@@ -84,7 +84,9 @@ Phase 1:
 - hint
 - completion state
 
-Phase 2 may add WebAssembly compilation with warning flags, but it MUST NOT change the Markdown content model.
+Browser compilation is implemented as a lazy-loaded Web Worker. It MUST remain optional infrastructure around the Markdown Lab source and MUST NOT change the Markdown content model.
+
+The Lab source shown in the editor starts from the repository source. Browser edits are ephemeral unless a future explicit save workflow is introduced.
 
 ## 7. Daily frontmatter
 

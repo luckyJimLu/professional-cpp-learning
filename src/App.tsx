@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import {
@@ -15,6 +15,7 @@ import {
   type Lesson,
   type StepKey,
 } from "./lib/course";
+import { compileAndRun, type CompileRunResult } from "./lib/browserCompiler";
 import { useLearningProgress } from "./lib/progress";
 
 type View =
@@ -473,19 +474,21 @@ function Roadmap({
             </section>
           );
         })}
-        <section className="roadmap-week upcoming">
-          <div className="week-marker">
-            <span>NEXT</span>
-            <strong>Day {nextPlannedDay}</strong>
-          </div>
-          <div className="week-lessons">
-            <div className="roadmap-placeholder">
-              <span className="roadmap-state">○</span>
-              <span className="mono">Day {currentDay}</span>
-              <strong>{latestNextSummary() ?? "Waiting for next Markdown lesson"}</strong>
+        {!lessonByDay(currentDay) && (
+          <section className="roadmap-week upcoming">
+            <div className="week-marker">
+              <span>NEXT</span>
+              <strong>Day {currentDay}</strong>
             </div>
-          </div>
-        </section>
+            <div className="week-lessons">
+              <div className="roadmap-placeholder">
+                <span className="roadmap-state">○</span>
+                <span className="mono">Day {currentDay}</span>
+                <strong>{latestNextSummary() ?? "Waiting for next Markdown lesson"}</strong>
+              </div>
+            </div>
+          </section>
+        )}
       </div>
       <details className="source-details">
         <summary>View canonical 16-week source plan</summary>
@@ -536,24 +539,93 @@ function Lab({
   isStepComplete: (day: number, step: StepKey) => boolean;
 }) {
   const lab = lesson.sections.find((section) => section.step === "lab");
+  const sourceCode = lesson.labCode ?? "// This lesson has no extracted C++ example yet.";
   const [hint, setHint] = useState(false);
-  const code = lesson.labCode ?? "// This lesson has no extracted C++ example yet.";
+  const [code, setCode] = useState(sourceCode);
+  const [compilerState, setCompilerState] = useState<
+    "idle" | "loading" | "compiling" | "success" | "failure"
+  >("idle");
+  const [compilerProgress, setCompilerProgress] = useState(0);
+  const [result, setResult] = useState<CompileRunResult | null>(null);
+  const [compilerError, setCompilerError] = useState("");
+
+  useEffect(() => {
+    setCode(sourceCode);
+    setCompilerState("idle");
+    setCompilerProgress(0);
+    setResult(null);
+    setCompilerError("");
+  }, [lesson.day, sourceCode]);
+
+  const runCompiler = async () => {
+    setResult(null);
+    setCompilerError("");
+    setCompilerState("loading");
+    setCompilerProgress(0);
+
+    try {
+      const next = await compileAndRun(code, (value) => {
+        setCompilerProgress(value);
+        if (value >= 1) setCompilerState("compiling");
+      });
+
+      setResult(next);
+      if (next.exitCode === 0 && next.errors.length === 0) {
+        setCompilerState("success");
+        markStep(lesson.day, "lab");
+      } else {
+        setCompilerState("failure");
+      }
+    } catch (error) {
+      setCompilerState("failure");
+      setCompilerError(error instanceof Error ? error.message : String(error));
+    }
+  };
+
+  const compilerBusy = compilerState === "loading" || compilerState === "compiling";
+  const displayOutput =
+    compilerError ||
+    result?.errors.join("\n") ||
+    result?.output ||
+    (compilerState === "success" ? "Program exited successfully with no output." : "");
 
   return (
     <div>
       <PageHeader
         eyebrow={`DAY ${lesson.day} · LAB`}
         title="Compile Mode"
-        description="Phase 1 reads the repository source directly. Browser-side compilation can be added later without changing the content contract."
+        description="Edit the repository lab, then compile and run it locally in the browser with Clang/WASM. The heavy toolchain is loaded only when you press Compile & Run."
       />
-      <div className="lab-shell">
+
+      <div className="lab-runtime-bar">
+        <div>
+          <span className="eyebrow">LOCAL TOOLCHAIN</span>
+          <strong>Clang 22 · WebAssembly · C++23</strong>
+        </div>
+        <div className="runtime-state">
+          <span className={cx("runtime-dot", compilerState)} />
+          <span className="mono">
+            {compilerState === "idle" && "READY"}
+            {compilerState === "loading" && `LOADING ${Math.round(compilerProgress * 100)}%`}
+            {compilerState === "compiling" && "COMPILING"}
+            {compilerState === "success" && "BUILD SUCCEEDED"}
+            {compilerState === "failure" && "BUILD FAILED"}
+          </span>
+        </div>
+      </div>
+
+      <div className="lab-shell lab-shell-runtime">
         <section className="lab-task">
           <div className="panel-title">
             <span>TASK</span>
             <span className="mono">{lesson.duration} min lesson</span>
           </div>
           <h2>{lesson.title}</h2>
-          {lab ? <Markdown>{lab.body.replace(/```[\s\S]*?```/g, "")}</Markdown> : <p>No lab section found.</p>}
+          {lab ? (
+            <Markdown>{lab.body.replace(/```[\s\S]*?```/g, "")}</Markdown>
+          ) : (
+            <p>No lab section found.</p>
+          )}
 
           {lesson.labChecklist.length > 0 && (
             <div className="checklist">
@@ -567,11 +639,25 @@ function Lab({
           )}
 
           <div className="lab-actions">
-            <button className="ghost-button" onClick={() => setHint((value) => !value)} type="button">
+            <button
+              className="ghost-button"
+              onClick={() => setHint((value) => !value)}
+              type="button"
+            >
               {hint ? "Hide hint" : "Reveal hint"}
             </button>
-            <button className="primary-button" onClick={() => markStep(lesson.day, "lab")} type="button">
-              {isStepComplete(lesson.day, "lab") ? "✓ Lab complete" : "Mark lab complete"}
+            <button
+              className="ghost-button"
+              onClick={() => {
+                setCode(sourceCode);
+                setResult(null);
+                setCompilerError("");
+                setCompilerState("idle");
+              }}
+              disabled={compilerBusy || code === sourceCode}
+              type="button"
+            >
+              Reset source
             </button>
           </div>
 
@@ -588,20 +674,83 @@ function Lab({
           )}
         </section>
 
-        <section className="code-panel">
-          <div className="panel-title">
-            <span>{lesson.labPath ?? `day-${String(lesson.day).padStart(3, "0")}/main.cpp`}</span>
-            <span>C++23</span>
+        <section className="code-workbench">
+          <div className="code-panel editable">
+            <div className="panel-title">
+              <span>
+                {lesson.labPath ?? `day-${String(lesson.day).padStart(3, "0")}/main.cpp`}
+              </span>
+              <span>EDITABLE · C++23</span>
+            </div>
+
+            <textarea
+              aria-label="C++ lab source editor"
+              value={code}
+              onChange={(event) => setCode(event.target.value)}
+              spellCheck={false}
+            />
+
+            <footer>
+              <span>-Wall</span>
+              <span>-Wextra</span>
+              <span>-Wconversion</span>
+              <span>-Wpedantic</span>
+              <button
+                className="compile-button"
+                disabled={compilerBusy || !code.trim()}
+                onClick={runCompiler}
+                type="button"
+              >
+                {compilerBusy ? "Working…" : "Compile & Run ▶"}
+              </button>
+            </footer>
           </div>
-          <pre>
-            <code>{code}</code>
-          </pre>
-          <footer>
-            <span>-Wall</span>
-            <span>-Wextra</span>
-            <span>-Wconversion</span>
-            <span>-Wpedantic</span>
-          </footer>
+
+          <section className={cx("compiler-output", compilerState)}>
+            <div className="panel-title">
+              <span>TERMINAL</span>
+              {result && (
+                <span>
+                  compile {Math.round(result.compileMs)}ms
+                  {result.runMs !== null ? ` · run ${Math.round(result.runMs)}ms` : ""}
+                </span>
+              )}
+            </div>
+
+            {compilerState === "loading" && (
+              <div className="compiler-loading">
+                <div>
+                  <i style={{ width: `${Math.round(compilerProgress * 100)}%` }} />
+                </div>
+                <p>
+                  First run downloads the browser toolchain. Later runs reuse it for this page
+                  session.
+                </p>
+              </div>
+            )}
+
+            {compilerState === "idle" ? (
+              <pre>
+                <code>$ clang++ main.cpp -std=gnu++23 -Wall -Wextra -Wconversion -Wpedantic{"\n"}$
+                  ./main</code>
+              </pre>
+            ) : displayOutput ? (
+              <pre>
+                <code>{displayOutput}</code>
+              </pre>
+            ) : compilerState === "compiling" ? (
+              <pre>
+                <code>Compiling and linking…</code>
+              </pre>
+            ) : null}
+
+            {result && (
+              <footer>
+                <span>exit {result.exitCode ?? "compile-error"}</span>
+                <span>{result.errors.length} compiler error(s)</span>
+              </footer>
+            )}
+          </section>
         </section>
       </div>
     </div>
