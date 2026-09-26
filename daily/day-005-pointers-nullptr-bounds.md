@@ -22,7 +22,9 @@
 
 nullptr 表达空指针
 
+```cpp
 Device* device {nullptr};
+```
 
 不要用 0 表达空指针。可空借用可用指针；不可空借用优先引用。
 
@@ -34,6 +36,7 @@ C 风格的地址 + 长度容易失配；现代 C++ 可用 std::span 表达非�
 
 std::optional<std::uint8_t> ParseFrame(
 std::span<const std::uint8_t> frame)
+```cpp
 {
 constexpr std::size_t kMinimumFrameSize {2};
 if (frame.size() < kMinimumFrameSize) {
@@ -41,6 +44,7 @@ return std::nullopt;
 }
 return frame.front();
 }
+```
 
 ## ⑤ 今日编码规范 · 10分钟
 
@@ -52,21 +56,27 @@ return frame.front();
 
 ## ⑥ 20分钟实验：Modem TLV Reader
 
+```cpp
 constexpr std::size_t kHeaderSize {2};
+```
 
+```cpp
 struct TlvHeader {
 std::uint8_t type {};
 std::uint8_t length {};
 };
+```
 
 std::optional<TlvHeader> ParseTlvHeader(
 std::span<const std::uint8_t> frame)
+```cpp
 {
 if (frame.size() < kHeaderSize) {
 return std::nullopt;
 }
 return TlvHeader{frame[0], frame[1]};
 }
+```
 
 编译：
 

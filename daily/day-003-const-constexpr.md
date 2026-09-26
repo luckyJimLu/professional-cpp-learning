@@ -20,32 +20,40 @@
 
 1. const：把“不修改”写进接口
 
+```cpp
 const std::uint32_t timeout_ms {5000};
 void PrintConfig(const ModemConfig& config);
+```
 
 这表达“借用 config，并且不修改它”，比注释约定更可靠。
 
 2. constexpr：编译期常量语义
 
+```cpp
 constexpr std::uint32_t kDefaultTimeoutMs {5000U};
 constexpr std::size_t kRxBufferSize {512U};
 std::array<std::uint8_t, kRxBufferSize> rx_buffer {};
+```
 
 3. constexpr 函数 + static_assert
 
+```cpp
 constexpr std::uint32_t SecondsToMs(std::uint32_t seconds)
 {
 return seconds * 1000U;
 }
 constexpr auto kBootTimeoutMs = SecondsToMs(5U);
 static_assert(kBootTimeoutMs == 5000U);
+```
 
 当输入是常量表达式时，纯计算可以前移到编译期；static_assert 则把错误挡在构建阶段。
 
 4. const 不等于 constexpr
 
+```cpp
 std::uint32_t ReadTimeoutFromNvram();
 const std::uint32_t timeout_ms {ReadTimeoutFromNvram()};
+```
 
 它初始化后不变，但值来自运行期，因此不是编译期常量。
 
@@ -59,6 +67,7 @@ int calc_timeout(int retry) { return MODEM_TIMEOUT * retry; }
 
 现代 C++
 
+```cpp
 namespace modem {
 constexpr std::uint32_t kDefaultTimeoutMs {5000U};
 constexpr std::size_t kRxBufferSize {512U};
@@ -68,6 +77,7 @@ return kDefaultTimeoutMs * retry_count;
 }
 static_assert(CalculateTimeoutMs(3U) == 15000U);
 }
+```
 
 ## ⑤ 今日编码规范 · 10 分钟
 
@@ -75,16 +85,21 @@ MUST：语义常量使用 kPascalCase；SHOULD：单位进入名称；SHOULD：�
 
 错误：
 
+```cpp
 const int timeout = 5000;
+```
 if (elapsed_ms > 5000U) { ResetModem(); }
 
 推荐：
 
+```cpp
 constexpr std::uint32_t kResponseTimeoutMs {5000U};
+```
 if (elapsed_ms > kResponseTimeoutMs) { ResetModem(); }
 
 ## ⑥ Coding 实验 · 20 分钟
 
+```cpp
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -94,7 +109,9 @@ namespace modem {
 constexpr std::uint32_t kDefaultTimeoutMs {5000U};
 constexpr std::uint32_t kMaxRetryCount {3U};
 constexpr std::size_t kRxBufferSize {512U};
+```
 
+```cpp
 constexpr std::uint32_t CalculateTotalTimeoutMs(std::uint32_t retry_count)
 {
 return kDefaultTimeoutMs * retry_count;
@@ -112,8 +129,10 @@ void PrintConfig(const Config& config)
 {
 std::cout << "timeout_ms = " << config.timeout_ms << '\n';
 }
+```
 } // namespace modem
 
+```cpp
 int main()
 {
 std::array<std::uint8_t, modem::kRxBufferSize> rx_buffer {};
@@ -121,6 +140,7 @@ const modem::Config config {};
 modem::PrintConfig(config);
 std::cout << rx_buffer.size() << '\n';
 }
+```
 
 编译：
 
@@ -135,7 +155,9 @@ g++ -std=c++20 -Wall -Wextra -Wconversion -Wpedantic day03.cpp -o day03
 #define TIMEOUT 5000
 #define SIZE 512
 int calc(int n) { return TIMEOUT * n; }
+```cpp
 void wait_modem(int t) { if (t > 5000) { } }
+```
 
 ## ⑦ 3 个常见坑 · 5 分钟
 

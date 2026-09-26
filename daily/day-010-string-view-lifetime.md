@@ -51,16 +51,22 @@ Modern C++：std::string_view 把地址与长度绑定成一个非拥有值对�
 
 ❌ 违反规范
 
+```cpp
 std::string_view BuildCommand() {
 std::string cmd{"AT+CSQ"};
+```
 return cmd; // dangling view
+```cpp
 }
+```
 
 ✅ 推荐方向
 
+```cpp
 std::string BuildCommand() {
 return std::string{"AT+CSQ"};
 }
+```
 
 ## ⑥ 20分钟实验：Modem +CREG 零拷贝解析器
 
@@ -72,6 +78,7 @@ return std::string{"AT+CSQ"};
 #include <string_view>
 ```
 
+```cpp
 struct CregStatus {
 int mode {};
 int status {};
@@ -102,6 +109,7 @@ const auto status = ParseInt(response.substr(comma + 1));
 if (!mode || !status) return std::nullopt;
 return CregStatus{.mode = *mode, .status = *status};
 }
+```
 
 ```bash
 g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic day10.cpp -o day10

@@ -38,16 +38,20 @@ ModemSession 负责 modem 会话策略；Transport 负责字节传输；HAL 负�
 当生命周期天然绑定时，可直接把子对象作为成员。没有裸 new/delete，生命周期由语言管理。
 
 C++
+```cpp
 class PacketQueue {
 std::array<Packet, 8> packets_;
 };
+```
 
 ### 3.3 has-a 不一定等于 owns-a
 
 ModemSession 需要 Transport，不代表必须拥有 Transport。若 Transport 生命周期由平台层管理，可以保存引用，表达 borrowing。
 
 C++
+```cpp
 explicit ModemSession(ITransport& transport) : transport_(transport) {}
+```
 
 ### 3.4 Composition 与 inheritance
 
@@ -62,28 +66,42 @@ explicit ModemSession(ITransport& transport) : transport_(transport) {}
 传统 C：依赖藏在全局状态。
 
 C
+```cpp
 static UartHandle* g_uart;
+```
 int modem_init(UartHandle* uart) { g_uart = uart; return 0; }
+```cpp
 int modem_send(const uint8_t* data, size_t size) {
 return uart_write(g_uart, data, size);
 }
+```
 
 现代 C++：依赖在接口中可见。
 
 C++
+```cpp
 class ITransport {
+```
 public:
+```cpp
 virtual ~ITransport() = default;
+```
 virtual Status Write(std::span<const std::uint8_t> data,
+```cpp
 std::chrono::milliseconds timeout) = 0;
 };
 
 class ModemSession {
+```
 public:
+```cpp
 explicit ModemSession(ITransport& transport) : transport_(transport) {}
+```
 private:
 ITransport& transport_; // borrowed
+```cpp
 };
+```
 
 ## ⑤ 今日编码规范（10分钟）
 
@@ -92,30 +110,43 @@ MUST：非拥有访问用引用/裸指针，并明确生命周期；SHOULD：接
 违反规范：
 
 C++
+```cpp
 class Modem {
+```
 public:
+```cpp
 Modem(std::shared_ptr<Uart> uart) : uart_(std::move(uart)) {}
+```
 private:
+```cpp
 std::shared_ptr<Uart> uart_;
 };
+```
 
 若 Modem 根本不参与 UART 所有权，shared_ptr 制造了虚假生命周期语义。
 
 推荐：
 
 C++
+```cpp
 class Modem {
+```
 public:
+```cpp
 explicit Modem(Uart& uart) : uart_(uart) {}
+```
 private:
+```cpp
 Uart& uart_;
 };
+```
 
 ## ⑥ 可编译小实验（20分钟）
 
 实现可替换 Transport 的 ModemSession：发送路径无 heap、依赖为 borrowing、timeout 强类型化。
 
 C++
+```cpp
 #include <array>
 #include <cassert>
 #include <chrono>
@@ -124,42 +155,62 @@ C++
 #include <span>
 
 using namespace std::chrono_literals;
+```
 
+```cpp
 enum class Status { kOk, kInvalidArgument, kBufferTooSmall, kTimeout };
+```
 
+```cpp
 class ITransport {
+```
 public:
+```cpp
 virtual ~ITransport() = default;
+```
 virtual Status Write(std::span<const std::uint8_t> data,
+```cpp
 std::chrono::milliseconds timeout) = 0;
 };
 
 class FakeTransport final : public ITransport {
+```
 public:
 Status Write(std::span<const std::uint8_t> data,
+```cpp
 std::chrono::milliseconds timeout) override {
 if (timeout <= 0ms) return Status::kTimeout;
 if (data.size() > buffer_.size()) return Status::kBufferTooSmall;
 size_ = data.size();
+```
 for (std::size_t i = 0; i < size_; ++i) buffer_[i] = data[i];
+```cpp
 return Status::kOk;
 }
+```
 [[nodiscard]] std::size_t Size() const { return size_; }
 private:
+```cpp
 static constexpr std::size_t kCapacity = 64;
 std::array<std::uint8_t, kCapacity> buffer_{};
 std::size_t size_ = 0;
 };
 
 class ModemSession {
+```
 public:
+```cpp
 explicit ModemSession(ITransport& transport) : transport_(transport) {}
+```
 Status Send(std::span<const std::uint8_t> data,
+```cpp
 std::chrono::milliseconds timeout) {
 if (data.empty()) return Status::kInvalidArgument;
 return transport_.Write(data, timeout);
 }
+```
 private:
+```cpp
 ITransport& transport_;
 };
 
@@ -173,6 +224,7 @@ const std::span<const std::uint8_t> empty;
 assert(modem.Send(empty, 100ms) == Status::kInvalidArgument);
 assert(modem.Send(command, 0ms) == Status::kTimeout);
 }
+```
 
 Bash
 g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic day30.cpp -o day30

@@ -73,30 +73,40 @@ SHOULD：平台差异集中隔离。若 MCU 标准库不支持 std::format，把
 #include <iostream>
 ```
 
+```cpp
 struct RadioStatus {
 int rssi_dbm {};
 std::uint32_t timeout_ms {};
 std::uint8_t retry_count {};
 };
+```
 
 bool FormatRadioStatusToBuffer(
+```cpp
 const RadioStatus& status, std::array<char, 96>& output) {
+```
 const int written = std::snprintf(
 output.data(), output.size(),
 "RSSI=%d dBm, timeout=%u ms, retry=%u",
 status.rssi_dbm,
 static_cast<unsigned int>(status.timeout_ms),
+```cpp
 static_cast<unsigned int>(status.retry_count));
+```
 if (written < 0) { return false; }
+```cpp
 return static_cast<std::size_t>(written) < output.size();
 }
 
 int main() {
 const RadioStatus status {-73, 5000U, 3U};
 std::array<char, 96> output {};
+```
 if (!FormatRadioStatusToBuffer(status, output)) { return 1; }
+```cpp
 std::cout << output.data() << '\n';
 }
+```
 
 任务 B：把缓冲区缩小到 16 字节，观察截断检测；解释为什么检查 snprintf 返回值属于接口契约。
 

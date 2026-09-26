@@ -49,12 +49,18 @@ std::chrono::milliseconds timeout) = 0;
 };
 ```
 
+```cpp
 class ModemSession {
+```
 public:
+```cpp
 explicit ModemSession(ITransport& transport) : transport_{transport} {}
+```
 private:
 ITransport& transport_; // borrowed, non-owning
+```cpp
 };
+```
 
 ## ⑤ 今日编码规范（10分钟）
 
@@ -85,14 +91,22 @@ std::uint8_t max_retries{0};
 };
 ```
 
+```cpp
 class ModemSession {
+```
 public:
+```cpp
 explicit ModemSession(ITransport& transport) : transport_{transport} {}
+```
 Status Send(std::span<const std::byte> data,
+```cpp
 const SendOptions& options);
+```
 private:
+```cpp
 ITransport& transport_;
 };
+```
 
 嵌入式注意：抽象不能掩盖无界等待或 heap allocation。硬实时路径必须能审计最坏执行时间和内存行为。
 
@@ -109,41 +123,60 @@ ITransport& transport_;
 using namespace std::chrono_literals;
 ```
 
+```cpp
 enum class Status { kOk, kTimeout, kIoError, kInvalidArgument };
+```
 
+```cpp
 class ITransport {
+```
 public:
+```cpp
 virtual ~ITransport() = default;
+```
 virtual Status Send(std::span<const std::byte> data,
+```cpp
 std::chrono::milliseconds timeout) = 0;
 };
 
 class FakeTransport final : public ITransport {
+```
 public:
 Status Send(std::span<const std::byte> data,
+```cpp
 std::chrono::milliseconds timeout) override {
 if (timeout <= 0ms || data.size() > last_frame_.size())
 return Status::kInvalidArgument;
+```
 for (std::size_t i = 0; i < data.size(); ++i) last_frame_[i] = data[i];
+```cpp
 last_size_ = data.size();
 return Status::kOk;
 }
+```
 [[nodiscard]] std::size_t LastSize() const { return last_size_; }
 private:
+```cpp
 std::array<std::byte, 64> last_frame_{};
 std::size_t last_size_{0};
 };
+```
 
 struct SendOptions { std::chrono::milliseconds timeout{1000}; };
 
+```cpp
 class ModemSession {
+```
 public:
+```cpp
 explicit ModemSession(ITransport& transport) : transport_{transport} {}
 Status Send(std::span<const std::byte> command, const SendOptions& options) {
 if (command.empty()) return Status::kInvalidArgument;
 return transport_.Send(command, options.timeout);
 }
+```
 private:
+```cpp
 ITransport& transport_;
 };
 
@@ -152,8 +185,11 @@ FakeTransport transport;
 ModemSession modem{transport};
 constexpr std::array command{std::byte{'A'}, std::byte{'T'}, std::byte{'\r'}};
 const Status status = modem.Send(command, SendOptions{500ms});
+```
 return status == Status::kOk && transport.LastSize() == command.size() ? 0 : 1;
+```cpp
 }
+```
 
 ```bash
 g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic day26.cpp -o day26

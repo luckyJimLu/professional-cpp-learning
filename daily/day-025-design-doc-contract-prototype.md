@@ -96,25 +96,36 @@ const TransferOptions& options);
 #include <span>
 ```
 
+```cpp
 enum class Status { kOk, kEmptyCommand, kCommandTooLarge };
+```
 
+```cpp
 class CommandBuffer {
+```
 public:
+```cpp
 static constexpr std::size_t kCapacity = 64;
 
 Status Store(std::span<const std::byte> command) {
 if (command.empty()) return Status::kEmptyCommand;
 if (command.size() > buffer_.size()) return Status::kCommandTooLarge;
+```
 for (std::size_t i = 0; i < command.size(); ++i) buffer_[i] = command[i];
+```cpp
 size_ = command.size();
 return Status::kOk;
 }
+```
 
 [[nodiscard]] std::span<const std::byte> View() const {
+```cpp
 return {buffer_.data(), size_};
 }
+```
 
 private:
+```cpp
 std::array<std::byte, kCapacity> buffer_{};
 std::size_t size_{0};
 };
@@ -125,6 +136,7 @@ CommandBuffer buffer;
 if (buffer.Store(command) != Status::kOk) return 1;
 std::cout << "stored bytes: " << buffer.View().size() << '\n';
 }
+```
 
 ```bash
 g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic day25.cpp -o day25
@@ -136,11 +148,15 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic day25.cpp -o day25
 C++ · 违反规范
 
 #define BUF_SIZE 128
+```cpp
 int Send(char* p, int len, int wait, bool retry) {
 char* tmp = new char[BUF_SIZE];
+```
 // ...
+```cpp
 return -1;
 }
+```
 
 要求改为：std::array + std::span + std::chrono::milliseconds + SendOptions + enum class Status，并保证实时路径不 new。
 

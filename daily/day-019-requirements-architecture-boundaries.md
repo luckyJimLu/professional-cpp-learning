@@ -52,17 +52,23 @@ return uart_wait(5000);
 enum class Status { kOk, kTimeout, kIoError };
 ```
 
+```cpp
 struct SessionOptions {
 std::chrono::milliseconds timeout;
 };
 
 class Transport {
+```
 public:
+```cpp
 virtual Status Send(std::string_view data) = 0;
+```
 virtual Status Receive(std::span<char> out,
+```cpp
 std::chrono::milliseconds timeout) = 0;
 virtual ~Transport() = default;
 };
+```
 
 ## ⑤ 今日编码规范（10 分钟）
 
@@ -74,23 +80,33 @@ SHOULD：平台差异集中隔离。
 
 违反规范
 
+```cpp
 extern int g_timeout_ms;
 extern int g_state;
+```
 int Attach(); // 依赖全部隐藏
 
 推荐写法
 
+```cpp
 class ModemSession {
+```
 public:
+```cpp
 ModemSession(Transport& transport, SessionOptions options)
 : transport_(transport), options_(options) {}
+```
 
+```cpp
 Status Attach();
+```
 
 private:
 Transport& transport_; // 借用，不拥有
+```cpp
 SessionOptions options_;
 };
+```
 
 ## ⑥ 可编译小实验 / 代码练习（20 分钟）
 

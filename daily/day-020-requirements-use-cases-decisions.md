@@ -73,38 +73,54 @@ Bounded Modem Command API：不使用异常，调用路径不动态分配；调�
 #include <string_view>
 ```
 
+```cpp
 using namespace std::chrono_literals;
+```
 
+```cpp
 enum class Status { kOk, kTimeout, kIoError, kInvalidArgument };
+```
 
+```cpp
 struct CommandOptions {
 std::chrono::milliseconds timeout{1000ms};
 };
 
 class Transport {
+```
 public:
+```cpp
 virtual ~Transport() = default;
+```
 virtual Status Exchange(std::string_view request,
 std::span<char> response,
+```cpp
 std::chrono::milliseconds timeout) = 0;
 };
 
 class ModemSession {
+```
 public:
+```cpp
 explicit ModemSession(Transport& transport) : transport_(transport) {}
+```
 
 Status SendCommand(std::string_view command,
 std::span<char> response,
+```cpp
 CommandOptions options) {
 if (command.empty() || response.empty() || options.timeout.count() <= 0) {
 return Status::kInvalidArgument;
 }
 return transport_.Exchange(command, response, options.timeout);
 }
+```
 
 private:
+```cpp
 Transport& transport_;
 };
+```
 
 练习 A：实现 FakeTransport，分别测试成功、超时、I/O 错误。
 

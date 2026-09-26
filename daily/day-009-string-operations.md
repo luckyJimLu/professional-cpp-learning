@@ -51,6 +51,7 @@ Modem AT 命令构建 + CREG 解析
 
 C++23
 
+```cpp
 #include <charconv>
 #include <iostream>
 #include <optional>
@@ -59,14 +60,18 @@ C++23
 
 namespace modem {
 enum class RegistrationState {
+```
 kNotRegistered = 0, kRegisteredHome = 1, kSearching = 2,
 kDenied = 3, kUnknown = 4, kRegisteredRoaming = 5
+```cpp
 };
 
 std::string BuildAtCommand(std::string_view command, std::string_view argument) {
 std::string result{"AT"};
 result += command;
+```
 if (!argument.empty()) { result += '='; result += argument; }
+```cpp
 result += "\r\n";
 return result;
 }
@@ -89,6 +94,7 @@ case 5: return RegistrationState::kRegisteredRoaming;
 default: return std::nullopt;
 }
 }
+```
 } // namespace modem
 
 ```bash

@@ -35,8 +35,10 @@ C · 违反规范
 
 C++ · 推荐
 
+```cpp
 inline constexpr std::string_view kSetFullFunctionality{"AT+CFUN=1\r\n"};
 inline constexpr std::string_view kRegistrationPrefix{"+CREG:"};
+```
 
 宏没有类型和正常作用域；具名 constexpr 常量更容易搜索、检查和 Review。
 
@@ -57,13 +59,18 @@ inline constexpr std::string_view kRegistrationPrefix{"+CREG:"};
 #include <string_view>
 ```
 
+```cpp
 namespace modem {
 inline constexpr std::string_view kQuerySignal{"AT+CSQ\r\n"};
+```
 inline constexpr std::string_view kExpectedTranscript{R"(AT+CSQ
 +CSQ: 18,99
 OK
+```cpp
 )"};
+```
 
+```cpp
 bool IsAtCommand(std::string_view text) {
 return text.starts_with("AT");
 }
@@ -74,14 +81,17 @@ std::cout << static_cast<unsigned int>(ch) << ' ';
 }
 std::cout << '\n';
 }
+```
 } // namespace modem
 
+```cpp
 int main() {
 std::cout << modem::kQuerySignal;
 std::cout << modem::kExpectedTranscript;
 std::cout << std::boolalpha << modem::IsAtCommand(modem::kQuerySignal) << '\n';
 modem::PrintBytes(modem::kQuerySignal);
 }
+```
 
 ```bash
 g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic day12.cpp -o day12

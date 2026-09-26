@@ -24,42 +24,54 @@ std::string 与 std::string_view：所有权、借用与零拷贝文本接口
 
 std::string 是拥有者
 
+```cpp
 std::string command{"AT+CGSN"};
 command += "\r\n";
+```
 
 std::string_view 是借用视图
 
+```cpp
 bool IsOkResponse(std::string_view response)
 {
 return response == "OK";
 }
+```
 
 它通常不拥有字符数据，因此避免为了只读而复制；代价是调用者必须保证源数据活得足够久。
 
 最大风险：悬空 view
 
+```cpp
 std::string_view Bad()
 {
 std::string text{"OK"};
+```
 return text; // text 销毁后 view 悬空
+```cpp
 }
+```
 view 的生命周期不能超过它观察的数据。
 ## ④ C vs Modern C++ · 10 分钟
 
 C 风格
 
+```cpp
 int is_ok_response(const char* response)
 {
 if (response == NULL) return 0;
 return strcmp(response, "OK") == 0;
 }
+```
 
 现代 C++
 
+```cpp
 bool IsOkResponse(std::string_view response)
 {
 return response == "OK";
 }
+```
 
 ## ⑤ 今日编码规范 · 10 分钟
 
@@ -67,12 +79,16 @@ return response == "OK";
 
 违反规范
 
+```cpp
 int Parse(char* p, int n, bool copy);
+```
 
 推荐
 
+```cpp
 enum class StorageMode { kBorrow, kCopy };
 Status ParseResponse(std::string_view response, StorageMode storage_mode);
+```
 
 若函数只解析、不保存，进一步简化为 Status ParseResponse(std::string_view response);
 
@@ -80,14 +96,17 @@ Status ParseResponse(std::string_view response, StorageMode storage_mode);
 
 目标：解析 +CSQ: <rssi>,<ber>，不为输入创建动态副本。
 
+```cpp
 #include <charconv>
 #include <iostream>
 #include <optional>
 #include <string_view>
 
 namespace modem {
+```
 struct SignalQuality { int rssi{}; int ber{}; };
 
+```cpp
 std::optional<int> ParseInt(std::string_view text)
 {
 int value{};
@@ -113,6 +132,7 @@ const auto ber = ParseInt(ber_text);
 if (!rssi || !ber) return std::nullopt;
 return SignalQuality{.rssi = *rssi, .ber = *ber};
 }
+```
 } // namespace modem
 
 编译：

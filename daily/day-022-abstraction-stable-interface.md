@@ -58,24 +58,36 @@ MUST/SHOULD：显式表达意图。 状态用 enum class，时间/长度用有�
 
 违反规范
 
+```cpp
 extern int g_uart_port;
 class Modem {
+```
 public:
+```cpp
 int uart_fd;
 unsigned char* rx_buf;
 int Send(unsigned char* p, int n, int timeout);
 };
+```
 
 推荐写法
 
+```cpp
 class ModemSession {
+```
 public:
+```cpp
 explicit ModemSession(Transport& transport) : transport_(transport) {}
+```
 Status Execute(std::string_view command,
+```cpp
 std::chrono::milliseconds timeout);
+```
 private:
 Transport& transport_; // borrowed, non-owning
+```cpp
 };
+```
 嵌入式注意：抽象层不能成为“性能免责层”。硬实时路径仍需审计 virtual dispatch、动态分配、锁、日志和最坏执行时间。不要为了架构漂亮而增加无法证明价值的层次。
 ## ⑥ 可编译的小实验 / 代码练习（20分钟）
 
@@ -89,21 +101,32 @@ Transport& transport_; // borrowed, non-owning
 #include <string_view>
 ```
 
+```cpp
 using namespace std::chrono_literals;
+```
 
+```cpp
 enum class Status { kOk, kTimeout, kIoError, kInvalidArgument };
+```
 struct SendOptions { std::chrono::milliseconds timeout{1000}; };
 
+```cpp
 class Transport {
+```
 public:
+```cpp
 virtual ~Transport() = default;
+```
 virtual Status Send(std::span<const std::byte> data,
+```cpp
 const SendOptions& options) = 0;
 };
 
 class FakeTransport final : public Transport {
+```
 public:
 Status Send(std::span<const std::byte> data,
+```cpp
 const SendOptions& options) override {
 if (data.empty()) return Status::kInvalidArgument;
 if (options.timeout <= 0ms) return Status::kTimeout;
@@ -111,24 +134,32 @@ if (options.timeout <= 0ms) return Status::kTimeout;
 last_size_ = data.size();
 return Status::kOk;
 }
+```
 [[nodiscard]] std::size_t SendCount() const { return send_count_; }
 [[nodiscard]] std::size_t LastSize() const { return last_size_; }
 private:
+```cpp
 std::size_t send_count_{0};
 std::size_t last_size_{0};
 };
 
 class ModemSession {
+```
 public:
+```cpp
 explicit ModemSession(Transport& transport) : transport_(transport) {}
+```
 Status Execute(std::string_view command,
+```cpp
 std::chrono::milliseconds timeout) {
 if (command.empty()) return Status::kInvalidArgument;
 const auto* begin = reinterpret_cast<const std::byte*>(command.data());
 const std::span<const std::byte> bytes{begin, command.size()};
 return transport_.Send(bytes, SendOptions{.timeout = timeout});
 }
+```
 private:
+```cpp
 Transport& transport_;
 };
 
@@ -137,10 +168,13 @@ FakeTransport transport;
 ModemSession modem{transport};
 const Status status = modem.Execute("AT+CSQ\r\n", 500ms);
 if (status != Status::kOk) return 1;
+```
 std::cout << "send_count=" << transport.SendCount()
 << ", bytes=" << transport.LastSize() << '\n';
+```cpp
 return 0;
 }
+```
 
 ```bash
 g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic day22.cpp -o day22

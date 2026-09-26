@@ -34,33 +34,43 @@ enum class 不会隐式转换成整数，也不会把枚举值泄漏到外层作
 
 3. 多个相关返回值优先返回值对象
 
+```cpp
 struct SignalInfo {
 int rssi_dbm {};
 int quality_percent {};
 };
 
 auto [rssi_dbm, quality_percent] = ReadSignal();
+```
 
 ## ④ C 写法 vs 现代 C++ · 10分钟
 
 C 风格
 
 #define MODEM_READY 3
+```cpp
 int modem_get_signal(int *rssi, int *quality) {
 if (rssi == NULL || quality == NULL) return -1;
+```
 *rssi = -75; *quality = 65; return 0;
+```cpp
 }
+```
 
 现代 C++
 
+```cpp
 struct SignalInfo {
 int rssi_dbm {};
 int quality_percent {};
 };
+```
 
 [[nodiscard]] SignalInfo ReadSignal() {
+```cpp
 return {.rssi_dbm = -75, .quality_percent = 65};
 }
+```
 
 输出参数 → 返回值；裸宏状态 → 类型；字段单位 → 名称；调用者无需传入可空写指针。
 
@@ -74,14 +84,17 @@ SHOULD：switch 覆盖有效状态，并打开编译告警；不要用无条件 
 
 ## ⑥ 20分钟实验：Modem 状态机
 
+```cpp
 #include <iostream>
 #include <string_view>
 
 namespace modem {
 enum class State { kOff, kBooting, kRegistering, kReady, kError };
+```
 struct SignalInfo { int rssi_dbm {}; int quality_percent {}; };
 
 [[nodiscard]] constexpr std::string_view ToString(State state) {
+```cpp
 switch (state) {
 case State::kOff: return "off";
 case State::kBooting: return "booting";
@@ -91,14 +104,17 @@ case State::kError: return "error";
 }
 return "invalid";
 }
+```
 [[nodiscard]] SignalInfo ReadSignal() { return {-75, 65}; }
 } // namespace modem
 
+```cpp
 int main() {
 const modem::State state {modem::State::kReady};
 const auto [rssi_dbm, quality_percent] = modem::ReadSignal();
 std::cout << modem::ToString(state) << '\n';
 }
+```
 
 ```bash
 g++ -std=c++20 -Wall -Wextra -Wconversion -Wpedantic -Wswitch-enum day06.cpp -o day06
