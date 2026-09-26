@@ -6,13 +6,17 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare:clang": "clang-wasm-copy-assets public/clang",
+    "predev": "npm run prepare:clang",
+    "prebuild": "npm run prepare:clang"
   },
   "dependencies": {
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-markdown": "^10.1.0",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "@live-codes/clang-wasm": "0.2.0"
   },
   "devDependencies": {
     "@types/react": "^19.2.0",
