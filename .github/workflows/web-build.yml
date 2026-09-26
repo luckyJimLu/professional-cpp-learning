@@ -26,3 +26,20 @@ jobs:
 
       - name: Typecheck and build
         run: npm run build
+
+      - name: Compile standalone C++ labs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t labs < <(find examples -type f -name main.cpp | sort)
+          if [ "${#labs[@]}" -eq 0 ]; then
+            echo "No standalone labs found."
+            exit 0
+          fi
+
+          for source in "${labs[@]}"; do
+            output="/tmp/$(echo "$source" | tr '/.' '__')"
+            echo "Compiling $source"
+            g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic "$source" -o "$output"
+            "$output"
+          done
