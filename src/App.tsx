@@ -285,11 +285,13 @@ function LessonView({
   markStep,
   isStepComplete,
   isDayComplete,
+  addWeakPoint,
 }: {
   lesson: Lesson;
   markStep: (day: number, step: StepKey) => void;
   isStepComplete: (day: number, step: StepKey) => boolean;
   isDayComplete: (day: number) => boolean;
+  addWeakPoint: (value: string) => void;
 }) {
   const firstIncomplete =
     STEP_DEFS.find((step) => !isStepComplete(lesson.day, step.key))?.key ?? "pass";
@@ -301,6 +303,15 @@ function LessonView({
       behavior: "smooth",
       block: "start",
     });
+  };
+
+  const completeStep = (step: StepKey) => {
+    markStep(lesson.day, step);
+    const index = STEP_DEFS.findIndex((item) => item.key === step);
+    const next = STEP_DEFS[index + 1]?.key;
+    if (next) {
+      window.setTimeout(() => navigate(next), 120);
+    }
   };
 
   return (
@@ -350,16 +361,29 @@ function LessonView({
                   <span className="eyebrow">{definition.label}</span>
                   <h2>{section.title}</h2>
                 </div>
-                <button
-                  className={cx(
-                    "section-check",
-                    isStepComplete(lesson.day, section.step) && "is-complete",
-                  )}
-                  onClick={() => markStep(lesson.day, section.step!)}
-                  type="button"
-                >
-                  {isStepComplete(lesson.day, section.step) ? "✓ Complete" : "Mark complete"}
-                </button>
+                <div className="section-actions">
+                  <button
+                    className="review-later"
+                    onClick={() =>
+                      addWeakPoint(
+                        `Day ${lesson.day} · ${definition.title} · ${lesson.title}`,
+                      )
+                    }
+                    type="button"
+                  >
+                    Review later
+                  </button>
+                  <button
+                    className={cx(
+                      "section-check",
+                      isStepComplete(lesson.day, section.step) && "is-complete",
+                    )}
+                    onClick={() => completeStep(section.step!)}
+                    type="button"
+                  >
+                    {isStepComplete(lesson.day, section.step) ? "✓ Complete" : "Mark complete"}
+                  </button>
+                </div>
               </div>
               <Markdown>{section.body}</Markdown>
             </section>
@@ -577,23 +601,64 @@ function Lab({
   );
 }
 
-function Review({ isDayComplete }: { isDayComplete: (day: number) => boolean }) {
+function Review({
+  isDayComplete,
+  weakPoints,
+  removeWeakPoint,
+}: {
+  isDayComplete: (day: number) => boolean;
+  weakPoints: string[];
+  removeWeakPoint: (value: string) => void;
+}) {
   const reviews = lessons.filter(
     (lesson) => lesson.day % 7 === 0 || /review|复盘/i.test(lesson.title),
   );
+
   return (
     <div>
       <PageHeader
         eyebrow="RECALL · REVIEW · REBUILD"
         title="Review"
-        description="Weekly checkpoints stay deliberately lighter: recall, mini-project, code review, weak-point detection."
+        description="Weekly checkpoints plus the exact lesson stages you marked for another pass."
       />
+
+      <section className="weak-points">
+        <div className="weak-points-header">
+          <div>
+            <span className="eyebrow">WEAK POINTS</span>
+            <h2>Review queue</h2>
+          </div>
+          <span className="mono">{weakPoints.length} queued</span>
+        </div>
+
+        {weakPoints.length === 0 ? (
+          <p className="empty-state">
+            No weak points queued. Use “Review later” beside any lesson stage when something still
+            feels uncertain.
+          </p>
+        ) : (
+          <div className="weak-point-list">
+            {weakPoints.map((point) => (
+              <div key={point}>
+                <span>{point}</span>
+                <button onClick={() => removeWeakPoint(point)} type="button">
+                  Resolved
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
       <div className="review-list">
         {reviews.map((lesson) => (
           <article key={lesson.day}>
             <span className="mono">DAY {lesson.day}</span>
             <h2>{lesson.title}</h2>
-            <p>{lesson.nextSummary ?? "Use this checkpoint to review interfaces, lifetime, ownership and error boundaries."}</p>
+            <p>
+              {lesson.nextSummary ??
+                "Use this checkpoint to review interfaces, lifetime, ownership and error boundaries."}
+            </p>
             <strong>{isDayComplete(lesson.day) ? "BUILD SUCCEEDED" : "REVIEW PENDING"}</strong>
           </article>
         ))}
@@ -638,7 +703,7 @@ const SKILLS = [
   { name: "Testing", range: [30, 30], evidence: /test|fake|mock|assert|测试/i },
 ] as const;
 
-function ProgressView() {
+function ProgressView({ weakPoints }: { weakPoints: string[] }) {
   const completed = lessons.filter((lesson) => lesson.day <= repoCompletedDay);
   const currentChapter = Math.max(...completed.map((lesson) => lesson.chapter ?? 0), 0);
 
@@ -683,6 +748,13 @@ function ProgressView() {
           <hr />
           <span className="eyebrow">NEXT</span>
           <p>{latestNextSummary() ?? `Publish Day ${nextPlannedDay} to continue.`}</p>
+          <hr />
+          <span className="eyebrow">NEEDS REVIEW</span>
+          <p>
+            {weakPoints.length > 0
+              ? `${weakPoints.length} learning stage${weakPoints.length === 1 ? "" : "s"} queued for review.`
+              : "No weak points queued."}
+          </p>
           <hr />
           <span className="eyebrow">SYSTEM</span>
           <p>{lessons.length} Markdown lessons indexed automatically.</p>
@@ -729,13 +801,19 @@ export default function App() {
       ) : null;
       break;
     case "review":
-      page = <Review isDayComplete={progress.isDayComplete} />;
+      page = (
+        <Review
+          isDayComplete={progress.isDayComplete}
+          weakPoints={progress.state.weakPoints}
+          removeWeakPoint={progress.removeWeakPoint}
+        />
+      );
       break;
     case "guidelines":
       page = <Guidelines />;
       break;
     case "progress":
-      page = <ProgressView />;
+      page = <ProgressView weakPoints={progress.state.weakPoints} />;
       break;
     case "lesson":
       page = selectedLesson ? (
@@ -744,6 +822,7 @@ export default function App() {
           markStep={progress.markStep}
           isStepComplete={progress.isStepComplete}
           isDayComplete={progress.isDayComplete}
+          addWeakPoint={progress.addWeakPoint}
         />
       ) : null;
       break;
