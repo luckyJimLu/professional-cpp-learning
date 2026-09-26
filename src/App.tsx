@@ -210,7 +210,7 @@ function Today({
             <span>{planned?.chapter ? `CHAPTER ${planned.chapter}` : "NEXT"}</span>
           </div>
 
-          <h2>{planned?.title ?? "Polymorphism & Virtual Interfaces"}</h2>
+          <h2>{planned?.title ?? `Next learning unit · Day ${nextPlannedDay}`}</h2>
           <p className="hero-summary">
             {planned
               ? planned.nextSummary ?? "Continue the current Professional C++ learning path."
@@ -263,7 +263,7 @@ function Today({
         </article>
         <article>
           <span className="eyebrow">NEXT ACTION</span>
-          <strong>{planned ? "Continue" : "Publish Day 33"}</strong>
+          <strong>{planned ? "Continue" : `Publish Day ${nextPlannedDay}`}</strong>
           <p>
             {planned
               ? "Resume at the first incomplete compile-rail stage."
@@ -546,7 +546,13 @@ function Lab({
 
           {hint && (
             <div className="hint">
-              Prefer a small interface, explicit lifetime, typed timeout, and composition when the relation is uses-a.
+              {lesson.sections.find((section) => section.step === "rules") ? (
+                <Markdown>
+                  {lesson.sections.find((section) => section.step === "rules")!.body}
+                </Markdown>
+              ) : (
+                "Re-read the lesson rules and use them as the review checklist for this lab."
+              )}
             </div>
           )}
         </section>
