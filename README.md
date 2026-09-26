@@ -123,7 +123,7 @@ npm run preview
 - Roadmap：按 Week / Part 生成纵向课程路径
 - Lessons：从 `daily/*.md` 自动建立课程索引
 - Lesson：Compile Rail + 8 阶段学习流
-- Lab：独立任务 / C++ 代码双栏模式
+- Lab：可编辑 C++ 代码 + 浏览器内 Clang/WASM Compile & Run
 - Review：每 7 天复盘入口
 - Guidelines：直接渲染 Embedded C++ Guideline Markdown
 - Progress：课程覆盖与学习证据
@@ -135,3 +135,17 @@ npm run preview
 - [Learning UX](docs/learning-ux.md)
 
 > Day 1–32 无需批量迁移即可使用。Day 33 起使用 YAML frontmatter + 独立 Lab 文件作为新内容契约示范。
+
+
+### 浏览器 C++ 编译
+
+Lab 使用 `@live-codes/clang-wasm` 在 Web Worker 中懒加载 Clang 22 工具链：
+
+- 浏览器本地编译与运行，不需要编译服务账号；
+- 默认 `gnu++23`；
+- 编译参数：`-Wall -Wextra -Wconversion -Wpedantic`；
+- 首次点击 Compile & Run 时才下载工具链；
+- 后续编译复用同一页面会话中的 WASM runtime；
+- `npm run dev` / `npm run build` 会自动把 runtime assets 复制到 `public/clang`。
+
+工具链体积较大，因此不在 Today / Lesson 首屏预加载。
