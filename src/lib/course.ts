@@ -210,6 +210,7 @@ export const lessons = Object.entries(rawLessons)
   .sort((a, b) => a.day - b.day);
 
 export const repoCompletedDay =
+  Number(progressRaw.match(/已完成[^\n]*Day\s+(\d+)/i)?.[1]) ||
   Number(progressRaw.match(/同步到\s+\*\*Day\s+(\d+)/i)?.[1]) ||
   Number(progressRaw.match(/Day\s+(\d+)/i)?.[1]) ||
   0;
