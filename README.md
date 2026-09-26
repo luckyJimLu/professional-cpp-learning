@@ -96,3 +96,41 @@ Day 1–30 的大部分课程由原 Gmail 正文转换为 Markdown。
 - Day 32
 
 后续课程直接以 Markdown 作为唯一主版本，不再维护邮件版。
+
+
+## Learning Console
+
+仓库现已包含第一版 **Professional C++ Learning Console**。课程 Markdown 仍然是唯一内容源，Web UI 只负责学习流、Lab、复盘与进度状态。
+
+### 本地运行
+
+```bash
+npm install
+npm run dev
+```
+
+生产构建：
+
+```bash
+npm run build
+npm run preview
+```
+
+### 第一版页面
+
+- Today：根据 `progress.md` 和现有 Day 自动确定当前位置
+- Roadmap：按 Week / Part 生成纵向课程路径
+- Lessons：从 `daily/*.md` 自动建立课程索引
+- Lesson：Compile Rail + 8 阶段学习流
+- Lab：独立任务 / C++ 代码双栏模式
+- Review：每 7 天复盘入口
+- Guidelines：直接渲染 Embedded C++ Guideline Markdown
+- Progress：课程覆盖与学习证据
+
+设计与 Agent 约束：
+
+- [DESIGN.md](DESIGN.md)
+- [UX-CONTRACT.md](UX-CONTRACT.md)
+- [Learning UX](docs/learning-ux.md)
+
+> Day 1–32 无需批量迁移即可使用。后续新课程建议逐步加入 YAML frontmatter。
