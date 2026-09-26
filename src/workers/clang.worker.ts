@@ -31,7 +31,7 @@ async function getCompiler(baseUrl: string, requestId: number) {
           value,
         });
       },
-    }).catch((error) => {
+    }).catch((error: unknown) => {
       compilerPromise = null;
       throw error;
     });
