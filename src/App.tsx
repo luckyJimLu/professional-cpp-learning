@@ -87,10 +87,12 @@ function CompileRail({
 function Shell({
   view,
   setView,
+  currentDay,
   children,
 }: {
   view: View;
   setView: (view: View) => void;
+  currentDay: number;
   children: ReactNode;
 }) {
   return (
@@ -113,7 +115,7 @@ function Shell({
               type="button"
             >
               <span>{item.label}</span>
-              {item.id === "today" && <small>Day {nextPlannedDay}</small>}
+              {item.id === "today" && <small>Day {currentDay}</small>}
             </button>
           ))}
         </nav>
@@ -133,7 +135,7 @@ function Shell({
             <span className="brand-mark">C++</span>
             <strong>Professional C++</strong>
           </div>
-          <span className="mono">Day {nextPlannedDay}</span>
+          <span className="mono">Day {currentDay}</span>
         </header>
         <main className="content">{children}</main>
         <nav className="bottom-nav" aria-label="Mobile navigation">
@@ -174,27 +176,30 @@ function PageHeader({
 }
 
 function Today({
+  currentDay,
   openLesson,
   isStepComplete,
 }: {
+  currentDay: number;
   openLesson: (day: number) => void;
   isStepComplete: (day: number, step: StepKey) => boolean;
 }) {
-  const planned = lessonByDay(nextPlannedDay);
-  const previous = latestLesson();
+  const planned = lessonByDay(currentDay);
+  const latestPublished = latestLesson();
+  const baseline = lessonByDay(currentDay - 1);
   const nextSummary = latestNextSummary();
 
-  if (!previous) {
+  if (!latestPublished) {
     return <PageHeader eyebrow="TODAY" title="No lessons published yet" />;
   }
 
-  const target = planned ?? previous;
+  const target = planned ?? latestPublished;
 
   return (
     <div className="today-page">
       <PageHeader
         eyebrow="TODAY"
-        title={planned ? `Continue Day ${planned.day}` : `Day ${nextPlannedDay} · Ready for content`}
+        title={planned ? `Continue Day ${planned.day}` : `Day ${currentDay} · Ready for content`}
         description={
           planned
             ? "One focused session. Read → recall → refactor → compile."
@@ -205,12 +210,12 @@ function Today({
       <section className="hero-card">
         <div className="hero-copy">
           <div className="lesson-meta">
-            <span>DAY {planned?.day ?? nextPlannedDay}</span>
-            <span>WEEK {planned?.week ?? Math.ceil(nextPlannedDay / 7)}</span>
+            <span>DAY {planned?.day ?? currentDay}</span>
+            <span>WEEK {planned?.week ?? Math.ceil(currentDay / 7)}</span>
             <span>{planned?.chapter ? `CHAPTER ${planned.chapter}` : "NEXT"}</span>
           </div>
 
-          <h2>{planned?.title ?? `Next learning unit · Day ${nextPlannedDay}`}</h2>
+          <h2>{planned?.title ?? `Next learning unit · Day ${currentDay}`}</h2>
           <p className="hero-summary">
             {planned
               ? planned.nextSummary ?? "Continue the current Professional C++ learning path."
@@ -230,7 +235,7 @@ function Today({
             onClick={() => openLesson(target.day)}
             type="button"
           >
-            {planned ? "Continue learning →" : `Review Day ${previous.day} →`}
+            {planned ? "Continue learning →" : `Review Day ${latestPublished.day} →`}
           </button>
         </div>
 
@@ -249,7 +254,7 @@ function Today({
             <span>
               {planned
                 ? `lesson --day ${planned.day} --mode focused`
-                : `next --day ${nextPlannedDay} --source daily/day-${String(nextPlannedDay).padStart(3, "0")}-*.md`}
+                : `next --day ${currentDay} --source daily/day-${String(currentDay).padStart(3, "0")}-*.md`}
             </span>
           </div>
         </div>
@@ -257,13 +262,13 @@ function Today({
 
       <section className="focus-grid">
         <article>
-          <span className="eyebrow">CURRENT BASELINE</span>
-          <strong>Day {repoCompletedDay}</strong>
-          <p>{previous.title}</p>
+          <span className="eyebrow">COMPLETED BASELINE</span>
+          <strong>Day {currentDay - 1}</strong>
+          <p>{baseline?.title ?? "Repository completion baseline"}</p>
         </article>
         <article>
           <span className="eyebrow">NEXT ACTION</span>
-          <strong>{planned ? "Continue" : `Publish Day ${nextPlannedDay}`}</strong>
+          <strong>{planned ? "Continue" : `Publish Day ${currentDay}`}</strong>
           <p>
             {planned
               ? "Resume at the first incomplete compile-rail stage."
@@ -285,11 +290,13 @@ function LessonView({
   markStep,
   isStepComplete,
   isDayComplete,
+  addWeakPoint,
 }: {
   lesson: Lesson;
   markStep: (day: number, step: StepKey) => void;
   isStepComplete: (day: number, step: StepKey) => boolean;
   isDayComplete: (day: number) => boolean;
+  addWeakPoint: (value: string) => void;
 }) {
   const firstIncomplete =
     STEP_DEFS.find((step) => !isStepComplete(lesson.day, step.key))?.key ?? "pass";
@@ -301,6 +308,15 @@ function LessonView({
       behavior: "smooth",
       block: "start",
     });
+  };
+
+  const completeStep = (step: StepKey) => {
+    markStep(lesson.day, step);
+    const index = STEP_DEFS.findIndex((item) => item.key === step);
+    const next = STEP_DEFS[index + 1]?.key;
+    if (next) {
+      window.setTimeout(() => navigate(next), 120);
+    }
   };
 
   return (
@@ -350,16 +366,29 @@ function LessonView({
                   <span className="eyebrow">{definition.label}</span>
                   <h2>{section.title}</h2>
                 </div>
-                <button
-                  className={cx(
-                    "section-check",
-                    isStepComplete(lesson.day, section.step) && "is-complete",
-                  )}
-                  onClick={() => markStep(lesson.day, section.step!)}
-                  type="button"
-                >
-                  {isStepComplete(lesson.day, section.step) ? "✓ Complete" : "Mark complete"}
-                </button>
+                <div className="section-actions">
+                  <button
+                    className="review-later"
+                    onClick={() =>
+                      addWeakPoint(
+                        `Day ${lesson.day} · ${definition.title} · ${lesson.title}`,
+                      )
+                    }
+                    type="button"
+                  >
+                    Review later
+                  </button>
+                  <button
+                    className={cx(
+                      "section-check",
+                      isStepComplete(lesson.day, section.step) && "is-complete",
+                    )}
+                    onClick={() => completeStep(section.step!)}
+                    type="button"
+                  >
+                    {isStepComplete(lesson.day, section.step) ? "✓ Complete" : "Mark complete"}
+                  </button>
+                </div>
               </div>
               <Markdown>{section.body}</Markdown>
             </section>
@@ -402,9 +431,11 @@ function LessonView({
 }
 
 function Roadmap({
+  currentDay,
   openLesson,
   isDayComplete,
 }: {
+  currentDay: number;
   openLesson: (day: number) => void;
   isDayComplete: (day: number) => boolean;
 }) {
@@ -428,7 +459,7 @@ function Roadmap({
               <div className="week-lessons">
                 {week.lessons.map((lesson) => {
                   const complete = isDayComplete(lesson.day);
-                  const current = lesson.day === repoCompletedDay;
+                  const current = lesson.day === currentDay && !complete;
                   return (
                     <button key={lesson.day} onClick={() => openLesson(lesson.day)} type="button">
                       <span className="roadmap-state">{complete ? "●" : current ? "◐" : "○"}</span>
@@ -450,7 +481,7 @@ function Roadmap({
           <div className="week-lessons">
             <div className="roadmap-placeholder">
               <span className="roadmap-state">○</span>
-              <span className="mono">Day {nextPlannedDay}</span>
+              <span className="mono">Day {currentDay}</span>
               <strong>{latestNextSummary() ?? "Waiting for next Markdown lesson"}</strong>
             </div>
           </div>
@@ -577,23 +608,64 @@ function Lab({
   );
 }
 
-function Review({ isDayComplete }: { isDayComplete: (day: number) => boolean }) {
+function Review({
+  isDayComplete,
+  weakPoints,
+  removeWeakPoint,
+}: {
+  isDayComplete: (day: number) => boolean;
+  weakPoints: string[];
+  removeWeakPoint: (value: string) => void;
+}) {
   const reviews = lessons.filter(
     (lesson) => lesson.day % 7 === 0 || /review|复盘/i.test(lesson.title),
   );
+
   return (
     <div>
       <PageHeader
         eyebrow="RECALL · REVIEW · REBUILD"
         title="Review"
-        description="Weekly checkpoints stay deliberately lighter: recall, mini-project, code review, weak-point detection."
+        description="Weekly checkpoints plus the exact lesson stages you marked for another pass."
       />
+
+      <section className="weak-points">
+        <div className="weak-points-header">
+          <div>
+            <span className="eyebrow">WEAK POINTS</span>
+            <h2>Review queue</h2>
+          </div>
+          <span className="mono">{weakPoints.length} queued</span>
+        </div>
+
+        {weakPoints.length === 0 ? (
+          <p className="empty-state">
+            No weak points queued. Use “Review later” beside any lesson stage when something still
+            feels uncertain.
+          </p>
+        ) : (
+          <div className="weak-point-list">
+            {weakPoints.map((point) => (
+              <div key={point}>
+                <span>{point}</span>
+                <button onClick={() => removeWeakPoint(point)} type="button">
+                  Resolved
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
       <div className="review-list">
         {reviews.map((lesson) => (
           <article key={lesson.day}>
             <span className="mono">DAY {lesson.day}</span>
             <h2>{lesson.title}</h2>
-            <p>{lesson.nextSummary ?? "Use this checkpoint to review interfaces, lifetime, ownership and error boundaries."}</p>
+            <p>
+              {lesson.nextSummary ??
+                "Use this checkpoint to review interfaces, lifetime, ownership and error boundaries."}
+            </p>
             <strong>{isDayComplete(lesson.day) ? "BUILD SUCCEEDED" : "REVIEW PENDING"}</strong>
           </article>
         ))}
@@ -638,8 +710,15 @@ const SKILLS = [
   { name: "Testing", range: [30, 30], evidence: /test|fake|mock|assert|测试/i },
 ] as const;
 
-function ProgressView() {
-  const completed = lessons.filter((lesson) => lesson.day <= repoCompletedDay);
+function ProgressView({
+  weakPoints,
+  isDayComplete,
+}: {
+  weakPoints: string[];
+  isDayComplete: (day: number) => boolean;
+}) {
+  const completed = lessons.filter((lesson) => isDayComplete(lesson.day));
+  const completedDay = Math.max(repoCompletedDay, ...completed.map((lesson) => lesson.day));
   const currentChapter = Math.max(...completed.map((lesson) => lesson.chapter ?? 0), 0);
 
   const skillRows = SKILLS.map((skill) => {
@@ -679,10 +758,17 @@ function ProgressView() {
         <aside className="progress-summary">
           <span className="eyebrow">CURRENT</span>
           <strong>Chapter {currentChapter || "—"}</strong>
-          <p>Day {repoCompletedDay} completed in repository history.</p>
+          <p>Day {completedDay} is the latest completed learning unit.</p>
           <hr />
           <span className="eyebrow">NEXT</span>
           <p>{latestNextSummary() ?? `Publish Day ${nextPlannedDay} to continue.`}</p>
+          <hr />
+          <span className="eyebrow">NEEDS REVIEW</span>
+          <p>
+            {weakPoints.length > 0
+              ? `${weakPoints.length} learning stage${weakPoints.length === 1 ? "" : "s"} queued for review.`
+              : "No weak points queued."}
+          </p>
           <hr />
           <span className="eyebrow">SYSTEM</span>
           <p>{lessons.length} Markdown lessons indexed automatically.</p>
@@ -696,6 +782,8 @@ export default function App() {
   const [view, setView] = useState<View>("today");
   const [selectedDay, setSelectedDay] = useState(() => latestLesson()?.day ?? repoCompletedDay);
   const progress = useLearningProgress();
+  const completedDay = Math.max(repoCompletedDay, ...progress.state.completedDays);
+  const currentLearningDay = completedDay + 1;
 
   const selectedLesson = useMemo(
     () => lessonByDay(selectedDay) ?? latestLesson(),
@@ -711,10 +799,22 @@ export default function App() {
   let page: ReactNode;
   switch (view) {
     case "today":
-      page = <Today openLesson={openLesson} isStepComplete={progress.isStepComplete} />;
+      page = (
+        <Today
+          currentDay={currentLearningDay}
+          openLesson={openLesson}
+          isStepComplete={progress.isStepComplete}
+        />
+      );
       break;
     case "roadmap":
-      page = <Roadmap openLesson={openLesson} isDayComplete={progress.isDayComplete} />;
+      page = (
+        <Roadmap
+          currentDay={currentLearningDay}
+          openLesson={openLesson}
+          isDayComplete={progress.isDayComplete}
+        />
+      );
       break;
     case "lessons":
       page = <Lessons openLesson={openLesson} isDayComplete={progress.isDayComplete} />;
@@ -729,13 +829,24 @@ export default function App() {
       ) : null;
       break;
     case "review":
-      page = <Review isDayComplete={progress.isDayComplete} />;
+      page = (
+        <Review
+          isDayComplete={progress.isDayComplete}
+          weakPoints={progress.state.weakPoints}
+          removeWeakPoint={progress.removeWeakPoint}
+        />
+      );
       break;
     case "guidelines":
       page = <Guidelines />;
       break;
     case "progress":
-      page = <ProgressView />;
+      page = (
+        <ProgressView
+          weakPoints={progress.state.weakPoints}
+          isDayComplete={progress.isDayComplete}
+        />
+      );
       break;
     case "lesson":
       page = selectedLesson ? (
@@ -744,13 +855,14 @@ export default function App() {
           markStep={progress.markStep}
           isStepComplete={progress.isStepComplete}
           isDayComplete={progress.isDayComplete}
+          addWeakPoint={progress.addWeakPoint}
         />
       ) : null;
       break;
   }
 
   return (
-    <Shell view={view} setView={setView}>
+    <Shell view={view} setView={setView} currentDay={currentLearningDay}>
       {page}
     </Shell>
   );

@@ -9,7 +9,7 @@
 ## 当前进度
 
 - **已完成：Day 1–32**
-- **下一课：Day 33**
+- **当前课程：Day 33（已发布 / 待学习）**
 - 当前主线：**Chapter 5 · Designing with Classes**
 - 更新方式：**GitHub Markdown only**
 - Gmail 邮件投递：**已停止**
@@ -24,6 +24,7 @@
 
 ## 最近课程
 
+- [Day 33 · Polymorphism and Virtual Interfaces](daily/day-033-polymorphism-virtual-interfaces.md)
 - [Day 32 · is-a、not-a、类层次与 Mixin](daily/day-032-inheritance-is-a-hierarchies-mixins.md)
 - [Day 31 · 对象所有权、生命周期与资源管理边界](daily/day-031-ownership-lifetime-resource-boundaries.md)
 - [Day 30 · Composition：用对象组合分配职责](daily/day-030-composition-object-responsibilities.md)
@@ -56,7 +57,7 @@
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-032-*.md
+│   └── day-033-*.md
 ├── examples/
 │   └── day-XXX/
 ├── weekly/
@@ -133,4 +134,4 @@ npm run preview
 - [UX-CONTRACT.md](UX-CONTRACT.md)
 - [Learning UX](docs/learning-ux.md)
 
-> Day 1–32 无需批量迁移即可使用。后续新课程建议逐步加入 YAML frontmatter。
+> Day 1–32 无需批量迁移即可使用。Day 33 起使用 YAML frontmatter + 独立 Lab 文件作为新内容契约示范。
