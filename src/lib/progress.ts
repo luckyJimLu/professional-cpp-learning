@@ -80,6 +80,16 @@ export function useLearningProgress() {
     [persist, state],
   );
 
+  const removeWeakPoint = useCallback(
+    (value: string) => {
+      persist({
+        ...state,
+        weakPoints: state.weakPoints.filter((item) => item !== value),
+      });
+    },
+    [persist, state],
+  );
+
   const value = useMemo(
     () => ({
       state,
@@ -88,8 +98,17 @@ export function useLearningProgress() {
       isStepComplete,
       completedStepCount,
       addWeakPoint,
+      removeWeakPoint,
     }),
-    [addWeakPoint, completedStepCount, isDayComplete, isStepComplete, markStep, state],
+    [
+      addWeakPoint,
+      completedStepCount,
+      isDayComplete,
+      isStepComplete,
+      markStep,
+      removeWeakPoint,
+      state,
+    ],
   );
 
   return value;
