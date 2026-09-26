@@ -77,7 +77,7 @@ private:
 Transport& transport_; // borrowed, non-owning
 };
 嵌入式注意：抽象层不能成为“性能免责层”。硬实时路径仍需审计 virtual dispatch、动态分配、锁、日志和最坏执行时间。不要为了架构漂亮而增加无法证明价值的层次。
-⑥ 可编译的小实验 / 代码练习（20分钟）
+## ⑥ 可编译的小实验 / 代码练习（20分钟）
 
 目标：实现一个不依赖真实 UART 的 ModemSession，并证明 transport 实现可替换。
 

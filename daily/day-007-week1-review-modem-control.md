@@ -1,3 +1,28 @@
+---
+day: 7
+week: 1
+part: I
+chapter: 2
+chapter_title: Professional C++ Basics
+title: Week 1 Review - Modem Control Module
+duration: 60
+status: published
+
+topics:
+  - week-review
+  - modem-control
+  - initialization
+  - references
+  - pointers
+  - enum-class
+
+guidelines:
+  - review
+
+previous: 6
+next: 8
+---
+
 # Day 07 · 第一周复盘：Modem 控制模块
 
 > **历史重建**：原邮件发送未成功。本文件依据 Day 1–6 的既有课程进度与既定 60 分钟课程结构重建。

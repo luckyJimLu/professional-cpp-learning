@@ -1,3 +1,26 @@
+---
+day: 13
+week: 2
+part: I
+chapter: 3
+chapter_title: Coding with Style
+title: Readability, Naming and Interface Contracts
+duration: 60
+status: published
+
+topics:
+  - readability
+  - naming
+  - interface-contracts
+
+guidelines:
+  - small-interface
+  - naming-intent
+
+previous: 12
+next: 14
+---
+
 # Day 13 · Coding with Style：可读性、命名与接口契约
 
 > **历史重建**：原邮件发送未成功。本文件依据既有课程记录重建，并作为 Chapter 3 的正式入口。

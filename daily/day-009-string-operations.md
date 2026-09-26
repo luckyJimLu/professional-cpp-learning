@@ -5,7 +5,7 @@
 **Chapter 2 · Working with Strings and String Views
 主题：std::string 的构造、修改、搜索与数值转换
 今日目标：在 Day 8 的所有权/借用基础上，掌握拥有型文本操作，并把 C 字符数组习惯迁移为边界更清楚的现代 C++。
-① 今日章节与建议阅读范围 · 5分钟**
+## ① 今日章节与建议阅读范围 · 5分钟
 
 继续 Chapter 2 的 std::string：构造、拼接、比较、查找、substring、数值转换。把它理解为拥有资源的值类型，而不是“更方便的 char*”。
 

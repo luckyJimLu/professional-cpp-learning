@@ -5,7 +5,7 @@
 **Chapter 4 · Designing Professional C++ Programs
 主题：设计文档、接口契约与原型验证
 目标：把“设计”从脑中的想法变成可审查、可验证的工程契约。今天继续 Chapter 4，不进入 Chapter 5。
-① 今日章节与建议阅读范围（5分钟）**
+## ① 今日章节与建议阅读范围（5分钟）
 
 阅读 Chapter 4 中围绕 professional program design、接口/抽象、设计决策和验证思路的相关段落。记录：系统必须保证什么？哪些约束属于接口契约？哪些风险必须先做 prototype 验证？
 

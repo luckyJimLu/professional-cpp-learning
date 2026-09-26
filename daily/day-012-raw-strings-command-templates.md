@@ -6,7 +6,7 @@
 
 **Chapter 2 · Working with Strings and String Views
 今日目标：正确选择普通字符串字面量与 raw string literal，减少转义噪声，同时把协议文本的所有权、生命周期和字节边界表达清楚。
-① 今日章节与建议阅读范围 · 5分钟**
+## ① 今日章节与建议阅读范围 · 5分钟
 
 继续 Chapter 2 中 string literals / raw string literals 及字符串收尾内容。阅读时重点问：文本是拥有的数据、非拥有视图，还是编译期常量？转义字符是在表达协议本身，还是只是在满足 C++ 语法？
 

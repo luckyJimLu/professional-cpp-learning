@@ -1,3 +1,27 @@
+---
+day: 32
+week: 5
+part: II
+chapter: 5
+chapter_title: Designing with Classes
+title: is-a, Hierarchies and Mixins - When to Inherit
+duration: 60
+status: published
+
+topics:
+  - inheritance
+  - is-a
+  - mixins
+  - hierarchies
+
+guidelines:
+  - prefer-composition
+  - stable-interface
+
+previous: 31
+next: 33
+---
+
 # Day 32 · is-a、not-a、类层次与 Mixin：什么时候才应该继承
 
 > **历史重建**：本日课程在邮件流程停止后生成，本文件作为 GitHub 迁移后的连续历史记录。

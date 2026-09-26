@@ -6,7 +6,7 @@ string_view 深入：生命周期、子视图与安全解析
 
 **Chapter 2 · Strings and String Views
 今天把 std::string_view 当成“只读、非拥有、带长度的文本视图”，重点训练协议解析中的生命周期与边界意识。
-① 今日章节与建议阅读范围 · 5分钟**
+## ① 今日章节与建议阅读范围 · 5分钟
 
 继续 Chapter 2 中 string_view 的构造、访问、子视图以及与 string 的关系。阅读时持续回答：谁拥有字符存储？view 能活多久？什么时候必须复制？
 

@@ -1,3 +1,27 @@
+---
+day: 31
+week: 5
+part: II
+chapter: 5
+chapter_title: Designing with Classes
+title: Object Ownership, Lifetime and Resource Boundaries
+duration: 60
+status: published
+
+topics:
+  - ownership
+  - lifetime
+  - raii
+  - resource-management
+
+guidelines:
+  - explicit-lifetime
+  - raii-ownership
+
+previous: 30
+next: 32
+---
+
 # Day 31 · 对象所有权、生命周期与资源管理边界
 
 > **历史重建**：当天课程已生成但邮件投递失败。本文件依据既有主题记录恢复为 Markdown。

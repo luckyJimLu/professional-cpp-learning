@@ -44,7 +44,7 @@ std::string text{"OK"};
 return text; // text 销毁后 view 悬空
 }
 view 的生命周期不能超过它观察的数据。
-④ C vs Modern C++ · 10 分钟
+## ④ C vs Modern C++ · 10 分钟
 
 C 风格
 
