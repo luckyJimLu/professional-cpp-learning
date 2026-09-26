@@ -43,3 +43,9 @@ jobs:
             g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic "$source" -o "$output"
             "$output"
           done
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Browser compiler smoke test
+        run: npm run test:e2e
