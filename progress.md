@@ -1,6 +1,6 @@
 # 学习进度
 
-当前已完成 **Day 32**。**Day 33 已发布，待学习**。
+当前仓库课程已发布到 **Day 34**。下一课从 **Day 35** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -36,7 +36,8 @@
 | 30 | Composition：用对象组合分配职责 | 历史邮件迁移 | [day-030](daily/day-030-composition-object-responsibilities.md) |
 | 31 | 对象所有权、生命周期与资源管理边界 | 历史重建 | [day-031](daily/day-031-ownership-lifetime-resource-boundaries.md) |
 | 32 | is-a、not-a、类层次与 Mixin：什么时候才应该继承 | 历史重建 | [day-032](daily/day-032-inheritance-is-a-hierarchies-mixins.md) |
-| 33 | Polymorphism and Virtual Interfaces | 已发布 / 待学习 | [day-033](daily/day-033-polymorphism-virtual-interfaces.md) |
+| 33 | Polymorphism and Virtual Interfaces | 已发布 | [day-033](daily/day-033-polymorphism-virtual-interfaces.md) |
+| 34 | override、final 与安全的多态析构 | 已发布 | [day-034](daily/day-034-override-final-safe-polymorphic-destruction.md) |
 
 ## 规则
 
