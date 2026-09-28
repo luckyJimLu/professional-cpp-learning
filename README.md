@@ -8,8 +8,8 @@
 
 ## 当前进度
 
-- **已完成：Day 1–32**
-- **当前课程：Day 33（已发布 / 待学习）**
+- **已发布：Day 1–35**
+- **下一课：Day 36**
 - 当前主线：**Chapter 5 · Designing with Classes**
 - 更新方式：**GitHub Markdown only**
 - Gmail 邮件投递：**已停止**
@@ -24,12 +24,11 @@
 
 ## 最近课程
 
+- [Day 35 · Object Slicing、Dynamic Type 与多态对象生命周期边界](daily/day-035-object-slicing-dynamic-type-lifetime.md)
+- [Day 34 · override、final 与安全的多态析构](daily/day-034-override-final-safe-polymorphic-destruction.md)
 - [Day 33 · Polymorphism and Virtual Interfaces](daily/day-033-polymorphism-virtual-interfaces.md)
 - [Day 32 · is-a、not-a、类层次与 Mixin](daily/day-032-inheritance-is-a-hierarchies-mixins.md)
 - [Day 31 · 对象所有权、生命周期与资源管理边界](daily/day-031-ownership-lifetime-resource-boundaries.md)
-- [Day 30 · Composition：用对象组合分配职责](daily/day-030-composition-object-responsibilities.md)
-- [Day 29 · 构造函数、初始化与让非法状态难以表示](daily/day-029-constructors-initialization-valid-state.md)
-- [Day 28 · 类的不变量与最小公共接口](daily/day-028-class-invariants-minimal-interface.md)
 
 ## 每日课程结构
 
@@ -57,7 +56,7 @@
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-033-*.md
+│   └── day-035-*.md
 ├── examples/
 │   └── day-XXX/
 ├── weekly/
@@ -98,7 +97,6 @@ Day 1–30 的大部分课程由原 Gmail 正文转换为 Markdown。
 
 后续课程直接以 Markdown 作为唯一主版本，不再维护邮件版。
 
-
 ## Learning Console
 
 仓库现已包含第一版 **Professional C++ Learning Console**。课程 Markdown 仍然是唯一内容源，Web UI 只负责学习流、Lab、复盘与进度状态。
@@ -135,7 +133,6 @@ npm run preview
 - [Learning UX](docs/learning-ux.md)
 
 > Day 1–32 无需批量迁移即可使用。Day 33 起使用 YAML frontmatter + 独立 Lab 文件作为新内容契约示范。
-
 
 ### 浏览器 C++ 编译
 
