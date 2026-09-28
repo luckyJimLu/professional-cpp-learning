@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 34**。下一课从 **Day 35** 继续。
+当前仓库课程已发布到 **Day 35**。下一课从 **Day 36** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -38,6 +38,16 @@
 | 32 | is-a、not-a、类层次与 Mixin：什么时候才应该继承 | 历史重建 | [day-032](daily/day-032-inheritance-is-a-hierarchies-mixins.md) |
 | 33 | Polymorphism and Virtual Interfaces | 已发布 | [day-033](daily/day-033-polymorphism-virtual-interfaces.md) |
 | 34 | override、final 与安全的多态析构 | 已发布 | [day-034](daily/day-034-override-final-safe-polymorphic-destruction.md) |
+| 35 | Object Slicing、Dynamic Type 与多态对象生命周期边界 | 已发布 | [day-035](daily/day-035-object-slicing-dynamic-type-lifetime.md) |
+
+## 最新发布详情
+
+- **日期**：2026-09-28
+- **章节**：Chapter 5 · Designing with Classes
+- **主题**：Object Slicing、Dynamic Type 与多态对象生命周期边界
+- **关键知识点**：static type / dynamic type、base reference / pointer、object slicing、ownership 与 borrowing、多态生命周期边界
+- **Lab**：[examples/day-035/main.cpp](examples/day-035/main.cpp)
+- **周复盘**：[Week 05 Review](weekly/week-05-review.md)
 
 ## 规则
 
