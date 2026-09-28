@@ -40,6 +40,14 @@
 - 明确 `nullptr` 语义
 - 避免多个 `bool` 参数
 
+### 多态对象与 slicing
+
+- 多态对象不得无意按值传递，否则可能发生 object slicing。
+- required non-owning dependency 优先使用引用。
+- optional non-owning dependency 使用裸指针时必须明确 `nullptr` 语义。
+- runtime polymorphism 与 ownership 是两个独立设计问题，不应因为需要 virtual dispatch 就默认使用 `shared_ptr`。
+- 多态基类应有明确析构策略，所有 override 显式使用 `override`。
+
 ## 资源与所有权
 
 - 默认单一 owner
@@ -49,6 +57,7 @@
 - RAII
 - 实时路径避免动态分配
 - 避免隐式大拷贝
+- borrower 生命周期不得超过被借用对象
 
 ## 错误处理
 
