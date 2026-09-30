@@ -48,6 +48,15 @@
 - runtime polymorphism 与 ownership 是两个独立设计问题，不应因为需要 virtual dispatch 就默认使用 `shared_ptr`。
 - 多态基类应有明确析构策略，所有 override 显式使用 `override`。
 
+## 类关系与层级
+
+- has-a / uses-a 与 is-a 必须表达真实语义，不为了复用实现而继承。
+- 当 has-a 与 is-a 都可实现需求且关系不明确时，优先考虑 composition。
+- 不把现实世界分类、组织架构或产品目录机械映射成代码 hierarchy。
+- 候选基类应有明确 properties、behaviors、invariants 或可被客户端真正使用的 contract。
+- 没有真实 contract 的空基类、过度泛化基类和深层 hierarchy 都应重新审视。
+- composition 后仍需明确 owner / borrow / lifetime，不能用 GetXxx() 暴露底层全部实现细节。
+
 ## 资源与所有权
 
 - 默认单一 owner
