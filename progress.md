@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 37**。下一课从 **Day 38** 继续。
+当前仓库课程已发布到 **Day 38**。下一课从 **Day 39** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -41,15 +41,16 @@
 | 35 | Object Slicing、Dynamic Type 与多态对象生命周期边界 | 已发布 | [day-035](daily/day-035-object-slicing-dynamic-type-lifetime.md) |
 | 36 | Has-a 与 Is-a 的边界：优先用关系表达真实设计 | 已发布 | [day-036](daily/day-036-has-a-vs-is-a-boundary.md) |
 | 37 | Not-a：不要把现实世界分类机械搬进代码层次 | 已发布 | [day-037](daily/day-037-not-a-relationship.md) |
+| 38 | Hierarchies：什么时候类层级真正有价值 | 已发布 | [day-038](daily/day-038-hierarchies.md) |
 
 ## 最新发布详情
 
-- **日期**：2026-09-30
+- **日期**：2026-10-01
 - **章节**：Chapter 5 · Designing with Classes
-- **主题**：The Not-a Relationship
-- **关键知识点**：functional relationship、not-a、over-classification、避免人工 hierarchy、按 capability 建模
-- **Lab**：[examples/day-037/main.cpp](examples/day-037/main.cpp)
-- **上一课**：[Day 36 · Has-a 与 Is-a 的边界](daily/day-036-has-a-vs-is-a-boundary.md)
+- **主题**：Hierarchies
+- **关键知识点**：稳定 root contract、concrete leaf、浅层 hierarchy、避免无价值中间层、横向能力优先 composition
+- **Lab**：[examples/day-038/main.cpp](examples/day-038/main.cpp)
+- **上一课**：[Day 37 · The Not-a Relationship](daily/day-037-not-a-relationship.md)
 
 ## 规则
 
