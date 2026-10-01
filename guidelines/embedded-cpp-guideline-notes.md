@@ -54,6 +54,10 @@
 - 当 has-a 与 is-a 都可实现需求且关系不明确时，优先考虑 composition。
 - 不把现实世界分类、组织架构或产品目录机械映射成代码 hierarchy。
 - 候选基类应有明确 properties、behaviors、invariants 或可被客户端真正使用的 contract。
+- root abstraction 应提供稳定、最小、可被调用者直接依赖的 contract。
+- hierarchy 应尽量保持浅；中间基类只有在它本身提供独立 contract / invariant 时才存在。
+- concrete leaf 承担平台或设备实现差异，避免把具体硬件细节泄漏到 root interface。
+- trace / metrics / retry 等横向能力优先考虑 composition、wrapper 或 policy，不为它们复制整棵 inheritance tree。
 - 没有真实 contract 的空基类、过度泛化基类和深层 hierarchy 都应重新审视。
 - composition 后仍需明确 owner / borrow / lifetime，不能用 GetXxx() 暴露底层全部实现细节。
 
