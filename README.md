@@ -8,8 +8,8 @@
 
 ## 当前进度
 
-- **已发布：Day 1–37**
-- **下一课：Day 38**
+- **已发布：Day 1–38**
+- **下一课：Day 39**
 - 当前主线：**Chapter 5 · Designing with Classes**
 - 更新方式：**GitHub Markdown only**
 - Gmail 邮件投递：**已停止**
@@ -24,11 +24,11 @@
 
 ## 最近课程
 
+- [Day 38 · Hierarchies：什么时候类层级真正有价值](daily/day-038-hierarchies.md)
 - [Day 37 · Not-a：不要把现实世界分类机械搬进代码层次](daily/day-037-not-a-relationship.md)
 - [Day 36 · Has-a 与 Is-a 的边界：优先用关系表达真实设计](daily/day-036-has-a-vs-is-a-boundary.md)
 - [Day 35 · Object Slicing、Dynamic Type 与多态对象生命周期边界](daily/day-035-object-slicing-dynamic-type-lifetime.md)
 - [Day 34 · override、final 与安全的多态析构](daily/day-034-override-final-safe-polymorphic-destruction.md)
-- [Day 33 · Polymorphism and Virtual Interfaces](daily/day-033-polymorphism-virtual-interfaces.md)
 
 ## 每日课程结构
 
@@ -56,7 +56,7 @@
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-037-*.md
+│   └── day-038-*.md
 ├── examples/
 │   └── day-XXX/
 ├── weekly/
