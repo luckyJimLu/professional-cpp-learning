@@ -39,7 +39,7 @@
 - **第 12–13 周 · Part IV**
   - Ch25 Extending the Standard Library
   - Ch26 Advanced Templates
-  - Ch27 Multithreading ➔ *(推荐结合 [frameworks/asio/ARCHITECTURE.md](../frameworks/asio/ARCHITECTURE.md) 研读 io_context 与 C++20 协程落地范式)*
+  - Ch27 Multithreading ➔ *(推荐结合 [frameworks/asio/EVENT_LOOP_RUNNER.md](../frameworks/asio/EVENT_LOOP_RUNNER.md) 研读线程捕获与工作池，结合 [ARCHITECTURE.md](../frameworks/asio/ARCHITECTURE.md) 研读 C++20 协程落地范式)*
 - **第 14–16 周 · Part V**
   - Ch28 Software Engineering Methods
   - Ch29 Efficient C++

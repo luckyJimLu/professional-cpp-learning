@@ -24,7 +24,8 @@
 | 核心文档 | 核心内容 | 推荐阅读阶段 |
 |---|---|---|
 | [📘 总体分层架构与底层机制 (ARCHITECTURE.md)](ARCHITECTURE.md) | 总体分层架构、核心运行时类层次、Proactor 机制、异步完成模型、SSL 装饰器模式、Reactor 驱动流程（含 13 幅标准 Mermaid 架构图与时序图） | **Ch13 I/O 篇**<br/>**Ch27 协程篇**<br/>**Ch32-33 架构篇** |
-| [📗 智能指针与异步生命周期实践 (SESSION_LIFECYCLE.md)](SESSION_LIFECYCLE.md) | 异步操作与栈帧生命周期错配、`shared_from_this` 绑定三要素、Lambda 捕获原则、循环引用与容器安全（含 7 幅完整引用计数演变时序图） | **Ch7 智能指针篇** |
+| [📗 智能指针与异步生命周期实践 (SESSION_LIFECYCLE.md)](SESSION_LIFECYCLE.md) | 异步操作与栈帧生命周期错配、`shared_from_this` 绑定三要素、`make_shared session start` 单行拆解、Lambda 捕获原则（含 7 幅完整引用计数演变时序图） | **Ch7 智能指针篇** |
+| [📙 运行器与事件循环深度解析 (EVENT_LOOP_RUNNER.md)](EVENT_LOOP_RUNNER.md) | 线程捕获机制（Thread Capture）、`io_service::work` / `work_guard` 常驻守护、多线程池事件调度（Thread Pool Runner）、`strand` 免锁串行化护盾 | **Ch27 多线程并发篇** |
 | [💻 核心实战代码示例 (examples/)](examples/) | 阻塞式 Echo、标准 `shared_from_this` 异步 Echo、C++20 协程 Echo 服务器，配有一键构建脚本 | 随读随练 |
 
 ---
@@ -37,7 +38,8 @@
 flowchart LR
     Ch7["Ch7 内存管理<br/>智能指针"] -->|"实战演练"| DocLife["SESSION_LIFECYCLE.md<br/>异步生命周期"]
     Ch13["Ch13 I/O<br/>流与网络"] -->|"架构跃迁"| DocArch["ARCHITECTURE.md<br/>Proactor 与 Reactor"]
-    Ch27["Ch27 多线程<br/>协程与调度"] -->|"工业落地"| DocCoro["ARCHITECTURE.md §5.4<br/>co_spawn 协程回环"]
+    Ch27["Ch27 多线程<br/>线程池与调度"] -->|"运行器原理"| DocRunner["EVENT_LOOP_RUNNER.md<br/>线程捕获与工作守护"]
+    Ch27 -->|"工业协程"| DocCoro["ARCHITECTURE.md §5.4<br/>co_spawn 协程回环"]
     Ch32["Ch32-33 架构<br/>设计模式"] -->|"框架全貌"| DocSvc["ARCHITECTURE.md §4.1<br/>Service Registry 模式"]
 ```
 
@@ -49,11 +51,15 @@ flowchart LR
 - **教材痛点**：标准库仅提供阻塞式 `iostream`，现代高性能服务器需要基于事件的多路复用机制。
 - **Asio 对照**：精读 [ARCHITECTURE.md](ARCHITECTURE.md) 的第 1–3 节。理解非阻塞 I/O、Scatter/Gather 内存连续/离散缓冲区（`mutable_buffer` / `const_buffer`）以及跨平台 Reactor 后端抽象。
 
-### 锚点 3：Ch27 多线程与并发（C++20 协程实战）
+### 锚点 3：Ch27 多线程与并发（事件循环捕获与工作线程池）
+- **教材痛点**：多线程编程教科书往往只讲 `std::thread`、`std::mutex`、条件变量，缺乏工业级事件调度线程池的设计范式。
+- **Asio 对照**：精读 [EVENT_LOOP_RUNNER.md](EVENT_LOOP_RUNNER.md)。学习 `io_context::run()` 的线程捕获机制、`make_work_guard` 防止空闲退出的守护原理、多原生线程共享事件池模型，以及利用 `asio::strand` 规避并发数据竞争的免锁串行化护盾。
+
+### 锚点 4：Ch27 多线程与并发（C++20 协程实战）
 - **教材痛点**：C++20 协程（`co_await` / `co_return` / `std::coroutine_handle`）底层概念繁杂，缺乏完整的事件循环运行时驱动。
 - **Asio 对照**：精读 [ARCHITECTURE.md](ARCHITECTURE.md) 的第 4.4 节与第 5.4 节。体验 Asio 如何通过 `async_result<use_awaitable_t>` 优雅地将协程挂起点桥接到 `io_context` 事件循环中。
 
-### 锚点 4：Ch32–33 框架设计与设计模式
+### 锚点 5：Ch32–33 框架设计与设计模式
 - **教材痛点**：设计模式往往停留于 UML 理论图。
 - **Asio 对照**：精读 [ARCHITECTURE.md](ARCHITECTURE.md) 的第 4.1 节。学习 Asio 的**服务注册中心（Service Registry）**模式：前端句柄对象（`tcp::socket`）零状态极轻，后端服务（`reactive_socket_service`）单例集中持有系统调用与状态机。
 
