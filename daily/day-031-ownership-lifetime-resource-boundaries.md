@@ -135,6 +135,12 @@ class ModemSession {
 };
 ```
 
+### 工业界特例：异步环境下的共享所有权与自驱动生命周期
+
+虽然同步系统应默认单一所有权，但在**异步网络/并发事件驱动**体系中，任务完成回调的时机完全独立于发起者的栈帧生命周期。此时通过 `std::shared_ptr` 与 `std::enable_shared_from_this` 延长生命周期是行业公认的标准解法：
+
+> 典型如 Asio 的经典单行 `std::make_shared<session>(std::move(socket))->start();`，将会话生命周期安全移交给内核事件队列，杜绝 use-after-free。详见专栏深度解析：[Asio 经典单行拆解与异步生命周期实践](../frameworks/asio/SESSION_LIFECYCLE.md#21-深度拆解经典单行stdmake_sharedsessionstdmovesocket-start)。
+
 ## ⑥ 可编译实验（20 分钟）
 
 ```cpp
