@@ -18,9 +18,19 @@
 
 - [16 周学习路线](docs/learning-plan.md)
 - [完整学习进度](progress.md)
+- [经典工业级框架解构 · Asio](frameworks/asio/)
 - [Embedded C++ 编码规范索引](guidelines/embedded-cpp-guideline-notes.md)
 - [每日课程目录](daily/)
 - [周复盘目录](weekly/)
+
+## 经典工业级框架解构（Framework Case Studies）
+
+除了跟随教材逐步推进，本仓库还设立了工业级框架深度解构专题，将抽象语言机制与顶级生产级基础设施直接对照：
+
+- **[Asio 框架解构专栏](frameworks/asio/)**：
+  - [📘 总体分层架构与底层机制 (ARCHITECTURE.md)](frameworks/asio/ARCHITECTURE.md)：Proactor 模式、`io_context`/`scheduler`/`reactor` 事件循环、C++20 协程完成模型（含 13 幅标准 Mermaid 架构与时序图）。
+  - [📗 智能指针与异步生命周期实践 (SESSION_LIFECYCLE.md)](frameworks/asio/SESSION_LIFECYCLE.md)：`std::enable_shared_from_this` 解决异步 use-after-free 的经典工业范式。
+  - [💻 核心实战代码示例 (examples/)](frameworks/asio/examples/)：涵盖同步阻塞 Echo、标准异步 Session 管理、C++20 协程 Echo 服务器。
 
 ## 最近课程
 
@@ -53,6 +63,8 @@
 ├── progress.md
 ├── docs/
 │   └── learning-plan.md
+├── frameworks/                      # 经典工业级框架源码解构
+│   └── asio/                        # Asio 专题（架构文档、生命周期、可编译实例）
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...

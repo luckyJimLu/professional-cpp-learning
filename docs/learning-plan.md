@@ -19,12 +19,12 @@
   - Ch5 Designing with Classes
   - Ch6 Designing for Reuse
 - **第 4–11 周 · Part III**
-  - Ch7 Memory Management
+  - Ch7 Memory Management ➔ *(推荐结合 [frameworks/asio/SESSION_LIFECYCLE.md](../frameworks/asio/SESSION_LIFECYCLE.md) 研读智能指针与异步生命周期)*
   - Ch8–9 Classes and Objects
   - Ch10 Inheritance
   - Ch11 Modules / Header Files / Miscellaneous
   - Ch12 Templates
-  - Ch13 I/O
+  - Ch13 I/O ➔ *(推荐结合 [frameworks/asio/ARCHITECTURE.md](../frameworks/asio/ARCHITECTURE.md) 研读 Proactor/Reactor 事件驱动网络 I/O)*
   - Ch14 Error Handling
   - Ch15 Operator Overloading
   - Ch16 Standard Library Overview
@@ -39,13 +39,13 @@
 - **第 12–13 周 · Part IV**
   - Ch25 Extending the Standard Library
   - Ch26 Advanced Templates
-  - Ch27 Multithreading
+  - Ch27 Multithreading ➔ *(推荐结合 [frameworks/asio/ARCHITECTURE.md](../frameworks/asio/ARCHITECTURE.md) 研读 io_context 与 C++20 协程落地范式)*
 - **第 14–16 周 · Part V**
   - Ch28 Software Engineering Methods
   - Ch29 Efficient C++
   - Ch30 Testing
   - Ch31 Debugging
-  - Ch32 Design Techniques / Frameworks
+  - Ch32 Design Techniques / Frameworks ➔ *(推荐结合 [frameworks/asio/](../frameworks/asio/) 研读 Service Registry 模式与泛型架构设计)*
   - Ch33 Design Patterns
   - Ch34 Cross-Platform / Cross-Language Development
 
@@ -78,6 +78,7 @@
 ```text
 daily/       每日完整课程
 examples/    当日可编译代码
+frameworks/  经典工业框架源码解构（Asio 专题）
 weekly/      周复盘
 guidelines/  编码规范学习索引
 docs/        学习路线与说明
