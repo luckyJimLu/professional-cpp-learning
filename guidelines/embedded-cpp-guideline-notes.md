@@ -58,6 +58,9 @@
 - hierarchy 应尽量保持浅；中间基类只有在它本身提供独立 contract / invariant 时才存在。
 - concrete leaf 承担平台或设备实现差异，避免把具体硬件细节泄漏到 root interface。
 - trace / metrics / retry 等横向能力优先考虑 composition、wrapper 或 policy，不为它们复制整棵 inheritance tree。
+- 多继承仅用于多个真实、独立、稳定的小 contract；每个 public base 都应能读成明确的 is-a。
+- 不使用多继承仅为了共享实现；带状态、资源 ownership 或复杂初始化约束的多个 base 默认优先重构为 composition。
+- 多个 base 出现同名 API 或语义冲突时，应先重新评估 contract 边界，而不是只用限定名消除编译二义性。
 - 没有真实 contract 的空基类、过度泛化基类和深层 hierarchy 都应重新审视。
 - composition 后仍需明确 owner / borrow / lifetime，不能用 GetXxx() 暴露底层全部实现细节。
 
