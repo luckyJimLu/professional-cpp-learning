@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 38**。下一课从 **Day 39** 继续。
+当前仓库课程已发布到 **Day 39**。下一课从 **Day 40** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -42,15 +42,16 @@
 | 36 | Has-a 与 Is-a 的边界：优先用关系表达真实设计 | 已发布 | [day-036](daily/day-036-has-a-vs-is-a-boundary.md) |
 | 37 | Not-a：不要把现实世界分类机械搬进代码层次 | 已发布 | [day-037](daily/day-037-not-a-relationship.md) |
 | 38 | Hierarchies：什么时候类层级真正有价值 | 已发布 | [day-038](daily/day-038-hierarchies.md) |
+| 39 | Multiple Inheritance：多个基类何时代表真实 contract | 已发布 | [day-039](daily/day-039-multiple-inheritance-contracts.md) |
 
 ## 最新发布详情
 
-- **日期**：2026-10-01
+- **日期**：2026-10-05
 - **章节**：Chapter 5 · Designing with Classes
-- **主题**：Hierarchies
-- **关键知识点**：稳定 root contract、concrete leaf、浅层 hierarchy、避免无价值中间层、横向能力优先 composition
-- **Lab**：[examples/day-038/main.cpp](examples/day-038/main.cpp)
-- **上一课**：[Day 37 · The Not-a Relationship](daily/day-037-not-a-relationship.md)
+- **主题**：Multiple Inheritance and Multiple Contracts
+- **关键知识点**：多个独立 is-a contract、小接口、多继承二义性、状态型多继承风险、composition 与 ownership/lifetime 分离
+- **Lab**：[examples/day-039/main.cpp](examples/day-039/main.cpp)
+- **上一课**：[Day 38 · Hierarchies](daily/day-038-hierarchies.md)
 
 ## 规则
 
