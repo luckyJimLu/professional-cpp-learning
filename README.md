@@ -31,6 +31,7 @@
   - [📘 总体分层架构与底层机制 (ARCHITECTURE.md)](frameworks/asio/ARCHITECTURE.md)：Proactor 模式、`io_context`/`scheduler`/`reactor` 事件循环、C++20 协程完成模型（含 13 幅标准 Mermaid 架构与时序图）。
   - [📗 智能指针与异步生命周期实践 (SESSION_LIFECYCLE.md)](frameworks/asio/SESSION_LIFECYCLE.md)：`std::enable_shared_from_this` 解决异步 use-after-free 的经典工业范式。
   - [📙 运行器与事件循环深度解析 (EVENT_LOOP_RUNNER.md)](frameworks/asio/EVENT_LOOP_RUNNER.md)：线程捕获（Thread Capture）、`io_service::work` / `work_guard` 常驻守护、多线程事件调度池与 `strand` 串行化护盾。
+  - [📕 回调与完成处理函数深度解析 (COMPLETION_HANDLER.md)](frameworks/asio/COMPLETION_HANDLER.md)：完成签名（Completion Signature）契约、Handler 存储与 Upcall 机制、操作链/状态机续接范式、Handler 分配器优化与跟踪调试（含 5 幅 Mermaid 图表）。
   - [💻 核心实战代码示例 (examples/)](frameworks/asio/examples/)：涵盖同步阻塞 Echo、标准异步 Session 管理、C++20 协程 Echo 服务器。
 
 ## 最近课程

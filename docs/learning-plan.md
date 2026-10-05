@@ -25,12 +25,12 @@
   - Ch11 Modules / Header Files / Miscellaneous
   - Ch12 Templates
   - Ch13 I/O ➔ *(推荐结合 [frameworks/asio/ARCHITECTURE.md](../frameworks/asio/ARCHITECTURE.md) 研读 Proactor/Reactor 事件驱动网络 I/O)*
-  - Ch14 Error Handling
+  - Ch14 Error Handling ➔ *(推荐结合 [frameworks/asio/COMPLETION_HANDLER.md](../frameworks/asio/COMPLETION_HANDLER.md) 研读 error_code 错误交付与 operation_aborted 语义)*
   - Ch15 Operator Overloading
   - Ch16 Standard Library Overview
   - Ch17 Iterators / Ranges
   - Ch18 Containers
-  - Ch19 Function Pointers / Function Objects / Lambdas
+  - Ch19 Function Pointers / Function Objects / Lambdas ➔ *(推荐结合 [frameworks/asio/COMPLETION_HANDLER.md](../frameworks/asio/COMPLETION_HANDLER.md) 研读完成签名契约与回调状态机)*
   - Ch20 Algorithms
   - Ch21 Localization / Regex
   - Ch22 Date / Time
