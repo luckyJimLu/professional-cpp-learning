@@ -8,8 +8,8 @@
 
 ## 当前进度
 
-- **已发布：Day 1–39**
-- **下一课：Day 40**
+- **已发布：Day 1–38**
+- **下一课：Day 39**
 - 当前主线：**Chapter 5 · Designing with Classes**
 - 更新方式：**GitHub Markdown only**
 - Gmail 邮件投递：**已停止**
@@ -30,17 +30,15 @@
 - **[Asio 框架解构专栏](frameworks/asio/)**：
   - [📘 总体分层架构与底层机制 (ARCHITECTURE.md)](frameworks/asio/ARCHITECTURE.md)：Proactor 模式、`io_context`/`scheduler`/`reactor` 事件循环、C++20 协程完成模型（含 13 幅标准 Mermaid 架构与时序图）。
   - [📗 智能指针与异步生命周期实践 (SESSION_LIFECYCLE.md)](frameworks/asio/SESSION_LIFECYCLE.md)：`std::enable_shared_from_this` 解决异步 use-after-free 的经典工业范式。
-  - [📙 运行器与事件循环深度解析 (EVENT_LOOP_RUNNER.md)](frameworks/asio/EVENT_LOOP_RUNNER.md)：线程捕获（Thread Capture）、`io_service::work` / `work_guard` 常驻守护、多线程事件调度池与 `strand` 串行化护盾。
-  - [📕 回调与完成处理函数深度解析 (COMPLETION_HANDLER.md)](frameworks/asio/COMPLETION_HANDLER.md)：完成签名（Completion Signature）契约、Handler 存储与 Upcall 机制、操作链/状态机续接范式、Handler 分配器优化与跟踪调试（含 5 幅 Mermaid 图表）。
   - [💻 核心实战代码示例 (examples/)](frameworks/asio/examples/)：涵盖同步阻塞 Echo、标准异步 Session 管理、C++20 协程 Echo 服务器。
 
 ## 最近课程
 
-- [Day 39 · Multiple Inheritance：多个基类何时代表真实 contract](daily/day-039-multiple-inheritance-contracts.md)
 - [Day 38 · Hierarchies：什么时候类层级真正有价值](daily/day-038-hierarchies.md)
 - [Day 37 · Not-a：不要把现实世界分类机械搬进代码层次](daily/day-037-not-a-relationship.md)
 - [Day 36 · Has-a 与 Is-a 的边界：优先用关系表达真实设计](daily/day-036-has-a-vs-is-a-boundary.md)
 - [Day 35 · Object Slicing、Dynamic Type 与多态对象生命周期边界](daily/day-035-object-slicing-dynamic-type-lifetime.md)
+- [Day 34 · override、final 与安全的多态析构](daily/day-034-override-final-safe-polymorphic-destruction.md)
 
 ## 每日课程结构
 
@@ -70,7 +68,7 @@
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-039-*.md
+│   └── day-038-*.md
 ├── examples/
 │   └── day-XXX/
 ├── weekly/
