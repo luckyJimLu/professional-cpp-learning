@@ -61,6 +61,10 @@
 - 多继承仅用于多个真实、独立、稳定的小 contract；每个 public base 都应能读成明确的 is-a。
 - 不使用多继承仅为了共享实现；带状态、资源 ownership 或复杂初始化约束的多个 base 默认优先重构为 composition。
 - 多个 base 出现同名 API 或语义冲突时，应先重新评估 contract 边界，而不是只用限定名消除编译二义性。
+- mixin 只承载单一、正交的小行为，优先无状态或小型有界状态；不在 mixin 中隐藏复杂资源 ownership。
+- template/CRTP mixin 对派生类型的要求必须可读，优先用清晰命名、concept 或静态约束表达 contract。
+- 需要运行时替换、独立生命周期、锁、设备资源或复杂状态时，优先 composition，而不是继续叠加 mixin。
+- 嵌入式使用模板 mixin 时检查实例化数量、flash/RAM 与实时路径影响，不假设模板天然零成本。
 - 没有真实 contract 的空基类、过度泛化基类和深层 hierarchy 都应重新审视。
 - composition 后仍需明确 owner / borrow / lifetime，不能用 GetXxx() 暴露底层全部实现细节。
 
