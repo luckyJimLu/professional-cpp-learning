@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 39**。下一课从 **Day 40** 继续。
+当前仓库课程已发布到 **Day 40**。下一课从 **Day 41** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -43,15 +43,16 @@
 | 37 | Not-a：不要把现实世界分类机械搬进代码层次 | 已发布 | [day-037](daily/day-037-not-a-relationship.md) |
 | 38 | Hierarchies：什么时候类层级真正有价值 | 已发布 | [day-038](daily/day-038-hierarchies.md) |
 | 39 | Multiple Inheritance：多个基类何时代表真实 contract | 已发布 | [day-039](daily/day-039-multiple-inheritance-contracts.md) |
+| 40 | Mixin Classes：用小型可组合行为扩展类型 | 已发布 | [day-040](daily/day-040-mixin-classes.md) |
 
 ## 最新发布详情
 
-- **日期**：2026-10-05
+- **日期**：2026-10-06
 - **章节**：Chapter 5 · Designing with Classes
-- **主题**：Multiple Inheritance and Multiple Contracts
-- **关键知识点**：多个独立 is-a contract、小接口、多继承二义性、状态型多继承风险、composition 与 ownership/lifetime 分离
-- **Lab**：[examples/day-039/main.cpp](examples/day-039/main.cpp)
-- **上一课**：[Day 38 · Hierarchies](daily/day-038-hierarchies.md)
+- **主题**：Mixin Classes
+- **关键知识点**：小型正交行为、compile-time behavior reuse、mixin 与 runtime polymorphism/composition 的边界、CRTP contract、嵌入式代码体积评估
+- **Lab**：[examples/day-040/main.cpp](examples/day-040/main.cpp)
+- **上一课**：[Day 39 · Multiple Inheritance](daily/day-039-multiple-inheritance-contracts.md)
 
 ## 规则
 
