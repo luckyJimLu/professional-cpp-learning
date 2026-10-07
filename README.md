@@ -8,9 +8,9 @@
 
 ## 当前进度
 
-- **已发布：Day 1–40**
-- **下一课：Day 41**
-- 当前主线：**Chapter 5 · Designing with Classes**
+- **已发布：Day 1–41**
+- **下一课：Day 42**
+- 当前主线：**Chapter 6 · Designing for Reuse**
 - 更新方式：**GitHub Markdown only**
 - Gmail 邮件投递：**已停止**
 
@@ -25,20 +25,17 @@
 
 ## 经典工业级框架解构（Framework Case Studies）
 
-除了跟随教材逐步推进，本仓库还设立了工业级框架深度解构专题，将抽象语言机制与顶级生产级基础设施直接对照：
+除了跟随教材逐步推进，本仓库还设立工业级框架深度解构专题，将抽象语言机制与顶级生产级基础设施直接对照：
 
-- **[Asio 框架解构专栏](frameworks/asio/)**：
-  - [📘 总体分层架构与底层机制 (ARCHITECTURE.md)](frameworks/asio/ARCHITECTURE.md)：Proactor 模式、`io_context`/`scheduler`/`reactor` 事件循环、C++20 协程完成模型（含 13 幅标准 Mermaid 架构与时序图）。
-  - [📗 智能指针与异步生命周期实践 (SESSION_LIFECYCLE.md)](frameworks/asio/SESSION_LIFECYCLE.md)：`std::enable_shared_from_this` 解决异步 use-after-free 的经典工业范式。
-  - [💻 核心实战代码示例 (examples/)](frameworks/asio/examples/)：涵盖同步阻塞 Echo、标准异步 Session 管理、C++20 协程 Echo 服务器。
+- **[Asio 框架解构专栏](frameworks/asio/)**：总体分层架构、异步生命周期与 C++20 协程实战。
 
 ## 最近课程
 
+- [Day 41 · Designing for Reuse：复用从稳定 Contract 开始](daily/day-041-reuse-contracts-components.md)
 - [Day 40 · Mixin Classes：用小型可组合行为扩展类型](daily/day-040-mixin-classes.md)
 - [Day 39 · Multiple Inheritance：多个基类何时代表真实 contract](daily/day-039-multiple-inheritance-contracts.md)
 - [Day 38 · Hierarchies：什么时候类层级真正有价值](daily/day-038-hierarchies.md)
 - [Day 37 · Not-a：不要把现实世界分类机械搬进代码层次](daily/day-037-not-a-relationship.md)
-- [Day 36 · Has-a 与 Is-a 的边界：优先用关系表达真实设计](daily/day-036-has-a-vs-is-a-boundary.md)
 
 ## 每日课程结构
 
@@ -68,7 +65,7 @@
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-040-*.md
+│   └── day-041-*.md
 ├── examples/
 │   └── day-XXX/
 ├── weekly/
@@ -80,13 +77,8 @@
 
 ## 编码规范基线
 
-课程示例持续遵循以下规则：
-
-- 类型：`PascalCase`
-- 函数：`PascalCase`
-- 变量 / 参数：`snake_case`
-- 成员：`snake_case_`
-- 常量：`kPascalCase`
+- 类型：`PascalCase`；函数：`PascalCase`
+- 变量 / 参数：`snake_case`；成员：`snake_case_`；常量：`kPascalCase`
 - 强类型枚举：`enum class`
 - 所有权清晰，优先 RAII / value semantics
 - required borrow 优先引用，optional borrow 明确 `nullptr` 语义
@@ -98,20 +90,11 @@
 
 ## 历史迁移说明
 
-Day 1–30 的大部分课程由原 Gmail 正文转换为 Markdown。
-
-以下课程因当时邮件投递失败或邮件流程已停止，依据既有学习记录重建：
-
-- Day 7
-- Day 13
-- Day 31
-- Day 32
-
-后续课程直接以 Markdown 作为唯一主版本，不再维护邮件版。
+Day 1–30 的大部分课程由原 Gmail 正文转换为 Markdown；Day 7、13、31、32 依据既有学习记录重建。后续课程直接以 Markdown 作为唯一主版本，不再维护邮件版。
 
 ## Learning Console
 
-仓库现已包含第一版 **Professional C++ Learning Console**。课程 Markdown 仍然是唯一内容源，Web UI 只负责学习流、Lab、复盘与进度状态。
+仓库包含 **Professional C++ Learning Console**。课程 Markdown 是唯一内容源，Web UI 负责学习流、Lab、复盘与进度状态。
 
 ### 本地运行
 
@@ -138,23 +121,10 @@ npm run preview
 - Guidelines：直接渲染 Embedded C++ Guideline Markdown
 - Progress：课程覆盖与学习证据
 
-设计与 Agent 约束：
-
-- [DESIGN.md](DESIGN.md)
-- [UX-CONTRACT.md](UX-CONTRACT.md)
-- [Learning UX](docs/learning-ux.md)
+设计与 Agent 约束：[DESIGN.md](DESIGN.md) · [UX-CONTRACT.md](UX-CONTRACT.md) · [Learning UX](docs/learning-ux.md)
 
 > Day 1–32 无需批量迁移即可使用。Day 33 起使用 YAML frontmatter + 独立 Lab 文件作为新内容契约示范。
 
 ### 浏览器 C++ 编译
 
-Lab 使用 `@live-codes/clang-wasm` 在 Web Worker 中懒加载 Clang 22 工具链：
-
-- 浏览器本地编译与运行，不需要编译服务账号；
-- 默认 `gnu++23`；
-- 编译参数：`-Wall -Wextra -Wconversion -Wpedantic`；
-- 首次点击 Compile & Run 时才下载工具链；
-- 后续编译复用同一页面会话中的 WASM runtime；
-- `npm run dev` / `npm run build` 会自动把 runtime assets 复制到 `public/clang`。
-
-工具链体积较大，因此不在 Today / Lesson 首屏预加载。
+Lab 使用 `@live-codes/clang-wasm` 在 Web Worker 中懒加载 Clang 22 工具链，默认 `gnu++23`，编译参数为 `-Wall -Wextra -Wconversion -Wpedantic`。工具链仅在首次 Compile & Run 时加载，避免首屏预加载大型 runtime。
