@@ -39,6 +39,10 @@
 - 避免可写全局状态
 - 明确 `nullptr` 语义
 - 避免多个 `bool` 参数
+- reusable abstraction 的公共接口不得泄漏 HAL handle、DMA channel、RTOS object、Linux fd 等平台实现细节，除非它们就是该 abstraction 的业务语义。
+- abstraction 不等于必须使用 virtual；根据变化时机选择 runtime interface、template/concept 或 composition。
+- required dependency 若不拥有且不允许为空，优先引用；不要用 nullable pointer 制造虚假状态。
+- buffer、timeout、长度、频率等边界优先使用 `std::span`、`std::chrono` 或明确单位类型表达。
 
 ### 多态对象与 slicing
 
