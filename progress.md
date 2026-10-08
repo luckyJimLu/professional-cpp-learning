@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 41**。下一课从 **Day 42** 继续。
+当前仓库课程已发布到 **Day 42**。下一课从 **Day 43** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -45,15 +45,17 @@
 | 39 | Multiple Inheritance | 已发布 | [day-039](daily/day-039-multiple-inheritance-contracts.md) |
 | 40 | Mixin Classes | 已发布 | [day-040](daily/day-040-mixin-classes.md) |
 | 41 | Designing for Reuse：复用从稳定 Contract 开始 | 已发布 | [day-041](daily/day-041-reuse-contracts-components.md) |
+| 42 | Use Abstraction：用接口/实现分离建立可复用边界 | 已发布 | [day-042](daily/day-042-use-abstraction-for-reuse.md) |
 
 ## 最新发布详情
 
-- **日期**：2026-10-07
+- **日期**：2026-10-08
 - **章节**：Chapter 6 · Designing for Reuse
-- **主题**：Reuse Starts with Stable Contracts
-- **关键知识点**：稳定 contract、最小依赖、依赖反转、显式 borrow、平台 adapter、可测试 reusable component
-- **Lab**：[examples/day-041/main.cpp](examples/day-041/main.cpp)
-- **上一课**：[Day 40 · Mixin Classes](daily/day-040-mixin-classes.md)
+- **主题**：Use Abstraction
+- **关键知识点**：interface/implementation 分离、abstraction leakage、最小 contract、required borrow、平台 adapter
+- **Lab**：[examples/day-042/main.cpp](examples/day-042/main.cpp)
+- **周复盘**：[Week 06 Review](weekly/week-06-review.md)
+- **上一课**：[Day 41 · Reuse Starts with Stable Contracts](daily/day-041-reuse-contracts-components.md)
 
 ## 规则
 
