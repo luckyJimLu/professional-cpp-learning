@@ -43,6 +43,9 @@
 - abstraction 不等于必须使用 virtual；根据变化时机选择 runtime interface、template/concept 或 composition。
 - required dependency 若不拥有且不允许为空，优先引用；不要用 nullable pointer 制造虚假状态。
 - buffer、timeout、长度、频率等边界优先使用 `std::span`、`std::chrono` 或明确单位类型表达。
+- reusable component 不强制携带与其核心概念无关的 logger、storage、retry 或 platform dependency。
+- policy、mechanism、observation 若具有独立变化原因，应拆成可组合组件；上层负责 orchestration。
+- 解耦不能以隐藏 ownership、service locator 或无界运行时注册为代价，尤其是实时路径。
 
 ### 多态对象与 slicing
 
