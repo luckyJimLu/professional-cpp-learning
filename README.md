@@ -8,8 +8,8 @@
 
 ## 当前进度
 
-- **已发布：Day 1–43**
-- **下一课：Day 44**
+- **已发布：Day 1–44**
+- **下一课：Day 45**
 - 当前主线：**Chapter 6 · Designing for Reuse**
 - 更新方式：**GitHub Markdown only**
 - Gmail 邮件投递：**已停止**
@@ -31,11 +31,11 @@
 
 ## 最近课程
 
+- [Day 44 · Avoid Combining Unrelated or Logically Separate Concepts](daily/day-044-separate-unrelated-concepts.md)
 - [Day 43 · Structure Your Code for Optimal Reuse：按职责与依赖方向组织代码](daily/day-043-structure-code-for-optimal-reuse.md)
 - [Day 42 · Use Abstraction：用接口/实现分离建立可复用边界](daily/day-042-use-abstraction-for-reuse.md)
 - [Day 41 · Designing for Reuse：复用从稳定 Contract 开始](daily/day-041-reuse-contracts-components.md)
 - [Day 40 · Mixin Classes：用小型可组合行为扩展类型](daily/day-040-mixin-classes.md)
-- [Day 39 · Multiple Inheritance：多个基类何时代表真实 contract](daily/day-039-multiple-inheritance-contracts.md)
 
 ## 每日课程结构
 
@@ -65,7 +65,7 @@
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-043-*.md
+│   └── day-044-*.md
 ├── examples/
 │   └── day-XXX/
 ├── weekly/
