@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 43**。下一课从 **Day 44** 继续。
+当前仓库课程已发布到 **Day 44**。下一课从 **Day 45** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -47,15 +47,16 @@
 | 41 | Designing for Reuse：复用从稳定 Contract 开始 | 已发布 | [day-041](daily/day-041-reuse-contracts-components.md) |
 | 42 | Use Abstraction：用接口/实现分离建立可复用边界 | 已发布 | [day-042](daily/day-042-use-abstraction-for-reuse.md) |
 | 43 | Structure Your Code for Optimal Reuse：按职责与依赖方向组织代码 | 已发布 | [day-043](daily/day-043-structure-code-for-optimal-reuse.md) |
+| 44 | Avoid Combining Unrelated or Logically Separate Concepts | 已发布 | [day-044](daily/day-044-separate-unrelated-concepts.md) |
 
 ## 最新发布详情
 
-- **日期**：2026-10-09
+- **日期**：2026-10-10
 - **章节**：Chapter 6 · Designing for Reuse
-- **主题**：Structure Your Code for Optimal Reuse
-- **关键知识点**：职责拆分、稳定依赖方向、公共头文件最小化、platform adapter、按变化原因拆组件
-- **Lab**：[examples/day-043/main.cpp](examples/day-043/main.cpp)
-- **上一课**：[Day 42 · Use Abstraction](daily/day-042-use-abstraction-for-reuse.md)
+- **主题**：Avoid Combining Unrelated or Logically Separate Concepts
+- **关键知识点**：单一概念边界、按变化原因拆分、policy/mechanism/observation 分离、显式依赖、有界 retry
+- **Lab**：[examples/day-044/main.cpp](examples/day-044/main.cpp)
+- **上一课**：[Day 43 · Structure Your Code for Optimal Reuse](daily/day-043-structure-code-for-optimal-reuse.md)
 
 ## 规则
 
