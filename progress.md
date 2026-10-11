@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 44**。下一课从 **Day 45** 继续。
+当前仓库课程已发布到 **Day 45**。下一课从 **Day 46** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -48,15 +48,16 @@
 | 42 | Use Abstraction：用接口/实现分离建立可复用边界 | 已发布 | [day-042](daily/day-042-use-abstraction-for-reuse.md) |
 | 43 | Structure Your Code for Optimal Reuse：按职责与依赖方向组织代码 | 已发布 | [day-043](daily/day-043-structure-code-for-optimal-reuse.md) |
 | 44 | Avoid Combining Unrelated or Logically Separate Concepts | 已发布 | [day-044](daily/day-044-separate-unrelated-concepts.md) |
+| 45 | Use Templates for Generic Data Structures and Algorithms | 已发布 | [day-045](daily/day-045-templates-generic-data-structures-algorithms.md) |
 
 ## 最新发布详情
 
-- **日期**：2026-10-10
+- **日期**：2026-10-11
 - **章节**：Chapter 6 · Designing for Reuse
-- **主题**：Avoid Combining Unrelated or Logically Separate Concepts
-- **关键知识点**：单一概念边界、按变化原因拆分、policy/mechanism/observation 分离、显式依赖、有界 retry
-- **Lab**：[examples/day-044/main.cpp](examples/day-044/main.cpp)
-- **上一课**：[Day 43 · Structure Your Code for Optimal Reuse](daily/day-043-structure-code-for-optimal-reuse.md)
+- **主题**：Use Templates for Generic Data Structures and Algorithms
+- **关键知识点**：generic programming、concept contract、static polymorphism、固定容量泛型容器、控制模板实例化成本
+- **Lab**：[examples/day-045/main.cpp](examples/day-045/main.cpp)
+- **上一课**：[Day 44 · Avoid Combining Unrelated or Logically Separate Concepts](daily/day-044-separate-unrelated-concepts.md)
 
 ## 规则
 
