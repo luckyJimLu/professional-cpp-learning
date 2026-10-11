@@ -47,6 +47,14 @@
 - policy、mechanism、observation 若具有独立变化原因，应拆成可组合组件；上层负责 orchestration。
 - 解耦不能以隐藏 ownership、service locator 或无界运行时注册为代价，尤其是实时路径。
 
+### 泛型编程与模板
+
+- template 参数只表达真实的 compile-time variation，不为减少几行重复代码而无边界模板化。
+- 泛型算法依赖最小能力；优先用 concept / requires 显式表达模板 contract，使错误尽量在调用边界暴露。
+- 实时路径中的泛型容器必须有可审计的容量和分配策略；固定容量应成为显式 contract，满容量必须进入错误模型。
+- 检查模板实例化数量、flash/RAM/map file；不要假设 static polymorphism 天然零成本。
+- 需要运行时替换、稳定 ABI 或独立生命周期的依赖，优先 runtime interface/composition，而不是强行模板化。
+
 ### 多态对象与 slicing
 
 - 多态对象不得无意按值传递，否则可能发生 object slicing。
