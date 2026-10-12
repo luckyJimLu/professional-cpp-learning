@@ -55,6 +55,15 @@
 - 检查模板实例化数量、flash/RAM/map file；不要假设 static polymorphism 天然零成本。
 - 需要运行时替换、稳定 ABI 或独立生命周期的依赖，优先 runtime interface/composition，而不是强行模板化。
 
+### Checks 与 Safeguards
+
+- 外部输入、设备输入、IPC/网络输入必须在 trust boundary 验证；无效输入属于正常运行时错误，不用 `assert` 代替错误处理。
+- `assert` 只验证 programmer invariant；可恢复错误必须进入显式错误模型。
+- reusable blocking API 必须显式 timeout；retry、scan、wait 等 safeguard 本身也必须有可审计上界。
+- buffer 边界优先用 `std::span` 等同时表达地址与长度的类型；最大长度、容量和 timeout 是 contract 的一部分。
+- 错误返回优先保留原因，避免把 invalid length、busy、timeout 等全部压成 `bool` 或 `-1`。
+- 边界测试至少覆盖 empty/min/max/max+1、timeout 及设备失败路径。
+
 ### 多态对象与 slicing
 
 - 多态对象不得无意按值传递，否则可能发生 object slicing。
