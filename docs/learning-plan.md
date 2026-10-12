@@ -19,7 +19,7 @@
   - Ch5 Designing with Classes
   - Ch6 Designing for Reuse
 - **第 4–11 周 · Part III**
-  - Ch7 Memory Management ➔ *(推荐结合 [frameworks/asio/SESSION_LIFECYCLE.md](../frameworks/asio/SESSION_LIFECYCLE.md) 研读智能指针与异步生命周期)*
+  - Ch7 Memory Management ➔ *(推荐结合 [patterns/ownership-and-smart-pointers.md](../patterns/ownership-and-smart-pointers.md) 与 [frameworks/asio/SESSION_LIFECYCLE.md](../frameworks/asio/SESSION_LIFECYCLE.md) 研读 ownership、智能指针与异步生命周期)*
   - Ch8–9 Classes and Objects
   - Ch10 Inheritance
   - Ch11 Modules / Header Files / Miscellaneous
@@ -28,9 +28,9 @@
   - Ch14 Error Handling ➔ *(推荐结合 [frameworks/asio/COMPLETION_HANDLER.md](../frameworks/asio/COMPLETION_HANDLER.md) 研读 error_code 错误交付与 operation_aborted 语义)*
   - Ch15 Operator Overloading
   - Ch16 Standard Library Overview
-  - Ch17 Iterators / Ranges
+  - Ch17 Iterators / Ranges ➔ *(推荐结合 [patterns/README.md](../patterns/README.md) 中 Iterator / Range 部分理解“遍历协议”这一稳定边界)*
   - Ch18 Containers
-  - Ch19 Function Pointers / Function Objects / Lambdas ➔ *(推荐结合 [frameworks/asio/COMPLETION_HANDLER.md](../frameworks/asio/COMPLETION_HANDLER.md) 研读完成签名契约与回调状态机)*
+  - Ch19 Function Pointers / Function Objects / Lambdas ➔ *(推荐结合 [patterns/README.md](../patterns/README.md) 的 Strategy / Observer 部分，以及 [frameworks/asio/COMPLETION_HANDLER.md](../frameworks/asio/COMPLETION_HANDLER.md) 研读 callable、callback 与完成签名契约)*
   - Ch20 Algorithms
   - Ch21 Localization / Regex
   - Ch22 Date / Time
@@ -46,7 +46,7 @@
   - Ch30 Testing
   - Ch31 Debugging
   - Ch32 Design Techniques / Frameworks ➔ *(推荐结合 [frameworks/asio/](../frameworks/asio/) 研读 Service Registry 模式与泛型架构设计)*
-  - Ch33 Design Patterns
+  - Ch33 Design Patterns ➔ **专题预习：[C++ Design Patterns · 工程化学习指南](../patterns/README.md)**；重点模式：Strategy、Abstract Factory、Factory Method、Adapter、Proxy、Iterator、Observer、Decorator、Chain of Responsibility、Singleton；同时结合 [Ownership & Smart Pointers](../patterns/ownership-and-smart-pointers.md) 理解 C++ 特有的生命周期问题
   - Ch34 Cross-Platform / Cross-Language Development
 
 ## 每日约 60 分钟结构
@@ -78,6 +78,7 @@
 ```text
 daily/       每日完整课程
 examples/    当日可编译代码
+patterns/    C++ Design Patterns 与 ownership 专题
 frameworks/  经典工业框架源码解构（Asio 专题）
 weekly/      周复盘
 guidelines/  编码规范学习索引
