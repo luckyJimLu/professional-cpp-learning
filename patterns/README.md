@@ -718,7 +718,8 @@ Decorator 独占拥有下一层
 
 进一步说明见：
 
-- [Ownership & Smart Pointers in Design Patterns](ownership-and-smart-pointers.md)
+- [Ownership & Smart Pointers in Design Patterns](ownership-and-smart-pointers.md)：包含三问决策流程、独占/借用/异步关系的 UML 类图与时序图。
+- [可运行指针选择实验](../examples/pointer-choice.cpp)：验证所有权转移、借用、强捕获与弱捕获的销毁时机。
 
 ---
 
