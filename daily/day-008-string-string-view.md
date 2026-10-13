@@ -1,6 +1,20 @@
+---
+day: 8
+week: 2
+part: I
+chapter: 2
+chapter_title: "Working with Strings and String Views"
+title: "std::string 与 std::string_view：所有权、借用与零拷贝文本接口"
+duration: 60
+status: published
+topics:
+  - string-string-view
+guidelines:
+  - explicit-contract
+previous: 7
+next: 9
+---
 # Day 08 · std::string 与 std::string_view：所有权、借用与零拷贝文本接口
-
-> 历史课程迁移自原 Gmail 正文；已转换为 Markdown。
 
 std::string 与 std::string_view：所有权、借用与零拷贝文本接口
 

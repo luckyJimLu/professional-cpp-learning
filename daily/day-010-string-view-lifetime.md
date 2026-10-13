@@ -1,6 +1,20 @@
+---
+day: 10
+week: 2
+part: I
+chapter: 2
+chapter_title: "Working with Strings and String Views"
+title: "string_view 深入：生命周期、子视图与安全解析"
+duration: 60
+status: published
+topics:
+  - string-view-lifetime
+guidelines:
+  - explicit-contract
+previous: 9
+next: 11
+---
 # Day 10 · string_view 深入：生命周期、子视图与安全解析
-
-> 历史课程迁移自原 Gmail 正文；已转换为 Markdown。
 
 string_view 深入：生命周期、子视图与安全解析
 

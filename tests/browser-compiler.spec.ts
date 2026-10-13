@@ -3,6 +3,8 @@ import { expect, test } from "@playwright/test";
 test("Day 33 compiles and runs in the browser", async ({ page }) => {
   await page.goto("/");
 
+  await page.getByRole("button", { name: "Lessons", exact: true }).click();
+  await page.getByRole("button", { name: /DAY 033/ }).click();
   await page.getByRole("button", { name: "Lab", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Compile Mode" })).toBeVisible();
 

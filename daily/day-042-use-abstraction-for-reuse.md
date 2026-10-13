@@ -12,6 +12,10 @@ lab:
   path: examples/day-042/main.cpp
 previous: 41
 next: 43
+topics:
+  - use-abstraction-for-reuse
+guidelines:
+  - explicit-contract
 ---
 
 # Day 42 · Use Abstraction：用接口/实现分离建立可复用边界

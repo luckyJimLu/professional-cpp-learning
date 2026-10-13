@@ -12,6 +12,10 @@ lab:
   path: examples/day-041/main.cpp
 previous: 40
 next: 42
+topics:
+  - reuse-contracts-components
+guidelines:
+  - explicit-contract
 ---
 
 # Day 41 · Designing for Reuse：复用从稳定 Contract 开始

@@ -24,8 +24,6 @@ next: 33
 
 # Day 32 · is-a、not-a、类层次与 Mixin：什么时候才应该继承
 
-> **历史重建**：本日课程在邮件流程停止后生成，本文件作为 GitHub 迁移后的连续历史记录。
-
 ## ① 今日章节与建议阅读范围（5 分钟）
 
 继续 Chapter 5 · **Designing with Classes**，聚焦类之间的：

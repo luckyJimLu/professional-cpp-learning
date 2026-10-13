@@ -1,6 +1,20 @@
+---
+day: 6
+week: 1
+part: I
+chapter: 1
+chapter_title: "A Crash Course in C++ and the Standard Library"
+title: "enum class、结构化绑定与类型安全状态机"
+duration: 60
+status: published
+topics:
+  - enum-class-state-machine
+guidelines:
+  - explicit-contract
+previous: 5
+next: 7
+---
 # Day 06 · enum class、结构化绑定与类型安全状态机
-
-> 历史课程迁移自原 Gmail 正文；已转换为 Markdown。
 
 enum class、结构化绑定与类型安全状态机
 今日目标：把 C 中“整数状态码 + 输出参数 + switch”升级为强类型枚举、结构化返回值与可审查的状态机接口。

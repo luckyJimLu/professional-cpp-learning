@@ -1,6 +1,20 @@
+---
+day: 3
+week: 1
+part: I
+chapter: 1
+chapter_title: "A Crash Course in C++ and the Standard Library"
+title: "const、constexpr 与编译期思维"
+duration: 60
+status: published
+topics:
+  - const-constexpr
+guidelines:
+  - explicit-contract
+previous: 2
+next: 4
+---
 # Day 03 · const、constexpr 与编译期思维
-
-> 历史课程迁移自原 Gmail 正文；已转换为 Markdown。
 
 **Chapter 1 · const、constexpr 与编译期思维
 今日目标：把“这个值不会变”升级为由类型系统和编译器验证的约束，并逐步消除嵌入式代码中的 magic number。

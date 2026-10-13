@@ -22,10 +22,10 @@ REQUIRED_KEYS = [
     "day", "week", "part", "chapter", "chapter_title", "title",
     "duration", "status", "topics", "guidelines", "lab", "previous", "next",
 ]
-STUB_MARKERS = ["历史课程迁移自原 Gmail 正文"]
+STUB_MARKERS = ["历史课程迁移", "完整课程见 HTML", "完整内容见 HTML"]
 STUB_MAX_LINES = 50
 # A file is "gold" when it has frontmatter, real sections, and no stub marker.
-# "legacy" = has readable content but old Gmail-converted formatting.
+# "legacy" = readable content without complete metadata.
 # "stub"   = placeholder only, needs a full rewrite.
 
 
@@ -82,7 +82,12 @@ def main() -> int:
             any(marker in text for marker in STUB_MARKERS)
             and len(lines) < STUB_MAX_LINES
         )
-        has_sections = len(re.findall(r"^## [①②③④⑤⑥⑦⑧]", text, re.M)) >= 5
+        markers = re.findall(r"^## ([①②③④⑤⑥⑦⑧])", text, re.M)
+        has_sections = set(markers) == set("①②③④⑤⑥⑦⑧") and len(markers) == 8
+        if not has_sections:
+            problems.append(f"{name}: requires all eight unique learning stages")
+        if any(marker in text for marker in STUB_MARKERS):
+            problems.append(f"{name}: contains delivery placeholder text")
         if is_stub:
             stubs.append(f"{name} ({len(lines)} lines)")
             continue  # Don't pile frontmatter errors onto stubs.

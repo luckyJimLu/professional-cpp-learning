@@ -1,6 +1,20 @@
+---
+day: 22
+week: 4
+part: II
+chapter: 4
+chapter_title: "Designing Professional C++ Programs"
+title: "抽象：稳定接口与隐藏实现"
+duration: 60
+status: published
+topics:
+  - abstraction-stable-interface
+guidelines:
+  - explicit-contract
+previous: 21
+next: 23
+---
 # Day 22 · 抽象：稳定接口与隐藏实现
-
-> 历史课程迁移自原 Gmail 正文；已转换为 Markdown。
 
 **Chapter 4 · 抽象：稳定接口与隐藏实现**
 

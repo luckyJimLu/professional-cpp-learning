@@ -12,6 +12,10 @@ lab:
   path: examples/day-043/main.cpp
 previous: 42
 next: 44
+topics:
+  - structure-code-for-optimal-reuse
+guidelines:
+  - explicit-contract
 ---
 
 # Day 43 · Structure Your Code for Optimal Reuse：按职责与依赖方向组织代码

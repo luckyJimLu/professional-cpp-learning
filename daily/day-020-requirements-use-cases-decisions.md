@@ -1,6 +1,20 @@
+---
+day: 20
+week: 3
+part: II
+chapter: 4
+chapter_title: "Designing Professional C++ Programs"
+title: "Chapter 4：需求、用例与设计决策"
+duration: 60
+status: published
+topics:
+  - requirements-use-cases-decisions
+guidelines:
+  - explicit-contract
+previous: 19
+next: 21
+---
 # Day 20 · Chapter 4：需求、用例与设计决策
-
-> 历史课程迁移自原 Gmail 正文；已转换为 Markdown。
 
 **Chapter 4：需求、用例与设计决策**
 

@@ -1,6 +1,20 @@
+---
+day: 25
+week: 4
+part: II
+chapter: 4
+chapter_title: "Designing Professional C++ Programs"
+title: "设计文档、接口契约与原型验证"
+duration: 60
+status: published
+topics:
+  - design-doc-contract-prototype
+guidelines:
+  - explicit-contract
+previous: 24
+next: 26
+---
 # Day 25 · 设计文档、接口契约与原型验证
-
-> 历史课程迁移自原 Gmail 正文；已转换为 Markdown。
 
 **Chapter 4 · Designing Professional C++ Programs
 主题：设计文档、接口契约与原型验证

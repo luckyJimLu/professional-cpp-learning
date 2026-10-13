@@ -24,8 +24,6 @@ next: 32
 
 # Day 31 · 对象所有权、生命周期与资源管理边界
 
-> **历史重建**：当天课程已生成但邮件投递失败。本文件依据既有主题记录恢复为 Markdown。
-
 ## ① 今日章节与建议阅读范围（5 分钟）
 
 继续 Chapter 5 · **Designing with Classes**。从 Day 30 的 composition 进一步追问：

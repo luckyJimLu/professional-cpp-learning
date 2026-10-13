@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { Markdown } from "./components/Markdown";
+import { topics, resolveTopicLink } from "./lib/topics";
 import {
   STEP_DEFS,
   guideline,
@@ -22,6 +22,7 @@ type View =
   | "today"
   | "roadmap"
   | "lessons"
+  | "topics"
   | "lab"
   | "review"
   | "guidelines"
@@ -32,6 +33,7 @@ const NAV: Array<{ id: Exclude<View, "lesson">; label: string; short: string }> 
   { id: "today", label: "Today", short: "Today" },
   { id: "roadmap", label: "Roadmap", short: "Roadmap" },
   { id: "lessons", label: "Lessons", short: "Lessons" },
+  { id: "topics", label: "专题", short: "专题" },
   { id: "lab", label: "Lab", short: "Lab" },
   { id: "review", label: "Review", short: "Review" },
   { id: "guidelines", label: "Guidelines", short: "Rules" },
@@ -40,14 +42,6 @@ const NAV: Array<{ id: Exclude<View, "lesson">; label: string; short: string }> 
 
 function cx(...values: Array<string | false | undefined>) {
   return values.filter(Boolean).join(" ");
-}
-
-function Markdown({ children, className = "" }: { children: string; className?: string }) {
-  return (
-    <div className={cx("markdown", className)}>
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>{children}</ReactMarkdown>
-    </div>
-  );
 }
 
 function CompileRail({
@@ -122,7 +116,7 @@ function Shell({
         </nav>
 
         <div className="sidebar-status">
-          <span>Repository baseline</span>
+          <span>课程进度</span>
           <strong>Day {repoCompletedDay} / 112</strong>
           <div className="mini-progress">
             <i style={{ width: `${Math.min(100, (repoCompletedDay / 112) * 100)}%` }} />
@@ -140,7 +134,7 @@ function Shell({
         </header>
         <main className="content">{children}</main>
         <nav className="bottom-nav" aria-label="Mobile navigation">
-          {NAV.filter((item) => ["today", "roadmap", "lab", "progress"].includes(item.id)).map(
+          {NAV.filter((item) => ["today", "roadmap", "topics", "lab", "progress"].includes(item.id)).map(
             (item) => (
               <button
                 className={cx(view === item.id && "is-active")}
@@ -204,7 +198,7 @@ function Today({
         description={
           planned
             ? "One focused session. Read → recall → refactor → compile."
-            : "The UI is already following repository progress. Publish the next Markdown lesson and it appears here automatically."
+            : "下一课尚未发布，可以复习最近课程并完成实验。"
         }
       />
 
@@ -227,7 +221,7 @@ function Today({
           <div className="session-row">
             <span className="mono">{planned?.duration ?? 60} min session</span>
             <span className="muted">
-              {planned ? "Markdown source available" : "Next Markdown not published yet"}
+              {planned ? "课程已发布" : "下一课准备中"}
             </span>
           </div>
 
@@ -255,7 +249,7 @@ function Today({
             <span>
               {planned
                 ? `lesson --day ${planned.day} --mode focused`
-                : `next --day ${currentDay} --source daily/day-${String(currentDay).padStart(3, "0")}-*.md`}
+                : `review --day ${latestPublished.day} --mode focused`}
             </span>
           </div>
         </div>
@@ -265,21 +259,21 @@ function Today({
         <article>
           <span className="eyebrow">COMPLETED BASELINE</span>
           <strong>Day {currentDay - 1}</strong>
-          <p>{baseline?.title ?? "Repository completion baseline"}</p>
+          <p>{baseline?.title ?? "已完成课程"}</p>
         </article>
         <article>
           <span className="eyebrow">NEXT ACTION</span>
-          <strong>{planned ? "Continue" : `Publish Day ${currentDay}`}</strong>
+          <strong>{planned ? "Continue" : `复习 Day ${latestPublished.day}`}</strong>
           <p>
             {planned
               ? "Resume at the first incomplete compile-rail stage."
-              : "No frontend change is required when the lesson is added."}
+              : "复习上一课，整理仍不确定的概念与实验结果。"}
           </p>
         </article>
         <article>
-          <span className="eyebrow">CONTENT MODEL</span>
-          <strong>Markdown first</strong>
-          <p>Daily lessons remain the source of truth; the console only adds learning state.</p>
+          <span className="eyebrow">学习方法</span>
+          <strong>阅读 → 实践 → 自测</strong>
+          <p>先解释概念，再运行实验，最后用自测检查理解。</p>
         </article>
       </section>
     </div>
@@ -446,7 +440,7 @@ function Roadmap({
       <PageHeader
         eyebrow="16-WEEK PATH"
         title="Roadmap"
-        description="A vertical execution path, not a card catalog. Course order remains aligned with Professional C++."
+        description="跟随 Professional C++，从语言基础逐步进入类设计、复用与系统工程。"
       />
       <div className="roadmap">
         {weeks.map((week) => {
@@ -484,14 +478,14 @@ function Roadmap({
               <div className="roadmap-placeholder">
                 <span className="roadmap-state">○</span>
                 <span className="mono">Day {currentDay}</span>
-                <strong>{latestNextSummary() ?? "Waiting for next Markdown lesson"}</strong>
+                <strong>{latestNextSummary() ?? "下一课准备中"}</strong>
               </div>
             </div>
           </section>
         )}
       </div>
       <details className="source-details">
-        <summary>View canonical 16-week source plan</summary>
+        <summary>查看完整 16 周学习计划</summary>
         <Markdown>{learningPlan}</Markdown>
       </details>
     </div>
@@ -510,7 +504,7 @@ function Lessons({
       <PageHeader
         eyebrow="COURSE INDEX"
         title="Lessons"
-        description="Generated directly from daily/*.md. No lesson cards are hard-coded in the frontend."
+        description="按课程主题选择学习单元，完成阅读、实验和自测。"
       />
       <div className="lesson-index">
         {lessons
@@ -594,7 +588,7 @@ function Lab({
       <PageHeader
         eyebrow={`DAY ${lesson.day} · LAB`}
         title="Compile Mode"
-        description="Edit the repository lab, then compile and run it locally in the browser with Clang/WASM. The heavy toolchain is loaded only when you press Compile & Run."
+        description="编辑本课 C++ 实验，点击 Compile & Run 查看输出和编译诊断。首次运行需要下载编译工具。"
       />
 
       <div className="lab-runtime-bar">
@@ -829,13 +823,34 @@ function Guidelines() {
       <PageHeader
         eyebrow="ENGINEERING RULES"
         title="Embedded C++ Guidelines"
-        description="Rendered from guidelines/embedded-cpp-guideline-notes.md."
+        description="复习类型安全、资源管理与嵌入式开发中的编码规范。"
       />
       <article className="document-card">
         <Markdown>{guideline}</Markdown>
       </article>
     </div>
   );
+}
+
+function Topics() {
+  const [selectedPath, setSelectedPath] = useState(() => topics.find((topic) => topic.path === "patterns/README.md")?.path ?? topics[0]?.path);
+  const selected = topics.find((topic) => topic.path === selectedPath);
+  return <div>
+    <PageHeader eyebrow="专题学习" title="设计模式与框架" description="结合所有权、生命周期与异步编程，阅读专题并对照代码实验。" />
+    <nav className="topic-index" aria-label="学习专题">
+      {topics.map((topic) => <button type="button" key={topic.path}
+        aria-pressed={selectedPath === topic.path} className="ghost-button"
+        onClick={() => setSelectedPath(topic.path)}>{topic.title}</button>)}
+    </nav>
+    {selected && <article className="document-card" key={selected.path}>
+      <Markdown onNavigate={(href) => {
+        const target = resolveTopicLink(selected.path, href);
+        if (!target) return false;
+        setSelectedPath(target.path);
+        return true;
+      }}>{selected.body}</Markdown>
+    </article>}
+  </div>;
 }
 
 const SKILLS = [
@@ -888,7 +903,7 @@ function ProgressView({
       <PageHeader
         eyebrow="LEARNING EVIDENCE"
         title="Progress"
-        description="Bars represent course coverage and repeated evidence in completed Markdown, not an exam score."
+        description="进度表示课程覆盖与实践记录，可结合自测确认理解程度。"
       />
       <div className="progress-layout">
         <section className="skill-matrix">
@@ -919,8 +934,8 @@ function ProgressView({
               : "No weak points queued."}
           </p>
           <hr />
-          <span className="eyebrow">SYSTEM</span>
-          <p>{lessons.length} Markdown lessons indexed automatically.</p>
+          <span className="eyebrow">课程</span>
+          <p>已发布 {lessons.length} 节课程。</p>
         </aside>
       </div>
     </div>
@@ -967,6 +982,9 @@ export default function App() {
       break;
     case "lessons":
       page = <Lessons openLesson={openLesson} isDayComplete={progress.isDayComplete} />;
+      break;
+    case "topics":
+      page = <Topics />;
       break;
     case "lab":
       page = selectedLesson ? (

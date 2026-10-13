@@ -12,6 +12,10 @@ lab:
   path: examples/day-044/main.cpp
 previous: 43
 next: 45
+topics:
+  - separate-unrelated-concepts
+guidelines:
+  - explicit-contract
 ---
 
 # Day 44 · Avoid Combining Unrelated or Logically Separate Concepts：不要把无关职责绑在一起

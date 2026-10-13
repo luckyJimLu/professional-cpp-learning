@@ -23,8 +23,6 @@ next: 14
 
 # Day 13 · Coding with Style：可读性、命名与接口契约
 
-> **历史重建**：原邮件发送未成功。本文件依据既有课程记录重建，并作为 Chapter 3 的正式入口。
-
 ## ① 今日章节与建议阅读范围（5 分钟）
 
 进入 Chapter 3 · **Coding with Style**。今天先建立三条主线：

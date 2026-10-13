@@ -39,7 +39,7 @@ docs/learning-plan.md ───┘
 - React 19
 - TypeScript
 - Vite
-- react-markdown + GFM
+- react-markdown + GFM + lazy-loaded Mermaid
 - no backend required for phase 1
 - local progress stored in browser localStorage
 
@@ -85,8 +85,11 @@ Implemented:
 
 Deferred:
 
-- browser C++ compiler / WASM
 - authenticated cloud sync
 - answer grading
 - search
 - server-side analytics
+
+## Diagram and topic reading
+
+Shared Markdown rendering lives in `src/components/Markdown.tsx`; diagrams use `MermaidDiagram.tsx`. The reading frame uses the existing `--surface`, `--line`, `--radius`, `--blue` and `--amber` tokens from `src/styles.css`; SVG content uses Mermaid's neutral theme with the existing font stack. Diagrams retain source access, keyboard-scrollable overflow, and readable failure feedback. Topic navigation uses the existing button style and reads repository Markdown, without duplicating topic content.

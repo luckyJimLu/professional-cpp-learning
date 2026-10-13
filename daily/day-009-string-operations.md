@@ -1,6 +1,20 @@
+---
+day: 9
+week: 2
+part: I
+chapter: 2
+chapter_title: "Working with Strings and String Views"
+title: "std::string 的构造、修改、搜索与数值转换"
+duration: 60
+status: published
+topics:
+  - string-operations
+guidelines:
+  - explicit-contract
+previous: 8
+next: 10
+---
 # Day 09 · std::string 的构造、修改、搜索与数值转换
-
-> 历史课程迁移自原 Gmail 正文；已转换为 Markdown。
 
 **Chapter 2 · Working with Strings and String Views
 主题：std::string 的构造、修改、搜索与数值转换

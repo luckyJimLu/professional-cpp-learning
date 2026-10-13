@@ -55,7 +55,9 @@ const rawExamples = import.meta.glob("../../examples/**/main.cpp", {
   eager: true,
 }) as Record<string, string>;
 
-function parseScalar(value: string): string | number | boolean {
+function parseScalar(value: string): string | number | boolean | string[] {
+  const array = value.trim().match(/^\[(.*)\]$/);
+  if (array) return array[1].split(",").map((item) => item.trim().replace(/^["']|["']$/g, "")).filter(Boolean);
   const clean = value.trim().replace(/^["']|["']$/g, "");
   if (/^-?\d+(\.\d+)?$/.test(clean)) return Number(clean);
   if (clean === "true") return true;
@@ -147,7 +149,7 @@ function cleanInline(text: string): string {
 
 function extractCode(section?: LessonSection): string | undefined {
   if (!section) return undefined;
-  return section.body.match(/```(?:cpp|c\+\+)?\r?\n([\s\S]*?)```/i)?.[1]?.trim();
+  return section.body.match(/(?:^|\n)(`{3,}|~{3,})(?:cpp|c\+\+)[ \t]*\r?\n([\s\S]*?)\r?\n\1(?=\s|$)/i)?.[2]?.trim();
 }
 
 function extractChecklist(section?: LessonSection): string[] {

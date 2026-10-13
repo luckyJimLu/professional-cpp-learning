@@ -1,6 +1,20 @@
+---
+day: 11
+week: 2
+part: I
+chapter: 2
+chapter_title: "Working with Strings and String Views"
+title: "字符串格式化、字符编码与嵌入式文本边界"
+duration: 60
+status: published
+topics:
+  - formatting-encoding
+guidelines:
+  - explicit-contract
+previous: 10
+next: 12
+---
 # Day 11 · 字符串格式化、字符编码与嵌入式文本边界
-
-> 历史课程迁移自原 Gmail 正文；已转换为 Markdown。
 
 字符串格式化、字符编码与嵌入式文本边界
 

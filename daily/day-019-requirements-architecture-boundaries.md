@@ -1,6 +1,20 @@
+---
+day: 19
+week: 3
+part: II
+chapter: 4
+chapter_title: "Designing Professional C++ Programs"
+title: "Designing Professional C++ Programs：从需求到架构边界"
+duration: 60
+status: published
+topics:
+  - requirements-architecture-boundaries
+guidelines:
+  - explicit-contract
+previous: 18
+next: 20
+---
 # Day 19 · Designing Professional C++ Programs：从需求到架构边界
-
-> 历史课程迁移自原 Gmail 正文；已转换为 Markdown。
 
 **Chapter 4 · Designing Professional C++ Programs**
 

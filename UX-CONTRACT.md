@@ -46,15 +46,17 @@ Desktop primary navigation:
 1. Today
 2. Roadmap
 3. Lessons
-4. Lab
-5. Review
-6. Guidelines
-7. Progress
+4. 专题
+5. Lab
+6. Review
+7. Guidelines
+8. Progress
 
 Mobile primary navigation:
 
 - Today
 - Roadmap
+- 专题
 - Lab
 - Progress
 
@@ -143,3 +145,12 @@ When content must be shortened, reduce prose before reducing Lab.
 Progress should prioritize learning evidence over vanity metrics.
 
 Skill bars MUST be described as coverage/evidence, not objective mastery scores unless a real assessment system is introduced.
+
+## 10. Markdown diagrams and topics
+
+- `src/components/Markdown.tsx` is the shared owner for Markdown across lessons, roadmap, guidelines and topics.
+- Fenced Mermaid blocks render diagrams; other code blocks retain their existing code behavior.
+- Mermaid loads on demand in strict mode. A failure must leave source readable and allow retry without breaking the rest of the lesson.
+- Diagram overflow is local and keyboard accessible; it must not expand the whole page on mobile.
+- Topics come from repository Markdown in patterns, frameworks/asio, and the Mermaid guide. Links between these documents select the target document in the reader.
+- No new progress or completion semantics are introduced by merely viewing a diagram or topic.

@@ -12,7 +12,6 @@
 - **下一课：Day 48**
 - 当前主线：**Chapter 6 · Designing for Reuse**
 - 更新方式：**GitHub Markdown only**
-- Gmail 邮件投递：**已停止**
 
 ## 快速入口
 
@@ -23,6 +22,7 @@
 - [Embedded C++ 编码规范索引](guidelines/embedded-cpp-guideline-notes.md)
 - [每日课程目录](daily/)
 - [周复盘目录](weekly/)
+- [Mermaid 图表学习与编写](docs/mermaid.md)
 
 ## C++ Design Patterns 专题
 
@@ -101,10 +101,6 @@
 - 开启 `-Wall -Wextra -Wconversion`
 - 持续引入 clang-format / clang-tidy / tests / CI
 
-## 历史迁移说明
-
-Day 1–30 的大部分课程由原 Gmail 正文转换为 Markdown；Day 7、13、31、32 依据既有学习记录重建。后续课程直接以 Markdown 作为唯一主版本，不再维护邮件版。
-
 ## Learning Console
 
 仓库包含 **Professional C++ Learning Console**。课程 Markdown 是唯一内容源，Web UI 负责学习流、Lab、复盘与进度状态。
@@ -128,7 +124,8 @@ npm run preview
 - Today：根据 `progress.md` 和现有 Day 自动确定当前位置
 - Roadmap：按 Week / Part 生成纵向课程路径
 - Lessons：从 `daily/*.md` 自动建立课程索引
-- Lesson：Compile Rail + 8 阶段学习流
+- Lesson：Compile Rail + 8 阶段学习流，支持 Mermaid 流程图、状态图、类图与时序图
+- 专题：设计模式、所有权、Asio 框架与图表指南
 - Lab：可编辑 C++ 代码 + 浏览器内 Clang/WASM Compile & Run
 - Review：每 7 天复盘入口
 - Guidelines：直接渲染 Embedded C++ Guideline Markdown
@@ -136,8 +133,18 @@ npm run preview
 
 设计与 Agent 约束：[DESIGN.md](DESIGN.md) · [UX-CONTRACT.md](UX-CONTRACT.md) · [Learning UX](docs/learning-ux.md)
 
-> Day 1–32 无需批量迁移即可使用。Day 33 起使用 YAML frontmatter + 独立 Lab 文件作为新内容契约示范。
+课程采用 Markdown 与 YAML 元数据；实验优先使用 examples 中的独立源码。
 
 ### 浏览器 C++ 编译
 
 Lab 使用 `@live-codes/clang-wasm` 在 Web Worker 中懒加载 Clang 22 工具链，默认 `gnu++23`，编译参数为 `-Wall -Wextra -Wconversion -Wpedantic`。工具链仅在首次 Compile & Run 时加载，避免首屏预加载大型 runtime。
+
+### 内容验证
+
+```bash
+npm run check:course
+npm run build
+npm run test:e2e
+```
+
+课程检查验证元数据、实验路径与前后课链接；浏览器测试验证图表渲染、加载失败后的源码回退，以及仓库 Mermaid 图表语法。CI 还会编译并执行独立 C++ 实验。

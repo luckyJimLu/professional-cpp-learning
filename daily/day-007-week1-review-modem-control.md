@@ -25,8 +25,6 @@ next: 8
 
 # Day 07 · 第一周复盘：Modem 控制模块
 
-> **历史重建**：原邮件发送未成功。本文件依据 Day 1–6 的既有课程进度与既定 60 分钟课程结构重建。
-
 ## ① 今日章节与建议阅读范围（5 分钟）
 
 回看《Professional C++, Sixth Edition》Chapter 1 已学习内容：程序结构、初始化、`const/constexpr`、引用、指针与 `nullptr`、数组边界、`enum class` 与结构化返回值。

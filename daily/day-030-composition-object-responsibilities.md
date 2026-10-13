@@ -1,6 +1,20 @@
+---
+day: 30
+week: 5
+part: II
+chapter: 5
+chapter_title: "Designing with Classes"
+title: "Composition：用对象组合分配职责"
+duration: 60
+status: published
+topics:
+  - composition-object-responsibilities
+guidelines:
+  - explicit-contract
+previous: 29
+next: 31
+---
 # Day 30 · Composition：用对象组合分配职责
-
-> 历史课程迁移自原 Gmail 正文；已转换为 Markdown。
 
 **Chapter 5 · Designing with Classes**
 

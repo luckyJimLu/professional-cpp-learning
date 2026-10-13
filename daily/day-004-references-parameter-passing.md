@@ -1,6 +1,20 @@
+---
+day: 4
+week: 1
+part: I
+chapter: 1
+chapter_title: "A Crash Course in C++ and the Standard Library"
+title: "引用、const 引用与参数传递"
+duration: 60
+status: published
+topics:
+  - references-parameter-passing
+guidelines:
+  - explicit-contract
+previous: 3
+next: 5
+---
 # Day 04 · 引用、const 引用与参数传递
-
-> 历史课程迁移自原 Gmail 正文；已转换为 Markdown。
 
 **Chapter 1：引用、const 引用与参数传递**
 
