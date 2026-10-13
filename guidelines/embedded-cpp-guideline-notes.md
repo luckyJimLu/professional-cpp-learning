@@ -47,6 +47,15 @@
 - policy、mechanism、observation 若具有独立变化原因，应拆成可组合组件；上层负责 orchestration。
 - 解耦不能以隐藏 ownership、service locator 或无界运行时注册为代价，尤其是实时路径。
 
+### Extensibility
+
+- 只为已识别的真实变化轴建立 customization point，不为假想未来设计万能插件接口。
+- 扩展点应保持最小、稳定、语义明确；OCP 是设计目标，不要求一律使用 virtual inheritance。
+- 根据变化时机和生命周期选择机制：编译期变化优先 template/concept；轻量行为可用 callable；需要运行时替换和独立实现时再考虑 runtime interface。
+- required dependency 应显式注入；避免通过 writable global 或 service locator 隐藏依赖、ownership 和初始化顺序。
+- embedded runtime extensibility 必须有容量、注册时机、生命周期和 WCET 上界；实时路径避免无界动态分配。
+- 推荐“启动期组装、运行期有界调用”，使 flash/RAM、对象数量、初始化顺序和 borrower lifetime 可审计。
+
 ### 泛型编程与模板
 
 - template 参数只表达真实的 compile-time variation，不为减少几行重复代码而无边界模板化。
