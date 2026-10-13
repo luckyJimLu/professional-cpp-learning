@@ -4,6 +4,13 @@
 >
 > 在 C++ 中，这两个问题必须一起设计。
 
+## 本次学习：三个判断问题与 UML
+
+- [三个问题与 Mermaid 决策流程图](#24-三个问题从存放方式到生命周期)
+- [独占拥有与借用：类图和时序图](#25-第二问同一个策略接口两种所有权)
+- [异步强持有与弱观察：类图和时序图](#26-第三问排队任务需要对象活到什么时候)
+- [可编译实验与学习检查](#27-可编译实验与学习检查)
+
 ---
 
 # 1. 为什么 C++ 设计模式必须讨论指针
@@ -925,3 +932,399 @@ weak_ptr<T>    = 我观察共享对象，但不让它多活
 最重要的一句：
 
 > **先设计 lifetime，再选择 pointer；不要先选 smart pointer，再让生命周期去适配它。**
+
+---
+
+# 24. 三个问题：从存放方式到生命周期
+
+> 接口规定“可以做什么”；所有权类型规定“谁负责对象、对象需要活多久”。
+>
+> 不要从模式名字推导指针类型。Strategy、Adapter、Decorator 都可能拥有对象，也可能只借用对象。
+
+按顺序问：
+
+1. **能否直接用值？** 类型和存放方式是否合适，是否需要使用同一个既有对象？
+2. **谁负责销毁对象？** 当前组件独占拥有、多个参与者共享拥有，还是外部拥有而当前组件借用？
+3. **使用者是否需要延长对象的生命周期？** 尤其要检查排队任务、回调、订阅是否可能晚于调用方销毁时执行。
+
+这三个问题是思考顺序，不是“每问一次只能走一条分支”的机械算法。第三问可能促使你重新设计第二问的所有权关系。
+
+## 24.1 Mermaid 决策流程图
+
+```mermaid
+flowchart TD
+    A["能否直接用值表达关系？"] -->|可以| V["使用 T：随外层对象销毁"]
+    A -->|需要间接访问或既有对象| B["谁负责销毁对象？"]
+    B -->|当前组件独占| U["使用 unique_ptr"]
+    B -->|多个独立所有者| S["使用 shared_ptr"]
+    B -->|外部所有者| C["借用关系能否保证有效？"]
+    C -->|必需依赖且存活有保证| R["使用 T 引用"]
+    C -->|可选依赖且存活有保证| P["使用非拥有 T 指针"]
+    C -->|对象可能先销毁| D["使用者是否必须维持对象存活？"]
+    D -->|必须| E["转移独占所有权，或建立共享所有权"]
+    D -->|允许跳过且对象由 shared_ptr 管理| W["使用 weak_ptr，并调用 lock"]
+    D -->|对象没有共享所有权| X["设计取消、注销或等待完成协议"]
+```
+
+说明：
+
+- 运行时多态不必然要求堆分配：引用同样支持虚函数调用；有限类型集合也可以考虑 `std::variant`。
+- `weak_ptr` 只能观察共享所有权体系中的对象，不能观察任意栈对象或 `unique_ptr`。
+- 延长生命周期可以通过转移 `unique_ptr` 实现；并非所有异步任务都需要 `shared_ptr`。
+- `T&` 不可为空的约定不等于生命周期自动安全。对象销毁后，引用同样悬空。
+- 裸指针在此文中约定为非拥有；C++ 语言本身不强制这一约定。
+
+## 24.2 第一问：配置直接用值
+
+```cpp
+struct Config {
+  int timeout_ms = 1000;
+  int retry_count = 3;
+};
+
+class Service {
+ private:
+  Config config_;
+};
+```
+
+配置类型固定、可以作为成员存放、生命周期随服务结束。这里使用值不需要额外分配，也不会引入空指针状态。
+
+如果只是因为“类成员习惯用指针”而改成 `unique_ptr<Config>`，就增加了复杂度。只有隐藏实现、地址稳定性等具体需求成立时，才进一步考虑间接存放。
+
+# 25. 第二问：同一个策略接口，两种所有权
+
+统一使用 `ITransport` 表达发送能力；`TcpTransport` 是具体实现。下面三张图描述独占拥有与借用之间的差异。
+
+## 25.1 UML 类图：独占拥有的策略
+
+```mermaid
+classDiagram
+    class Config {
+        +int timeout_ms
+        +int retry_count
+    }
+    class ITransport {
+        <<interface>>
+        +Send() void
+    }
+    class TcpTransport {
+        +Send() void
+    }
+    class OwnedService {
+        -Config config_
+        -unique_ptr~ITransport~ transport_
+        +Send() void
+    }
+    ITransport <|.. TcpTransport : 实现
+    OwnedService *-- Config : 值成员
+    OwnedService *-- ITransport : 独占拥有具体实现
+```
+
+组合关系 `*--` 表示这里的生命周期由服务管理。图中的接口端代表实际派生对象，并非实例化抽象类。
+
+```cpp
+class OwnedService {
+ public:
+  explicit OwnedService(std::unique_ptr<ITransport> transport)
+      : transport_(std::move(transport)) {
+    if (!transport_) {
+      throw std::invalid_argument("transport required");
+    }
+  }
+
+  void Send() { transport_->Send(); }
+
+ private:
+  Config config_{};
+  std::unique_ptr<ITransport> transport_;
+};
+```
+
+`ITransport` 的定义必须包含虚析构函数：
+
+```cpp
+struct ITransport {
+  virtual ~ITransport() = default;
+  virtual void Send() = 0;
+};
+```
+
+通过 `unique_ptr<ITransport>` 删除派生对象时，虚析构确保执行正确的派生析构逻辑。
+
+## 25.2 UML 时序图：所有权转移与销毁
+
+```mermaid
+sequenceDiagram
+    participant App as 应用
+    participant Factory as make_unique
+    participant Service as OwnedService
+    participant Transport as TcpTransport
+    App->>Factory: 创建传输对象
+    Factory->>Transport: 构造对象
+    Factory-->>App: 返回 unique_ptr
+    App->>Service: 构造并移动 unique_ptr
+    Note over App,Service: 移动后，应用原指针为空；服务独占拥有
+    App->>Service: Send()
+    Service->>Transport: Send()
+    Transport-->>Service: 返回
+    App->>Service: 离开服务作用域
+    Service->>Transport: unique_ptr 删除对象
+    Note over Transport: 执行派生类与基类析构
+```
+
+`std::move` 本身只是允许移动；真正转移所有权的是 `unique_ptr` 的移动操作。
+
+## 25.3 UML 类图：应用拥有，服务借用
+
+```mermaid
+classDiagram
+    class Application
+    class ITransport {
+        <<interface>>
+        +Send() void
+    }
+    class TcpTransport {
+        +Send() void
+    }
+    class BorrowedService {
+        -ITransport& transport_
+        +Send() void
+    }
+    ITransport <|.. TcpTransport : 实现
+    Application *-- TcpTransport : 按值拥有
+    Application *-- BorrowedService : 按值拥有
+    BorrowedService --> ITransport : 借用，不负责销毁
+```
+
+借用使用普通关联 `-->`，不要画成组合关系。
+
+```cpp
+class BorrowedService {
+ public:
+  explicit BorrowedService(ITransport& transport)
+      : transport_(transport) {}
+
+  void Send() { transport_.Send(); }
+
+ private:
+  ITransport& transport_;
+};
+```
+
+对于应用根对象，成员声明顺序必须体现依赖：
+
+```cpp
+class Application {
+ private:
+  TcpTransport transport_;       // 先构造，后销毁
+  BorrowedService service_{transport_}; // 后构造，先销毁
+};
+```
+
+这是结构示意；下方完整实验的 TcpTransport 还接收一个析构计数器。真实成员按照声明顺序构造，按照相反顺序销毁，不能只依赖构造函数初始化列表的书写顺序。
+
+## 25.4 UML 时序图：借用者销毁不会销毁依赖
+
+```mermaid
+sequenceDiagram
+    participant App as 应用
+    participant Transport as TcpTransport
+    participant Service as BorrowedService
+    App->>Transport: 构造传输对象
+    App->>Service: 传入 ITransport 引用
+    App->>Service: Send()
+    Service->>Transport: Send()
+    Transport-->>Service: 返回
+    App->>Service: 结束服务作用域
+    Note over App,Transport: 传输对象仍然存活，服务不执行 delete
+    App->>Transport: 再次 Send()
+    App->>Transport: 结束传输对象作用域，自动析构
+```
+
+如果依赖允许不存在，可以改成 `ITransport*`，并定义 `nullptr` 的业务含义；这不会改变“不拥有”的约定。
+
+# 26. 第三问：排队任务需要对象活到什么时候？
+
+本节使用单线程延迟执行队列，刻意把“提交”与“执行”分开，方便观察生命周期。它不是生产线程池。
+
+## 26.1 UML 类图：任务强持有或弱观察
+
+```mermaid
+classDiagram
+    class Application
+    class Executor {
+        +Post(task) void
+        +RunAll() void
+    }
+    class StrongTask {
+        -shared_ptr~Session~ session_
+        +Execute() void
+    }
+    class WeakTask {
+        -weak_ptr~Session~ session_
+        +Execute() void
+    }
+    class Session {
+        +Handle() void
+    }
+    Application --> Session : 持有 shared_ptr
+    Executor *-- StrongTask : 保存任务
+    Executor *-- WeakTask : 保存任务
+    StrongTask --> Session : 共享拥有，延长存活
+    WeakTask ..> Session : 弱观察，不延长存活
+```
+
+`StrongTask`、`WeakTask` 是两类 lambda 闭包的概念名称，实验代码并未单独定义这两个类。共享拥有用带标签的关联表示，避免误画成独占组合。
+
+## 26.2 强持有：任务释放前对象必须存活
+
+```cpp
+auto session = std::make_shared<Session>();
+
+executor.Post([session] {
+  session->Handle();
+});
+
+session.reset();
+executor.RunAll();
+```
+
+上面是概念片段；完整实验中的 Session 还接收处理与析构计数器。
+
+```mermaid
+sequenceDiagram
+    participant App as 应用
+    participant Queue as Executor 队列
+    participant Task as 强持有任务
+    participant Session as Session
+    App->>Session: make_shared 构造
+    App->>Queue: Post，按值捕获 shared_ptr
+    Queue->>Task: 保存闭包，持有一份所有权
+    App->>App: reset 应用持有的 shared_ptr
+    Note over Task,Session: 任务仍拥有对象，不会析构
+    App->>Queue: RunAll()
+    Queue->>Task: 调用闭包
+    Task->>Session: Handle()
+    Session-->>Task: 返回
+    Task-->>Queue: 执行结束
+    Queue->>Task: 释放闭包
+    Task->>Session: 释放最后一份强引用，析构
+```
+
+关键细节：**任务执行完不一定立即释放对象；闭包释放时才释放其中的 shared_ptr。** 本实验的 RunAll 在返回前释放执行批次，因此观察到会话随后销毁。如果生产队列保留已执行任务，生命周期会更长。
+
+`shared_ptr` 只保证对象存活，不保证业务状态仍然“打开”，也不保护 Session 内部数据的并发访问。
+
+## 26.3 弱观察：对象已销毁则跳过
+
+```cpp
+std::weak_ptr<Session> weak = session;
+executor.Post([weak] {
+  if (auto alive = weak.lock()) {
+    alive->Handle();
+  }
+});
+```
+
+```mermaid
+sequenceDiagram
+    participant App as 应用
+    participant Queue as Executor 队列
+    participant Task as 弱观察任务
+    participant Session as Session
+    App->>Session: make_shared 构造
+    App->>Queue: Post，捕获 weak_ptr
+    Queue->>Task: 保存闭包，不增加强引用
+    alt 执行前所有强引用已释放
+        App->>Session: reset 最后一份 shared_ptr，析构
+        Queue->>Task: 执行任务
+        Task->>Task: lock() 返回空 shared_ptr
+        Note over Task: 跳过处理，不访问已销毁对象
+    else 执行时仍有强引用
+        Queue->>Task: 执行任务
+        Task->>Task: lock() 成功，获得临时 shared_ptr
+        Task->>Session: Handle()
+        Session-->>Task: 返回
+        Task->>Task: 释放临时 shared_ptr
+        Note over App,Session: 外部仍持有所有权，对象继续存活
+    end
+```
+
+不要先检查 `expired()` 再解引用裸指针，应直接使用 `lock()` 的结果。成功获得的强引用只覆盖本次处理；如果 Handle 又启动新的异步任务，新任务的生命周期必须继续设计。
+
+## 26.4 智能指针不等于关闭协议
+
+“对象尚未析构”和“业务允许继续执行”不同：
+
+- `reset()` 只是释放当前指针的所有权，不等于主动关闭会话。
+- 若对象被其他强引用持有，weak_ptr 仍能 lock 成功。
+- 业务关闭通常还需要 Close、取消标记、停止接收新任务、等待在途任务等约定。
+- `weak_ptr` 解决销毁后的访问问题，不能代替取消与状态同步。
+
+# 27. 可编译实验与学习检查
+
+完整示例：[pointer-choice.cpp](../examples/pointer-choice.cpp)。
+
+在仓库根目录执行：
+
+```bash
+g++ -std=c++20 -Wall -Wextra -Wconversion -Wpedantic \
+  examples/pointer-choice.cpp -o /tmp/pointer-choice
+/tmp/pointer-choice
+```
+
+最后一行预期：
+
+```text
+All ownership checks passed
+```
+
+示例用断言验证五种行为：
+
+| 场景 | 验证结果 |
+|---|---|
+| 独占传输对象 | 原 unique_ptr 移动后为空；服务析构时对象恰好销毁一次 |
+| 借用传输对象 | 服务析构后传输对象仍可调用；外层作用域结束才销毁 |
+| shared_ptr 强捕获 | 应用 reset 后仍存活；任务处理一次；闭包释放后析构 |
+| weak_ptr 失效分支 | 应用 reset 后析构；任务跳过，不执行处理 |
+| weak_ptr 存活分支 | lock 成功后处理一次；外部所有者释放后才析构 |
+
+另验证必需依赖为空时构造函数拒绝接收。不要加 `-DNDEBUG`，否则这些 assert 检查会被禁用。
+
+## 27.1 参数类型也在说明所有权
+
+| 签名 | 契约 |
+|---|---|
+| `void Inspect(const T& object)` | 同步只读借用，不延长生命周期 |
+| `void Update(T& object)` | 同步可写借用，不延长生命周期 |
+| `void Inspect(const T* object)` | 可空借用，调用前检查并定义空值含义 |
+| `void Install(std::unique_ptr<T> object)` | 接收独占所有权 |
+| `void Retain(std::shared_ptr<T> object)` | 接收一份共享所有权，可保存或转交 |
+| `void Watch(std::weak_ptr<T> object)` | 观察共享对象，使用时 lock |
+
+异步接口即使参数是引用，也必须另行约定引用是否逃逸、谁保证存活。不要因为函数签名里有引用，就默认它只同步使用。
+
+## 27.2 自检题
+
+1. 三个服务使用同一个 Transport，是否必须用 shared_ptr？
+2. 队列中的任务是对象唯一的后续所有者，可以怎么保存对象？
+3. 为什么弱观察者不能直接改成裸指针？
+4. 为什么 task 已执行，Session 却可能仍没有析构？
+
+参考答案：
+
+1. 不必须。Application Root 可唯一拥有，三个服务借用，前提是依赖存活及关闭顺序可靠。
+2. 可以移动 unique_ptr 到任务中；队列须支持只可移动的闭包。本文使用 std::function，不支持这样的闭包；C++23 可考虑 std::move_only_function。
+3. 裸指针无法检查对象是否已销毁。只有外部能保证存活，或有可靠注销/取消协议时，才可作为借用关系。
+4. 队列或其他组件可能仍持有闭包，闭包中的 shared_ptr 仍维持强引用。
+
+## 27.3 设计模式落点
+
+- Strategy：接口隔离行为变化；拥有或借用由生命周期决定。
+- Factory：返回 unique_ptr 表达把新对象所有权交给调用方。
+- Decorator：独占包装用 unique_ptr；固定对象图中的借用包装用引用。
+- Observer：共享管理的订阅者可弱观察；固定生命周期系统可使用注销 token。
+- Command：队列拥有命令，不代表命令必然拥有其接收者；接收者的存活需要单独约定。
+
+**先判断是否需要间接访问，再确认谁拥有，最后检查延迟使用能否跨越对象生命周期。**
