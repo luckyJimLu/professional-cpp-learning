@@ -1,0 +1,18 @@
+@startuml
+title Plan / Build / Review 流程
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam ArrowColor #4F5D75
+skinparam roundcorner 8
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #2D3142
+  FontColor #2D3142
+}
+start
+:Plan：理解代码、找调用链、提出方案;
+:人工确认：范围、风险、迁移与回滚;
+:Build：修改实现、补测试、运行验证;
+:Review：检查 diff、边界和回归;
+stop
+@enduml

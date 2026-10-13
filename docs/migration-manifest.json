@@ -1,0 +1,1330 @@
+{
+  "source": "system-design-notes",
+  "files": [
+    {
+      "source": "content/29. embedded-systems/README.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/README.md",
+      "sha256": "ac78752b43366882cc3622444401cc9277f5b33f30160a519b0a746a0a924527"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/01-diagnostics-unified-design.en.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/01-diagnostics-unified-design.en.md",
+      "sha256": "5538c516399a5151010ca6ab0564ceaf68e21ad26c8baf948371178c25b24fa7"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/01-diagnostics-unified-design.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/01-diagnostics-unified-design.md",
+      "sha256": "21de97953fbc1b6b5b4aa10712a99d4956f73211889c629af645268593d6f4a3"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/02-cpp-architecture-and-interactions.en.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/02-cpp-architecture-and-interactions.en.md",
+      "sha256": "7eb871512a63b399d89be84c804cc83270d422174636efddfecd8a1e8c7be594"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/02-cpp-architecture-and-interactions.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/02-cpp-architecture-and-interactions.md",
+      "sha256": "39a007d158fd4b1ad6239ef7ab18d92b6b51d2f7eab295a2037d4666e6473ad9"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/03-modem-complete-mermaid-flows.en.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/03-modem-complete-mermaid-flows.en.md",
+      "sha256": "53551ec35c64d8138a1880e3a89d9cfa73ec06896489db781bf7228a1a6b88ad"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/03-modem-complete-mermaid-flows.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/03-modem-complete-mermaid-flows.md",
+      "sha256": "c0f99ff05b83c4f1724c26c92d4aecf86c0ad339111bf38424066a16d037874d"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/04-stm32-lwip-modem-log-storage-design.en.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/04-stm32-lwip-modem-log-storage-design.en.md",
+      "sha256": "a7fb9b5eac2b27ef1b82a429ddb3ad77fa85441b064624d974caa1659f9f5436"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/04-stm32-lwip-modem-log-storage-design.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/04-stm32-lwip-modem-log-storage-design.md",
+      "sha256": "92d67ea1cdf2c85703773a2bfe49027c283b79107e0b3196266b8fec2f5ce3f3"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/05-modem-mcu-dual-netif-routing-design.en.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/05-modem-mcu-dual-netif-routing-design.en.md",
+      "sha256": "1df9672c4ccb261cc5ab76a22d36b4fd4fd308e57d13ab3e943519c5e9ee0efc"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/05-modem-mcu-dual-netif-routing-design.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/05-modem-mcu-dual-netif-routing-design.md",
+      "sha256": "66fdee2c1d4a6e5fe2fe46ca75116ea5a36a59ae066521ff6529fa1776f1d709"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/06-multi-channel-elastic-worker-pool-design.en.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/06-multi-channel-elastic-worker-pool-design.en.md",
+      "sha256": "61e0712f0cffe2be0089f23919dcccef36c863b93c28d41f88414ea36bc226a9"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/06-multi-channel-elastic-worker-pool-design.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/06-multi-channel-elastic-worker-pool-design.md",
+      "sha256": "84c3ae53391db41e8340485d21cfadf53e4cdb2547250e95736658f3727f12b8"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/07-multi-channel-elastic-worker-pool-design-review.en.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/07-multi-channel-elastic-worker-pool-design-review.en.md",
+      "sha256": "691ecebcdccb2e4cf5d45f5902348a5eb784f0a5c33475c42d1e11df5fbd6246"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/07-multi-channel-elastic-worker-pool-design-review.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/07-multi-channel-elastic-worker-pool-design-review.md",
+      "sha256": "099f1783a2ac2fa8c3d85695afef7a9e7a026b05f4c6e7106db8c57d3fdfa9f1"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/README.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/README.md",
+      "sha256": "e4260df3f0b169e7cde3ed8699ecadd604d1e506403cbd594458202b633019f3"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/107rybd.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/107rybd.puml",
+      "sha256": "476e0b11f670f958ef88ccb9b002006d6322fe08f8ce5773cda9ab1fcbf9bf30"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/107rybd.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/107rybd.svg",
+      "sha256": "dfa7cccf67c28437270892e65e5e08ed8b0871b3dc1d40830ca81500c36fc156"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/10822ch.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/10822ch.puml",
+      "sha256": "5b233017ad476f49021d5143b09dfbc55427af01d442e7340d16332eebe120d1"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/10822ch.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/10822ch.svg",
+      "sha256": "ac5e227633669f7bdc3d2749b4281bc7237f175f20c36ac909fdaf1ec27fbe5d"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1221ked.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1221ked.puml",
+      "sha256": "045fe336a228c063165d69041c593c4138d8cdd3aed8a72a932c383627f233b9"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1221ked.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1221ked.svg",
+      "sha256": "90cf7f55e3c9f2c938f262e6d008d03b20536110b21b9dba919596325127c03d"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/13q98jp.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/13q98jp.puml",
+      "sha256": "ca7a760dda0933d9583d697dba3af0d0cb9a3693252586b8116495c057147e5a"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/13q98jp.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/13q98jp.svg",
+      "sha256": "def7feee71b3e7647606c2e045e483d15d6cfa0982cd1252d3496d6fb360e4c4"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/15uxunp.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/15uxunp.puml",
+      "sha256": "e89afafc024d23120eeb7c617e587a9f38442ade3a53950029702627a7a91b12"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/15uxunp.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/15uxunp.svg",
+      "sha256": "49a1100c64a8eb1f15baef9ca982b3ddee98f5d9c8497e4eef1ca6096348c119"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/16ov8nd.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/16ov8nd.puml",
+      "sha256": "6132af172678702d2a50e0579a656b4f2b11931f5cf60d6feaf57893f66ac748"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/16ov8nd.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/16ov8nd.svg",
+      "sha256": "f8633eefdc631fb72820f1118e5a557d2f6bf18ec4a604ff40708b560389ad31"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/174bx71.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/174bx71.puml",
+      "sha256": "b396ffacfa424967c2d532cf5660f1ecdfd5e86abbd85cb7a6d1067d74a61aec"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/174bx71.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/174bx71.svg",
+      "sha256": "4c4fe0941e338e6c2693d561771f1601c01e9d57bb0b1a8553c3d0b665ac316a"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/182yorl.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/182yorl.puml",
+      "sha256": "3b95b32536c9cf9170678409b397c9b2c6ac8bceacedef44c059c809a2dbd55f"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/182yorl.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/182yorl.svg",
+      "sha256": "f564600c9d680ac8eafa182e1f86917d85a7eafa71701630d9ef4285f463e10f"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/18jpkp8.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/18jpkp8.puml",
+      "sha256": "54f6880cae1b7ed28eb69bd663fd58b4def2b89131bcf883fdde0fec50220353"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/18jpkp8.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/18jpkp8.svg",
+      "sha256": "4361ada98bab19bedd9f41280e109bc429896672e559a4bf7584a48fa0d153ed"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/199wia.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/199wia.puml",
+      "sha256": "0fe55f3340008db356f2be63478db035d6efe03a2c8d991822b90e2119b0685d"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/199wia.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/199wia.svg",
+      "sha256": "f28f87550b0b4f6fd98fe8a0b75639882d66ea6793cceac1f3d2e77f8cdc2d2e"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1ak50f5.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1ak50f5.puml",
+      "sha256": "343cba89a7037b570cb3c48ef7324eb043527aa12ffe64f7d66024d1b419f130"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1ak50f5.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1ak50f5.svg",
+      "sha256": "1d0c4f8909b10365db511c524c53983bf142c450f09df9143d2daab537b0f9ce"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1coc6gd.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1coc6gd.puml",
+      "sha256": "1229bd04d80100c81da8ad03ad192c750288de9bea0ba4bb54a1efd156c04158"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1coc6gd.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1coc6gd.svg",
+      "sha256": "f00ab492cc2476438571771a735d6d2585d97094a9eda5b2873b8eeb575c604b"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1fyddg7.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1fyddg7.puml",
+      "sha256": "e772e1e686bb93921cd3ef39a3296f11bc3e5535831f60a0b783cf12c1154dd3"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1fyddg7.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1fyddg7.svg",
+      "sha256": "d9c922bb40ddbedf355fcbb7059e8f54125a54519bc0157d1ed904ec9c6dad46"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1hackrj.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1hackrj.puml",
+      "sha256": "247272fab576befa90c6ddf6fc62c6c37efb666a3323824ee24c9f8866f26db5"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1hackrj.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1hackrj.svg",
+      "sha256": "b4bf57dac5202f8b2af52b9e4810dbdb91c39836ee7edb1e1e63be88882049b7"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1jpwkyj.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1jpwkyj.puml",
+      "sha256": "7ef085a14e0647576594354b8ef99c336f370b80d0dddc0487fd80ac5701b663"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1jpwkyj.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1jpwkyj.svg",
+      "sha256": "0c27ffc220fdf80bcc3b29e4251fa62e6ddbd7341e77e186b0ebf09b4061b05e"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1ksmmb0.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1ksmmb0.puml",
+      "sha256": "30b29983807a868d3482d51479aa919559eaf0de325168b4766dce9f0adb78b9"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1ksmmb0.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1ksmmb0.svg",
+      "sha256": "39bb7bf5ac0c9e98b81d0cfef5575b00dcdba6d9ccc147846438ce4872af9bbf"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1ls1shj.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1ls1shj.puml",
+      "sha256": "c368ed05fd1a39de7e526ad023e6d0725548eca664a15d9fab64e2fd1397f6d7"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1ls1shj.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1ls1shj.svg",
+      "sha256": "dbd2eef19066c90c64bfe3c4792150520e6daf41e2d186c457474f71ec925b72"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1mvqnex.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1mvqnex.puml",
+      "sha256": "c2200fc3fc655492d2f534f89a255cfffb06403bcb7780544eff8537e72b810d"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1mvqnex.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1mvqnex.svg",
+      "sha256": "99a00fb48452f6f97af009680ab2a1f3bbf2ac2cbb4a13b6ef71759a461e86ba"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1o16aq3.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1o16aq3.puml",
+      "sha256": "41b39817dfe2f1b4abf3c14f238880c11ff282ae5c09d2b175964578740dc8e4"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1o16aq3.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1o16aq3.svg",
+      "sha256": "aa4d7b6fed111c331b6b468cc6dd7dfa7c86236365d9a8787fe9ed1bd52378cd"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1p1sm3n.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1p1sm3n.puml",
+      "sha256": "0852a4dce44ed54282fbda69cd8404167a738e9334058b24c128895687549c4d"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1p1sm3n.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1p1sm3n.svg",
+      "sha256": "bd84fdbb0ab94e8ac0d52326587a52d96f6890d5c4db69a7c78f177981ec0a7a"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1pa4fj1.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1pa4fj1.puml",
+      "sha256": "ae24362198a97362ae85dd3f747ce7e78eb0109f9c072c596a3a116c2c30768f"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1pa4fj1.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1pa4fj1.svg",
+      "sha256": "4822a221fdf7b9956b6711c3b1c4bbce68c73a32cfa1fbb1d2be85400f11c1be"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1q2zm8p.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1q2zm8p.puml",
+      "sha256": "1c1070de3ed01c8cb88f12f7769c61330c6a78ef410fe2ed106f5dc5cfc8359f"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1q2zm8p.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1q2zm8p.svg",
+      "sha256": "ae6b3a0a78fc5775bfcbc58aa4b1cb431ec8221213e8d969011e417a729d4790"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1rijokv.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1rijokv.puml",
+      "sha256": "6b1c55a7268e06db599568024a9c2ca15c0eaa97a3e993bfa47f4335e99ce6f5"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1rijokv.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1rijokv.svg",
+      "sha256": "a23317da6708b55a4291de54929bd94d6f06e3766482ee65f5717cefa8242ec8"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1sqmnz8.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1sqmnz8.puml",
+      "sha256": "8fdfa2606b59363fd55a3e415cb2611fb76895bd67b5ef02669d4db66505718a"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1sqmnz8.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1sqmnz8.svg",
+      "sha256": "eaae19d3cc5d757fe78bfeb371f66423b077e8786773c4368e7148a03c766083"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1te00e6.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1te00e6.puml",
+      "sha256": "8fbc3a1bb6d8020464608ce5ebf33accfcf814657b4fb99444b3407ae0437502"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1te00e6.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1te00e6.svg",
+      "sha256": "6e47c091eac3440523c65ad3aefadb4be2dae583ab787bad6d433d3e39d1bee6"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1ulgs5j.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1ulgs5j.puml",
+      "sha256": "60ed63b811a5a00b84815d43230d5aa9e9d255547dde0a2c33f3bdf4a0535721"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1ulgs5j.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1ulgs5j.svg",
+      "sha256": "97f53b326b3cb31860c96379b1b795eac4f7421efe8d9840ecac43d706f51e8f"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1w70ugs.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1w70ugs.puml",
+      "sha256": "749ecdffc490ce057ead9eb9b8107df8143d090bd02e43d9b40410b9bfc7f306"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1w70ugs.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1w70ugs.svg",
+      "sha256": "d83d1f495017794c054af9c01e076379959a341d5f4bd1c75fce45f5ae2804a3"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1xvu1z0.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1xvu1z0.puml",
+      "sha256": "2a1a20dcea96a3da06ea8df3d7ca50dc780e8679a6500817076ad9021663657b"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1xvu1z0.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1xvu1z0.svg",
+      "sha256": "794b4aac727188eedb2202631f9de05188474ce5c6c60223a7251000781eef2d"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1ymbe3s.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1ymbe3s.puml",
+      "sha256": "e6b1e51ed5c05d103f8a71e463254c31c9cf9feb600f4eb521bf5e9b63b7f74d"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/1ymbe3s.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/1ymbe3s.svg",
+      "sha256": "b980e7db7da8d2be89a02aa90f59c9ab3e4391dab408724a984d7faafbfed133"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/5om9wf.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/5om9wf.puml",
+      "sha256": "dd4b50ad1c9f86e8ca8a5cfda092b3a605678e2275e266658c1c5e51b787bf17"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/5om9wf.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/5om9wf.svg",
+      "sha256": "3578043723f30d6af87d79501bb06f7181b8a92a40dc6efabb3b47ddbadf4274"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/6rp55a.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/6rp55a.puml",
+      "sha256": "aa15892a7cc3f1f1fad2b242225b38c3ac661e5a3290407a064a73946a3cbc17"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/6rp55a.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/6rp55a.svg",
+      "sha256": "5733436dda2b711b9ed9ae41dcba7972bc1b5d39eaf7eadfecc3b654deab54e8"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/9jeq3e.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/9jeq3e.puml",
+      "sha256": "ce34672026bc930c619b161e33a4d18c2f7abfdf4802034170ddc931c8ce23e0"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/9jeq3e.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/9jeq3e.svg",
+      "sha256": "2fcf9597764ee4e7eb1527fce96c1dfc384dca25824613d80970fc5cbb011266"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/apctnz.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/apctnz.puml",
+      "sha256": "c2c569e8c6b61057c0f871e521035742e5560ff7884bb7bc91561561995865ac"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/apctnz.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/apctnz.svg",
+      "sha256": "515c75becba5a1b086390f0270f6602b14862b8bdbecd46fcc0000f884ded3b1"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/c6i0c.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/c6i0c.puml",
+      "sha256": "af8d33b87deda089d0b5c179ba84de80f3c3d62b0e206e97604c3976da95c6c4"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/c6i0c.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/c6i0c.svg",
+      "sha256": "002f258d98a8d79f4351312a611a620bcee344a27a784d9c4c3c842fb47fc838"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/cgqesn.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/cgqesn.puml",
+      "sha256": "e98cf42bdf56aa6cabac4880c5a1076677fa67204da5549f79cb873df6c277bb"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/cgqesn.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/cgqesn.svg",
+      "sha256": "6e1b39edd2e75b99afe5e5009e6bb6662fa4729b0b3fdc8f7a6838778248bfc5"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/dpe21f.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/dpe21f.puml",
+      "sha256": "84783b4a09ca3e415389278a8516be6ea8f276cfa78d9270b492f0a90e070d1d"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/dpe21f.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/dpe21f.svg",
+      "sha256": "d3a52362e5566e651209ec6e81b94a5232f60728876516d59b62ec71382ccc7f"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/gt3eci.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/gt3eci.puml",
+      "sha256": "5a4a67ceb09854823b92a58b4be93dde9f557a71179c418d92824e50202a4132"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/gt3eci.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/gt3eci.svg",
+      "sha256": "56d97cbd7f62de3582b7a7c98fb1e87eeabeeacd6825eaaa0ab9dccc4284512f"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/i0hwy4.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/i0hwy4.puml",
+      "sha256": "d1e428a1969d017435290355d9128ad4c6eb0b1aaa383423c8212bfe1924b948"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/i0hwy4.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/i0hwy4.svg",
+      "sha256": "b9d2d650edabe88c80e637666da23d6e51d24fce1148a7055b56be21e8b7426f"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/kb6x7t.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/kb6x7t.puml",
+      "sha256": "e2ba31c0a27e6e4d041856ee3819da964e1ecc539513a0c41bc8899508d21487"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/kb6x7t.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/kb6x7t.svg",
+      "sha256": "ab84eddcf35d54a59bb9bff5bf0711918b57323e44ea96c85afc76e167b74f9b"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/p60nli.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/p60nli.puml",
+      "sha256": "9686d183beb31e2db3966386212f1c9d9c5cae773858263ffbc82767a4b86a39"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/p60nli.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/p60nli.svg",
+      "sha256": "a22dbdb99aca20d94bf2ec1e0c843793aca34873b8ef2d92c2a681c3d4ca1104"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/su1o34.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/su1o34.puml",
+      "sha256": "ccd69b4d2bb101cc6bfbd9741be3a3b19c092d5de93c3df187c05fc6e5d276f8"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/su1o34.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/su1o34.svg",
+      "sha256": "5c3d3dc71eccb606383ad3c48c6ac8d05113522d6604577d9934d20c2c2f3c2c"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/sybqdb.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/sybqdb.puml",
+      "sha256": "fb059bf06212082dc99e876d5e043f74e7d6e911d7a2c6dbd13608ecf11d4d49"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/sybqdb.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/sybqdb.svg",
+      "sha256": "000a4c4965406bea6b06944e6e6c64ddc87bb5b496a4c37d998aaa7d8f3113df"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/t3na3k.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/t3na3k.puml",
+      "sha256": "e5fd957f3761599676d30c8b5ca66c8f960bf34870a1d045e9c71ebf91af16bb"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/t3na3k.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/t3na3k.svg",
+      "sha256": "3e4df669c56615d2fa70ac9ae076e0234a81549ddeb6ea8ce5c74c3bf5035772"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/vsr3be.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/vsr3be.puml",
+      "sha256": "91c916fbc1960a313555ae492e6d572c80733a34c0490245c4a55fb255daa119"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/vsr3be.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/vsr3be.svg",
+      "sha256": "402fdda7de5fc9879ceda2457f8a94046560d3f35422b37b0623a11d2e413b80"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/war5k6.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/war5k6.puml",
+      "sha256": "6ca172a89efb7eea1a8c2584e7b31e030c2d1528b5a2294c2aa9880def1149b1"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/war5k6.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/war5k6.svg",
+      "sha256": "9d9215cbd3dfb8d2e486c20968e26a8b32541830401a87040b2a20f1c506ce4d"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/wd1p38.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/wd1p38.puml",
+      "sha256": "91a7910cc38e26c410736d97f6df439dccdc173eb18bb32d21e96eb736b0a84e"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/wd1p38.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/wd1p38.svg",
+      "sha256": "8b2d8a6f6d64b1a1699f5a5a435d8650824a896b59f2121f4bc9ee5188234e75"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/z0s3lq.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/z0s3lq.puml",
+      "sha256": "4faa96fc839787cf41b43fdf9015b3ec27cc173f34f52cb83354b0cf31b80d00"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/z0s3lq.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/z0s3lq.svg",
+      "sha256": "c396c2bbb2cbfd121d4cb5988d5fca882fe4e8cf41ac73b67fbd5e51d7b3563e"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/z15xkz.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/z15xkz.puml",
+      "sha256": "c088aaf1205e2c9bd41a919c6e575ea33f929d4027a835e9abc6787e1aefba30"
+    },
+    {
+      "source": "content/29. embedded-systems/modemlog/images/z15xkz.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/modemlog/images/z15xkz.svg",
+      "sha256": "74c0757639eb4657a468bffadc3d766e250b9e1946cc69f024abc82844a6bfad"
+    },
+    {
+      "source": "content/29. embedded-systems/networking/README.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/networking/README.md",
+      "sha256": "ff57706b4400f11f973bcd9f6350cbb8be764bbf704f5c1af2fa23b85e4f07f2"
+    },
+    {
+      "source": "content/29. embedded-systems/networking/images/199caz4.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/networking/images/199caz4.puml",
+      "sha256": "358fa16b5c6aa9620f5c05d2182307580b767e132a2353430333071d00dd548c"
+    },
+    {
+      "source": "content/29. embedded-systems/networking/images/199caz4.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/networking/images/199caz4.svg",
+      "sha256": "77fb51ac0d61cc7b996f534bbe0ca4cc3ed8fb70066f1a7c864381b52072f365"
+    },
+    {
+      "source": "content/29. embedded-systems/networking/images/1f7x2wf.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/networking/images/1f7x2wf.puml",
+      "sha256": "455f954e6e80e37fdf19077995e653f742eb3486cb3b336a407f8f33c5d4c5f7"
+    },
+    {
+      "source": "content/29. embedded-systems/networking/images/1f7x2wf.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/networking/images/1f7x2wf.svg",
+      "sha256": "f454bafc4d6d927f891aceee647b48c0bd87abd8e47f7d9b1c04546ddeadeb3c"
+    },
+    {
+      "source": "content/29. embedded-systems/networking/images/1m8h57w.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/networking/images/1m8h57w.puml",
+      "sha256": "0b6ca6e244742dc8ca82018a38e6d21e7536c537981096d7a57071656f48e465"
+    },
+    {
+      "source": "content/29. embedded-systems/networking/images/1m8h57w.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/networking/images/1m8h57w.svg",
+      "sha256": "3a5652c6edcd07f885ce937ba86242f9d855410c68d1327c8aa33b5d84ca2c40"
+    },
+    {
+      "source": "content/29. embedded-systems/networking/images/1xvhp4g.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/networking/images/1xvhp4g.puml",
+      "sha256": "707d8210f11b59f90e5920d940bb44e55e15c371a176944c642bfc4b9b970cb2"
+    },
+    {
+      "source": "content/29. embedded-systems/networking/images/1xvhp4g.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/networking/images/1xvhp4g.svg",
+      "sha256": "25b6f4c4ce52712f034520968e1ddc3435e69feae3fb700885099671dbef081d"
+    },
+    {
+      "source": "content/29. embedded-systems/networking/images/5zjcdq.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/networking/images/5zjcdq.puml",
+      "sha256": "434774a27f12628eb76eeed2d4544c689f6ee7fe88257edd0f76a2110a353b82"
+    },
+    {
+      "source": "content/29. embedded-systems/networking/images/5zjcdq.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/networking/images/5zjcdq.svg",
+      "sha256": "2251c5690884e07a76128a1b95365b9bfea6e8a134185a4393fb0917d9192bca"
+    },
+    {
+      "source": "content/29. embedded-systems/networking/images/csocoa.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/networking/images/csocoa.puml",
+      "sha256": "ce683b5574fd47d3dd1114590c991bdceccd935983947809799d28c364ad295a"
+    },
+    {
+      "source": "content/29. embedded-systems/networking/images/csocoa.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/networking/images/csocoa.svg",
+      "sha256": "9a5c404a1e2a30fcfaaba4bbf026c994578c743e0a9abd5043219f4a8347006f"
+    },
+    {
+      "source": "content/29. embedded-systems/networking/images/rnarci.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/networking/images/rnarci.puml",
+      "sha256": "03cf096bb7cb1eed9c968506f058214dde4d90c09bb88f7b2c85d5fa6290cc12"
+    },
+    {
+      "source": "content/29. embedded-systems/networking/images/rnarci.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/networking/images/rnarci.svg",
+      "sha256": "c1260210d9aa169e89733d944953bffc63251d281e012a3d5323c10673f822e5"
+    },
+    {
+      "source": "content/29. embedded-systems/networking/images/zfqyce.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/networking/images/zfqyce.puml",
+      "sha256": "0dda624e7535a77e937e3bc4b530ceff8238662b6e615c8fc2b02526260d6519"
+    },
+    {
+      "source": "content/29. embedded-systems/networking/images/zfqyce.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/networking/images/zfqyce.svg",
+      "sha256": "4b84b79f684f95c62061297fdfa05ded352f2dac98f2e7ae5e2495a9754623ea"
+    },
+    {
+      "source": "content/29. embedded-systems/networking/lwip-tcpip-deepwiki.en.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/networking/lwip-tcpip-deepwiki.en.md",
+      "sha256": "cd2e6c5a48a729c2c02ce0471d9b21ba5e44d57a6f3cc6a3656116b6e1016eb6"
+    },
+    {
+      "source": "content/29. embedded-systems/networking/lwip-tcpip-deepwiki.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/networking/lwip-tcpip-deepwiki.md",
+      "sha256": "d3678f0548122b6be0ce4078b09087c10006152d2f3ccdec8258027cbe3d0ca2"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/README.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/README.md",
+      "sha256": "c36731da0e453935c7b900a19fbc06ea6a6e25058c0f2437f6e913e0a611b130"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/10qnaw2.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/10qnaw2.puml",
+      "sha256": "af20d255ba0e4ca1738cb70ccbbf378c8e7f944954d99a2f332f5014358b9181"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/10qnaw2.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/10qnaw2.svg",
+      "sha256": "1e4d9e96c19c9ef4e4d9ea86ec3181ab66d50571edc825b8cbb787931f9942c3"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/162pnrr.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/162pnrr.puml",
+      "sha256": "20b46f489728015f31131f5f87f447eade7aada7397982e7fda5195d18fdfd7d"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/162pnrr.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/162pnrr.svg",
+      "sha256": "138aea965d2debce00c8f422ed8023c42143903a3648342ba4b4ce87c1497001"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1alc67o.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1alc67o.puml",
+      "sha256": "01d62090c2fb21fcf1cc184a3d7c0a4a85ea7e5672bf60160891d8280cf96ea9"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1alc67o.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1alc67o.svg",
+      "sha256": "f893f36777baeb2945d4948db85fae757d648befe70c2191694445f144f55349"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1d6akdn.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1d6akdn.puml",
+      "sha256": "ca9be6f0a21e0f0efb4b363c586da9a345abf25e602719a42d5f2c770f2c900d"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1d6akdn.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1d6akdn.svg",
+      "sha256": "0624a43da28c7b7ec866419753540b67b013db786f1ecb1171ae478440dfa349"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1fiziw5.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1fiziw5.puml",
+      "sha256": "e60bf57a0f9a7fb2619491a7af1f2c776c164168b8fd121de4a8e8b50c30decf"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1fiziw5.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1fiziw5.svg",
+      "sha256": "b53e17be539b4cadda4678b0b61aee9d542b290e5819e3dd8f74b3d17cc5f65c"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1i4kp1q.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1i4kp1q.puml",
+      "sha256": "9bc46fe87c82feb93353ce1adbd7e72843809fae78c4552194049301f3495963"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1i4kp1q.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1i4kp1q.svg",
+      "sha256": "57b99b28750ead8ed7e5882ad62079597445974a2bbaeab4d4b8fffdd9e19bda"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1jft3uh.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1jft3uh.puml",
+      "sha256": "fae4a14e22910f3053456fc4839b1fd824c9945f47bd9c79f85cf8e13d067562"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1jft3uh.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1jft3uh.svg",
+      "sha256": "d6d244ddbc5762f1c04e75782e7d8e897deefe93c6214d31c02e0e4a121463dd"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1kpknfj.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1kpknfj.puml",
+      "sha256": "4c17b3e0eb7420e15fda5b95210da049e9341cf89aad6f3ddd0ddef804664429"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1kpknfj.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1kpknfj.svg",
+      "sha256": "4a9d2bc1fa387af27ab9cdb3bc7ce196c2f1d5d4bd84aaf0113763d50d7165fc"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1ktawox.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1ktawox.puml",
+      "sha256": "b2c342ba8895a2fbee9408f6e86cf0c19fdab6e6bbb1fefe9d219695a54df7e4"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1ktawox.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1ktawox.svg",
+      "sha256": "3b382f6aa0e1dd36d82d436dc2b186e90390995729ebdaf9097f91b15ec79666"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1l3gteq.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1l3gteq.puml",
+      "sha256": "9bde09b0f7183f4e1d185b997c2761ac1704f1188b6a86bb6e034d97bf99c505"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1l3gteq.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1l3gteq.svg",
+      "sha256": "a83206ac7a4ac7630666e55d27e920bb7ad43e33c8c040d8065636ddd61a160b"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1o1jpe.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1o1jpe.puml",
+      "sha256": "b5590c8e318c3693ea440f781bcb01493938650b6b520734bb0da02f96f6082f"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1o1jpe.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1o1jpe.svg",
+      "sha256": "1e5c8229151bf50e69a4a1b459a2338e76a0644b8fc0d0bba45c3de66f67b7e2"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1pas1dw.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1pas1dw.puml",
+      "sha256": "21e63ef616101ab2cf21e4ef10eddca4d7d46cfa96a03a492684e49580e60e40"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1pas1dw.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1pas1dw.svg",
+      "sha256": "977bbb8b0ac714bc0c16fd6ea73a95e07cfc0b161fe9eb59c592a8261b2b287b"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1x6c7rb.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1x6c7rb.puml",
+      "sha256": "77713d189bc0f71960c9d3e00829b8d59307849342d85b582e1dd933cb9a8056"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/1x6c7rb.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/1x6c7rb.svg",
+      "sha256": "2d97efaf15685feb1d152abf88166e1de486125f8babb7ef287ea16f66b27078"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/7x32q4.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/7x32q4.puml",
+      "sha256": "526c122f010fd01d8b71f77fe14d6c701d004da739b25f815d3ebc97fa9ab9b6"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/7x32q4.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/7x32q4.svg",
+      "sha256": "c71a12cd697425d13d884f86e55a90701567cc6e23a52d12cd9c00adfc854824"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/biz0jx.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/biz0jx.puml",
+      "sha256": "b24fa1dd9c2cbfc4eab4552ec8428d5c6541db2a7903349ce0f18d3b992620de"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/biz0jx.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/biz0jx.svg",
+      "sha256": "dce815ae8626d002ecf047f32eee845ad5b4530ba9903021fcbeb573eeac1cf9"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/d2mxuh.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/d2mxuh.puml",
+      "sha256": "752b3408937a49c9625450176e364893abdc4db073dfaf036026b5f8e7fb93c5"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/d2mxuh.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/d2mxuh.svg",
+      "sha256": "fc58997737fac871ec00a244995f6a07a046bf02c8f461e7b790a5f1fd484d38"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/evw8n2.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/evw8n2.puml",
+      "sha256": "b3abf6c3ce46adcf1ec7e0fc12bac71f839caa80159f1b360d9ccd13f8f3a08d"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/evw8n2.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/evw8n2.svg",
+      "sha256": "ba1cf047563a3e8a14ce41b1eefd59c5a6c7cc634f00481c1970456a9a88143d"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/olzwcs.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/olzwcs.puml",
+      "sha256": "337b5ce5d4e44bdae52c81f9c046c8b7517dc0f4054aeb517a2ecd1ee1dd5c47"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/olzwcs.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/olzwcs.svg",
+      "sha256": "d7811063c9cd9c1da69e585f4456843a13b5a711b3f877a8a0472c0da51bd386"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/prl9xf.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/prl9xf.puml",
+      "sha256": "807e9a758d1ddce6209b30b243ee1e87ce041fb25435895db9b1fee1fb673eb5"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/prl9xf.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/prl9xf.svg",
+      "sha256": "7e84b4f4bf7d626f597afb13dee28f0bc1ca1075127f57005de177637b30a647"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/qvb8be.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/qvb8be.puml",
+      "sha256": "c625316696ade3d24378a9337b855575bc05367943c5c2f169ee28a0e6987774"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/qvb8be.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/qvb8be.svg",
+      "sha256": "427abebdeb751542afc731c2d550f696105b040b7d16a13e37e913bbcdf849a1"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/vrwnzx.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/vrwnzx.puml",
+      "sha256": "20c6ee5110a1d521d9fa73a28532ae49271b65c59112126617dfc058d49082f6"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/vrwnzx.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/vrwnzx.svg",
+      "sha256": "6de02b72f0bfdea14ddc064469db23911a67402c123d9b14d14eec35482888f8"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/xcybou.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/xcybou.puml",
+      "sha256": "be43914f26f6bfdbc3c69be3604a72457e7efd993e4161a7e9df41247002f075"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/xcybou.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/xcybou.svg",
+      "sha256": "e696658b363b49a3f0f340b06cb2aa96071ef105c40e34e9432c3b69644a60a2"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/yknkmf.puml",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/yknkmf.puml",
+      "sha256": "3168708b9b309689657d3ce68f3618f6e1d1d3bd83d3642750b1a290eeb41781"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/images/yknkmf.svg",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/images/yknkmf.svg",
+      "sha256": "53313b10f16a030a18d9ee921a686334b1605a6ac68bf7318ecbf0b5cf9823bb"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/resource-constrained-embedded-rtos-architecture.en.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/resource-constrained-embedded-rtos-architecture.en.md",
+      "sha256": "fe9ee6d9c5243315823a202700abda0cbbb22604f61cc61111f4084ceb08eb95"
+    },
+    {
+      "source": "content/29. embedded-systems/rtos/resource-constrained-embedded-rtos-architecture.md",
+      "destination": "references/system-design-notes/content/29. embedded-systems/rtos/resource-constrained-embedded-rtos-architecture.md",
+      "sha256": "e53b217e21e3b552fbdca6ca602c9b94695ac2f9bab09f67287d5146a79f7d4b"
+    },
+    {
+      "source": "content/31. Development Tools/images/agent-roles-zh.puml",
+      "destination": "references/system-design-notes/content/31. Development Tools/images/agent-roles-zh.puml",
+      "sha256": "efdaa3c1eeb8084dd06d1b21aab65606536f7e549bc403bbef6a96cfc769e15b"
+    },
+    {
+      "source": "content/31. Development Tools/images/agent-roles-zh.svg",
+      "destination": "references/system-design-notes/content/31. Development Tools/images/agent-roles-zh.svg",
+      "sha256": "94d15f2adf0c4d9618a6c4f0138a15c534481953cf55f89c1d2cc97ca9b9cad5"
+    },
+    {
+      "source": "content/31. Development Tools/images/bugfix-loop-en.puml",
+      "destination": "references/system-design-notes/content/31. Development Tools/images/bugfix-loop-en.puml",
+      "sha256": "490f3c8d40606fd99a7086ea93f56688fc505efbb6df15667cd17f9c23c99fc4"
+    },
+    {
+      "source": "content/31. Development Tools/images/bugfix-loop-en.svg",
+      "destination": "references/system-design-notes/content/31. Development Tools/images/bugfix-loop-en.svg",
+      "sha256": "fdff76bb409a0aef9dbd8a995cbc462a04d0a3024414e331a6dcabaaa0178d55"
+    },
+    {
+      "source": "content/31. Development Tools/images/bugfix-loop-zh.puml",
+      "destination": "references/system-design-notes/content/31. Development Tools/images/bugfix-loop-zh.puml",
+      "sha256": "0c0b55cf4e3697dca036cbe32ba2925df38fab252b668879d3808bde624b0021"
+    },
+    {
+      "source": "content/31. Development Tools/images/bugfix-loop-zh.svg",
+      "destination": "references/system-design-notes/content/31. Development Tools/images/bugfix-loop-zh.svg",
+      "sha256": "cc3dcde400a1594f92a0ece7542262998c4652e4acbdf7d029131c94366a4437"
+    },
+    {
+      "source": "content/31. Development Tools/images/control-plane-zh.puml",
+      "destination": "references/system-design-notes/content/31. Development Tools/images/control-plane-zh.puml",
+      "sha256": "42b2f0a25caa09b13fd096b82d91c8317b44ea3347564ecc6c6b1f4e47f6fbfe"
+    },
+    {
+      "source": "content/31. Development Tools/images/control-plane-zh.svg",
+      "destination": "references/system-design-notes/content/31. Development Tools/images/control-plane-zh.svg",
+      "sha256": "6efff256aec632a19c4cdc07392aa9c2606981f08726dd58d45acaaae109ed35"
+    },
+    {
+      "source": "content/31. Development Tools/images/engineering-loop-en.puml",
+      "destination": "references/system-design-notes/content/31. Development Tools/images/engineering-loop-en.puml",
+      "sha256": "e08e03e289ec29e9398d545f2ca1fe5b4ffc5ffb2bef19c6b5c603e7b1bd56c7"
+    },
+    {
+      "source": "content/31. Development Tools/images/engineering-loop-en.svg",
+      "destination": "references/system-design-notes/content/31. Development Tools/images/engineering-loop-en.svg",
+      "sha256": "ad0712ecc42ff4b52909cfdba2909d2988b9c6d7665b1f9cc3f0262389dfb293"
+    },
+    {
+      "source": "content/31. Development Tools/images/engineering-loop-zh.puml",
+      "destination": "references/system-design-notes/content/31. Development Tools/images/engineering-loop-zh.puml",
+      "sha256": "52b783f189e8848675546de5bdd61379434c2d6235e3620c259f64a765842ed6"
+    },
+    {
+      "source": "content/31. Development Tools/images/engineering-loop-zh.svg",
+      "destination": "references/system-design-notes/content/31. Development Tools/images/engineering-loop-zh.svg",
+      "sha256": "39d6f242abf04e2d7c28d7270b496f4ea9cac3272ffa03bf8190a8378486b785"
+    },
+    {
+      "source": "content/31. Development Tools/images/plan-build-review-zh.puml",
+      "destination": "references/system-design-notes/content/31. Development Tools/images/plan-build-review-zh.puml",
+      "sha256": "23992ad3c1bf51f94bfd489681f75c9406378e339850f2bd4ae6dfc6f2609422"
+    },
+    {
+      "source": "content/31. Development Tools/images/plan-build-review-zh.svg",
+      "destination": "references/system-design-notes/content/31. Development Tools/images/plan-build-review-zh.svg",
+      "sha256": "4ba9d1a090d7ffa9a4f7071ce168a7622c6fc286e1b99b0859b69d1819dc6ffd"
+    },
+    {
+      "source": "content/31. Development Tools/images/refactor-milestones-zh.puml",
+      "destination": "references/system-design-notes/content/31. Development Tools/images/refactor-milestones-zh.puml",
+      "sha256": "d09a69abf9d3d4b85aa8defe5c3927c19e6832a0ee357dc318f2aa3695268782"
+    },
+    {
+      "source": "content/31. Development Tools/images/refactor-milestones-zh.svg",
+      "destination": "references/system-design-notes/content/31. Development Tools/images/refactor-milestones-zh.svg",
+      "sha256": "b383d792c4c2dbb2bfcc163a3093b16ea02ed0dafa496825c4a3f2458fedbfd1"
+    },
+    {
+      "source": "content/31. Development Tools/index.en.md",
+      "destination": "references/system-design-notes/content/31. Development Tools/index.en.md",
+      "sha256": "9336730fbd05b7e08748bc75f063facc6b18b28dea9e15acc29b871dba64e5ab"
+    },
+    {
+      "source": "content/31. Development Tools/index.zh.md",
+      "destination": "references/system-design-notes/content/31. Development Tools/index.zh.md",
+      "sha256": "de8ce180a8f217e6636c24e1c0d1dbf53b2cb1e31e49b7c8f6fead8c91f37174"
+    },
+    {
+      "source": "content/33. Cpp System Architecture/examples/bounded_thread_pool.cpp",
+      "destination": "references/system-design-notes/content/33. Cpp System Architecture/examples/bounded_thread_pool.cpp",
+      "sha256": "0b05ec99731e7f8744d14a7885a85a677057dee293c3363b7f4c63042a9a44bc"
+    },
+    {
+      "source": "content/33. Cpp System Architecture/images/connection-ownership.puml",
+      "destination": "references/system-design-notes/content/33. Cpp System Architecture/images/connection-ownership.puml",
+      "sha256": "a9308741f9ed9c33ccd9567e741bcd05af2d4d7786167fcbbfb13c252114d959"
+    },
+    {
+      "source": "content/33. Cpp System Architecture/images/connection-ownership.svg",
+      "destination": "references/system-design-notes/content/33. Cpp System Architecture/images/connection-ownership.svg",
+      "sha256": "f83521c50b10b2ade24095b8a924efa4aef2dbcb9a0b683e0c702da104a4ae8e"
+    },
+    {
+      "source": "content/33. Cpp System Architecture/images/draining-shutdown.puml",
+      "destination": "references/system-design-notes/content/33. Cpp System Architecture/images/draining-shutdown.puml",
+      "sha256": "adc4f85cb9a792e802add5e4d477544abf0dc753950ef2a2bc3f7228bc46a1e5"
+    },
+    {
+      "source": "content/33. Cpp System Architecture/images/draining-shutdown.svg",
+      "destination": "references/system-design-notes/content/33. Cpp System Architecture/images/draining-shutdown.svg",
+      "sha256": "ba7f96ef0864fdebb36749fb02e5e159483e44addf33934c9e28617673c4963d"
+    },
+    {
+      "source": "content/33. Cpp System Architecture/images/request-runtime.puml",
+      "destination": "references/system-design-notes/content/33. Cpp System Architecture/images/request-runtime.puml",
+      "sha256": "000985c694437a73b2f94a6b4d872d32aa7bda4b45f3869363525bd5687a9a1d"
+    },
+    {
+      "source": "content/33. Cpp System Architecture/images/request-runtime.svg",
+      "destination": "references/system-design-notes/content/33. Cpp System Architecture/images/request-runtime.svg",
+      "sha256": "3e93a88cd8e131e1aac09eb744d3f86d6019537897be7eeb72e0100c0ed3c8bb"
+    },
+    {
+      "source": "content/33. Cpp System Architecture/images/task-completion.puml",
+      "destination": "references/system-design-notes/content/33. Cpp System Architecture/images/task-completion.puml",
+      "sha256": "9875dbfd8cb1fa90f8a9eac05b04bb2733b4ccf10824d9c367e9171b284abdbc"
+    },
+    {
+      "source": "content/33. Cpp System Architecture/images/task-completion.svg",
+      "destination": "references/system-design-notes/content/33. Cpp System Architecture/images/task-completion.svg",
+      "sha256": "dae57641d9091e3f98185296cdf9943aa55b524b43ed3b2342338694e2997b50"
+    },
+    {
+      "source": "content/33. Cpp System Architecture/index.en.md",
+      "destination": "references/system-design-notes/content/33. Cpp System Architecture/index.en.md",
+      "sha256": "836f5f7397f8969825f8c1582d2fcd4529fd05c80fbe33805575b3ee863e3911"
+    },
+    {
+      "source": "content/33. Cpp System Architecture/index.zh.md",
+      "destination": "references/system-design-notes/content/33. Cpp System Architecture/index.zh.md",
+      "sha256": "8620a77670fbebabf1408204349702634169d43e5b6d300d25f85fc52ef9e9f9"
+    },
+    {
+      "source": "content/34. Boost Asio Deep Dive/examples/asio_contracts.cpp",
+      "destination": "references/system-design-notes/content/34. Boost Asio Deep Dive/examples/asio_contracts.cpp",
+      "sha256": "57972b20832ad8648def4c228707d2f3a446b2911f156976c5a10b8437116d75"
+    },
+    {
+      "source": "content/34. Boost Asio Deep Dive/examples/check_echo.py",
+      "destination": "references/system-design-notes/content/34. Boost Asio Deep Dive/examples/check_echo.py",
+      "sha256": "4b2ec6791a89667354e5d786dafb619ea49c49944d1777ccf851549faeaa9168"
+    },
+    {
+      "source": "content/34. Boost Asio Deep Dive/examples/coroutine_echo.cpp",
+      "destination": "references/system-design-notes/content/34. Boost Asio Deep Dive/examples/coroutine_echo.cpp",
+      "sha256": "2229c92a8a3ca6021ed4afa21b02ad77eead8312137d84fe45ba0007b776af23"
+    },
+    {
+      "source": "content/34. Boost Asio Deep Dive/images/execution-domains.puml",
+      "destination": "references/system-design-notes/content/34. Boost Asio Deep Dive/images/execution-domains.puml",
+      "sha256": "91334dbba8c9d8493394fe2296013e06a1753d0b17c3a276521d03141916c046"
+    },
+    {
+      "source": "content/34. Boost Asio Deep Dive/images/execution-domains.svg",
+      "destination": "references/system-design-notes/content/34. Boost Asio Deep Dive/images/execution-domains.svg",
+      "sha256": "52ad4d0e9bfd7994599082c0f929dae89e3b2bf0f0924254f2c619987713ce0d"
+    },
+    {
+      "source": "content/34. Boost Asio Deep Dive/images/read-completion.puml",
+      "destination": "references/system-design-notes/content/34. Boost Asio Deep Dive/images/read-completion.puml",
+      "sha256": "5dc02b6c26df1dcb884c496c1d69da905866b27dd2d6fb17b77f6aaff97a0455"
+    },
+    {
+      "source": "content/34. Boost Asio Deep Dive/images/read-completion.svg",
+      "destination": "references/system-design-notes/content/34. Boost Asio Deep Dive/images/read-completion.svg",
+      "sha256": "9215d926e090baf58a27fc005c561776979a00a487280c55223e2a74134abc83"
+    },
+    {
+      "source": "content/34. Boost Asio Deep Dive/images/timeout-race.puml",
+      "destination": "references/system-design-notes/content/34. Boost Asio Deep Dive/images/timeout-race.puml",
+      "sha256": "f2b804cce0f18857b5eba20a9ad3faaa16e536a16e174b916a4f31bbb73fed59"
+    },
+    {
+      "source": "content/34. Boost Asio Deep Dive/images/timeout-race.svg",
+      "destination": "references/system-design-notes/content/34. Boost Asio Deep Dive/images/timeout-race.svg",
+      "sha256": "76ca11c6b717ee4c907e05cfcd8f3a9f2e97b6efc9bf1304ec0b1f3d51859351"
+    },
+    {
+      "source": "content/34. Boost Asio Deep Dive/index.en.md",
+      "destination": "references/system-design-notes/content/34. Boost Asio Deep Dive/index.en.md",
+      "sha256": "890d37e0447972dad26112347746c1969580aaac5da8d8758f893ee1daa5cba8"
+    },
+    {
+      "source": "content/34. Boost Asio Deep Dive/index.zh.md",
+      "destination": "references/system-design-notes/content/34. Boost Asio Deep Dive/index.zh.md",
+      "sha256": "310c6e29ffd344542aa86a19abb7625ce16afed67061be1ee5655de11f6b0562"
+    },
+    {
+      "source": "content/35. Boost.Asio - 01 The Basics/index.en.md",
+      "destination": "references/system-design-notes/content/35. Boost.Asio - 01 The Basics/index.en.md",
+      "sha256": "c916ea4bd3136f022dd2dba24b59a349f0507451769f1409010ae25c2084e514"
+    },
+    {
+      "source": "content/35. Boost.Asio - 01 The Basics/index.zh.md",
+      "destination": "references/system-design-notes/content/35. Boost.Asio - 01 The Basics/index.zh.md",
+      "sha256": "b6be34ef71d500d8cd67faafb0d7de88e36cda70a5f66ab7e5278c759a9735b8"
+    },
+    {
+      "source": "content/36. Boost.Asio - 02 IO Operations/index.en.md",
+      "destination": "references/system-design-notes/content/36. Boost.Asio - 02 IO Operations/index.en.md",
+      "sha256": "ff8ac5db113154d8789bd54b11c6f5e7c14fd91f7b9f61c34274324aa997f5ae"
+    },
+    {
+      "source": "content/36. Boost.Asio - 02 IO Operations/index.zh.md",
+      "destination": "references/system-design-notes/content/36. Boost.Asio - 02 IO Operations/index.zh.md",
+      "sha256": "ccf3144e06fb05844e7232c0cc1c8d488357d03e17724bdb1dc14857c6b0903f"
+    },
+    {
+      "source": "content/37. Boost.Asio - 03 Client Applications/index.en.md",
+      "destination": "references/system-design-notes/content/37. Boost.Asio - 03 Client Applications/index.en.md",
+      "sha256": "bc0aaa317bc243b3db6708847ce69696500d17aa6341c6116409d7ba7a35cc9a"
+    },
+    {
+      "source": "content/37. Boost.Asio - 03 Client Applications/index.zh.md",
+      "destination": "references/system-design-notes/content/37. Boost.Asio - 03 Client Applications/index.zh.md",
+      "sha256": "7c9db224f4197c7b9bdf74f008f6c234ee6d3222682c42249ca40c7b7d98e471"
+    },
+    {
+      "source": "content/38. Boost.Asio - 04 Server Applications/index.en.md",
+      "destination": "references/system-design-notes/content/38. Boost.Asio - 04 Server Applications/index.en.md",
+      "sha256": "4be507342910bec846f2a89346b926852718be58224078076cc21137aa8e96fa"
+    },
+    {
+      "source": "content/38. Boost.Asio - 04 Server Applications/index.zh.md",
+      "destination": "references/system-design-notes/content/38. Boost.Asio - 04 Server Applications/index.zh.md",
+      "sha256": "9a010a56611f166e9f4956ab3567748e6ce83cf194cb9b3a8e11c7aa3c1c14e7"
+    },
+    {
+      "source": "content/39. Boost.Asio - 05 HTTP and SSL-TLS/index.en.md",
+      "destination": "references/system-design-notes/content/39. Boost.Asio - 05 HTTP and SSL-TLS/index.en.md",
+      "sha256": "3627e40da68ebd37520ad6e25862e4f1f0c9571163830b7ca5bf356ac74bd8bf"
+    },
+    {
+      "source": "content/39. Boost.Asio - 05 HTTP and SSL-TLS/index.zh.md",
+      "destination": "references/system-design-notes/content/39. Boost.Asio - 05 HTTP and SSL-TLS/index.zh.md",
+      "sha256": "781b1328e605cf23e9a36b60dba7db10b7aa85c2200d046d7ce7849af54bb9cb"
+    },
+    {
+      "source": "content/40. Boost.Asio - 06 Other Topics/index.en.md",
+      "destination": "references/system-design-notes/content/40. Boost.Asio - 06 Other Topics/index.en.md",
+      "sha256": "06a774e821505b698a3a5a4b786a38fd2210bc63bb96be0c029f716ac2d46db2"
+    },
+    {
+      "source": "content/40. Boost.Asio - 06 Other Topics/index.zh.md",
+      "destination": "references/system-design-notes/content/40. Boost.Asio - 06 Other Topics/index.zh.md",
+      "sha256": "8be284ce5a1e2b9c785ace38f6a54d8fabe522567e6e2e726add10923fbf0fe6"
+    },
+    {
+      "source": "content/41. C++ Concurrency - 01 Hello World/index.en.md",
+      "destination": "references/system-design-notes/content/41. C++ Concurrency - 01 Hello World/index.en.md",
+      "sha256": "1ac1d4a5844aa50610d78fb0ea978aa00fa49899a13696b802016fa78e3eda0f"
+    },
+    {
+      "source": "content/41. C++ Concurrency - 01 Hello World/index.zh.md",
+      "destination": "references/system-design-notes/content/41. C++ Concurrency - 01 Hello World/index.zh.md",
+      "sha256": "a8d9d4e15a178bfb0b8dafd37218722ca1fe4cf5f06cd0d02a3f7b98062efa48"
+    },
+    {
+      "source": "content/42. C++ Concurrency - 02 Managing Threads/index.en.md",
+      "destination": "references/system-design-notes/content/42. C++ Concurrency - 02 Managing Threads/index.en.md",
+      "sha256": "c93082ff3e6e36464aa234c320cf9bed737880c699bfb019ca2f14dce8832f26"
+    },
+    {
+      "source": "content/42. C++ Concurrency - 02 Managing Threads/index.zh.md",
+      "destination": "references/system-design-notes/content/42. C++ Concurrency - 02 Managing Threads/index.zh.md",
+      "sha256": "eb45c64ba812443df622c22ab6083dbb647a983ac154144a1ced897f12dfdfca"
+    },
+    {
+      "source": "content/43. C++ Concurrency - 03 Sharing Data/index.en.md",
+      "destination": "references/system-design-notes/content/43. C++ Concurrency - 03 Sharing Data/index.en.md",
+      "sha256": "902740db8cb6d4b64b56558871e0208082ffd46b8a835948969a2a9c6355fade"
+    },
+    {
+      "source": "content/43. C++ Concurrency - 03 Sharing Data/index.zh.md",
+      "destination": "references/system-design-notes/content/43. C++ Concurrency - 03 Sharing Data/index.zh.md",
+      "sha256": "2ce0762884f7f36ba486e627672f6f0d7dc392818a9767b934362521a43dbc12"
+    },
+    {
+      "source": "content/44. C++ Concurrency - 04 Synchronizing Operations/index.en.md",
+      "destination": "references/system-design-notes/content/44. C++ Concurrency - 04 Synchronizing Operations/index.en.md",
+      "sha256": "1b3bb9fec6784cd46bb4d3db67524283f9905d57f71bc239f0805022cdc6b463"
+    },
+    {
+      "source": "content/44. C++ Concurrency - 04 Synchronizing Operations/index.zh.md",
+      "destination": "references/system-design-notes/content/44. C++ Concurrency - 04 Synchronizing Operations/index.zh.md",
+      "sha256": "b76c1919307effa00fc92e26bcd0c7ff5d8e8fc628b8270bed7cdf9ee0a73513"
+    },
+    {
+      "source": "content/45. C++ Concurrency - 05 Memory Model and Atomics/index.en.md",
+      "destination": "references/system-design-notes/content/45. C++ Concurrency - 05 Memory Model and Atomics/index.en.md",
+      "sha256": "40dfbd731e0bcb9cf2bdf59880fea5a0a6544b48a8701bc9782452b73427ed76"
+    },
+    {
+      "source": "content/45. C++ Concurrency - 05 Memory Model and Atomics/index.zh.md",
+      "destination": "references/system-design-notes/content/45. C++ Concurrency - 05 Memory Model and Atomics/index.zh.md",
+      "sha256": "187214b8a184b5f960a2ec55f8672a8fd3d22bfb0b154f728c2d736517dcb57c"
+    },
+    {
+      "source": "content/46. C++ Concurrency - 06 Lock-Based Data Structures/index.en.md",
+      "destination": "references/system-design-notes/content/46. C++ Concurrency - 06 Lock-Based Data Structures/index.en.md",
+      "sha256": "be49be2ffddcdd66155b8bc8e8f30756ddc8ac638e347b9104f8f1bd19f452f5"
+    },
+    {
+      "source": "content/46. C++ Concurrency - 06 Lock-Based Data Structures/index.zh.md",
+      "destination": "references/system-design-notes/content/46. C++ Concurrency - 06 Lock-Based Data Structures/index.zh.md",
+      "sha256": "eba9ae61f2de9b04195642cb40871fba0cc2a53c8e853823532394eda0024951"
+    },
+    {
+      "source": "content/47. C++ Concurrency - 07 Lock-Free Data Structures/index.en.md",
+      "destination": "references/system-design-notes/content/47. C++ Concurrency - 07 Lock-Free Data Structures/index.en.md",
+      "sha256": "95f9cc4edc95d280ebdfe655566f9fbf6c3f24718a291d8f84c20cf48eb7b925"
+    },
+    {
+      "source": "content/47. C++ Concurrency - 07 Lock-Free Data Structures/index.zh.md",
+      "destination": "references/system-design-notes/content/47. C++ Concurrency - 07 Lock-Free Data Structures/index.zh.md",
+      "sha256": "5e12bc78c517bf1c728dd4446f0efa6433e0811636cd048ab6fdb4acad5506f0"
+    },
+    {
+      "source": "content/48. C++ Concurrency - 08 Designing Concurrent Code/index.en.md",
+      "destination": "references/system-design-notes/content/48. C++ Concurrency - 08 Designing Concurrent Code/index.en.md",
+      "sha256": "5c497d03e571a9d4126c5ef26076730f7dade65ee173cb778a787d267e665601"
+    },
+    {
+      "source": "content/48. C++ Concurrency - 08 Designing Concurrent Code/index.zh.md",
+      "destination": "references/system-design-notes/content/48. C++ Concurrency - 08 Designing Concurrent Code/index.zh.md",
+      "sha256": "f3bef7fbed3d62882962d0e49ca8f06a9c40d02a3e18864f6ecadb28df177955"
+    },
+    {
+      "source": "content/49. C++ Concurrency - 09 Advanced Thread Management/index.en.md",
+      "destination": "references/system-design-notes/content/49. C++ Concurrency - 09 Advanced Thread Management/index.en.md",
+      "sha256": "ad3450d63ad97552035ec0f5c19202d59129515e55b1548bd5abb1714fea2d17"
+    },
+    {
+      "source": "content/49. C++ Concurrency - 09 Advanced Thread Management/index.zh.md",
+      "destination": "references/system-design-notes/content/49. C++ Concurrency - 09 Advanced Thread Management/index.zh.md",
+      "sha256": "7fb562494ad9ef859926c8ff5258d76dccce18babd30164cd9e4436b969ba041"
+    },
+    {
+      "source": "content/50. C++ Concurrency - 10 Parallel Algorithms/index.en.md",
+      "destination": "references/system-design-notes/content/50. C++ Concurrency - 10 Parallel Algorithms/index.en.md",
+      "sha256": "fd1d6de5b7f75f51afd6a3a33d2b392193463210eadd365d6ee7180087b32b0c"
+    },
+    {
+      "source": "content/50. C++ Concurrency - 10 Parallel Algorithms/index.zh.md",
+      "destination": "references/system-design-notes/content/50. C++ Concurrency - 10 Parallel Algorithms/index.zh.md",
+      "sha256": "c66df87290d940090715ebd8f6f11467c7d400db9827332ceab79c0d6307cc83"
+    },
+    {
+      "source": "content/51. C++ Concurrency - 11 Testing and Debugging/index.en.md",
+      "destination": "references/system-design-notes/content/51. C++ Concurrency - 11 Testing and Debugging/index.en.md",
+      "sha256": "ae3fc8de75a8e12cf3d9a9f00b7966117c3828ed215ba6047829aa3b39b72d51"
+    },
+    {
+      "source": "content/51. C++ Concurrency - 11 Testing and Debugging/index.zh.md",
+      "destination": "references/system-design-notes/content/51. C++ Concurrency - 11 Testing and Debugging/index.zh.md",
+      "sha256": "db1f8e64602433900a5eab59358e290e2f3dc0be2f1e476b843629e4e0f9e8ae"
+    },
+    {
+      "source": "content/52. C++ Concurrency - 12 Appendix A/index.en.md",
+      "destination": "references/system-design-notes/content/52. C++ Concurrency - 12 Appendix A/index.en.md",
+      "sha256": "c4bff662c56739b86d8b62daaf7c02489956a7ecb06a1adada26e3442568ef45"
+    },
+    {
+      "source": "content/52. C++ Concurrency - 12 Appendix A/index.zh.md",
+      "destination": "references/system-design-notes/content/52. C++ Concurrency - 12 Appendix A/index.zh.md",
+      "sha256": "2e3cf23d884e00f6ff6558120565b9ad538977235b16bf0edf49784f8732d2d1"
+    },
+    {
+      "source": "content/53. C++ Concurrency - 13 Appendix B/index.en.md",
+      "destination": "references/system-design-notes/content/53. C++ Concurrency - 13 Appendix B/index.en.md",
+      "sha256": "20b9be5edb512687ffd34c351b08d3770984924e24265e9f3ee38e519522afe3"
+    },
+    {
+      "source": "content/53. C++ Concurrency - 13 Appendix B/index.zh.md",
+      "destination": "references/system-design-notes/content/53. C++ Concurrency - 13 Appendix B/index.zh.md",
+      "sha256": "34c1b4fd4b099c20cbb33f7051a3e2eda36674eb9b11c6cf5f65accb5fb6071b"
+    },
+    {
+      "source": "content/54. C++ Concurrency - 14 Appendix C/index.en.md",
+      "destination": "references/system-design-notes/content/54. C++ Concurrency - 14 Appendix C/index.en.md",
+      "sha256": "fe9e4a99de8676977f438eef2175a237357681f56f9bb551bdbb0f1fd0164003"
+    },
+    {
+      "source": "content/54. C++ Concurrency - 14 Appendix C/index.zh.md",
+      "destination": "references/system-design-notes/content/54. C++ Concurrency - 14 Appendix C/index.zh.md",
+      "sha256": "64bc92a9168d23844777a2b75829de70c6de9b85d3be7d2d6d705adb888b05f9"
+    },
+    {
+      "source": "content/55. C++ Concurrency - 15 Appendix D/index.en.md",
+      "destination": "references/system-design-notes/content/55. C++ Concurrency - 15 Appendix D/index.en.md",
+      "sha256": "170061c78435be1388ee2ac681fbfe58ff161398d67bbff469c0397de73ed2ed"
+    },
+    {
+      "source": "content/55. C++ Concurrency - 15 Appendix D/index.zh.md",
+      "destination": "references/system-design-notes/content/55. C++ Concurrency - 15 Appendix D/index.zh.md",
+      "sha256": "1c01285ac8c3cf42fbb85e16b33ecfc3145106cf883ad3fe9f80a3cf068f7a7e"
+    },
+    {
+      "source": "pdfs/Boost.Asio C++ Network Programming Cookbook.pdf",
+      "destination": "references/system-design-notes/pdfs/Boost.Asio C++ Network Programming Cookbook.pdf",
+      "sha256": "f8064c135f7c744cb5fdeca5a88e8076326ef49b8e5ea5260a9fa623c8cb6660"
+    },
+    {
+      "source": "pdfs/C++ Concurrency in Action.pdf",
+      "destination": "references/system-design-notes/pdfs/C++ Concurrency in Action.pdf",
+      "sha256": "4a90a39395976889074b2e3593e745659f7a6a7666779c1a5bed7d972322cef0"
+    },
+    {
+      "source": "scripts/check-cpp-examples.sh",
+      "destination": "references/system-design-notes/scripts/check-cpp-examples.sh",
+      "sha256": "fda02d758fb20b12b7f17cfb9d079e26c1b42a86ab133406fc8c8052b641cfbb"
+    }
+  ]
+}

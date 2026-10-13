@@ -1,0 +1,48 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+package "Modem Firmware Domain (IPC Source)" as MODEM {
+  rectangle "ModemLog Stream Service\n(Continuous 1 Mbps Throughput)" as modemLog
+  rectangle "Modem CHR Event Service\n(Critical Crash & State Events)" as modemChr
+}
+package "MCU Ingress Domain (Socket Reactor Task)" as INGRESS {
+  rectangle "ModemLog TCP Client\n(Non-blocking Socket)" as logSock
+  rectangle "CHR TCP Client\n(Reliable In-order Socket)" as chrSock
+  rectangle "Socket Reactor Scheduler\n(select multiplexing / dynamic budget)" as reactor
+}
+package "lwIP Network Domain (Normal MCU Traffic)" as NETIF {
+  rectangle "Normal lwIP RX / TX Packet Flow" as netTraffic
+  rectangle "CaptureTap\nPassive Observation Gate" as tap
+  rectangle "Normal lwIP Protocol Stack Continues" as netStack
+}
+package "Static SRAM Pools (SPSC Lock-Free Ring Buffers)" as SRAM_POOLS {
+  database "ModemLog Dedicated Ring\n(Fixed Chunk Queue)" as logRing
+  database "CHR Dedicated Ring\n(Framed Message Queue)" as chrRing
+  database "Capture Snapshot Ring\n(Dual-buffered Private Slots)" as capRing
+}
+package "Storage Engine (Storage Owner Task)" as STORAGE_DOMAIN {
+  rectangle "StorageOwner Engine\n(Sole Owner of FatFs / SDIO DMA)" as storageExec
+}
+package "Persistent Storage (MicroSD / eMMC)" as MEDIA_FS {
+  database "ModemLog Files\n(*.log circular overwrite)" as fileLog
+  database "CHR Files\n(*.chr append archive)" as fileChr
+  database "PCAP Files\n(*.pcap capture stream)" as filePcap
+}
+
+logSock --> reactor
+chrSock --> reactor
+netTraffic --> tap
+tap --> netStack : Zero-latency pass
+modemLog --> logSock : IPC TCP Link
+modemChr --> chrSock : IPC TCP Link
+reactor --> logRing : Zero-copy chunk publish
+reactor --> chrRing : Structured frame publish
+tap ..> capRing : Best-effort copy (if slot free)
+logRing --> storageExec : Sequential batch consume
+chrRing --> storageExec : Sequential consume ack
+capRing --> storageExec : Asynchronous drain
+storageExec --> fileLog
+storageExec --> fileChr
+storageExec --> filePcap
+@enduml

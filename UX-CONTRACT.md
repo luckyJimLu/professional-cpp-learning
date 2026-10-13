@@ -60,7 +60,7 @@ Mobile primary navigation:
 - Lab
 - Progress
 
-Secondary destinations remain reachable from desktop and can later be added to a mobile overflow surface.
+All destinations, including code search, are reachable on mobile through the shared navigation disclosure.
 
 ## 5. Lesson layout
 
@@ -154,3 +154,14 @@ Skill bars MUST be described as coverage/evidence, not objective mastery scores 
 - Diagram overflow is local and keyboard accessible; it must not expand the whole page on mobile.
 - Topics come from repository Markdown in patterns, frameworks/asio, and the Mermaid guide. Links between these documents select the target document in the reader.
 - No new progress or completion semantics are introduced by merely viewing a diagram or topic.
+
+## 11. Workspace navigation and search
+
+| Capability | Canonical owner | Contract |
+|---|---|---|
+| Navigation | `src/lib/navigation.ts`, `Shell.tsx` | URL query state, reload and browser back/forward, Ctrl/Cmd+K opens search |
+| Reading | `Topics.tsx`, `Markdown.tsx`, `topics.ts` | Classified bilingual repository documents, shared asset resolution |
+| Search | `CodeSearch.tsx`, `search.ts` | Local literal case-insensitive search, C/C++ files and fenced code; 30 matches per page |
+| Scrollbar | `src/workspace.css` | Global token baseline and forced-colors fallback |
+
+Search stores query, type, page and preview location in the URL. Local search updates immediately, suspends commits during IME composition, and clear restores input focus. Empty query and no matches have distinct guidance. Code previews show original file line numbers, escaped text and highlighted matches. Viewing search results does not mark lessons complete. PDF reference files are downloadable; source files and diagram assets remain usable after static deployment.

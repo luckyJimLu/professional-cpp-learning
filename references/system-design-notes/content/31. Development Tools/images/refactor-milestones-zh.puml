@@ -1,0 +1,20 @@
+@startuml
+title 大型重构里程碑
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam ArrowColor #4F5D75
+skinparam roundcorner 8
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #2D3142
+  FontColor #2D3142
+}
+start
+:M0 代码地图与依赖冻结;
+:M1 接口 / Schema 与兼容策略;
+:M2 旧实现与新实现并存;
+:M3 数据或配置迁移;
+:M4 测试、观测和回滚;
+:M5 删除旧路径;
+stop
+@enduml

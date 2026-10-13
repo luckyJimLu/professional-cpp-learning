@@ -1,0 +1,15 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "Socket接收线程" as RX
+rectangle "lwIP Socket" as S
+rectangle "SPSC环形缓冲区" as R
+rectangle "写盘线程" as W
+rectangle "FatFs / SD卡" as D
+
+RX --> S : recv阻塞等待数据
+RX --> R : 收到数据后发布write_seq
+R --> W
+W --> D : f_write阻塞
+@enduml

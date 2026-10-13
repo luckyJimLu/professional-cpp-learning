@@ -1,6 +1,8 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { lazy, useEffect, useMemo, useState, type ReactNode } from "react";
 import { Markdown } from "./components/Markdown";
-import { topics, resolveTopicLink } from "./lib/topics";
+import { DeferredContent } from "./components/DeferredContent";
+import { Shell } from "./components/Shell";
+import { NAV, navigate, useLocationParams, type View } from "./lib/navigation";
 import {
   STEP_DEFS,
   guideline,
@@ -18,27 +20,14 @@ import {
 import { compileAndRun, type CompileRunResult } from "./lib/browserCompiler";
 import { useLearningProgress } from "./lib/progress";
 
-type View =
-  | "today"
-  | "roadmap"
-  | "lessons"
-  | "topics"
-  | "lab"
-  | "review"
-  | "guidelines"
-  | "progress"
-  | "lesson";
-
-const NAV: Array<{ id: Exclude<View, "lesson">; label: string; short: string }> = [
-  { id: "today", label: "Today", short: "Today" },
-  { id: "roadmap", label: "Roadmap", short: "Roadmap" },
-  { id: "lessons", label: "Lessons", short: "Lessons" },
-  { id: "topics", label: "专题", short: "专题" },
-  { id: "lab", label: "Lab", short: "Lab" },
-  { id: "review", label: "Review", short: "Review" },
-  { id: "guidelines", label: "Guidelines", short: "Rules" },
-  { id: "progress", label: "Progress", short: "Progress" },
-];
+const Topics = lazy(() =>
+  import("./components/Topics").then((module) => ({ default: module.Topics })),
+);
+const CodeSearch = lazy(() =>
+  import("./components/CodeSearch").then((module) => ({
+    default: module.CodeSearch,
+  })),
+);
 
 function cx(...values: Array<string | false | undefined>) {
   return values.filter(Boolean).join(" ");
@@ -56,98 +45,34 @@ function CompileRail({
   isStepComplete: (day: number, step: StepKey) => boolean;
 }) {
   return (
-    <div className="compile-rail" aria-label={`Day ${lesson.day} learning pipeline`}>
+    <div
+      className="compile-rail"
+      aria-label={`Day ${lesson.day} learning pipeline`}
+    >
       {STEP_DEFS.map((step, index) => {
         const complete = isStepComplete(lesson.day, step.key);
         const current = active === step.key;
         return (
           <button
-            className={cx("rail-step", complete && "is-complete", current && "is-current")}
+            className={cx(
+              "rail-step",
+              complete && "is-complete",
+              current && "is-current",
+            )}
             key={step.key}
             onClick={() => onSelect?.(step.key)}
             type="button"
           >
             <span className="rail-label">{step.label}</span>
             <span className="rail-track" aria-hidden="true">
-              <span className="rail-dot">{complete ? "●" : current ? "◐" : "○"}</span>
+              <span className="rail-dot">
+                {complete ? "●" : current ? "◐" : "○"}
+              </span>
               {index < STEP_DEFS.length - 1 && <span className="rail-line" />}
             </span>
           </button>
         );
       })}
-    </div>
-  );
-}
-
-function Shell({
-  view,
-  setView,
-  currentDay,
-  children,
-}: {
-  view: View;
-  setView: (view: View) => void;
-  currentDay: number;
-  children: ReactNode;
-}) {
-  return (
-    <div className="app-shell">
-      <aside className="sidebar">
-        <div className="brand">
-          <span className="brand-mark">C++</span>
-          <div>
-            <strong>Professional C++</strong>
-            <span>Learning Console</span>
-          </div>
-        </div>
-
-        <nav className="side-nav" aria-label="Primary navigation">
-          {NAV.map((item) => (
-            <button
-              className={cx("nav-item", view === item.id && "is-active")}
-              key={item.id}
-              onClick={() => setView(item.id)}
-              type="button"
-            >
-              <span>{item.label}</span>
-              {item.id === "today" && <small>Day {currentDay}</small>}
-            </button>
-          ))}
-        </nav>
-
-        <div className="sidebar-status">
-          <span>课程进度</span>
-          <strong>Day {repoCompletedDay} / 112</strong>
-          <div className="mini-progress">
-            <i style={{ width: `${Math.min(100, (repoCompletedDay / 112) * 100)}%` }} />
-          </div>
-        </div>
-      </aside>
-
-      <div className="main-shell">
-        <header className="mobile-header">
-          <div className="brand compact">
-            <span className="brand-mark">C++</span>
-            <strong>Professional C++</strong>
-          </div>
-          <span className="mono">Day {currentDay}</span>
-        </header>
-        <main className="content">{children}</main>
-        <nav className="bottom-nav" aria-label="Mobile navigation">
-          {NAV.filter((item) => ["today", "roadmap", "topics", "lab", "progress"].includes(item.id)).map(
-            (item) => (
-              <button
-                className={cx(view === item.id && "is-active")}
-                key={item.id}
-                onClick={() => setView(item.id)}
-                type="button"
-              >
-                {item.short}
-              </button>
-            ),
-          )}
-        </nav>
-      </div>
     </div>
   );
 }
@@ -194,7 +119,11 @@ function Today({
     <div className="today-page">
       <PageHeader
         eyebrow="TODAY"
-        title={planned ? `Continue Day ${planned.day}` : `Day ${currentDay} · Ready for content`}
+        title={
+          planned
+            ? `Continue Day ${planned.day}`
+            : `Day ${currentDay} · Ready for content`
+        }
         description={
           planned
             ? "One focused session. Read → recall → refactor → compile."
@@ -207,13 +136,16 @@ function Today({
           <div className="lesson-meta">
             <span>DAY {planned?.day ?? currentDay}</span>
             <span>WEEK {planned?.week ?? Math.ceil(currentDay / 7)}</span>
-            <span>{planned?.chapter ? `CHAPTER ${planned.chapter}` : "NEXT"}</span>
+            <span>
+              {planned?.chapter ? `CHAPTER ${planned.chapter}` : "NEXT"}
+            </span>
           </div>
 
           <h2>{planned?.title ?? `Next learning unit · Day ${currentDay}`}</h2>
           <p className="hero-summary">
             {planned
-              ? planned.nextSummary ?? "Continue the current Professional C++ learning path."
+              ? (planned.nextSummary ??
+                "Continue the current Professional C++ learning path.")
               : nextSummary ||
                 "Continue Chapter 5 with polymorphism, virtual interface cost, and embedded trade-offs."}
           </p>
@@ -230,7 +162,9 @@ function Today({
             onClick={() => openLesson(target.day)}
             type="button"
           >
-            {planned ? "Continue learning →" : `Review Day ${latestPublished.day} →`}
+            {planned
+              ? "Continue learning →"
+              : `Review Day ${latestPublished.day} →`}
           </button>
         </div>
 
@@ -241,7 +175,11 @@ function Today({
           </div>
           <CompileRail
             lesson={target}
-            active={planned ? target.sections.find((section) => section.step)?.step : undefined}
+            active={
+              planned
+                ? target.sections.find((section) => section.step)?.step
+                : undefined
+            }
             isStepComplete={isStepComplete}
           />
           <div className="build-line">
@@ -263,7 +201,9 @@ function Today({
         </article>
         <article>
           <span className="eyebrow">NEXT ACTION</span>
-          <strong>{planned ? "Continue" : `复习 Day ${latestPublished.day}`}</strong>
+          <strong>
+            {planned ? "Continue" : `复习 Day ${latestPublished.day}`}
+          </strong>
           <p>
             {planned
               ? "Resume at the first incomplete compile-rail stage."
@@ -294,7 +234,8 @@ function LessonView({
   addWeakPoint: (value: string) => void;
 }) {
   const firstIncomplete =
-    STEP_DEFS.find((step) => !isStepComplete(lesson.day, step.key))?.key ?? "pass";
+    STEP_DEFS.find((step) => !isStepComplete(lesson.day, step.key))?.key ??
+    "pass";
   const [active, setActive] = useState<StepKey>(firstIncomplete);
 
   const navigate = (step: StepKey) => {
@@ -353,9 +294,15 @@ function LessonView({
 
         {lesson.sections.map((section) => {
           if (!section.step) return null;
-          const definition = STEP_DEFS.find((step) => step.key === section.step)!;
+          const definition = STEP_DEFS.find(
+            (step) => step.key === section.step,
+          )!;
           return (
-            <section className="lesson-section" id={`section-${section.step}`} key={section.title}>
+            <section
+              className="lesson-section"
+              id={`section-${section.step}`}
+              key={section.title}
+            >
               <div className="section-heading">
                 <div>
                   <span className="eyebrow">{definition.label}</span>
@@ -381,7 +328,9 @@ function LessonView({
                     onClick={() => completeStep(section.step!)}
                     type="button"
                   >
-                    {isStepComplete(lesson.day, section.step) ? "✓ Complete" : "Mark complete"}
+                    {isStepComplete(lesson.day, section.step)
+                      ? "✓ Complete"
+                      : "Mark complete"}
                   </button>
                 </div>
               </div>
@@ -405,7 +354,11 @@ function LessonView({
         <dl>
           <div>
             <dt>Chapter</dt>
-            <dd>{lesson.chapter ? `${lesson.chapter} ${lesson.chapterTitle ?? ""}` : "—"}</dd>
+            <dd>
+              {lesson.chapter
+                ? `${lesson.chapter} ${lesson.chapterTitle ?? ""}`
+                : "—"}
+            </dd>
           </div>
           <div>
             <dt>Part</dt>
@@ -456,8 +409,14 @@ function Roadmap({
                   const complete = isDayComplete(lesson.day);
                   const current = lesson.day === currentDay && !complete;
                   return (
-                    <button key={lesson.day} onClick={() => openLesson(lesson.day)} type="button">
-                      <span className="roadmap-state">{complete ? "●" : current ? "◐" : "○"}</span>
+                    <button
+                      key={lesson.day}
+                      onClick={() => openLesson(lesson.day)}
+                      type="button"
+                    >
+                      <span className="roadmap-state">
+                        {complete ? "●" : current ? "◐" : "○"}
+                      </span>
                       <span className="mono">Day {lesson.day}</span>
                       <strong>{lesson.title}</strong>
                       {lesson.chapter && <small>Ch {lesson.chapter}</small>}
@@ -511,10 +470,20 @@ function Lessons({
           .slice()
           .reverse()
           .map((lesson) => (
-            <button key={lesson.day} onClick={() => openLesson(lesson.day)} type="button">
-              <span className="mono">DAY {String(lesson.day).padStart(3, "0")}</span>
+            <button
+              key={lesson.day}
+              onClick={() => openLesson(lesson.day)}
+              type="button"
+            >
+              <span className="mono">
+                DAY {String(lesson.day).padStart(3, "0")}
+              </span>
               <strong>{lesson.title}</strong>
-              <span>{lesson.chapter ? `Chapter ${lesson.chapter}` : `Week ${lesson.week}`}</span>
+              <span>
+                {lesson.chapter
+                  ? `Chapter ${lesson.chapter}`
+                  : `Week ${lesson.week}`}
+              </span>
               <i>{isDayComplete(lesson.day) ? "●" : "○"}</i>
             </button>
           ))}
@@ -533,7 +502,8 @@ function Lab({
   isStepComplete: (day: number, step: StepKey) => boolean;
 }) {
   const lab = lesson.sections.find((section) => section.step === "lab");
-  const sourceCode = lesson.labCode ?? "// This lesson has no extracted C++ example yet.";
+  const sourceCode =
+    lesson.labCode ?? "// This lesson has no extracted C++ example yet.";
   const [hint, setHint] = useState(false);
   const [code, setCode] = useState(sourceCode);
   const [compilerState, setCompilerState] = useState<
@@ -576,12 +546,15 @@ function Lab({
     }
   };
 
-  const compilerBusy = compilerState === "loading" || compilerState === "compiling";
+  const compilerBusy =
+    compilerState === "loading" || compilerState === "compiling";
   const displayOutput =
     compilerError ||
     result?.errors.join("\n") ||
     result?.output ||
-    (compilerState === "success" ? "Program exited successfully with no output." : "");
+    (compilerState === "success"
+      ? "Program exited successfully with no output."
+      : "");
 
   return (
     <div>
@@ -600,7 +573,8 @@ function Lab({
           <span className={cx("runtime-dot", compilerState)} />
           <span className="mono">
             {compilerState === "idle" && "READY"}
-            {compilerState === "loading" && `LOADING ${Math.round(compilerProgress * 100)}%`}
+            {compilerState === "loading" &&
+              `LOADING ${Math.round(compilerProgress * 100)}%`}
             {compilerState === "compiling" && "COMPILING"}
             {compilerState === "success" && "BUILD SUCCEEDED"}
             {compilerState === "failure" && "BUILD FAILED"}
@@ -659,7 +633,10 @@ function Lab({
             <div className="hint">
               {lesson.sections.find((section) => section.step === "rules") ? (
                 <Markdown>
-                  {lesson.sections.find((section) => section.step === "rules")!.body}
+                  {
+                    lesson.sections.find((section) => section.step === "rules")!
+                      .body
+                  }
                 </Markdown>
               ) : (
                 "Re-read the lesson rules and use them as the review checklist for this lab."
@@ -672,13 +649,15 @@ function Lab({
           <div className="code-panel editable">
             <div className="panel-title">
               <span>
-                {lesson.labPath ?? `day-${String(lesson.day).padStart(3, "0")}/main.cpp`}
+                {lesson.labPath ??
+                  `day-${String(lesson.day).padStart(3, "0")}/main.cpp`}
               </span>
               <span>EDITABLE · C++23</span>
             </div>
 
             <textarea
               aria-label="C++ lab source editor"
+              className="resize-none"
               value={code}
               onChange={(event) => setCode(event.target.value)}
               spellCheck={false}
@@ -706,7 +685,9 @@ function Lab({
               {result && (
                 <span>
                   compile {Math.round(result.compileMs)}ms
-                  {result.runMs !== null ? ` · run ${Math.round(result.runMs)}ms` : ""}
+                  {result.runMs !== null
+                    ? ` · run ${Math.round(result.runMs)}ms`
+                    : ""}
                 </span>
               )}
             </div>
@@ -714,19 +695,23 @@ function Lab({
             {compilerState === "loading" && (
               <div className="compiler-loading">
                 <div>
-                  <i style={{ width: `${Math.round(compilerProgress * 100)}%` }} />
+                  <i
+                    style={{ width: `${Math.round(compilerProgress * 100)}%` }}
+                  />
                 </div>
                 <p>
-                  First run downloads the browser toolchain. Later runs reuse it for this page
-                  session.
+                  First run downloads the browser toolchain. Later runs reuse it
+                  for this page session.
                 </p>
               </div>
             )}
 
             {compilerState === "idle" ? (
               <pre>
-                <code>$ clang++ main.cpp -std=gnu++23 -Wall -Wextra -Wconversion -Wpedantic{"\n"}$
-                  ./main</code>
+                <code>
+                  $ clang++ main.cpp -std=gnu++23 -Wall -Wextra -Wconversion
+                  -Wpedantic{"\n"}$ ./main
+                </code>
               </pre>
             ) : displayOutput ? (
               <pre>
@@ -783,8 +768,8 @@ function Review({
 
         {weakPoints.length === 0 ? (
           <p className="empty-state">
-            No weak points queued. Use “Review later” beside any lesson stage when something still
-            feels uncertain.
+            No weak points queued. Use “Review later” beside any lesson stage
+            when something still feels uncertain.
           </p>
         ) : (
           <div className="weak-point-list">
@@ -809,7 +794,9 @@ function Review({
               {lesson.nextSummary ??
                 "Use this checkpoint to review interfaces, lifetime, ownership and error boundaries."}
             </p>
-            <strong>{isDayComplete(lesson.day) ? "BUILD SUCCEEDED" : "REVIEW PENDING"}</strong>
+            <strong>
+              {isDayComplete(lesson.day) ? "BUILD SUCCEEDED" : "REVIEW PENDING"}
+            </strong>
           </article>
         ))}
       </div>
@@ -832,27 +819,6 @@ function Guidelines() {
   );
 }
 
-function Topics() {
-  const [selectedPath, setSelectedPath] = useState(() => topics.find((topic) => topic.path === "patterns/README.md")?.path ?? topics[0]?.path);
-  const selected = topics.find((topic) => topic.path === selectedPath);
-  return <div>
-    <PageHeader eyebrow="专题学习" title="设计模式与框架" description="结合所有权、生命周期与异步编程，阅读专题并对照代码实验。" />
-    <nav className="topic-index" aria-label="学习专题">
-      {topics.map((topic) => <button type="button" key={topic.path}
-        aria-pressed={selectedPath === topic.path} className="ghost-button"
-        onClick={() => setSelectedPath(topic.path)}>{topic.title}</button>)}
-    </nav>
-    {selected && <article className="document-card" key={selected.path}>
-      <Markdown onNavigate={(href) => {
-        const target = resolveTopicLink(selected.path, href);
-        if (!target) return false;
-        setSelectedPath(target.path);
-        return true;
-      }}>{selected.body}</Markdown>
-    </article>}
-  </div>;
-}
-
 const SKILLS = [
   {
     name: "Language",
@@ -869,8 +835,16 @@ const SKILLS = [
     range: [4, 6],
     evidence: /class|composition|inheritance|interface|类|接口|继承/i,
   },
-  { name: "STL", range: [13, 24], evidence: /iterator|container|algorithm|ranges|span|标准库/i },
-  { name: "Concurrency", range: [27, 27], evidence: /thread|mutex|atomic|并发|线程/i },
+  {
+    name: "STL",
+    range: [13, 24],
+    evidence: /iterator|container|algorithm|ranges|span|标准库/i,
+  },
+  {
+    name: "Concurrency",
+    range: [27, 27],
+    evidence: /thread|mutex|atomic|并发|线程/i,
+  },
   { name: "Testing", range: [30, 30], evidence: /test|fake|mock|assert|测试/i },
 ] as const;
 
@@ -882,8 +856,14 @@ function ProgressView({
   isDayComplete: (day: number) => boolean;
 }) {
   const completed = lessons.filter((lesson) => isDayComplete(lesson.day));
-  const completedDay = Math.max(repoCompletedDay, ...completed.map((lesson) => lesson.day));
-  const currentChapter = Math.max(...completed.map((lesson) => lesson.chapter ?? 0), 0);
+  const completedDay = Math.max(
+    repoCompletedDay,
+    ...completed.map((lesson) => lesson.day),
+  );
+  const currentChapter = Math.max(
+    ...completed.map((lesson) => lesson.chapter ?? 0),
+    0,
+  );
 
   const skillRows = SKILLS.map((skill) => {
     const [start, end] = skill.range;
@@ -892,8 +872,12 @@ function ProgressView({
         ? 0
         : currentChapter >= end
           ? 100
-          : Math.round(((currentChapter - start + 1) / (end - start + 1)) * 100);
-    const evidenceCount = completed.filter((lesson) => skill.evidence.test(lesson.raw)).length;
+          : Math.round(
+              ((currentChapter - start + 1) / (end - start + 1)) * 100,
+            );
+    const evidenceCount = completed.filter((lesson) =>
+      skill.evidence.test(lesson.raw),
+    ).length;
     const evidenceCoverage = Math.min(100, evidenceCount * 20);
     return { ...skill, value: Math.max(chapterCoverage, evidenceCoverage) };
   });
@@ -925,7 +909,10 @@ function ProgressView({
           <p>Day {completedDay} is the latest completed learning unit.</p>
           <hr />
           <span className="eyebrow">NEXT</span>
-          <p>{latestNextSummary() ?? `Publish Day ${nextPlannedDay} to continue.`}</p>
+          <p>
+            {latestNextSummary() ??
+              `Publish Day ${nextPlannedDay} to continue.`}
+          </p>
           <hr />
           <span className="eyebrow">NEEDS REVIEW</span>
           <p>
@@ -943,10 +930,20 @@ function ProgressView({
 }
 
 export default function App() {
-  const [view, setView] = useState<View>("today");
-  const [selectedDay, setSelectedDay] = useState(() => latestLesson()?.day ?? repoCompletedDay);
+  const params = useLocationParams();
+  const requestedView = params.get("view");
+  const view: View =
+    requestedView === "lesson" || NAV.some((item) => item.id === requestedView)
+      ? (requestedView as View)
+      : "today";
+  const setView = (value: View) => navigate({ view: value });
+  const selectedDay =
+    Number(params.get("day")) || latestLesson()?.day || repoCompletedDay;
   const progress = useLearningProgress();
-  const completedDay = Math.max(repoCompletedDay, ...progress.state.completedDays);
+  const completedDay = Math.max(
+    repoCompletedDay,
+    ...progress.state.completedDays,
+  );
   const currentLearningDay = completedDay + 1;
 
   const selectedLesson = useMemo(
@@ -955,8 +952,7 @@ export default function App() {
   );
 
   const openLesson = (day: number) => {
-    setSelectedDay(day);
-    setView("lesson");
+    navigate({ view: "lesson", day: String(day) });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -981,10 +977,26 @@ export default function App() {
       );
       break;
     case "lessons":
-      page = <Lessons openLesson={openLesson} isDayComplete={progress.isDayComplete} />;
+      page = (
+        <Lessons
+          openLesson={openLesson}
+          isDayComplete={progress.isDayComplete}
+        />
+      );
+      break;
+    case "search":
+      page = (
+        <DeferredContent key="search">
+          <CodeSearch />
+        </DeferredContent>
+      );
       break;
     case "topics":
-      page = <Topics />;
+      page = (
+        <DeferredContent key="topics" label="专题知识库">
+          <Topics />
+        </DeferredContent>
+      );
       break;
     case "lab":
       page = selectedLesson ? (

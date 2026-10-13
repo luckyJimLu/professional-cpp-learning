@@ -1,0 +1,21 @@
+@startuml
+    autonumber
+    actor "业务应用 (App)" as App
+    participant "Coordinator 及 Reactor" as Ctl
+    participant "StorageOwner 任务" as Disk
+    participant "Socket会话或CaptureGate" as Source
+
+    App ->> Ctl : 提交 Start 异步请求
+    note over Ctl,Disk : 存储准备先于数据接入
+    Ctl ->> Disk : PrepareFile 与 generation 参数
+    Disk ->> Disk : 创建/对齐目标日志文件
+    Disk -->> Ctl : 保留完成结果 (Prepared OK / Error)
+
+    alt 文件准备成功
+        Ctl ->> Source : 非阻塞连接建立或启用快照门控
+        Source -->> Ctl : READY 或连接建立完成
+        Ctl -->> App : 异步通知：请求完成为 RUNNING
+    else 文件准备失败
+        Ctl -->> App : 异步通知：请求失败，状态标记为 FAULTED
+    end
+@enduml

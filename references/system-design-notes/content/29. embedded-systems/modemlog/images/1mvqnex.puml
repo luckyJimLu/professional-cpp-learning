@@ -1,0 +1,24 @@
+@startuml
+    autonumber
+    actor "会话管理 (SessionCoordinator)" as Manager
+    participant "Reactor或Capture入口" as Producer
+    participant "Storage Owner" as Storage
+    participant "SD驱动 / FatFs" as Disk
+
+    note over Manager,Disk : 阶段 1: 停止输入准入
+    Manager ->> Producer : 请求停止指定业务输入 (STOP_REQUEST)
+    Producer ->> Producer : 禁止新报文进入，标记 QUIESCING
+    Producer ->> Producer : 等待在途当前分块完成发布
+    Producer -->> Manager : 输入已完全静默 (Ingress Quiesced)
+
+    note over Manager,Disk : 阶段 2: 排空在途缓冲并关停文件
+    Manager ->> Storage : 通知排空该业务并关闭文件 (DRAIN_AND_CLOSE)
+    Storage ->> Storage : 顺序消费该业务所有剩余已发布块
+    Storage ->> Disk : 完成最后缓冲区写入并调用 f_sync()
+    Disk -->> Storage : 写入成功确认 (或有界超时故障)
+    Storage ->> Disk : f_close() 关闭对应文件句柄
+    Storage -->> Manager : 资源释放与清理确认
+
+    note over Manager : 状态安全更新
+    Manager ->> Manager : 标记会话为 STOPPED (或 FAULTED)
+@enduml

@@ -45,11 +45,11 @@ stateDiagram-v2
 sequenceDiagram
     participant Caller as 调用者
     participant Session as 会话
-    participant Loop as 事件循环
+    participant EventLoop as 事件循环
     Caller->>Session: 启动异步读取
-    Session->>Loop: 注册操作与完成处理器
-    Note over Session,Loop: 缓冲区必须活到操作完成
-    Loop-->>Session: 完成或取消回调
+    Session->>EventLoop: 注册操作与完成处理器
+    Note over Session,EventLoop: 缓冲区必须活到操作完成
+    EventLoop-->>Session: 完成或取消回调
     Session-->>Caller: 通知结果
 ```
 

@@ -1,0 +1,42 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+package "Client & Control Interface (Caller Context)" as CLIENT {
+  rectangle "DiagnosticApi\n(Unified External Contract)" as api
+  database "Fixed Command Slot\n(Zero-allocation slot)" as requestSlot
+}
+package "SocketReactor Task (Task 1)" as REACTOR_TASK {
+  rectangle "SessionCoordinator\n(State Machine Orchestrator)" as coordinator
+  rectangle "SocketReactor\n(select multiplexing)" as reactor
+  rectangle "LogSession\n(Zero-lock Stream Unpacker)" as log
+  rectangle "ChrSession\n(Transaction Framing & Ack)" as chr
+}
+package "SRAM Dedicated Buffer Pools (SPSC Rings)" as BUFFERS {
+  database "Log & CHR Dedicated Rings\n(Fixed-size chunk queues)" as rings
+  database "Independent RX / TX Capture Ring\n(Dual-buffered slots)" as cap
+}
+package "lwIP Network Context (Network Thread / ISR)" as LWIP_CTX {
+  rectangle "lwIP RX / TX Hooks" as hooks
+  rectangle "CaptureTap & CaptureGate\n(Atomic counters / Threshold check)" as tap
+}
+package "StorageOwner Task (Task 2)" as STORAGE_TASK {
+  rectangle "StorageOwner Task\n(Single-threaded serial flush)" as storage
+  rectangle "FatFsPort Driver Abstraction\n(Sector-aligned writing)" as files
+}
+
+api --> requestSlot : Zero-heap Submission
+requestSlot --> coordinator
+coordinator --> reactor
+reactor --> log
+reactor --> chr
+log --> rings : Publish Ownership
+chr --> rings : Publish Ownership
+hooks --> tap
+tap ..> cap : Try-Reserve Copy
+coordinator --> storage : Storage Command Slot
+rings --> storage : Consume
+cap --> storage : Consume
+storage --> files
+storage ..> coordinator : Result Slot Confirmation
+@enduml

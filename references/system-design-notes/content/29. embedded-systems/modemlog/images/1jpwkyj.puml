@@ -1,0 +1,43 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "Scheduling Period Begins" as start
+rectangle "Pending Control / Stop Signal?" as checkCtl
+rectangle "Transition Session State Machine\nExecute Quiesce / Drain" as handleCtl
+rectangle "Rebuild fd_set\nBased on Free Ring Quotas" as buildFds
+rectangle "Execute select() (Bounded timeout 5~10ms)" as doSelect
+rectangle "select() Return Status?" as selResult
+rectangle "Check CPU Time Budget\n& Stop Request Flag?" as checkBudget
+rectangle "Log Transient Warning & Backoff" as logErr
+rectangle "CHR Ready?" as checkChr
+rectangle "Read Bounded CHR Frames\nVerify Frame Length & CRC" as readChr
+rectangle "ModemLog Ready?" as checkLog
+rectangle "Read Bounded Log Chunk (Max 4KB)\nPrevent CPU Starvation" as readLog
+rectangle "New Chunks Ready?" as checkPublish
+rectangle "Publish with Memory Barrier to Ring\nLightweight Semaphore to Storage" as publish
+rectangle "taskYIELD() Relinquish Timeslice" as yield
+
+start --> checkCtl
+checkCtl --> handleCtl : Pending Control Command
+checkCtl --> buildFds : No Control Pending
+handleCtl --> buildFds
+buildFds --> doSelect
+doSelect --> selResult
+selResult --> checkBudget : Timeout / 0 Ready
+selResult --> logErr : Error / EINTR
+logErr --> checkBudget
+selResult --> checkChr : Events Ready
+checkChr --> readChr : Yes
+checkChr --> checkLog : No
+readChr --> checkLog
+checkLog --> readLog : Yes
+checkLog --> checkPublish : No
+readLog --> checkPublish
+checkPublish --> publish : Yes
+checkPublish --> checkBudget : No
+publish --> checkBudget
+checkBudget --> buildFds : Budget Remaining
+checkBudget --> yield : Budget Exhausted / Stop
+yield --> start
+@enduml

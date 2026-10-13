@@ -1,0 +1,26 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+package "Traditional Model (Heavy SRAM Waste)" as TRAD {
+  rectangle "Module A" as m1
+  rectangle "Task A + Dedicated Stack A" as tA
+  rectangle "Module B" as m2
+  rectangle "Task B + Dedicated Stack B" as tB
+  rectangle "Module C" as m3
+  rectangle "Task C + Dedicated Stack C" as tC
+}
+package "Active Object Pattern (Minimal SRAM Footprint)" as AO {
+  rectangle "Unified Event Queue" as events
+  rectangle "Single Active Object Task (Shared Stack)" as aoTask
+  rectangle "Hierarchical State Machine (HSM)" as hsm
+  rectangle "Run-to-Completion Fast Dispatch" as rtc
+}
+
+m1 --> tA
+m2 --> tB
+m3 --> tC
+events --> aoTask
+aoTask --> hsm
+hsm --> rtc
+@enduml

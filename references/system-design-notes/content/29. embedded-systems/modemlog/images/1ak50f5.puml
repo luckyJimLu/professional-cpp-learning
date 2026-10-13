@@ -1,0 +1,18 @@
+@startuml
+    autonumber
+    participant "Modem CHR Client" as Modem
+    participant "ChrSession & Reactor" as Rx
+    participant "CHR Dedicated Ring" as Ring
+    participant "StorageOwner Task" as Disk
+
+    Modem ->> Rx : Structured Byte Stream (with unique SeqID)
+    Rx ->> Rx : Frame Boundary & CRC Verification
+    Rx ->> Ring : Publish Intact Message Block to SPSC Ring
+    Rx -->> Modem : TCP Transport Layer ACK (Network Confirmed)
+
+    note over Ring,Disk : Asynchronous Flush & Persistence
+    Disk ->> Ring : Sequentially Consume Pending CHR Chunks
+    Disk ->> Disk : Write to FatFs and Call f_sync()
+    Disk -->> Rx : Sync Checkpoint Confirmation (Persisted up to SeqID)
+    Rx -->> Modem : Send Application-Level CHR_PERSISTED_ACK(SeqID)\n(Modem can safely reclaim its internal flash buffer)
+@enduml

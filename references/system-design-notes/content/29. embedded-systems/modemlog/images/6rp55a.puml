@@ -1,0 +1,37 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+package "Application Layer Socket Sources" as APPS {
+  rectangle "Diagnostic Clients\n(Two Dedicated Diag Sockets)" as diagSockets
+  rectangle "Public Application Traffic\n(HTTP / MQTT / OTA Sockets)" as wanApps
+}
+package "MCU Routing Decision & Compliance Engine" as ROUTING {
+  rectangle "Route Lookup by Destination IP" as routeTable
+  rectangle "IPC Boundary Compliance\nAllow Only Modem Local Diag IPs" as guardIPC
+  rectangle "WAN Boundary Compliance\nStrictly Deny IPC Private Subnets" as guardWAN
+}
+package "Network Interface Layer" as NETIFS {
+  rectangle "IPC Virtual Netif\n(Inter-core Communication)" as netifIPC
+  rectangle "WAN Default Netif\n(Cellular Internet)" as netifWAN
+  rectangle "MCU Local Capture Tap\n(Passive Snapshot Probe)" as tap
+}
+package "External Network Endpoints" as EXTERNALS {
+  rectangle "Modem Local Diag Endpoint\n(127.0.0.1 / Local Daemon)" as modemLocal
+  rectangle "Cellular Operator Network\n(Cellular Internet)" as modemCell
+}
+rectangle "Drop & Security Audit Alarm" as dropIPC
+rectangle "Drop & Prevent Data Leak" as dropWAN
+
+diagSockets --> routeTable : Explicitly Bound to IPC IP
+wanApps --> routeTable : Default Gateway Path
+routeTable --> guardIPC : Destination is IPC Subnet
+routeTable --> guardWAN : Destination is Public Internet
+guardIPC --> netifIPC : Legitimate IP
+guardIPC --> dropIPC : Invalid Outbound
+guardWAN --> netifWAN : Legitimate Public IP
+guardWAN --> dropWAN : Private Subnet Leak
+netifIPC --> modemLocal
+netifWAN --> modemCell
+netifWAN ..> tap : Read-only Snapshot
+@enduml

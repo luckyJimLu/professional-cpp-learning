@@ -1,0 +1,15 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "Application Layer" as app
+rectangle "Domain / Service Layer" as domain
+rectangle "Driver Interface Layer" as drv
+rectangle "HAL / BSP" as hal
+rectangle "MMIO / Hardware Registers" as mmio
+
+app --> domain : High-level Logic
+domain --> drv : Abstract Device Contract
+drv --> hal : Zero-cost Inlines / Static Config
+hal --> mmio : Direct Reads/Writes
+@enduml

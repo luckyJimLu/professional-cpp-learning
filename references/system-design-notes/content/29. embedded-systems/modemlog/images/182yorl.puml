@@ -1,0 +1,19 @@
+@startuml
+hide empty description
+skinparam shadowing false
+
+state "FREE (空闲可用)" as FREE
+state "FILLING (生产者占用写入)" as FILLING
+state "READY (已就绪等待消费)" as READY
+state "READING (Storage 独占读取)" as READING
+state "ERROR_HELD (故障保持与隔离)" as ERROR_HELD
+
+[*] --> FREE : 系统冷启动静态内存分配
+FREE --> FILLING : 唯一生产者原子预约成功\n[Producer Try-Acquire]
+FILLING --> READY : 写入校验完成并发布\n[Release Publish]
+FILLING --> FREE : 校验异常 / 取消未发布快照\n[Rollback Discard]
+READY --> READING : Storage 引擎原子取得读取所有权\n[Storage Acquire]
+READING --> FREE : DMA 写盘同步结束直接释放\n[Storage Release]
+READING --> ERROR_HELD : SDIO/DMA 传输错误，保留故障现场\n[IO Failure]
+ERROR_HELD --> FREE : 确认 DMA 停止后显式清理复位\n[Fault Recovery Clean]
+@enduml

@@ -1,0 +1,15 @@
+@startuml
+    participant "核间Driver" as Driver
+    participant "独立Channel Ring" as Ring
+    participant "Core Worker" as Core
+    participant "Storage Owner" as Store
+
+    Driver ->> Ring : 写描述符并更新sequence
+    Driver ->> Core : Notify bits
+    Core ->> Ring : 按通道预算消费
+    Core ->> Core : 解析/封装
+    Core ->> Store : 写请求+generation+sequence
+    Store ->> Store : 公平调度并写盘
+    Store -->> Core : 完成
+    Core ->> Ring : 提交并释放所有权
+@enduml

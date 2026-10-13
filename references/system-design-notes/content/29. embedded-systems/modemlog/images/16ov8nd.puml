@@ -1,0 +1,48 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+package "Modem 固件域 (IPC 诊断源)" as MODEM {
+  rectangle "Modem 日志流服务\n(持续高吞吐 1 Mbps)" as modemLog
+  rectangle "Modem CHR 事件服务\n(关键状态与崩溃信令)" as modemChr
+}
+package "MCU 接入调度域 (Socket Reactor Task)" as INGRESS {
+  rectangle "ModemLog TCP 客户端\n(非阻塞套接字)" as logSock
+  rectangle "CHR TCP 客户端\n(按序可靠套接字)" as chrSock
+  rectangle "Socket Reactor 事件调度器\n(select 多路复用 / 动态配额)" as reactor
+}
+package "lwIP 网络业务域 (MCU 正常业务流量)" as NETIF {
+  rectangle "正常 lwIP RX / TX 报文流" as netTraffic
+  rectangle "CaptureTap\n旁路观察门" as tap
+  rectangle "原始业务协议栈正常流转" as netStack
+}
+package "静态内存池 (SPSC 无锁环形缓冲区)" as SRAM_POOLS {
+  database "ModemLog 专用块环\n(定长 Chunk 队列)" as logRing
+  database "CHR 专用消息环\n(边界保全队列)" as chrRing
+  database "Capture 独立快照环\n(私有槽位双缓冲)" as capRing
+}
+package "存储引擎任务 (Storage Owner Task)" as STORAGE_DOMAIN {
+  rectangle "唯一 Storage Owner 引擎\n(独占 FatFs / SDIO DMA 控制权)" as storageExec
+}
+package "持久化介质 (SD卡 / eMMC)" as MEDIA_FS {
+  database "ModemLog 文件\n(*.log 循环覆盖)" as fileLog
+  database "CHR 文件\n(*.chr 追加归档)" as fileChr
+  database "PCAP 文件\n(*.pcap 抓包存储)" as filePcap
+}
+
+logSock --> reactor
+chrSock --> reactor
+netTraffic --> tap
+tap --> netStack : 零延迟放行
+modemLog --> logSock : IPC 诊断链路
+modemChr --> chrSock : IPC 诊断链路
+reactor --> logRing : 零拷贝发布块
+reactor --> chrRing : 结构化分帧发布
+tap ..> capRing : 尽力复制 (若槽位可用)
+logRing --> storageExec : 按序批量消费
+chrRing --> storageExec : 按序消费确认
+capRing --> storageExec : 异步排空
+storageExec --> fileLog
+storageExec --> fileChr
+storageExec --> filePcap
+@enduml

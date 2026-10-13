@@ -1,0 +1,26 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+package "传统模式 (RAM 浪费严重)" as TRAD {
+  rectangle "模块 A" as m1
+  rectangle "Task A + 私有栈 A" as tA
+  rectangle "模块 B" as m2
+  rectangle "Task B + 私有栈 B" as tB
+  rectangle "模块 C" as m3
+  rectangle "Task C + 私有栈 C" as tC
+}
+package "活动对象模式 (SRAM 极致节省)" as AO {
+  rectangle "统一 Event Queue" as events
+  rectangle "单一 Active Object Task (共享单一栈)" as aoTask
+  rectangle "层次化状态机 (HSM)" as hsm
+  rectangle "Run-to-Completion 快速分发" as rtc
+}
+
+m1 --> tA
+m2 --> tB
+m3 --> tC
+events --> aoTask
+aoTask --> hsm
+hsm --> rtc
+@enduml

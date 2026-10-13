@@ -1,0 +1,8 @@
+@startuml
+skinparam shadowing false
+
+start
+:ISR/Task A;
+:单一 Task B;
+stop
+@enduml

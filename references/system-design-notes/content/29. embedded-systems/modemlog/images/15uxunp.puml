@@ -1,0 +1,23 @@
+@startuml
+hide empty description
+skinparam shadowing false
+
+state "STOPPED (就绪静默)" as STOPPED
+state "PREPARING (资源分配与文件就绪)" as PREPARING
+state "ACTIVE (全速采集与存储中)" as ACTIVE
+state "QUIESCING (输入源静默中)" as QUIESCING
+state "DRAINING (排空在途队列)" as DRAINING
+state "FAULTED (故障隔离与保护)" as FAULTED
+
+[*] --> STOPPED : 系统冷启动就绪
+STOPPED --> PREPARING : 收到启动命令 (Start Command)\n[Storage 准备内存与新建文件]
+PREPARING --> ACTIVE : 文件初始化成功\n[打开 Socket 读准入]
+PREPARING --> FAULTED : 文件创建失败或存储介质不可用\n[记录初始化错误]
+ACTIVE --> QUIESCING : 收到停止命令 (Stop Command)\n[关闭输入端准入]
+ACTIVE --> FAULTED : 底层 IO 致命错误或通道失败\n[触发保护熔断]
+QUIESCING --> DRAINING : 输入完全静默且 inflight 归零\n[无新数据入队]
+QUIESCING --> FAULTED : 等待静默超时\n[强制关停]
+DRAINING --> STOPPED : 排空完成且文件安全关闭同步\n[f_close 成功]
+DRAINING --> FAULTED : 排空同步超时或写入错误\n[记录未落盘日志]
+FAULTED --> STOPPED : 运维执行安全隔离与资源清理完成\n[显式重置清理]
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+    autonumber
+    participant "Modem CHR 固件" as Modem
+    participant "ChrSession 及 Reactor" as Rx
+    participant "CHR 专用无锁环" as Ring
+    participant "StorageOwner 任务" as Disk
+
+    Modem ->> Rx : 有序消息字节流 (带消息唯一标识 SeqID)
+    Rx ->> Rx : 帧边界校验与完整性确认
+    Rx ->> Ring : 完整记录或有界分段发布至环形队列
+    Rx -->> Modem : TCP 传输层 ACK (网络层已收妥)
+
+    note over Ring,Disk : 异步写盘与落盘确认
+    Disk ->> Ring : 按序消费待写入 CHR 块
+    Disk ->> Disk : 写入 FatFs 并在边界调用 f_sync()
+    Disk -->> Rx : 同步检查点确认 (已完成持久化至 generation/SeqID)
+    Rx -->> Modem : 协议允许时发送应用级持久化 ACK\n(Modem 端可安全回收内部诊断缓存)
+@enduml

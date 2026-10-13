@@ -115,7 +115,7 @@ sequenceDiagram
     Session->>OpQueue: async_read_some(..., [this, self])<br/>Lambda 副本被放入异步队列 [count = 3]
     Session-->>Server: start() 执行完毕返回，局部 self 析构<br/>[count = 2]
 
-    Note over Server: 2. 遇到分号 ';'，临时 shared_ptr 析构！
+    Note over Server: 2. 遇到分号 #59;，临时 shared_ptr 析构！
     Server-->>Server: 临时 shared_ptr 销毁<br/>[count = 1：仅队列中的 Lambda 拥有]
 
     Note over OpQueue, Session: 3. 数据到来，触发回调

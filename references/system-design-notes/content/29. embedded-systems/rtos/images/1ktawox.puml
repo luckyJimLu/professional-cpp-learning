@@ -1,0 +1,16 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+left to right direction
+
+rectangle "Hardware IRQ" as irq
+rectangle "Top-Half ISR\n(Fast Sampling / Clear IRQ Flags)" as topHalf
+rectangle "Lightweight IPC Decoupling\n(Ring Buffer / Task Notification)" as ipc
+rectangle "Bottom-Half Worker Task / State Machine\n(Full Protocol Parsing / State Transition)" as bottomHalf
+rectangle "Business Logic Execution" as biz
+
+irq --> topHalf
+topHalf --> ipc
+ipc --> bottomHalf
+bottomHalf --> biz
+@enduml

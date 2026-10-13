@@ -1,0 +1,15 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "Application (应用层)" as app
+rectangle "Domain / Service (领域服务层)" as domain
+rectangle "Driver Interface (驱动接口层)" as drv
+rectangle "HAL / BSP (硬件抽象与板级支持)" as hal
+rectangle "MMIO / Hardware Registers (物理寄存器)" as mmio
+
+app --> domain : 高层业务逻辑
+domain --> drv : 抽象设备契约
+drv --> hal : 零开销内联 / 编译期配置
+hal --> mmio : 直读直写
+@enduml

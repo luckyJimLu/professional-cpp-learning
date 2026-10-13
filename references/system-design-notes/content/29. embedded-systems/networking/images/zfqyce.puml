@@ -1,0 +1,9 @@
+@startuml
+start
+:ISR;
+:driver queue / flag;
+:main loop;
+:netif->input();
+:sys_check_timeouts();
+stop
+@enduml

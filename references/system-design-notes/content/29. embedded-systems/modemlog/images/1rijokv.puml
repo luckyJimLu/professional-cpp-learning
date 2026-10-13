@@ -1,0 +1,19 @@
+@startuml
+hide empty description
+skinparam shadowing false
+
+state "FREE (Idle / Available)" as FREE
+state "FILLING (Producer Reserved & Writing)" as FILLING
+state "READY (Published / Awaiting Drain)" as READY
+state "READING (Storage Exclusive In-flight)" as READING
+state "ERROR_HELD (Fault Retained for Recovery)" as ERROR_HELD
+
+[*] --> FREE : Cold Boot Static Pool Allocation
+FREE --> FILLING : Producer Atomic Try-Reserve Success\n[Producer Try-Acquire]
+FILLING --> READY : Verification Pass & Memory Barrier\n[Release Publish]
+FILLING --> FREE : Verification Failed / Rollback Discard\n[Rollback Discard]
+READY --> READING : Storage Engine Atomic Acquire\n[Storage Acquire]
+READING --> FREE : DMA Flush & Sector Sync Complete\n[Storage Release]
+READING --> ERROR_HELD : SDIO/DMA Bus Fault; Preserve Context\n[IO Failure]
+ERROR_HELD --> FREE : DMA Abort Confirmed & Channel Cleaned\n[Fault Recovery Clean]
+@enduml

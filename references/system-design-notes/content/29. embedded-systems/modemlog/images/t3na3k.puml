@@ -1,0 +1,14 @@
+@startuml
+    participant "Channel RX" as RX
+    participant "Core Worker" as Core
+    participant "Storage Owner" as Store
+    participant "SD/DMA" as SD
+
+    RX ->> Core : 设置ready bit
+    Core ->> Core : 解析并建立写请求
+    Core ->> Store : 提交buffer+generation+sequence
+    Store ->> SD : f_write / DMA
+    SD -->> Store : 完成或超时
+    Store -->> Core : completion
+    Core ->> Core : 推进commit并释放buffer
+@enduml

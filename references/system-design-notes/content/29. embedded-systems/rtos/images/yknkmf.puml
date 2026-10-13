@@ -1,0 +1,31 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+package "Task Heartbeats (Independent Bits)" as TASKS {
+  rectangle "Task A (Business Loop)" as tA
+  database "Heartbeat Bitmap Register" as reg
+  rectangle "Task B (Protocol Worker)" as tB
+  rectangle "Task C (Sensor Sampler)" as tC
+}
+rectangle "Watchdog Supervisor Task" as supervisor
+rectangle "All Critical Task Bits\nHealthy & Present?" as check
+rectangle "Feed Hardware Watchdog" as feed
+rectangle "Atomic Clear Heartbeat Bitmap" as clear
+rectangle "Next Supervision Period" as nextPeriod
+rectangle "Refuse to Feed Watchdog" as refuse
+rectangle "Preserve Minimal Crash Context to Backup RAM" as faultSave
+rectangle "Hardware Watchdog Timeout -> Chip Reset" as hwReset
+
+tA --> reg : Atomic set BIT0
+tB --> reg : Atomic set BIT1
+tC --> reg : Atomic set BIT2
+reg --> supervisor
+supervisor --> check
+check --> feed : Yes (All Healthy)
+feed --> clear
+clear --> nextPeriod
+check --> refuse : No (Deadlock / Starvation)
+refuse --> faultSave
+faultSave --> hwReset
+@enduml

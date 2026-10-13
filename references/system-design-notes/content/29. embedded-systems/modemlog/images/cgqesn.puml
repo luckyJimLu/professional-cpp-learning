@@ -1,0 +1,32 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "Modem 日志服务" as modemLog
+rectangle "MCU ModemLog Socket" as logSocket
+rectangle "Modem CHR服务" as modemChr
+rectangle "MCU CHR Socket" as chrSocket
+rectangle "Socket Reactor" as reactor
+rectangle "ModemLog 专用块环" as logRing
+rectangle "CHR 专用消息块环" as chrRing
+rectangle "正常 lwIP RX / TX" as net
+rectangle "有界只读 Capture Tap" as tap
+rectangle "原始业务路径继续" as normal
+rectangle "私有 RX / TX 抓包环" as cap
+rectangle "唯一 Storage Owner" as storage
+rectangle "日志文件、CHR文件、PCAP文件" as files
+
+modemLog --> logSocket
+modemChr --> chrSocket
+logSocket --> reactor
+chrSocket --> reactor
+reactor --> logRing
+reactor --> chrRing
+net --> tap
+tap --> normal
+tap ..> cap : 尽力复制
+logRing --> storage
+chrRing --> storage
+cap --> storage
+storage --> files
+@enduml

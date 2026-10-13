@@ -1,0 +1,13 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "1. 先写入数据至 ring_buffer->data[head]" as wData
+rectangle "2. 插入硬件内存屏障 (__DMB / 编译器屏障)" as dmb
+rectangle "3. 更新发布写指针: ring_buffer->head = next" as pubHead
+rectangle "4. 通知或唤醒消费者读取" as notify
+
+wData --> dmb
+dmb --> pubHead
+pubHead --> notify
+@enduml

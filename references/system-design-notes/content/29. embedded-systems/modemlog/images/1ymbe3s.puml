@@ -1,0 +1,14 @@
+@startuml
+    participant "会话管理" as manager
+    participant "Reactor或Capture入口" as producer
+    participant "Storage Owner" as storage
+    participant "SD驱动" as disk
+    manager ->> producer : 停止指定业务输入
+    producer ->> producer : 禁止新进入并等待在途完成
+    producer -->> manager : 输入已静默
+    manager ->> storage : 排空该业务并关闭文件
+    storage ->> disk : 完成写入和同步
+    disk -->> storage : 成功或有界故障
+    storage -->> manager : 结果与资源清理确认
+    manager ->> manager : 标记STOPPED或FAULTED
+@enduml

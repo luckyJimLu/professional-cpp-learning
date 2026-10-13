@@ -1,0 +1,16 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+left to right direction
+
+rectangle "硬件中断 IRQ" as irq
+rectangle "顶半部 ISR\n(快速采样/清除中断标志)" as topHalf
+rectangle "轻量 IPC 解耦\n(Ring Buffer / Task Notification)" as ipc
+rectangle "底半部 Worker Task / 状态机\n(完整报文解析 / 状态转移)" as bottomHalf
+rectangle "业务逻辑处理与完成" as biz
+
+irq --> topHalf
+topHalf --> ipc
+ipc --> bottomHalf
+bottomHalf --> biz
+@enduml

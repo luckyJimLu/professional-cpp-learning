@@ -1,0 +1,33 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "Original Packet at lwIP Ingress / Egress Tap" as pktIn
+rectangle "1. Capture Globally Enabled\n& Interface Whitelisted?" as checkEn
+rectangle "Normal Path: Pass to lwIP Stack with Zero Delay" as passOriginal
+rectangle "2. Filter & Rate-Budget Check\n(Token Bucket Limiter)?" as checkBudget
+rectangle "Increment Rate-Limit Drop Counter Only" as dropCount1
+rectangle "3. Atomic Try-Acquire Private Slot\n(Non-blocking Check)?" as acquireSlot
+rectangle "Increment Overflow Drop Counter Only\n(Never Block Network Stack)" as dropCount2
+rectangle "4. SnapLen Truncated Read-Only Copy\nRead pbuf Only; No Long Holding" as copyPkt
+rectangle "5. Snapshot & Segment Verification OK?" as checkValid
+rectangle "Return Slot to FREE State\nIncrement Corrupt Drop Counter" as discardSlot
+rectangle "6. Release Mark Slot as READY\nNotify StorageOwner Task" as publishSlot
+rectangle "Original Packet Continues Normal Transmission" as pktOut
+
+pktIn --> checkEn
+checkEn --> passOriginal : No
+checkEn --> checkBudget : Yes
+checkBudget --> dropCount1 : Over Budget
+dropCount1 --> passOriginal
+checkBudget --> acquireSlot : Budget OK
+acquireSlot --> dropCount2 : No Slot Available
+dropCount2 --> passOriginal
+acquireSlot --> copyPkt : Acquired Slot
+copyPkt --> checkValid
+checkValid --> discardSlot : Corrupt / Partial
+discardSlot --> passOriginal
+checkValid --> publishSlot : Valid Snapshot
+publishSlot --> passOriginal
+passOriginal --> pktOut
+@enduml

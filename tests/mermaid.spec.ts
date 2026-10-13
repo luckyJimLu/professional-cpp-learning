@@ -66,8 +66,9 @@ test("all repository Mermaid diagrams have valid syntax", async ({ page }) => {
 test("topic documents are reachable and render diagrams", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "专题", exact: true }).first().click();
+  await page.getByText("框架与阅读指南", { exact: false }).first().click();
   await page.getByRole("button", { name: "Mermaid 图表学习与编写", exact: true }).click();
   await expect(page.locator(".mermaid-viewport svg")).toHaveCount(3);
   await page.getByRole("link", { name: "所有权与智能指针", exact: true }).click();
-  await expect(page.locator(".document-card h1")).toContainText("Ownership");
+  await expect(page.locator(".document-card h1").first()).toContainText("Ownership");
 });

@@ -1,0 +1,22 @@
+@startuml
+hide empty description
+skinparam shadowing false
+
+state "STOPPED" as STOPPED
+state "STARTING" as STARTING
+state "ACTIVE" as ACTIVE
+state "QUIESCING" as QUIESCING
+state "DRAINING" as DRAINING
+state "SYNCING" as SYNCING
+state "ERROR" as ERROR
+
+[*] --> STOPPED
+STOPPED --> STARTING : 初始化上下文和文件
+STARTING --> ACTIVE : 打开通道
+ACTIVE --> QUIESCING : 收到停止请求
+QUIESCING --> DRAINING : 通道close-ack
+DRAINING --> SYNCING : RX和写队列清空
+SYNCING --> STOPPED : DMA完成且文件关闭
+ACTIVE --> ERROR : 通道或存储错误
+ERROR --> QUIESCING : 受控停止
+@enduml

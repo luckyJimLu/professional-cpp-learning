@@ -1,0 +1,23 @@
+@startuml
+hide empty description
+skinparam shadowing false
+
+state "STOPPED (Quiescent / Ready)" as STOPPED
+state "PREPARING (Resource & File Pre-allocation)" as PREPARING
+state "ACTIVE (Full-rate Streaming & Logging)" as ACTIVE
+state "QUIESCING (Ingress Suppressed)" as QUIESCING
+state "DRAINING (In-flight Buffer Flush)" as DRAINING
+state "FAULTED (Fault-isolated & Protected)" as FAULTED
+
+[*] --> STOPPED : System Boot Initialized
+STOPPED --> PREPARING : Start Command Received\n[Storage Allocates Memory & Opens Target Files]
+PREPARING --> ACTIVE : Initialization Successful\n[Open Socket Read Admissions]
+PREPARING --> FAULTED : File Creation Failed or Media Unavailable\n[Log Pre-allocation Error Code]
+ACTIVE --> QUIESCING : Stop Command Received\n[Quiesce Socket Ingress & Disable Tap]
+ACTIVE --> FAULTED : Severe Storage IO Timeout or DMA Lockup\n[Trigger Circuit Breaker]
+QUIESCING --> DRAINING : Ingress Fully Silent and In-flight Zero\n[No New Packets Queued]
+QUIESCING --> FAULTED : Quiescence Timeout Exceeded\n[Force Abort]
+DRAINING --> STOPPED : All Buffers Flushed & Files Cleanly Closed\n[f_close Success]
+DRAINING --> FAULTED : Flush Timeout or Sector IO Failure\n[Record Dropped Log Count]
+FAULTED --> STOPPED : Explicit Recovery / Reset Invoked\n[Release Leases & Reset State]
+@enduml

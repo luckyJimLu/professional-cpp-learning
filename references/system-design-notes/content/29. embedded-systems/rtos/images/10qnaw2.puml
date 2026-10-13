@@ -1,0 +1,31 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+package "业务任务心跳 (独立 Bit 位)" as TASKS {
+  rectangle "Task A (业务闭环)" as tA
+  database "心跳位图寄存器" as reg
+  rectangle "Task B (协议处理)" as tB
+  rectangle "Task C (传感器采样)" as tC
+}
+rectangle "Watchdog Supervisor 检查任务" as supervisor
+rectangle "所有关键业务位\n均已打卡 (WaitAll)?" as check
+rectangle "刷新物理看门狗 (Feed WDG)" as feed
+rectangle "原子清零所有心跳位图" as clear
+rectangle "进入下一监管周期" as nextPeriod
+rectangle "拒绝喂狗 (Do Not Feed)" as refuse
+rectangle "保存最小崩溃上下文至 Backup RAM" as faultSave
+rectangle "硬件看门狗超时 -> 强制芯片复位" as hwReset
+
+tA --> reg : 原子置位 BIT0
+tB --> reg : 原子置位 BIT1
+tC --> reg : 原子置位 BIT2
+reg --> supervisor
+supervisor --> check
+check --> feed : 是 (全部健康)
+feed --> clear
+clear --> nextPeriod
+check --> refuse : 否 (存在死锁/饿死)
+refuse --> faultSave
+faultSave --> hwReset
+@enduml

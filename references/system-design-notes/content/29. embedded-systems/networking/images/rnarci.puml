@@ -1,0 +1,15 @@
+@startuml
+start
+fork
+  :RX thread / ISR bottom-half;
+  :tcpip_input();
+  :tcpip_mbox;
+fork again
+  :app thread;
+  :Netconn / Socket;
+  :api_msg;
+  :tcpip_mbox;
+end fork
+:tcpip_thread;
+stop
+@enduml

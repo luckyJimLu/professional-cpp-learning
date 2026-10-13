@@ -1,0 +1,24 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "两个诊断 Socket" as diag
+rectangle "IPC 地址域" as ipc
+rectangle "公网应用 Socket" as app
+rectangle "WAN 默认接口" as wan
+rectangle "IPC 出口地址与链路校验" as guardI
+rectangle "WAN 出口拒绝 IPC 源和目的" as guardW
+rectangle "Modem 本地诊断端点" as local
+rectangle "Modem 公网透传或路由" as modemWan
+rectangle "蜂窝网络" as cell
+rectangle "MCU 本地 TCPDump" as capture
+
+diag --> ipc
+app --> wan
+ipc --> guardI
+wan --> guardW
+guardI --> local
+guardW --> modemWan
+modemWan --> cell
+wan ..> capture : 只读快照
+@enduml

@@ -1,0 +1,24 @@
+@startuml
+    autonumber
+    actor "Session Coordinator (SessionCoordinator)" as Manager
+    participant "Ingress (Reactor or Capture Gate)" as Producer
+    participant "Storage Owner Task" as Storage
+    participant "SD Driver / FatFs" as Disk
+
+    note over Manager,Disk : Phase 1: Ingress Quiescence
+    Manager ->> Producer : Request Stop for Target Service (STOP_REQUEST)
+    Producer ->> Producer : Block New Inbound Admissions (QUIESCING)
+    Producer ->> Producer : Await In-flight Chunks to Finish Publishing
+    Producer -->> Manager : Ingress Fully Quiesced
+
+    note over Manager,Disk : Phase 2: Drain In-Flight & Close Files
+    Manager ->> Storage : Drain Remaining Data and Close File (DRAIN_AND_CLOSE)
+    Storage ->> Storage : Sequentially Consume All Remaining READY Slots
+    Storage ->> Disk : Flush Final Buffers and Invoke f_sync()
+    Disk -->> Storage : Write & Sync Confirmed (or Bounded Timeout)
+    Storage ->> Disk : Close File Handle via f_close()
+    Storage -->> Manager : Resource Cleanup Confirmed
+
+    note over Manager : Safe State Update
+    Manager ->> Manager : Transition Session State to STOPPED (or FAULTED)
+@enduml

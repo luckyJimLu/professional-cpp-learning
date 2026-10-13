@@ -11,7 +11,9 @@
     "predev": "npm run prepare:clang",
     "prebuild": "npm run prepare:clang",
     "test:e2e": "playwright test",
-    "check:course": "python3 tools/check-course.py"
+    "check:course": "python3 tools/check-course.py",
+    "check:migration": "python3 tools/check-migration.py",
+    "check:reference-cpp": "cd references/system-design-notes && bash scripts/check-cpp-examples.sh"
   },
   "dependencies": {
     "react": "^19.3.0",

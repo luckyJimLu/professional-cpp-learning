@@ -1,0 +1,21 @@
+@startuml
+    autonumber
+    actor "Client Application (App)" as App
+    participant "SessionCoordinator & Reactor" as Ctl
+    participant "StorageOwner Task" as Disk
+    participant "SocketSession or CaptureGate" as Source
+
+    App ->> Ctl : Submit Start(config) Request
+    note over Ctl,Disk : Storage Preparation Precedes Data Flow
+    Ctl ->> Disk : PrepareFile & generation Params
+    Disk ->> Disk : Allocate Buffers & Create Target File
+    Disk -->> Ctl : Retain Completed Result (Prepared OK / Error)
+
+    alt File Preparation Succeeded
+        Ctl ->> Source : Establish Non-blocking Connection or Enable Tap
+        Source -->> Ctl : READY or Connection Established
+        Ctl -->> App : Asynchronous Completion: State Marked RUNNING
+    else File Preparation Failed
+        Ctl -->> App : Asynchronous Failure: State Marked FAULTED
+    end
+@enduml

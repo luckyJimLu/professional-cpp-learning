@@ -1,0 +1,24 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam ArrowColor #4F5D75
+skinparam defaultFontSize 14
+title 异步读：需要等待的路径
+participant "Session / 调用者" as app
+participant "Socket Service" as service
+participant "Reactor / epoll" as reactor
+participant "Scheduler / Runner" as runner
+participant "完成 Handler" as handler
+app -> service : async_read_some(buffer, token)
+service -> reactor : 注册读取 operation
+service --> app : 发起函数返回
+reactor -> reactor : 可读事件，尝试 recv
+reactor -> runner : 可完成工作
+runner -> service : operation.complete()
+service -> handler : 经关联 Executor 交付 ec, n
+handler -> app : 更新协议状态
+note over app,handler
+等待期间 buffer 必须有效
+调用返回不是读取完成
+end note
+@enduml

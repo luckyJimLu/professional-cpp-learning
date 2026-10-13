@@ -1,0 +1,43 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "SDIO Slowdown or Buffer High-Watermark Detected" as start
+package "Tier 1 Backoff: Shed Non-Essential Sideband" as T1 {
+  rectangle "1. Throttle / Suspend CaptureTap Ingress\n(100% bypass drop; zero production impact)" as tier1
+  rectangle "Queue Pressure Relieved?" as checkT1
+  rectangle "Restore Capture Tap Sampling" as recoverT1
+  rectangle "Resume Normal Operation" as normalState
+  rectangle "2. ModemLog Independent High-Watermark Flow Control\n(Shrink TCP Receive Window to apply backpressure)" as tier2
+}
+package "Tier 2 Backoff: Throttle High-Throughput Logs" as T2 {
+  rectangle "Queue Pressure Relieved?" as checkT2
+  rectangle "Gradually Reopen Receive Window" as recoverT2
+  rectangle "3. CHR High-Priority Protected Queuing\n(Preserve crash dumps & critical events only)" as tier3
+}
+package "Tier 3 Backoff: Protect Critical Telemetry" as T3 {
+  rectangle "Storage Stall Duration\nExceeded Safety Threshold?" as checkTimeout
+  rectangle "Await SDIO Internal Block Erase Completion" as waitRecovery
+  rectangle "4. Mark Diagnostic Session as FAULTED\nAbort DMA and Safely Close Corrupted File" as tier4
+}
+package "Tier 4 Backoff: Fault Isolation & Circuit Breaker" as T4 {
+  rectangle "Keep Normal WAN Cellular Operation 100% Intact" as keepWAN
+  rectangle "Emit Hardware Telemetry Alert to Management Plane" as alertOps
+}
+
+start --> tier1
+tier1 --> checkT1
+checkT1 --> recoverT1 : Yes
+recoverT1 --> normalState
+checkT1 --> tier2 : No
+tier2 --> checkT2
+checkT2 --> recoverT2 : Yes
+recoverT2 --> normalState
+checkT2 --> tier3 : No
+tier3 --> checkTimeout
+checkTimeout --> waitRecovery : No
+waitRecovery --> tier2
+checkTimeout --> tier4 : Yes
+tier4 --> keepWAN
+tier4 --> alertOps
+@enduml

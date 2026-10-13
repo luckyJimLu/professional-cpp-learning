@@ -1,0 +1,29 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "Enter Idle Task" as start
+rectangle "Calculate Next Task Wakeup Time\n(Next Wakeup Tick)" as calc
+rectangle "Sleep Duration\n> Minimum Threshold?" as checkMin
+rectangle "Standard Light Sleep WFI\nKeep SysTick Running" as normalIdle
+rectangle "Configure Low-Power Timer (LPTIM)" as cfgTimer
+rectangle "Stop / Mask Standard SysTick" as stopTick
+rectangle "Atomic Check: Any New Interrupt/Task\nBecame Ready During Setup?" as raceCheck
+rectangle "Abort Sleep Immediately\nRestore SysTick Scheduling" as abortSleep
+rectangle "Execute WFI / WFE (Deep Sleep)" as enterWFI
+rectangle "Hardware Interrupt Wakeup" as wakeup
+rectangle "Compensate OS Ticks from LPTIM Count" as compTime
+rectangle "Restore OS Scheduler & Peripheral Clocks" as resumeOS
+
+start --> calc
+calc --> checkMin
+checkMin --> normalIdle : No
+checkMin --> cfgTimer : Yes
+cfgTimer --> stopTick
+stopTick --> raceCheck
+raceCheck --> abortSleep : Task Ready
+raceCheck --> enterWFI : Safe
+enterWFI --> wakeup
+wakeup --> compTime
+compTime --> resumeOS
+@enduml

@@ -1,0 +1,29 @@
+@startuml
+    autonumber
+    participant "网络驱动 (RX/TX)" as Driver
+    participant "Capture Tap" as Tap
+    participant "私有抓包槽池" as Pool
+    participant "lwIP 正常网络路径" as Network
+    participant "Storage Owner" as Storage
+
+    note over Driver,Network : 快速路径：非侵入式只读观察
+    Driver ->> Tap : 原包传入 (由正常网络栈持有所有权)
+    Tap ->> Tap : 检查抓包白名单及 Token Bucket 预算
+
+    alt 私有槽可用且预算通过 (快速复制)
+        Tap ->> Pool : 尝试原子预约私有槽 (Try-Reserve)
+        Tap ->> Pool : 限长 SnapLen 只读拷贝前 N 字节
+        Pool -->> Tap : 快照完成并发布为 READY
+        Tap -->> Driver : 立即返回 (纳秒级耗时)
+        Driver ->> Network : 继续执行原始报文正常转发收发
+
+        note over Storage,Pool : 异步解耦写盘路径
+        Storage ->> Pool : 异步检测并提取 READY 槽位
+        Storage ->> Storage : 组装 PCAP 数据头并写入磁盘缓冲
+        Storage ->> Pool : 消费结束，释放槽位变回 FREE
+    else 槽位耗尽或超过预算 (主动丢弃降级)
+        Tap ->> Tap : 递增对应 Drop 计数器
+        Tap -->> Driver : 立即返回 (零开销)
+        Driver ->> Network : 继续执行原始报文正常转发收发 (业务零影响)
+    end
+@enduml

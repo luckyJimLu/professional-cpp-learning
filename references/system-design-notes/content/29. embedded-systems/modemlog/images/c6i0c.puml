@@ -1,0 +1,12 @@
+@startuml
+    participant "Modem CHR" as modem
+    participant "ChrSession及Reactor" as rx
+    participant "CHR专用环" as ring
+    participant "StorageOwner" as disk
+    modem ->> rx : 有序消息字节流
+    rx ->> ring : 完整记录或有界分段发布
+    ring ->> disk : 按序消费
+    disk ->> disk : 写入并按策略同步
+    disk -->> rx : 同步检查点与 generation
+    rx -->> modem : 协议允许时发送持久化 ACK
+@enduml

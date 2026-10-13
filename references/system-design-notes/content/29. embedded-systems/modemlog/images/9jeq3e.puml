@@ -1,0 +1,37 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+package "应用层套接字发起来源" as APPS {
+  rectangle "诊断通信客户端\n(两个专用诊断 Socket)" as diagSockets
+  rectangle "公网业务应用\n(HTTP / MQTT / OTA Socket)" as wanApps
+}
+package "MCU 路由裁决与合规引擎" as ROUTING {
+  rectangle "根据目的 IP 查路由表" as routeTable
+  rectangle "IPC 边界校验规则\n仅放行 Modem 本地诊断地址" as guardIPC
+  rectangle "WAN 边界校验规则\n严禁泄漏任何 IPC 内部私网地址" as guardWAN
+}
+package "网络物理/虚拟接口" as NETIFS {
+  rectangle "IPC 虚拟网卡接口\n(核间专属通信)" as netifIPC
+  rectangle "WAN 默认网卡接口\n(4G 蜂窝公网通信)" as netifWAN
+  rectangle "MCU 本地 Capture Tap\n(只读旁路镜像探针)" as tap
+}
+package "外部网络实体" as EXTERNALS {
+  rectangle "Modem 本地诊断端点\n(127.0.0.1 / 本地控制口)" as modemLocal
+  rectangle "蜂窝运营商公网\n(Cellular Internet)" as modemCell
+}
+rectangle "丢弃并安全审计告警" as dropIPC
+rectangle "丢弃阻断内部数据泄漏" as dropWAN
+
+diagSockets --> routeTable : 指定绑定 IPC IP
+wanApps --> routeTable : 默认走缺省网关
+routeTable --> guardIPC : 目标为 IPC 内部网
+routeTable --> guardWAN : 目标为外部公网
+guardIPC --> netifIPC : 地址合法
+guardIPC --> dropIPC : 越界外发
+guardWAN --> netifWAN : 地址合法
+guardWAN --> dropWAN : 私网泄漏
+netifIPC --> modemLocal
+netifWAN --> modemCell
+netifWAN ..> tap : 只读快照
+@enduml

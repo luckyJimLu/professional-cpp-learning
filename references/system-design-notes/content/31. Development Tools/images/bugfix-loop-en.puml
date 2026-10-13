@@ -1,0 +1,20 @@
+@startuml
+title Bug fix workflow
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam ArrowColor #4F5D75
+skinparam roundcorner 8
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #2D3142
+  FontColor #2D3142
+}
+start
+:Reproduce;
+:Locate;
+:Hypothesize;
+:Minimal fix;
+:Regression test;
+:Reproduce again;
+stop
+@enduml

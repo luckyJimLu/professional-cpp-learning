@@ -1,0 +1,22 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "处理控制与停止请求" as control
+rectangle "按空闲配额重建 fd集合" as sets
+rectangle "select 有限超时" as wait
+rectangle "CHR 就绪则有限读取" as chr
+rectangle "ModemLog 就绪则有限读取" as log
+rectangle "保存分帧状态并发布块" as parse
+rectangle "通知 Storage" as notify
+rectangle "检查CPU预算和停止状态" as budget
+
+control --> sets
+sets --> wait
+wait --> chr
+chr --> log
+log --> parse
+parse --> notify
+notify --> budget
+budget --> control
+@enduml

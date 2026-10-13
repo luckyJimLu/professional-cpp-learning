@@ -1,0 +1,20 @@
+@startuml
+title Bug 修复流程
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam ArrowColor #4F5D75
+skinparam roundcorner 8
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #2D3142
+  FontColor #2D3142
+}
+start
+:复现;
+:定位;
+:假设;
+:最小修复;
+:回归测试;
+:再现确认;
+stop
+@enduml

@@ -1,0 +1,21 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam ArrowColor #4F5D75
+skinparam defaultFontSize 14
+skinparam roundcorner 8
+
+title 排空式关闭：先完成，再释放
+start
+:停止接受新请求;
+:关闭任务提交入口;
+:排空已接受任务
+或按协议协作取消;
+:保留结果交付需要的
+I/O 执行能力;
+:等待任务和必要回调收尾;
+:join 所有 Worker;
+:停止 I/O Runner
+释放设备与同步资源;
+stop
+@enduml

@@ -1,0 +1,20 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+left to right direction
+
+rectangle "MCU应用" as A
+rectangle "MCU ipc0\n172.31.255.2/30" as I1
+rectangle "Modem ipc0\n172.31.255.1/30" as I2
+rectangle "MCU wan0\n192.168.225.2/24" as W1
+rectangle "Modem wan-lan0\n192.168.225.1/24" as W2
+rectangle "NAT/路由" as N
+rectangle "Modem cell0\n蜂窝公网" as C
+
+A --> I1
+I1 <--> I2 : IPC通道0
+A --> W1
+W1 <--> W2 : IPC通道1或PPP
+W2 --> N
+N --> C
+@enduml

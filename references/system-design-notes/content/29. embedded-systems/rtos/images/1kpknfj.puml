@@ -1,0 +1,9 @@
+@startuml
+skinparam shadowing false
+
+start
+:Storage;
+:Bus;
+:Device;
+stop
+@enduml

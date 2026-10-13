@@ -1,0 +1,14 @@
+@startuml
+start
+:MAC / PHY;
+:DMA RX descriptor;
+:driver alloc / fill pbuf;
+:tcpip_input(p, netif);
+:tcpip_mbox;
+:tcpip_thread;
+:ethernet_input();
+:ARP / IP;
+:TCP / UDP / RAW;
+:callback 或 netconn / socket 唤醒;
+stop
+@enduml

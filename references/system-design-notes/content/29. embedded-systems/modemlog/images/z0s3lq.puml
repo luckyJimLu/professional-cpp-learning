@@ -1,0 +1,24 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "等待Task Notification" as WAIT
+rectangle "获取ready bits" as SNAP
+rectangle "按优先级和等待时间选通道" as PICK
+rectangle "处理有限字节/时间预算" as RUN
+rectangle "该通道已空？" as EMPTY
+rectangle "保留ready bit" as AGAIN
+rectangle "原子清除bit并再次检查" as CLEAR
+rectangle "还有ready通道？" as MORE
+
+WAIT --> SNAP
+SNAP --> PICK
+PICK --> RUN
+RUN --> EMPTY
+EMPTY --> AGAIN : 否
+EMPTY --> CLEAR : 是
+AGAIN --> PICK
+CLEAR --> MORE
+MORE --> PICK : 是
+MORE --> WAIT : 否
+@enduml

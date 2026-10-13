@@ -1,0 +1,25 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam ArrowColor #4F5D75
+skinparam defaultFontSize 14
+skinparam roundcorner 8
+skinparam linetype ortho
+top to bottom direction
+title 执行域与结果回投
+rectangle "I/O Runner\n线程调用 io_context.run()" as runner
+rectangle "io_context\n协调待执行工作" as io
+rectangle "连接 strand\n协议状态与输出队列" as session #FFF4EC
+rectangle "Socket Service\n默认 Linux epoll 后端" as backend
+rectangle "CPU thread_pool\n独立输入与计算" as cpu
+runner --> io : 驱动
+io --> session : 串行完成处理
+io --> backend : 驱动 I/O
+backend --> io : 完成工作
+session --> cpu : 提交独立任务
+cpu --> session : post 结果
+note bottom of session
+所有连接状态访问进入同一执行域
+strand 不绑定某个 OS 线程
+end note
+@enduml

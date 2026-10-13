@@ -1,0 +1,28 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "核间物理链路" as PHY
+rectangle "Channel Demux" as DEMUX
+rectangle "Channel 0\nModemLog Ring" as M
+rectangle "Channel 1\nTCPDump Ring" as T
+rectangle "Channel 2\nCHR Ring" as C
+rectangle "常驻核心调度Worker" as CORE
+rectangle "可选Burst Worker" as BURST
+rectangle "Storage请求队列" as SQ
+rectangle "Storage Owner" as STORE
+rectangle "FatFs / SDMMC" as DISK
+
+PHY --> DEMUX
+DEMUX --> M
+DEMUX --> T
+DEMUX --> C
+M --> CORE
+T --> CORE
+C --> CORE
+CORE --> BURST : 可选计算任务
+CORE --> SQ
+BURST --> SQ
+SQ --> STORE
+STORE --> DISK
+@enduml

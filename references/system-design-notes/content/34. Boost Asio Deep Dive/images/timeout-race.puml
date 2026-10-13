@@ -1,0 +1,22 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam ArrowColor #4F5D75
+skinparam defaultFontSize 14
+skinparam roundcorner 8
+title 超时与正常完成：只选择一次业务结果
+state "等待读 / timer" as pending
+state "已选正常结果" as success
+state "已选超时结果" as timeout
+state "清理残余完成" as cleanup
+[*] --> pending : 同一 strand 发起
+pending --> success : 读完成，撤销 timer
+pending --> timeout : timer 到期，请求取消读
+success --> cleanup : 忽略 timer 取消完成
+timeout --> cleanup : 处理读的最后完成
+cleanup --> [*] : 安全释放操作状态
+note bottom of cleanup
+取消请求不等于操作已完成
+新请求使用代号隔离旧回调
+end note
+@enduml

@@ -1,0 +1,16 @@
+@startuml
+    participant "应用" as app
+    participant "Coordinator及Reactor" as ctl
+    participant "StorageOwner" as disk
+    participant "Socket会话或CaptureGate" as source
+    app ->> ctl : 提交 Start 请求
+    ctl ->> disk : PrepareFile 与 generation
+    disk -->> ctl : 保留完成结果
+    alt 文件准备成功
+        ctl ->> source : 非阻塞连接或启用快照
+        source -->> ctl : READY 或连接完成
+        ctl -->> app : 请求完成为 RUNNING
+    else 文件准备失败
+        ctl -->> app : 请求完成为 FAULTED
+    end
+@enduml

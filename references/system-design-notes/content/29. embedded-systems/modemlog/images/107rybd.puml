@@ -1,0 +1,43 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "检测到 SDIO 变慢或环形缓冲积压达到高水位" as start
+package "第一级退让：削减非关键旁路" as T1 {
+  rectangle "1. 立即停止或缩减 CaptureTap 准入\n(降级为 100% 旁路丢弃，业务完全不受损)" as tier1
+  rectangle "积压是否缓解?" as checkT1
+  rectangle "恢复 Capture 抓包采样" as recoverT1
+  rectangle "恢复常态运行" as normalState
+  rectangle "2. ModemLog 独立高水位流控\n(收缩 TCP 接收窗口，依靠协议栈自然背压)" as tier2
+}
+package "第二级退让：流控高吞吐日志" as T2 {
+  rectangle "积压是否缓解?" as checkT2
+  rectangle "缓慢恢复正常接收窗口" as recoverT2
+  rectangle "3. CHR 维持高优先级排队\n(仅在超限时按可靠性协议拒绝低优事件)" as tier3
+}
+package "第三级退让：信令可靠性保护" as T3 {
+  rectangle "存储写入停滞\n是否超过故障截止时间?" as checkTimeout
+  rectangle "按低水位及冷却条件等待恢复" as waitRecovery
+  rectangle "4. 诊断文件标记为 FAULTED\n安全中止 DMA 传输并关闭诊断文件" as tier4
+}
+package "第四级退让：故障隔离熔断" as T4 {
+  rectangle "正常 WAN 蜂窝业务继续 100% 运行不受拖累" as keepWAN
+  rectangle "上报存储硬件故障遥测日志" as alertOps
+}
+
+start --> tier1
+tier1 --> checkT1
+checkT1 --> recoverT1 : 是
+recoverT1 --> normalState
+checkT1 --> tier2 : 否
+tier2 --> checkT2
+checkT2 --> recoverT2 : 是
+recoverT2 --> normalState
+checkT2 --> tier3 : 否
+tier3 --> checkTimeout
+checkTimeout --> waitRecovery : 否
+waitRecovery --> tier2
+checkTimeout --> tier4 : 是
+tier4 --> keepWAN
+tier4 --> alertOps
+@enduml

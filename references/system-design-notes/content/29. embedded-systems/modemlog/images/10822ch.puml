@@ -1,0 +1,17 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "ModemLog TX Queue" as Q0
+rectangle "加权仲裁器" as ARB
+rectangle "TCPDump TX Queue" as Q1
+rectangle "CHR TX Queue" as Q2
+rectangle "共享DMA / IPC链路" as DMA
+rectangle "对端按Channel ID分流" as DEMUX
+
+Q0 --> ARB
+Q1 --> ARB
+Q2 --> ARB
+ARB --> DMA
+DMA --> DEMUX
+@enduml

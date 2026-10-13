@@ -1,0 +1,29 @@
+@startuml
+    autonumber
+    participant "Network Driver (RX/TX)" as Driver
+    participant "Capture Tap" as Tap
+    participant "Private Capture Slots" as Pool
+    participant "lwIP Protocol Stack" as Network
+    participant "Storage Owner Task" as Storage
+
+    note over Driver,Network : Fast-Path: Non-invasive Read-only Probe
+    Driver ->> Tap : Pass Packet Pointer (pbuf Ownership Stays with lwIP)
+    Tap ->> Tap : Evaluate Whitelist and Token-Bucket Rate Budget
+
+    alt Private Slot Available & Budget Passes (Hit)
+        Tap ->> Pool : Atomic Try-Reserve Private Slot
+        Tap ->> Pool : Truncated Read-only Copy (SnapLen Bytes)
+        Pool -->> Tap : Mark Slot Published as READY
+        Tap -->> Driver : Return Immediately (< 2 microseconds)
+        Driver ->> Network : Continue Normal Packet Transmission
+
+        note over Storage,Pool : Decoupled Async Flush
+        Storage ->> Pool : Scan and Batch Acquire READY Slots
+        Storage ->> Storage : Assemble PCAP Header & Write to Sector Buffer
+        Storage ->> Pool : Return Slot to FREE State for Re-use
+    else Slot Exhausted or Budget Exceeded (Graceful Drop)
+        Tap ->> Tap : Increment Drop Counters Atomically
+        Tap -->> Driver : Return Immediately (Zero Overhead)
+        Driver ->> Network : Continue Normal Packet Transmission (Zero Degradation)
+    end
+@enduml

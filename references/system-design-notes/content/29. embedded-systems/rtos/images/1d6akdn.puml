@@ -1,0 +1,13 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "1. Task Notification\n(Lightest: Zero RAM control block, directly uses TCB)" as p1
+rectangle "2. SPSC Ring Buffer\n(Lock-free single-producer single-consumer, minimal overhead)" as p2
+rectangle "3. OS Queue / Semaphore\n(Requires wait-lists & scheduler context switches)" as p3
+rectangle "4. Complex Shared Mutexes / Locks\n(Requires priority inheritance & strict ordering, lowest priority)" as p4
+
+p1 --> p2 : Needs Data Buffering
+p2 --> p3 : Needs Multi-Producer/Consumer
+p3 --> p4 : Avoid When Possible
+@enduml

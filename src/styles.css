@@ -1474,7 +1474,7 @@ summary:focus-visible {
 .code-panel.editable textarea {
   width: 100%;
   min-height: 430px;
-  resize: vertical;
+  resize: none;
   padding: 22px;
   border: 0;
   outline: 0;

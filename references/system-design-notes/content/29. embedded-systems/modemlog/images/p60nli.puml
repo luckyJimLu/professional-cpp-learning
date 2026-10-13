@@ -1,0 +1,27 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "核间驱动 / ISR / DMA" as D
+rectangle "ModemLog通道" as C1
+rectangle "TCPDump通道" as C2
+rectangle "CHR通道" as C3
+rectangle "ModemLog RX Ring" as R1
+rectangle "TCPDump RX Ring" as R2
+rectangle "CHR RX Ring" as R3
+rectangle "共享弹性工作池" as P
+rectangle "唯一Storage Owner" as S
+rectangle "三个独立文件" as F
+
+D --> C1
+D --> C2
+D --> C3
+C1 --> R1
+C2 --> R2
+C3 --> R3
+R1 --> P
+R2 --> P
+R3 --> P
+P --> S
+S --> F
+@enduml

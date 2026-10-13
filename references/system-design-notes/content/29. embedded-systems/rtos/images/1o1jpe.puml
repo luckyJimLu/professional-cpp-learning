@@ -1,0 +1,8 @@
+@startuml
+skinparam shadowing false
+
+start
+:SysTick ISR;
+:Feed Watchdog;
+stop
+@enduml

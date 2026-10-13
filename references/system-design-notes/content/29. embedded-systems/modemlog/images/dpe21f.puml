@@ -1,0 +1,33 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "原始报文到达网络观察点 lwIP Ingress / Egress" as pktIn
+rectangle "1. 抓包功能是否启用\n且匹配网卡监听白名单?" as checkEn
+rectangle "原路径继续：无延迟无损耗送入 lwIP" as passOriginal
+rectangle "2. 过滤及包率字节预算检查\n(Token Bucket 速率限制)?" as checkBudget
+rectangle "仅递增预算 Drop 计数器" as dropCount1
+rectangle "3. 尝试原子预约私有抓包槽位\n(非阻塞 Try-Acquire)?" as acquireSlot
+rectangle "仅递增溢出 Drop 计数器\n(不阻塞正常业务通信)" as dropCount2
+rectangle "4. 限长只读复制 (SnapLen 截断)\n只读持有 pbuf，杜绝长周期引用" as copyPkt
+rectangle "5. 快照与分段校验完整?" as checkValid
+rectangle "归还槽位至 FREE 状态\n递增快照损坏 Drop 计数" as discardSlot
+rectangle "6. Release 标记槽位为 READY\n异步通知 StorageOwner 消费" as publishSlot
+rectangle "原始报文继续正常收发处理" as pktOut
+
+pktIn --> checkEn
+checkEn --> passOriginal : 否
+checkEn --> checkBudget : 是
+checkBudget --> dropCount1 : 预算超限
+dropCount1 --> passOriginal
+checkBudget --> acquireSlot : 预算合格
+acquireSlot --> dropCount2 : 无可用空闲槽
+dropCount2 --> passOriginal
+acquireSlot --> copyPkt : 成功取得槽位
+copyPkt --> checkValid
+checkValid --> discardSlot : 校验失败
+discardSlot --> passOriginal
+checkValid --> publishSlot : 校验合格
+publishSlot --> passOriginal
+passOriginal --> pktOut
+@enduml

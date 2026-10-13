@@ -1,0 +1,25 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "1. 定义 MCU 资源预算\n(ROM/RAM/Stack/ISR Latency 限额)" as s1
+rectangle "2. 静态设计\n(任务规划 / 缓冲尺寸 / IPC 选型)" as s2
+rectangle "3. 编译分析\n(生成 ELF + .map + .su 静态调用图)" as s3
+rectangle "4. 静态审计\n(Flash/RAM 占用率与最差栈深度)" as s4
+rectangle "5. 实时性实测\n(GPIO/Trace 测量 ISR / WCET / 延迟)" as s5
+rectangle "6. 压力负载测试\n(峰值吞吐 / 持续满载稳定性验证)" as s6
+rectangle "7. 故障注入矩阵\n(Task Hang / 锁死 / 环溢出 / 栈打满 / 突发 DMA)" as s7
+rectangle "8. 验证自愈容灾\n(Watchdog 触发 & Backup RAM 崩溃现场保存)" as s8
+rectangle "9. 低功耗与时序\n(Tickless 唤醒时序 & 竞争窗口拦截)" as s9
+rectangle "10. 冻结量产配置\n(关闭调试开关，固化只读区与校验)" as s10
+
+s1 --> s2
+s2 --> s3
+s3 --> s4
+s4 --> s5
+s5 --> s6
+s6 --> s7
+s7 --> s8
+s8 --> s9
+s9 --> s10
+@enduml

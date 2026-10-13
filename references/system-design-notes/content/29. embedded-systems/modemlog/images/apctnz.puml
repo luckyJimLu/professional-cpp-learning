@@ -1,0 +1,22 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+left to right direction
+
+rectangle "Modem 日志" as M
+rectangle "lwIP TCP Socket" as L
+rectangle "唯一 Socket 接收线程" as R
+rectangle "协议解析与分流" as P
+rectangle "静态 SPSC 环形缓冲区" as B
+rectangle "命令状态机" as C
+rectangle "低优先级写盘线程" as W
+rectangle "FatFs / SD卡" as F
+
+M --> L
+L --> R
+R --> P
+P --> B : 日志 payload
+P --> C : 命令响应
+B --> W
+W --> F
+@enduml

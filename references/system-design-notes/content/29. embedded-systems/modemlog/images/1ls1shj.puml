@@ -1,0 +1,18 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "核间通道0" as CH0
+rectangle "Modem ipc0" as IPC
+rectangle "控制/IND/日志Socket服务" as S
+rectangle "核间通道1" as CH1
+rectangle "wan-lan0" as LAN
+rectangle "仅WAN转发/NAT" as F
+rectangle "cell0 蜂窝公网" as CELL
+
+CH0 --> IPC
+IPC --> S
+CH1 --> LAN
+LAN --> F
+F --> CELL
+@enduml

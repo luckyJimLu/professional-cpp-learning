@@ -1,0 +1,12 @@
+@startuml
+start
+:application;
+:tcp_write / udp_send / send;
+:IP output;
+:netif->output;
+:netif->linkoutput;
+:driver maps / copies pbuf chain;
+:DMA TX;
+:MAC / PHY;
+stop
+@enduml

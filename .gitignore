@@ -5,3 +5,7 @@ dist/
 build/
 *.o
 
+
+public/clang/
+playwright-report/
+test-results/

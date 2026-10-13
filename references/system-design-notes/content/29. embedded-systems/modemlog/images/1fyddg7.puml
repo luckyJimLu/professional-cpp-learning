@@ -1,0 +1,17 @@
+@startuml
+hide empty description
+skinparam shadowing false
+
+state "ReadHeader" as ReadHeader
+state "ReadResponse" as ReadResponse
+state "ReadLog" as ReadLog
+state "ReadIndication" as ReadIndication
+
+[*] --> ReadHeader
+ReadHeader --> ReadResponse : 命令响应
+ReadHeader --> ReadLog : 日志IND
+ReadHeader --> ReadIndication : 普通IND
+ReadResponse --> ReadHeader : 消息完成
+ReadLog --> ReadHeader : payload完成
+ReadIndication --> ReadHeader : 消息完成
+@enduml

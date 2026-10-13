@@ -1,0 +1,10 @@
+@startuml
+skinparam shadowing false
+
+start
+#LightBlue:Task A: lock Bus;
+#LightBlue:Task A: lock Device;
+#LightCoral:Task B: lock Device;
+#LightCoral:Task B: lock Bus;
+stop
+@enduml

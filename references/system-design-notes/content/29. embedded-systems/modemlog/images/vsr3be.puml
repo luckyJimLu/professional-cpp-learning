@@ -1,0 +1,43 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "调度周期开始" as start
+rectangle "处理控制与停机信号?" as checkCtl
+rectangle "更新会话状态机\n执行局部静默/排空" as handleCtl
+rectangle "根据环空闲配额\n重构 fd_set 集合" as buildFds
+rectangle "执行 select() (有限超时 5~10ms)" as doSelect
+rectangle "select 返回结果?" as selResult
+rectangle "检查 CPU 时间片配额\n与停机终止标志?" as checkBudget
+rectangle "记录瞬态告警并退避" as logErr
+rectangle "CHR 就绪?" as checkChr
+rectangle "限额读取 CHR 帧 (防饥饿)\n校验帧长与头部 CRC" as readChr
+rectangle "ModemLog 就绪?" as checkLog
+rectangle "限额读取 Log 块 (防独占 CPU)\n写入预分配固定内存块" as readLog
+rectangle "是否有新数据块就绪?" as checkPublish
+rectangle "内存屏障发布至环形队列\n轻量信号量通知 Storage" as publish
+rectangle "taskYIELD() 让出时间片" as yield
+
+start --> checkCtl
+checkCtl --> handleCtl : 有挂起控制命令
+checkCtl --> buildFds : 无挂起控制命令
+handleCtl --> buildFds
+buildFds --> doSelect
+doSelect --> selResult
+selResult --> checkBudget : 超时 0 就绪
+selResult --> logErr : 错误 EINTR
+logErr --> checkBudget
+selResult --> checkChr : 事件就绪
+checkChr --> readChr : 是
+checkChr --> checkLog : 否
+readChr --> checkLog
+checkLog --> readLog : 是
+checkLog --> checkPublish : 否
+readLog --> checkPublish
+checkPublish --> publish : 是
+checkPublish --> checkBudget : 否
+publish --> checkBudget
+checkBudget --> buildFds : 未超额且未停机
+checkBudget --> yield : 超额或需让渡
+yield --> start
+@enduml

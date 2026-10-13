@@ -1,0 +1,32 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "DiagnosticApi" as api
+package "SocketReactor 任务" as reactorTask {
+  rectangle "SessionCoordinator" as coordinator
+  rectangle "SocketReactor" as reactor
+  rectangle "LogSession" as log
+  rectangle "ChrSession" as chr
+}
+rectangle "Log 与 CHR 专用环" as rings
+rectangle "已有 lwIP RX / TX 上下文" as hooks
+rectangle "CaptureTap 与 CaptureGate" as tap
+rectangle "独立 RX / TX 快照环" as cap
+rectangle "StorageOwner 任务" as storage
+rectangle "FatFsPort 与三个文件会话" as files
+
+api --> coordinator : 固定请求槽
+coordinator --> reactor
+reactor --> log
+reactor --> chr
+log --> rings
+chr --> rings
+hooks --> tap
+tap --> cap
+coordinator --> storage : 存储命令槽
+rings --> storage
+cap --> storage
+storage --> files
+storage ..> coordinator : 保留至确认的结果槽
+@enduml

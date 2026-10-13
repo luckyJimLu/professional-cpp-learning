@@ -148,3 +148,17 @@ npm run test:e2e
 ```
 
 课程检查验证元数据、实验路径与前后课链接；浏览器测试验证图表渲染、加载失败后的源码回退，以及仓库 Mermaid 图表语法。CI 还会编译并执行独立 C++ 实验。
+
+## 知识库与代码搜索
+
+运行 `npm install`、`npm run dev` 打开学习工作区。导航中提供专题知识库和代码搜索，也可使用 Ctrl/Cmd+K。搜索覆盖独立 C/C++ 源码和 Markdown 代码块，支持文件名、代码文本、类型筛选、行号预览及原文跳转；查询和阅读位置可通过 URL 分享。
+
+从 `system-design-notes` 导入的资料位于 `references/system-design-notes/`，包含架构、Asio、并发编程及相关嵌入式实践。详见 [迁移说明](docs/content-migration.md)。原项目文件保留。
+
+```bash
+npm run check:migration      # 校验 265 个迁移文件
+npm run check:course         # 每日课程结构
+npm run build               # TypeScript + 生产构建
+npm run test:e2e            # 搜索、阅读、图表与浏览器编译
+npm run check:reference-cpp # 迁移示例（要求 Boost 1.83.0）
+```

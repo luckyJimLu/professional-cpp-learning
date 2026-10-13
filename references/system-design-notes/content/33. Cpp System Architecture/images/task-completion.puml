@@ -1,0 +1,32 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam ArrowColor #4F5D75
+skinparam defaultFontSize 14
+skinparam roundcorner 8
+
+title 提交任务与交付结果
+participant "调用方" as caller
+participant "Executor / 队列" as queue
+participant "Worker / Runner" as worker
+participant "Handler" as handler
+participant "结果共享状态" as state
+caller -> queue : submit(callable)
+queue -> state : 建立任务结果通道
+queue --> caller : 返回 Future
+worker -> queue : 取出任务
+queue --> worker : move(Task)
+worker -> handler : 执行业务
+alt 正常完成
+handler --> worker : 返回值
+worker -> state : 写入结果
+else 业务失败
+handler --> worker : 异常
+worker -> state : 保存异常
+end
+state --> caller : Future 就绪，可取得结果
+note over caller
+get 未就绪时阻塞
+不要在结果所依赖的 Runner 上阻塞等待
+end note
+@enduml

@@ -1,0 +1,42 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+package "应用与控制接口 (Caller Context)" as CLIENT {
+  rectangle "DiagnosticApi\n(提供统一外部调用契约)" as api
+  database "固定请求槽\n(Fixed Command Slot)" as requestSlot
+}
+package "SocketReactor 调度任务 (Task 1)" as REACTOR_TASK {
+  rectangle "SessionCoordinator\n(统一会话协调器)" as coordinator
+  rectangle "SocketReactor\n(select 多路复用)" as reactor
+  rectangle "LogSession\n(无锁字节块解包)" as log
+  rectangle "ChrSession\n(事务分帧与持久化确认)" as chr
+}
+package "SRAM 专用静态缓冲区 (SPSC Rings)" as BUFFERS {
+  database "Log 与 CHR 专用块环\n(定长 Chunk 队列)" as rings
+  database "独立 RX / TX 快照环\n(双缓冲槽位池)" as cap
+}
+package "lwIP 协议栈上下文 (Network Thread / ISR)" as LWIP_CTX {
+  rectangle "已有 lwIP RX / TX 钩子" as hooks
+  rectangle "CaptureTap 与 CaptureGate\n(原子计数 / 阈值过滤)" as tap
+}
+package "StorageOwner 存储任务 (Task 2)" as STORAGE_TASK {
+  rectangle "StorageOwner 任务\n(单线程串行处理)" as storage
+  rectangle "FatFsPort 驱动抽象\n(扇区对齐写入)" as files
+}
+
+api --> requestSlot : 零堆分配提交
+requestSlot --> coordinator
+coordinator --> reactor
+reactor --> log
+reactor --> chr
+log --> rings : 发布所有权
+chr --> rings : 发布所有权
+hooks --> tap
+tap ..> cap : Try-Reserve 复制
+coordinator --> storage : 存储命令槽
+rings --> storage : 消费读取
+cap --> storage : 消费读取
+storage --> files
+storage ..> coordinator : 保留至确认的结果槽
+@enduml

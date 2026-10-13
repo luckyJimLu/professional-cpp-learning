@@ -1,0 +1,25 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+package "Application Layer" as L1 {
+  rectangle "HSM / Active Objects / Domain State Machines\n(Run-to-Completion, Non-blocking)" as app
+}
+package "Event & Service Layer" as L2 {
+  rectangle "Task Notification | Event Queue | Timer Events" as events
+}
+package "Minimal RTOS Worker Tasks" as L3 {
+  rectangle "Control Task | I/O Task | Protocol/Storage Task | Supervisor" as workers
+}
+package "Driver / HAL / BSP" as L4 {
+  rectangle "UART | SPI | I2C | ADC | DMA | Flash | WDG" as drivers
+}
+package "Hardware Layer" as L5 {
+  rectangle "MCU Peripherals / Physical Pins / NVIC" as hw
+}
+
+app --> events : Dispatch Events
+events --> workers : Async Wakeup
+workers --> drivers : Non-blocking / DMA
+drivers --> hw : Direct Register MMIO
+@enduml

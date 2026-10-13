@@ -1,0 +1,27 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam ArrowColor #4F5D75
+skinparam defaultFontSize 14
+skinparam roundcorner 8
+
+title 请求、调度与结果
+top to bottom direction
+rectangle "客户端" as client
+rectangle "I/O 接入与响应" as io
+rectangle "Dispatcher\n请求路由" as dispatcher
+rectangle "Executor\n有界任务队列" as executor
+rectangle "Runner\n工作线程循环" as runner
+rectangle "Business Handler\n业务逻辑" as handler
+rectangle "结果共享状态\nPromise / Future" as result
+rectangle "设备 / 存储" as device
+client --> io : 请求
+io --> dispatcher : 解析后请求
+dispatcher --> executor : submit(Task)
+executor --> runner : 取出任务
+runner --> handler : 调用
+handler --> device : 访问
+handler --> result : 值 / 异常
+result --> io : 完成后投递
+io --> client : 响应
+@enduml

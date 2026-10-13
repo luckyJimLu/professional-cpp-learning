@@ -1,0 +1,14 @@
+@startuml
+start
+:MAC / PHY;
+:DMA RX descriptor;
+:driver allocates / populates pbuf;
+:tcpip_input(p, netif);
+:tcpip_mbox;
+:tcpip_thread;
+:ethernet_input();
+:ARP / IP processing;
+:TCP / UDP / RAW;
+:Application callback or Netconn / Socket wakeup;
+stop
+@enduml

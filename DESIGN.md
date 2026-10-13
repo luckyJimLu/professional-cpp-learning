@@ -81,15 +81,26 @@ Implemented:
 - Guidelines
 - Progress / skill evidence
 - responsive mobile shell
+- categorized bilingual topic library
+- source search with line-level preview
 - build CI
 
 Deferred:
 
 - authenticated cloud sync
 - answer grading
-- search
 - server-side analytics
 
 ## Diagram and topic reading
 
 Shared Markdown rendering lives in `src/components/Markdown.tsx`; diagrams use `MermaidDiagram.tsx`. The reading frame uses the existing `--surface`, `--line`, `--radius`, `--blue` and `--amber` tokens from `src/styles.css`; SVG content uses Mermaid's neutral theme with the existing font stack. Diagrams retain source access, keyboard-scrollable overflow, and readable failure feedback. Topic navigation uses the existing button style and reads repository Markdown, without duplicating topic content.
+
+## Workspace and source explorer
+
+The existing Engineering Notebook × Compiler identity is preserved. `src/styles.css` owns runtime tokens: Canvas → `--canvas`, Ink → `--ink`, C++ Blue → `--blue`, Compile Green → `--green`, Warning Amber → `--amber`, Code Surface → `--code`. IBM Plex Sans/system CJK fallbacks serve reading; IBM Plex Mono serves paths, line numbers and compiler output.
+
+`Shell.tsx` owns grouped primary navigation and the shared search entry. Desktop uses the 228px workspace sidebar; mobile uses an inline disclosure containing every destination. `Topics.tsx` uses a 245px classified reading rail and flexible document column. `CodeSearch.tsx` uses source rows and a dark line-numbered code preview: the code itself is the signature visual. At narrow widths the selected preview precedes results and document navigation collapses above reading.
+
+Use existing white surfaces, 12px panel radius and blue selection accents. No new brand palette. `src/workspace.css` defines global scrollbars using `--scroll-thumb`, `--scroll-track`, `--scroll-hover`, `--scroll-active`; reduced-motion and forced-colors modes respect platform preferences.
+
+Reconciliation: prior topic button wrapping did not scale to the imported corpus; replaced with classified disclosure navigation. Prior mobile navigation omitted secondary destinations; all destinations now remain accessible. Existing color tokens remain unchanged.

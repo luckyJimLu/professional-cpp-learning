@@ -1,0 +1,18 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+left to right direction
+
+rectangle "ModemLog写请求" as M
+rectangle "Storage调度器" as Q
+rectangle "TCPDump写请求" as T
+rectangle "CHR写请求" as C
+rectangle "唯一Storage Owner" as W
+rectangle "FatFs / SDMMC" as SD
+
+M --> Q
+T --> Q
+C --> Q
+Q --> W
+W --> SD
+@enduml

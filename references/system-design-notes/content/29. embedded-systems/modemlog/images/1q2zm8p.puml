@@ -1,0 +1,19 @@
+@startuml
+hide empty description
+skinparam shadowing false
+
+state "FREE" as FREE
+state "FILLING" as FILLING
+state "READY" as READY
+state "READING" as READING
+state "ERROR_HELD" as ERROR_HELD
+
+[*] --> FREE
+FREE --> FILLING : 唯一生产者预约
+FILLING --> READY : release发布
+FILLING --> FREE : 取消未发布快照
+READY --> READING : Storage acquire取得
+READING --> FREE : 同步消费完成或复制至Storage私有区
+READING --> ERROR_HELD : IO失败且所有权尚未解除
+ERROR_HELD --> FREE : 确认DMA停止后显式清理
+@enduml

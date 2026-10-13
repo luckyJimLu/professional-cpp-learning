@@ -1,0 +1,22 @@
+@startuml
+title Engineering delivery loop
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam ArrowColor #4F5D75
+skinparam roundcorner 8
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #2D3142
+  FontColor #2D3142
+}
+start
+:Goal and acceptance criteria;
+:Repository rules and issue context;
+:Read-only exploration / reproduction;
+:Plan and risk review;
+:Minimal implementation;
+:Build, tests, static checks;
+:Diff review and evidence;
+:Commit, PR, release, or rollback;
+stop
+@enduml

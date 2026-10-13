@@ -1,0 +1,22 @@
+@startuml
+title 工程开发闭环
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam ArrowColor #4F5D75
+skinparam roundcorner 8
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #2D3142
+  FontColor #2D3142
+}
+start
+:需求与验收标准;
+:读取项目规则与 Issue;
+:只读探索 / 复现问题;
+:形成计划、边界与风险;
+:小步修改;
+:构建、测试、静态检查;
+:审查 diff 与运行证据;
+:提交、PR、回滚或发布;
+stop
+@enduml

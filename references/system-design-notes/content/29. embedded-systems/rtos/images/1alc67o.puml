@@ -1,0 +1,25 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+package "应用业务层 (Application)" as L1 {
+  rectangle "HSM / Active Objects / 领域状态机\n(Run-to-Completion 无阻塞)" as app
+}
+package "事件与服务层 (Event / Service Layer)" as L2 {
+  rectangle "Task Notification | Event Queue | 定时器事件" as events
+}
+package "RTOS 精简工作线程域 (Few RTOS Worker Tasks)" as L3 {
+  rectangle "Control Task | I/O Task | 协议存储 Task | Supervisor" as workers
+}
+package "驱动与平台抽象 (Driver / HAL / BSP)" as L4 {
+  rectangle "UART | SPI | I2C | ADC | DMA | Flash | WDG" as drivers
+}
+package "物理硬件层 (Hardware)" as L5 {
+  rectangle "MCU 外设寄存器 / 物理引脚 / 中断控制器" as hw
+}
+
+app --> events : 分发业务事件
+events --> workers : 异步唤醒驱动
+workers --> drivers : 非阻塞/DMA 访问
+drivers --> hw : 直接寄存器 MMIO
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+title 四层工程控制面
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam ArrowColor #4F5D75
+skinparam roundcorner 8
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #2D3142
+  FontColor #2D3142
+}
+start
+:项目规则;
+:任务合同;
+:工具与 Agent;
+:验证与交付;
+stop
+@enduml

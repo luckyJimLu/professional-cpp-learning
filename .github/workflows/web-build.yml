@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,10 +23,19 @@ jobs:
           node-version: 22
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       - name: Check course content
         run: npm run check:course
+
+      - name: Verify migrated content
+        run: npm run check:migration
+
+      - name: Check migrated C++ examples
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libboost1.83-dev
+          npm run check:reference-cpp
 
       - name: Typecheck and build
         run: npm run build

@@ -1,0 +1,21 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "MCU应用" as APP
+rectangle "BSD Socket API" as API
+rectangle "lwIP TCP/IP" as TCP
+rectangle "路由策略" as R
+rectangle "ipc0" as IPC
+rectangle "wan0 默认路由" as WAN
+rectangle "核间通道0" as CH0
+rectangle "核间通道1 / PPP" as CH1
+
+APP --> API
+API --> TCP
+TCP --> R
+R --> IPC : IPC目标地址
+R --> WAN : 其他目标
+IPC --> CH0
+WAN --> CH1
+@enduml

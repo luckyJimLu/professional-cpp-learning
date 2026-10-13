@@ -1,0 +1,29 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "原包到达观察点" as packet
+rectangle "启用且在范围内？" as enabled
+rectangle "原路径继续" as pass
+rectangle "过滤及包率字节预算通过？" as budget
+rectangle "立即取得私有槽？" as slot
+rectangle "仅增加抓包drop" as drop
+rectangle "限长限链段只读复制" as copy
+rectangle "快照完整？" as valid
+rectangle "归还未发布槽并记drop" as discard
+rectangle "release发布槽并通知Storage" as publish
+
+packet --> enabled
+enabled --> pass : 否
+enabled --> budget : 是
+budget --> pass : 否
+budget --> slot : 是
+slot --> drop : 否
+slot --> copy : 是
+copy --> valid
+valid --> discard : 否
+valid --> publish : 是
+drop --> pass
+discard --> pass
+publish --> pass
+@enduml

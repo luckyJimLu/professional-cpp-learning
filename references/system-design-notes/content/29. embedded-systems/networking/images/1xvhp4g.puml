@@ -1,0 +1,20 @@
+@startuml
+start
+:AT command mode;
+:dial / CONNECT;
+:PPP data mode;
+fork
+  :UART RX;
+  :pppos_input[_tcpip]();
+  :PPP FSM;
+  :IPCP / IPv6CP;
+  :netif;
+  :IP stack;
+fork again
+  :IP output;
+  :PPP framing;
+  :UART TX;
+  :Cellular Modem;
+end fork
+stop
+@enduml

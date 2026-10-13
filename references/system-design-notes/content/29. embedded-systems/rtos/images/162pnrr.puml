@@ -1,0 +1,29 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "系统进入空闲 Idle 任务" as start
+rectangle "计算下一次任务唤醒时间\n(Next Wakeup Tick)" as calc
+rectangle "剩余睡眠时间\n> 最小阈值?" as checkMin
+rectangle "执行常规低开销 WFI\n维持系统 Tick" as normalIdle
+rectangle "配置低功耗硬件定时器 (LPTIM)" as cfgTimer
+rectangle "停止/屏蔽标准 SysTick" as stopTick
+rectangle "原子确认: 是否有新中断/任务\n在准备期间就绪 (Race Check)?" as raceCheck
+rectangle "中止睡眠 (Sleep Abort)\n立即恢复 SysTick 调度" as abortSleep
+rectangle "执行 WFI / WFE 进入低功耗模式" as enterWFI
+rectangle "中断唤醒" as wakeup
+rectangle "根据 LPTIM 计数补偿系统 Tick" as compTime
+rectangle "恢复标准调度器与外设时钟" as resumeOS
+
+start --> calc
+calc --> checkMin
+checkMin --> normalIdle : 否
+checkMin --> cfgTimer : 是
+cfgTimer --> stopTick
+stopTick --> raceCheck
+raceCheck --> abortSleep : 有新任务就绪
+raceCheck --> enterWFI : 安全无就绪
+enterWFI --> wakeup
+wakeup --> compTime
+compTime --> resumeOS
+@enduml

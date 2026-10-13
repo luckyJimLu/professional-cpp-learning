@@ -1,0 +1,25 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "1. Define MCU Resource Budget\n(ROM / RAM / Stack / ISR Latency Limits)" as s1
+rectangle "2. Static Design\n(Task Partitioning / Buffer Sizing / IPC Selection)" as s2
+rectangle "3. Compilation & Analysis\n(Generate ELF + .map + .su Static Call Graph)" as s3
+rectangle "4. Static Resource Audit\n(Flash/RAM Utilization & Worst-Case Stack)" as s4
+rectangle "5. Real-Time Instrumentation\n(GPIO/Trace Measurement of ISR / WCET / Latency)" as s5
+rectangle "6. Stress & Peak Load Testing\n(Sustained Maximum Throughput Stability)" as s6
+rectangle "7. Fault Injection Matrix\n(Task Hang / Deadlock / Ring Overflow / Stack Pressure / Burst DMA)" as s7
+rectangle "8. Disaster Recovery Verification\n(Watchdog Action & Backup RAM Context Capture)" as s8
+rectangle "9. Low Power & Timing Verification\n(Tickless Wakeup Timing & Race Window Guards)" as s9
+rectangle "10. Freeze Production Config\n(Disable Debug Hooks & Lock Down Partitions)" as s10
+
+s1 --> s2
+s2 --> s3
+s3 --> s4
+s4 --> s5
+s5 --> s6
+s6 --> s7
+s7 --> s8
+s8 --> s9
+s9 --> s10
+@enduml

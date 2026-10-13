@@ -1,0 +1,13 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "1. Task Notification (任务通知)\n(最轻量：零额外 RAM 控制块，直接利用 TCB)" as p1
+rectangle "2. SPSC Ring Buffer (无锁单产单消环)\n(仅需静态数组与 head/tail 索引，无阻塞开销)" as p2
+rectangle "3. OS Queue / Semaphore\n(包含等待链表与调度上下文切换，适度使用)" as p3
+rectangle "4. 复杂共享锁与互斥量\n(需强制优先级继承与锁顺序防死锁，优先级最低)" as p4
+
+p1 --> p2 : 需要数据缓冲队列
+p2 --> p3 : 需要多对多或等待阻塞
+p3 --> p4 : 严禁滥用
+@enduml

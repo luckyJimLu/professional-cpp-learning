@@ -1,0 +1,18 @@
+@startmindmap
+title Agent 协作职责
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam ArrowColor #4F5D75
+skinparam roundcorner 8
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #2D3142
+  FontColor #2D3142
+}
+* 主 Agent：目标、范围、任务清单与最终整合
+** Explorer：代码地图与调用链
+** Researcher：官方文档与兼容性证据
+** Implementer：按计划修改
+** Tester：测试与故障注入
+** Reviewer：检查 diff、风险和回归
+@endmindmap

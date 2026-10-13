@@ -1,0 +1,21 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam ArrowColor #4F5D75
+skinparam defaultFontSize 14
+skinparam roundcorner 8
+
+title 连接生命周期与观察关系
+top to bottom direction
+rectangle "连接管理器" as manager
+rectangle "Connection\n内部状态由执行域保护" as conn
+rectangle "正在执行的任务\n需要延长连接寿命" as task
+rectangle "定时器 / 观察者\n不应让连接一直存活" as timer
+manager --> conn : shared_ptr（持有）
+task --> conn : shared_ptr（临时持有）
+timer ..> conn : weak_ptr（观察）
+note bottom of conn
+weak.lock() 获得临时强引用
+生命期保障不等于线程安全
+end note
+@enduml

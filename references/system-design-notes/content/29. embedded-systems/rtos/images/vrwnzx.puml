@@ -1,0 +1,13 @@
+@startuml
+hide stereotype
+skinparam shadowing false
+
+rectangle "1. Write Data to ring_buffer->data[head]" as wData
+rectangle "2. Execute Memory Barrier (__DMB() / Compiler Barrier)" as dmb
+rectangle "3. Publish Head Pointer: ring_buffer->head = next" as pubHead
+rectangle "4. Notify / Wake Consumer Task" as notify
+
+wData --> dmb
+dmb --> pubHead
+pubHead --> notify
+@enduml
