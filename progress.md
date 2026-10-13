@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 46**。下一课从 **Day 47** 继续。
+当前仓库课程已发布到 **Day 47**。下一课从 **Day 48** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -50,15 +50,16 @@
 | 44 | Avoid Combining Unrelated or Logically Separate Concepts | 已发布 | [day-044](daily/day-044-separate-unrelated-concepts.md) |
 | 45 | Use Templates for Generic Data Structures and Algorithms | 已发布 | [day-045](daily/day-045-templates-generic-data-structures-algorithms.md) |
 | 46 | Provide Appropriate Checks and Safeguards | 已发布 | [day-046](daily/day-046-checks-safeguards.md) |
+| 47 | Design for Extensibility | 已发布 | [day-047](daily/day-047-design-for-extensibility.md) |
 
 ## 最新发布详情
 
-- **日期**：2026-10-12
+- **日期**：2026-10-13
 - **章节**：Chapter 6 · Designing for Reuse
-- **主题**：Provide Appropriate Checks and Safeguards
-- **关键知识点**：precondition、trust boundary validation、assert vs recoverable error、有界 timeout/retry、边界测试
-- **Lab**：[examples/day-046/main.cpp](examples/day-046/main.cpp)
-- **上一课**：[Day 45 · Use Templates for Generic Data Structures and Algorithms](daily/day-045-templates-generic-data-structures-algorithms.md)
+- **主题**：Design for Extensibility
+- **关键知识点**：Open/Closed Principle、customization points、dependency injection、runtime vs compile-time extensibility、embedded 有界扩展
+- **Lab**：[examples/day-047/main.cpp](examples/day-047/main.cpp)
+- **上一课**：[Day 46 · Provide Appropriate Checks and Safeguards](daily/day-046-checks-safeguards.md)
 
 ## 规则
 
