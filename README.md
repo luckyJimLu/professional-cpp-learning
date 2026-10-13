@@ -29,7 +29,7 @@
 设计模式专题不占用每日 Day 编号，用于提前建立 Chapter 33 的全局认知：
 
 - **[C++ Design Patterns · 工程化学习指南](patterns/README.md)**：以“稳定边界”为主线整理 Strategy、Factory、Adapter、Proxy、Iterator、Observer、Decorator、Chain of Responsibility、Singleton 等模式，并结合 Embedded / Modem / Driver 场景。
-- **[Design Patterns 下的 Ownership 与 Smart Pointers](patterns/ownership-and-smart-pointers.md)**：系统说明 `T&`、`T*`、`std::unique_ptr`、`std::shared_ptr`、`std::weak_ptr` 在各模式中的所有权与生命周期含义。
+- **[Design Patterns 下的 Ownership 与 Smart Pointers](patterns/ownership-and-smart-pointers.md)**：系统说明 `T&`、`T*`、`std::unique_ptr`、`std::shared_ptr`、`std::weak_ptr` 在各模式中的所有权与生命周期含义；新增三个判断问题、Mermaid 决策流程图、UML 类图与时序图，以及 [可运行生命周期实验](examples/pointer-choice.cpp)。
 
 核心原则：**先识别变化，再建立稳定边界；先设计 lifetime，再选择 pointer。**
 
