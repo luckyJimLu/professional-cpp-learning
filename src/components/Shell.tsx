@@ -239,13 +239,9 @@ export function Shell({
                   onChange={handleHeaderInputChange}
                   onKeyDown={(event) => {
                     if (event.key === "Escape") {
-                      if (view !== "search") {
-                        setIsSearchExpanded(false);
-                      }
+                      setIsSearchExpanded(false);
                     } else if (event.key === "Enter") {
-                      if (view !== "search") {
-                        setView("search");
-                      }
+                      setView("search");
                       triggerMainSearchFocus();
                     }
                   }}

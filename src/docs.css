@@ -492,6 +492,20 @@ body {
   line-height: 1.35;
   font-size: 36px;
 }
+.title-mobile,
+.guide-hero-cta {
+  display: none;
+}
+.docs-note-collapsible summary {
+  list-style: none;
+}
+.docs-note-collapsible summary::-webkit-details-marker {
+  display: none;
+}
+.docs-note-collapsible .docs-note-chevron {
+  display: none;
+}
+
 @media (max-width: 1200px) {
   .docs-layout {
     grid-template-columns: minmax(0, 1fr);
@@ -500,18 +514,48 @@ body {
     position: static;
     grid-row: 1;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     align-items: center;
-    gap: 8px 18px;
-    padding: 0 0 14px;
+    gap: 8px;
+    padding: 6px 0 12px;
+    margin-bottom: 16px;
     border: 0;
     border-bottom: 1px solid var(--line);
+    -webkit-overflow-scrolling: touch;
+  }
+  .on-this-page::-webkit-scrollbar {
+    display: none;
   }
   .on-this-page .eyebrow {
-    margin: 0;
+    display: none;
   }
   .on-this-page .back-top {
     display: none;
+  }
+  .on-this-page a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 14px;
+    border-radius: 18px;
+    background: var(--canvas);
+    border: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+  }
+  .on-this-page a:hover,
+  .on-this-page a[aria-current] {
+    color: var(--blue);
+    background: var(--blue-soft);
+    border-color: var(--blue);
+    font-weight: 600;
   }
   .lesson-layout {
     gap: 24px;
@@ -544,35 +588,59 @@ body {
 @media (max-width: 760px) {
   :root {
     --sidebar: 0px;
-    --header-height: 64px;
+    --header-height: 56px;
   }
   .docs-header {
-    padding: 0 16px;
-    gap: 12px;
+    padding: 0 12px;
+    gap: 8px;
+    height: var(--header-height);
   }
   .docs-header .brand {
     min-width: 0;
     gap: 8px;
+    display: inline-flex;
+    align-items: center;
   }
   .docs-header .brand strong {
-    font-size: 12px;
+    font-size: 15px;
   }
   .docs-header .brand-mark {
-    width: 34px;
-    height: 34px;
-    font-size: 11px;
+    width: 28px;
+    height: 28px;
+    font-size: 10px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .title-desktop,
+  .brand-subtitle {
+    display: none !important;
+  }
+  .title-mobile {
+    display: inline !important;
+    font-size: 15px !important;
+    white-space: nowrap !important;
+  }
+  .docs-header .header-actions {
+    margin-left: auto;
   }
   .docs-header .shell-search {
     width: auto;
     margin-left: auto;
-    padding: 9px;
+    padding: 0;
+    background: transparent;
+    border: none;
+  }
+  .docs-header .shell-search .shell-search-icon-btn {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 8px;
   }
   .docs-header .shell-search span {
-    font-size: 0;
-  }
-  .docs-header .shell-search span::after {
-    content: "搜索";
-    font-size: 12px;
+    display: none;
   }
   .docs-header kbd,
   .repo-link,
@@ -580,34 +648,100 @@ body {
     display: none;
   }
   .content {
-    width: calc(100% - 36px);
-    padding-top: 24px;
+    width: 100%;
+    padding: 16px 16px 40px;
   }
   .docs-layout {
-    gap: 26px;
+    gap: 16px;
   }
   .guide-title h1 {
-    font-size: 36px;
+    font-size: var(--font-h1);
+    line-height: 1.25;
+    margin-bottom: 10px;
   }
   .guide-kicker {
-    gap: 12px;
-    font-size: 9px;
+    gap: 8px;
+    font-size: 11px;
+    margin-bottom: 10px;
   }
   .guide-lead {
-    font-size: 16px;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 16px;
   }
   .guide-document {
-    font-size: 14px;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .guide-hero-cta {
+    display: block;
+    margin: 16px 0 24px;
+  }
+  .guide-hero-cta .hero-cta-btn {
+    width: 100%;
+    min-height: 44px;
+    font-size: 15px;
+    font-weight: 600;
+    justify-content: center;
+    border-radius: 8px;
+  }
+  .docs-note-collapsible {
+    border-radius: 8px;
+    padding: 0;
+    overflow: hidden;
+  }
+  .docs-note-collapsible summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 44px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    user-select: none;
+    list-style: none;
+  }
+  .docs-note-collapsible summary::-webkit-details-marker {
+    display: none;
+  }
+  .docs-note-summary-text {
+    font-size: 12px;
+    color: var(--muted);
+    margin-left: 8px;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .docs-note-chevron {
+    display: inline-block !important;
+    font-size: 12px;
+    margin-left: 6px;
+    color: var(--muted);
+    transition: transform 0.2s ease;
+  }
+  .docs-note-collapsible[open] .docs-note-chevron {
+    transform: rotate(180deg);
+  }
+  .docs-note-collapsible p {
+    margin: 0;
+    padding: 10px 14px 14px;
+    font-size: 13px;
+    line-height: 1.6;
+    border-top: 1px dashed var(--line);
   }
   .guide-section h2 {
-    font-size: 22px;
+    font-size: var(--font-h2);
+    margin: 28px 0 12px;
   }
   .start-links {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
   .continue-reading {
     align-items: start;
     flex-direction: column;
+    padding: 16px;
   }
   .guide-pipeline {
     padding: 14px;
@@ -621,6 +755,8 @@ body {
   }
   .docs-footer {
     flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 24px;
   }
   .library-nav,
   .source-viewer {

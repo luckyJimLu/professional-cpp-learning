@@ -69,6 +69,7 @@ export function CodeSearch() {
   const [draft, setDraft] = useState(query);
   const [previousQuery, setPreviousQuery] = useState(query);
   const [copied, setCopied] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const composing = useRef(false);
 
   useEffect(() => {
@@ -148,11 +149,11 @@ export function CodeSearch() {
 
   return (
     <div>
-      <header className="page-header search-header-compact">
+      <header
+        className={`page-header search-header-compact ${isFocused ? "is-focused-hidden" : ""}`}
+      >
         <h1>代码搜索</h1>
-        <p>
-          检索课程与工程专题中的 C/C++ 代码及文件
-        </p>
+        <p>检索课程与工程专题中的 C/C++ 代码及文件</p>
       </header>
 
       <form
@@ -174,9 +175,11 @@ export function CodeSearch() {
             autoFocus
             type="search"
             value={draft}
-            placeholder="例如 std::mutex、async_read、unique_ptr"
+            placeholder="例如 std::mutex"
             autoComplete="off"
             spellCheck={false}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
             onCompositionStart={() => {
               composing.current = true;
             }}
@@ -192,7 +195,7 @@ export function CodeSearch() {
           {draft && (
             <button
               type="button"
-              className="ghost-button"
+              className="ghost-button search-clear-btn"
               aria-label="清除搜索"
               onClick={() => {
                 setDraft("");
