@@ -5,14 +5,6 @@ import {
   type StepKey,
 } from "../../lib/course";
 import { CompileRail } from "../common/CompileRail";
-import { OnThisPage } from "../common/OnThisPage";
-
-const contents = [
-  { id: "introduction", label: "关于这份学习手册" },
-  { id: "start-learning", label: "开始学习" },
-  { id: "learning-method", label: "每天一小时" },
-  { id: "explore", label: "深入工程实践" },
-];
 
 export function TodayView({
   currentDay,
@@ -27,12 +19,9 @@ export function TodayView({
   const planned = lessonByDay(currentDay);
   const target = planned ?? latest;
   return (
-    <div className="docs-layout">
+    <div className="docs-layout today-layout">
       <article className="guide-document">
         <header className="guide-title" id="introduction">
-          <div className="guide-kicker">
-            <span>PROFESSIONAL C++ · 第六版 · C++23</span>
-          </div>
           <h1>从 C 出发，写出专业的 C++</h1>
           <p className="guide-lead">
             面向 C / 嵌入式开发者的现代 C++ 工程化学习手册，沿着原书章节以可运行实验从语言机制走向系统架构。
@@ -65,12 +54,7 @@ export function TodayView({
           </p>
         </details>
         <section id="start-learning" className="guide-section">
-          <h2>
-            开始学习{" "}
-            <a href="#start-learning" aria-label="链接到开始学习">
-              #
-            </a>
-          </h2>
+          <h2>开始学习</h2>
           <p>第一次来，从 Day 1 开始；已经在学习，可以回到最近发布的课程。</p>
           <div className="start-links">
             <a href="?view=lesson&day=1">
@@ -110,12 +94,7 @@ export function TodayView({
           )}
         </section>
         <section id="learning-method" className="guide-section">
-          <h2>
-            每天一小时{" "}
-            <a href="#learning-method" aria-label="链接到每天一小时">
-              #
-            </a>
-          </h2>
+          <h2>每天一小时</h2>
           <p>
             用八个阶段完成一次学习闭环。阅读不等于完成，解释清楚、运行通过，再记录你的学习进度。
           </p>
@@ -141,46 +120,44 @@ export function TodayView({
             完成状态保存在当前浏览器。课程与代码来自仓库，可随时查看原文。
           </p>
         </section>
-        <section id="explore" className="guide-section">
-          <h2>
-            深入工程实践{" "}
-            <a href="#explore" aria-label="链接到深入工程实践">
-              #
-            </a>
-          </h2>
-          <div className="resource-links">
-            <a href="?view=topics">
-              <strong>
-                专题知识库 <span>↗</span>
-              </strong>
-              <p>设计模式、所有权、Asio 与系统架构。</p>
-            </a>
-            <a href="?view=lab">
-              <strong>
-                在线编译实验 <span>↗</span>
-              </strong>
-              <p>修改真实课程代码，在浏览器中编译 C++23。</p>
-            </a>
-            <a href="?view=guidelines">
-              <strong>
-                嵌入式编码规范 <span>↗</span>
-              </strong>
-              <p>把生命周期、接口与资源约束落实到代码。</p>
-            </a>
-          </div>
-        </section>
-        <footer className="docs-footer">
-          <a href="https://github.com/luckyJimLu/professional-cpp-learning">
-            在 GitHub 查看源码 ↗
-          </a>
-          <span>以实验验证理解</span>
-        </footer>
         <a className="next-doc" href="?view=roadmap">
           <span>下一步</span>
           <strong>学习路线 →</strong>
         </a>
+        <footer className="article-footer">
+          <div className="article-footer-left">
+            <a
+              className="github-footer-link"
+              href="https://github.com/luckyJimLu/professional-cpp-learning"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <svg
+                className="github-icon"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                />
+              </svg>
+              <span>在 GitHub 查看源码</span>
+            </a>
+            <div className="footer-lang-picker">
+              <span className="lang-icon" aria-hidden="true">文A</span>
+              <span>简体中文 ▾</span>
+            </div>
+          </div>
+          <div className="article-footer-right">
+            <span className="footer-meta">基于 Professional C++ (第6版) · C++23</span>
+          </div>
+        </footer>
       </article>
-      <OnThisPage items={contents} />
     </div>
   );
 }

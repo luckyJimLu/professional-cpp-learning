@@ -31,9 +31,6 @@ export function OnThisPage({
           {item.label}
         </a>
       ))}
-      <a className="back-top" href="#main-content">
-        返回顶部 ↑
-      </a>
     </nav>
   );
 }

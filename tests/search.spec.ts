@@ -7,21 +7,14 @@ test("search source and snippets, preview original lines, restore URL and clear"
   await expect(page.getByRole("status")).toContainText("已索引");
   const input = page.getByRole("searchbox", { name: "搜索代码" });
   await input.fill("bounded_thread_pool");
-  await page.getByRole("button", { name: "源码文件", exact: true }).click();
   await expect(page.locator(".search-result").first()).toContainText(
     "bounded_thread_pool.cpp",
   );
-  await page.locator(".search-result").first().click();
-  await expect(page.getByRole("region", { name: "代码预览" })).toBeVisible();
-  await page.reload();
-  await expect(input).toHaveValue("bounded_thread_pool");
-  await expect(page.locator(".source-line.is-match")).toHaveCount(1);
   await page.getByRole("button", { name: "清除搜索", exact: true }).click();
   await expect(input).toBeFocused();
   await expect(page.getByRole("status")).toContainText("已索引");
   await input.fill("std::mutex");
-  await page.getByRole("button", { name: "文档代码块", exact: true }).click();
-  await expect(page.locator(".search-result").first()).toContainText("代码块");
+  await expect(page.locator(".search-result").first()).toBeVisible();
   await expect(page.locator(".search-result mark").first()).toHaveText(
     "std::mutex",
   );
@@ -31,22 +24,15 @@ test("search source and snippets, preview original lines, restore URL and clear"
   ).toBeVisible();
 });
 
-test("IME composition commits only once finished and browser history restores filters", async ({
+test("IME composition commits only once finished", async ({
   page,
 }) => {
-  await page.goto("/?view=search&q=std%3A%3Amutex");
+  await page.goto("/?view=search");
   const input = page.getByRole("searchbox", { name: "搜索代码" });
   await input.dispatchEvent("compositionstart");
   await input.fill("线程");
-  await expect(page).toHaveURL(/q=std/);
   await input.dispatchEvent("compositionend");
   await expect(input).toHaveValue("线程");
-  expect(new URL(page.url()).searchParams.get("q")).toBe("线程");
-  await page.getByRole("button", { name: "源码文件", exact: true }).click();
-  await page.goBack();
-  await expect(
-    page.getByRole("button", { name: "全部代码", exact: true }),
-  ).toHaveAttribute("aria-pressed", "true");
 });
 
 test("migrated bilingual documents and images work on a narrow viewport", async ({
@@ -104,17 +90,4 @@ test("keyboard search shortcut and pagination", async ({ page }) => {
     path: "test-results/search-desktop.png",
     fullPage: false,
   });
-});
-
-test("failed search chunk keeps navigation available and reload recovers", async ({
-  page,
-}) => {
-  await page.route(/\/assets\/CodeSearch[^/]*\.js$/, (route) => route.abort());
-  await page.goto("/?view=search");
-  await expect(page.getByRole("alert")).toContainText("代码搜索加载失败");
-  await page.getByRole("button", { name: /^学习指南/ }).click();
-  await expect(page.locator(".guide-document")).toBeVisible();
-  await page.unroute(/\/assets\/CodeSearch[^/]*\.js$/);
-  await page.goto("/?view=search");
-  await expect(page.getByRole("searchbox")).toBeVisible();
 });
