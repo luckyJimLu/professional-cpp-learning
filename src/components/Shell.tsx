@@ -9,7 +9,6 @@ import {
   type View,
 } from "../lib/navigation";
 import { repoCompletedDay } from "../lib/course";
-import { SearchModal } from "./SearchModal";
 
 function BackToTop() {
   const [visible, setVisible] = useState(false);
@@ -54,7 +53,7 @@ function BackToTop() {
 
 function NavIcon({ id }: { id: string }) {
   switch (id) {
-    case "today": // 学习指南 - Compass
+    case "today":
       return (
         <svg
           className="nav-icon"
@@ -72,7 +71,7 @@ function NavIcon({ id }: { id: string }) {
           <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
         </svg>
       );
-    case "roadmap": // 学习路线 - Map
+    case "roadmap":
       return (
         <svg
           className="nav-icon"
@@ -91,7 +90,7 @@ function NavIcon({ id }: { id: string }) {
           <line x1="16" y1="6" x2="16" y2="22" />
         </svg>
       );
-    case "lessons": // 每日课程 - BookOpen
+    case "lessons":
       return (
         <svg
           className="nav-icon"
@@ -109,7 +108,7 @@ function NavIcon({ id }: { id: string }) {
           <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
         </svg>
       );
-    case "topics": // 专题 - Layers
+    case "topics":
       return (
         <svg
           className="nav-icon"
@@ -128,7 +127,7 @@ function NavIcon({ id }: { id: string }) {
           <polyline points="2 12 12 17 22 12" />
         </svg>
       );
-    case "lab": // 编译实验 - Terminal
+    case "lab":
       return (
         <svg
           className="nav-icon"
@@ -146,7 +145,7 @@ function NavIcon({ id }: { id: string }) {
           <line x1="12" y1="19" x2="20" y2="19" />
         </svg>
       );
-    case "review": // 每周复盘 - RotateCcw
+    case "review":
       return (
         <svg
           className="nav-icon"
@@ -164,7 +163,7 @@ function NavIcon({ id }: { id: string }) {
           <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
         </svg>
       );
-    case "guidelines": // 编码规范 - ShieldCheck
+    case "guidelines":
       return (
         <svg
           className="nav-icon"
@@ -182,7 +181,7 @@ function NavIcon({ id }: { id: string }) {
           <path d="m9 12 2 2 4-4" />
         </svg>
       );
-    case "progress": // 学习进度 - BarChart2
+    case "progress":
       return (
         <svg
           className="nav-icon"
@@ -239,16 +238,29 @@ export function Shell({
   onPreloadSearch?: () => void;
   children: ReactNode;
 }) {
-  const params = useLocationParams();
-  const [isSearchOpen, setIsSearchOpen] = useState(
-    params.get("view") === "search" || params.get("q") !== null,
-  );
-
-  useEffect(() => {
-    if (params.get("view") === "search") {
-      setIsSearchOpen(true);
+  const triggerMainSearchFocus = () => {
+    const mainInput = document.getElementById(
+      "code-query",
+    ) as HTMLInputElement | null;
+    if (mainInput) {
+      mainInput.focus();
+      mainInput.classList.remove("input-pulse");
+      void mainInput.offsetWidth;
+      mainInput.classList.add("input-pulse");
     }
-  }, [params]);
+  };
+
+  const handleHeaderSearchClick = () => {
+    onPreloadSearch?.();
+    if (view !== "search") {
+      setView("search");
+      requestAnimationFrame(() => {
+        triggerMainSearchFocus();
+      });
+    } else {
+      triggerMainSearchFocus();
+    }
+  };
 
   useEffect(() => {
     const shortcut = (event: KeyboardEvent) => {
@@ -259,12 +271,19 @@ export function Shell({
       ) {
         event.preventDefault();
         onPreloadSearch?.();
-        setIsSearchOpen(true);
+        if (view !== "search") {
+          setView("search");
+          requestAnimationFrame(() => {
+            triggerMainSearchFocus();
+          });
+        } else {
+          triggerMainSearchFocus();
+        }
       }
     };
     window.addEventListener("keydown", shortcut);
     return () => window.removeEventListener("keydown", shortcut);
-  }, [onPreloadSearch]);
+  }, [view, setView, onPreloadSearch]);
 
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
 
@@ -273,11 +292,6 @@ export function Shell({
       ...prev,
       [group]: !prev[group],
     }));
-  };
-
-  const handleHeaderSearchClick = () => {
-    onPreloadSearch?.();
-    setIsSearchOpen(true);
   };
 
   const label =
@@ -345,7 +359,10 @@ export function Shell({
                 type="button"
                 aria-current={view === "search" ? "page" : undefined}
                 onClick={(event) => {
-                  setIsSearchOpen(true);
+                  setView("search");
+                  requestAnimationFrame(() => {
+                    triggerMainSearchFocus();
+                  });
                   event.currentTarget
                     .closest("details")
                     ?.removeAttribute("open");
@@ -363,11 +380,7 @@ export function Shell({
           href="?view=today"
           aria-label="Professional C++ 学习指南"
         >
-          <span className="brand-mark">C++</span>
-          <strong className="brand-title">
-            <span className="title-desktop">Professional C++</span>
-            <span className="title-mobile">C++ 学习</span>
-          </strong>
+          <span className="brand-mark">Professional C++</span>
         </a>
 
         <div className="header-actions">
@@ -478,10 +491,6 @@ export function Shell({
         </main>
       </div>
 
-      <SearchModal
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-      />
       <BackToTop />
     </div>
   );

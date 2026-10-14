@@ -10,6 +10,8 @@ test("search source and snippets, preview original lines, restore URL and clear"
   await expect(page.locator(".search-result").first()).toContainText(
     "bounded_thread_pool.cpp",
   );
+  await page.locator(".search-result").first().click();
+  await expect(page.getByRole("region", { name: "代码预览" })).toBeVisible();
   await page.getByRole("button", { name: "清除搜索", exact: true }).click();
   await expect(input).toBeFocused();
   await expect(page.getByRole("status")).toContainText("已索引");

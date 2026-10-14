@@ -200,13 +200,7 @@ export function LessonView({
           );
         })}
 
-        {isDayComplete(lesson.day) && (
-          <section className="build-success">
-            <span className="eyebrow">SESSION RESULT</span>
-            <h2>BUILD SUCCEEDED</h2>
-            <p>Day {lesson.day} completed · concepts · rules · lab · quiz</p>
-          </section>
-        )}
+
         <nav className="lesson-pagination" aria-label="相邻课程">
           {lessonByDay(lesson.day - 1) && (
             <a href={`?view=lesson&day=${lesson.day - 1}`}>

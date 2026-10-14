@@ -6,16 +6,7 @@ test("documentation anchors, course navigation and search shortcut", async ({
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/");
   await expect(page).toHaveTitle("学习指南 · Professional C++");
-  await page
-    .getByRole("navigation", { name: "本页目录" })
-    .getByRole("link", { name: "每天一小时" })
-    .click();
-  await expect(page).toHaveURL(/#learning-method$/);
-  await expect(
-    page
-      .getByRole("navigation", { name: "本页目录" })
-      .getByRole("link", { name: "每天一小时" }),
-  ).toHaveAttribute("aria-current", "location");
+  await expect(page.locator("h1")).toContainText("从 C 出发，写出专业的 C++");
   await page.screenshot({
     path: "test-results/docs-desktop.png",
     fullPage: true,

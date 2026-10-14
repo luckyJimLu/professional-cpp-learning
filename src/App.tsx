@@ -28,8 +28,9 @@ export default function App() {
   const params = useLocationParams();
   const requestedView = params.get("view");
   const view: View =
+    requestedView === "search" ||
     requestedView === "lesson" ||
-    (requestedView && requestedView !== "search" && NAV.some((item) => item.id === requestedView))
+    NAV.some((item) => item.id === requestedView)
       ? (requestedView as View)
       : "today";
   const setView = (value: View) => navigate({ view: value });
