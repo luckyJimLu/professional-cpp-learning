@@ -1,5 +1,5 @@
-import { useEffect, useState, type ReactNode } from "react";
-import { NAV, type View } from "../lib/navigation";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { NAV, navigate, useLocationParams, type View } from "../lib/navigation";
 import { repoCompletedDay } from "../lib/course";
 
 export function Shell({
@@ -16,10 +16,28 @@ export function Shell({
   children: ReactNode;
 }) {
   const [isSearchExpanded, setIsSearchExpanded] = useState(view === "search");
+  const params = useLocationParams();
+  const currentQuery = params.get("q") ?? "";
+  const [headerDraft, setHeaderDraft] = useState(currentQuery);
+  const headerInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setIsSearchExpanded(view === "search");
   }, [view]);
+
+  useEffect(() => {
+    setHeaderDraft(currentQuery);
+  }, [currentQuery]);
+
+  const triggerMainSearchFocus = () => {
+    const mainInput = document.getElementById("code-query") as HTMLInputElement | null;
+    if (mainInput) {
+      mainInput.focus();
+      mainInput.classList.remove("input-pulse");
+      void mainInput.offsetWidth; // trigger reflow
+      mainInput.classList.add("input-pulse");
+    }
+  };
 
   useEffect(() => {
     const shortcut = (event: KeyboardEvent) => {
@@ -30,16 +48,62 @@ export function Shell({
       ) {
         event.preventDefault();
         onPreloadSearch?.();
-        setView("search");
         setIsSearchExpanded(true);
-        requestAnimationFrame(() =>
-          document.getElementById("code-query")?.focus(),
-        );
+        if (view !== "search") {
+          setView("search");
+          requestAnimationFrame(() => {
+            triggerMainSearchFocus();
+          });
+        } else {
+          triggerMainSearchFocus();
+        }
       }
     };
     window.addEventListener("keydown", shortcut);
     return () => window.removeEventListener("keydown", shortcut);
-  }, [setView, onPreloadSearch]);
+  }, [view, setView, onPreloadSearch]);
+
+  const handleHeaderSearchClick = () => {
+    onPreloadSearch?.();
+    setIsSearchExpanded(true);
+    if (view !== "search") {
+      setView("search");
+      requestAnimationFrame(() => {
+        triggerMainSearchFocus();
+      });
+    } else {
+      triggerMainSearchFocus();
+    }
+  };
+
+  const handleHeaderInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const val = event.target.value;
+    setHeaderDraft(val);
+    if (view !== "search") {
+      navigate(
+        {
+          view: "search",
+          q: val || undefined,
+          page: undefined,
+          code: undefined,
+          line: undefined,
+        },
+        true,
+      );
+    } else {
+      navigate(
+        {
+          q: val || undefined,
+          page: undefined,
+          code: undefined,
+          line: undefined,
+        },
+        true,
+      );
+    }
+  };
 
   const label =
     view === "search"
@@ -64,41 +128,76 @@ export function Shell({
           </div>
         </a>
         <div className="header-actions">
-          <button
+          <div
             className={`shell-search ${isSearchExpanded ? "is-expanded" : ""}`}
-            title="搜索代码 (Ctrl+K)"
-            aria-label="搜索代码 (Ctrl+K)"
             onMouseEnter={onPreloadSearch}
             onFocus={onPreloadSearch}
-            onClick={() => {
-              onPreloadSearch?.();
-              if (view !== "search") {
-                setView("search");
-              }
-              setIsSearchExpanded(true);
-              requestAnimationFrame(() =>
-                document.getElementById("code-query")?.focus(),
-              );
-            }}
           >
-            <svg
-              className="search-icon"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
+            <button
+              type="button"
+              className="shell-search-icon-btn"
+              title="搜索代码 (Ctrl+K)"
+              aria-label="搜索代码 (Ctrl+K)"
+              onClick={handleHeaderSearchClick}
             >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-            <span className="search-placeholder">搜索代码与示例…</span>
-            <kbd>Ctrl K</kbd>
-          </button>
+              <svg
+                className="search-icon"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </button>
+
+            {isSearchExpanded ? (
+              <input
+                ref={headerInputRef}
+                type="text"
+                className="header-search-input"
+                aria-label="全局快速搜索"
+                placeholder="搜索代码与示例…"
+                value={headerDraft}
+                autoComplete="off"
+                spellCheck={false}
+                onChange={handleHeaderInputChange}
+                onKeyDown={(event) => {
+                  if (event.key === "Escape") {
+                    if (view !== "search") {
+                      setIsSearchExpanded(false);
+                    }
+                  } else if (event.key === "Enter") {
+                    if (view !== "search") {
+                      setView("search");
+                    }
+                    triggerMainSearchFocus();
+                  }
+                }}
+              />
+            ) : (
+              <span
+                className="shell-search-trigger"
+                onClick={handleHeaderSearchClick}
+              >
+                <span className="search-placeholder">搜索代码与示例…</span>
+              </span>
+            )}
+
+            <kbd
+              className="search-shortcut"
+              title="快捷键 Ctrl+K"
+              onClick={handleHeaderSearchClick}
+            >
+              Ctrl K
+            </kbd>
+          </div>
           <a
             className="repo-link"
             href="https://github.com/luckyJimLu/professional-cpp-learning"
@@ -172,6 +271,19 @@ export function Shell({
                 {item.label}
               </button>
             ))}
+            <button
+              key="search"
+              type="button"
+              aria-current={view === "search" ? "page" : undefined}
+              onClick={(event) => {
+                setView("search");
+                event.currentTarget
+                  .closest("details")
+                  ?.removeAttribute("open");
+              }}
+            >
+              代码搜索
+            </button>
           </nav>
         </details>
         <main className="content" id="main-content" tabIndex={-1}>

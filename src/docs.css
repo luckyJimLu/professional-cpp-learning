@@ -48,21 +48,49 @@ body {
 .docs-header .shell-search {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   margin: 0;
-  padding: 6px 12px;
+  padding: 4px 8px;
   min-height: 34px;
   width: auto;
   background: var(--canvas);
   border: 1px solid var(--line);
   border-radius: 6px;
   color: var(--muted);
+  transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+.docs-header .shell-search:focus-within {
+  border-color: var(--blue);
+  background: var(--surface);
+  box-shadow: 0 0 0 2px var(--blue-soft);
+}
+.docs-header .shell-search.is-expanded {
+  width: 250px;
+  background: var(--surface);
+  border-color: var(--blue);
+}
+.docs-header .shell-search-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 3px;
+  color: var(--muted);
   cursor: pointer;
-  transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.15s ease, background 0.15s ease;
+  border-radius: 4px;
+}
+.docs-header .shell-search-icon-btn:hover {
+  color: var(--blue);
+  background: var(--canvas);
 }
 .docs-header .shell-search .search-icon {
   flex-shrink: 0;
-  color: var(--muted);
+}
+.docs-header .shell-search-trigger {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
 }
 .docs-header .shell-search .search-placeholder {
   display: none;
@@ -70,31 +98,44 @@ body {
   color: var(--muted);
   white-space: nowrap;
 }
-.docs-header .shell-search.is-expanded {
-  width: 220px;
-  justify-content: space-between;
-  border-color: var(--blue);
-  background: var(--surface);
+.docs-header .header-search-input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font: 13px/1.4 var(--mono);
   color: var(--ink);
+  outline: none;
+  padding: 2px 4px;
 }
-.docs-header .shell-search.is-expanded .search-placeholder {
-  display: inline;
+.docs-header .header-search-input::placeholder {
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 12px;
 }
 .docs-header .shell-search:hover {
   border-color: var(--line-strong);
   color: var(--ink);
 }
-.docs-header .shell-search:hover .search-icon {
+.docs-header .shell-search:hover .shell-search-icon-btn {
   color: var(--ink);
 }
 .docs-header .shell-search kbd {
   margin-left: auto;
+  flex-shrink: 0;
   border: 1px solid var(--line);
   padding: 2px 5px;
   border-radius: 3px;
   font-size: 10px;
   background: var(--surface);
   color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease;
+}
+.docs-header .shell-search:hover kbd {
+  border-color: var(--blue);
+  color: var(--blue);
 }
 .repo-link {
   color: var(--muted);

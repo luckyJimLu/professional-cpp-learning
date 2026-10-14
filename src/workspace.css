@@ -238,6 +238,23 @@ kbd {
   border-radius: 7px;
   background: var(--canvas);
   font: 14px/1.6 var(--mono);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+@keyframes input-focus-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(14, 116, 222, 0.5);
+    border-color: var(--blue);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(14, 116, 222, 0.25);
+    border-color: var(--blue);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(14, 116, 222, 0);
+  }
+}
+.input-pulse {
+  animation: input-focus-pulse 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .search-input-row .primary-button {
   margin: 0;
