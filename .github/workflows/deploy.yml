@@ -31,7 +31,7 @@ jobs:
           node-version: 24
 
       - name: Install dependencies
-        run: npm ci --no-audit --no-fund || npm install --no-audit --no-fund
+        run: npm install --no-audit --no-fund
 
       - name: Check course content
         run: npm run check:course
@@ -45,10 +45,7 @@ jobs:
         run: npm run build
 
       - name: Setup GitHub Pages
-        uses: actions/configure-pages@v6
-        with:
-          token: ${{ secrets.PAGES_TOKEN || github.token }}
-          enablement: ${{ secrets.PAGES_TOKEN != '' }}
+        uses: actions/configure-pages@v5
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
