@@ -5,13 +5,12 @@ export const NAV = [
   { id: "roadmap", label: "学习路线", group: "学习路径" },
   { id: "lessons", label: "每日课程", group: "学习路径" },
   { id: "topics", label: "专题", group: "知识与实践" },
-  { id: "search", label: "代码搜索", group: "知识与实践" },
   { id: "lab", label: "编译实验", group: "知识与实践" },
   { id: "review", label: "每周复盘", group: "学习记录" },
   { id: "guidelines", label: "编码规范", group: "学习记录" },
   { id: "progress", label: "学习进度", group: "学习记录" },
 ] as const;
-export type View = (typeof NAV)[number]["id"] | "lesson";
+export type View = (typeof NAV)[number]["id"] | "lesson" | "search";
 export function navigate(
   values: Record<string, string | undefined>,
   replace = false,

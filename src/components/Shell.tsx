@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { NAV, type View } from "../lib/navigation";
 import { repoCompletedDay } from "../lib/course";
 
@@ -6,13 +6,21 @@ export function Shell({
   view,
   setView,
   currentDay,
+  onPreloadSearch,
   children,
 }: {
   view: View;
   setView: (view: View) => void;
   currentDay: number;
+  onPreloadSearch?: () => void;
   children: ReactNode;
 }) {
+  const [isSearchExpanded, setIsSearchExpanded] = useState(view === "search");
+
+  useEffect(() => {
+    setIsSearchExpanded(view === "search");
+  }, [view]);
+
   useEffect(() => {
     const shortcut = (event: KeyboardEvent) => {
       if (
@@ -21,7 +29,9 @@ export function Shell({
         event.key.toLowerCase() === "k"
       ) {
         event.preventDefault();
+        onPreloadSearch?.();
         setView("search");
+        setIsSearchExpanded(true);
         requestAnimationFrame(() =>
           document.getElementById("code-query")?.focus(),
         );
@@ -29,8 +39,13 @@ export function Shell({
     };
     window.addEventListener("keydown", shortcut);
     return () => window.removeEventListener("keydown", shortcut);
-  }, [setView]);
-  const label = NAV.find((item) => item.id === view)?.label ?? "课程阅读";
+  }, [setView, onPreloadSearch]);
+
+  const label =
+    view === "search"
+      ? "代码搜索"
+      : (NAV.find((item) => item.id === view)?.label ?? "课程阅读");
+
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main-content">
@@ -48,15 +63,49 @@ export function Shell({
             <span>学习文档</span>
           </div>
         </a>
-        <button className="shell-search" onClick={() => setView("search")}>
-          <span>搜索代码与示例…</span> <kbd>Ctrl K</kbd>
-        </button>
-        <a
-          className="repo-link"
-          href="https://github.com/luckyJimLu/professional-cpp-learning"
-        >
-          GitHub ↗
-        </a>
+        <div className="header-actions">
+          <button
+            className={`shell-search ${isSearchExpanded ? "is-expanded" : ""}`}
+            title="搜索代码 (Ctrl+K)"
+            aria-label="搜索代码 (Ctrl+K)"
+            onMouseEnter={onPreloadSearch}
+            onFocus={onPreloadSearch}
+            onClick={() => {
+              onPreloadSearch?.();
+              if (view !== "search") {
+                setView("search");
+              }
+              setIsSearchExpanded(true);
+              requestAnimationFrame(() =>
+                document.getElementById("code-query")?.focus(),
+              );
+            }}
+          >
+            <svg
+              className="search-icon"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <span className="search-placeholder">搜索代码与示例…</span>
+            <kbd>Ctrl K</kbd>
+          </button>
+          <a
+            className="repo-link"
+            href="https://github.com/luckyJimLu/professional-cpp-learning"
+          >
+            GitHub ↗
+          </a>
+        </div>
       </header>
       <aside className="sidebar">
         <div className="sidebar-edition">
@@ -100,9 +149,6 @@ export function Shell({
           <span className="mono">
             C++ / <strong>{label}</strong>
           </span>
-          <button className="ghost-button" onClick={() => setView("search")}>
-            代码搜索
-          </button>
         </div>
         <details className="mobile-menu">
           <summary>导航 · {label}</summary>

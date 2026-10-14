@@ -39,26 +39,67 @@ body {
   color: var(--surface);
   border: 0;
 }
-.docs-header .shell-search {
-  margin: 0 auto;
-  width: min(420px, 40vw);
-  min-height: 38px;
-  background: var(--canvas);
-  border-color: var(--line);
-  border-radius: 6px;
-  font-size: 13px;
+.docs-header .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
 }
-.docs-header kbd {
+.docs-header .shell-search {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 6px 12px;
+  min-height: 34px;
+  width: auto;
+  background: var(--canvas);
   border: 1px solid var(--line);
-  padding: 3px 5px;
+  border-radius: 6px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.15s ease, background 0.15s ease;
+}
+.docs-header .shell-search .search-icon {
+  flex-shrink: 0;
+  color: var(--muted);
+}
+.docs-header .shell-search .search-placeholder {
+  display: none;
+  font-size: 13px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.docs-header .shell-search.is-expanded {
+  width: 220px;
+  justify-content: space-between;
+  border-color: var(--blue);
+  background: var(--surface);
+  color: var(--ink);
+}
+.docs-header .shell-search.is-expanded .search-placeholder {
+  display: inline;
+}
+.docs-header .shell-search:hover {
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+.docs-header .shell-search:hover .search-icon {
+  color: var(--ink);
+}
+.docs-header .shell-search kbd {
+  margin-left: auto;
+  border: 1px solid var(--line);
+  padding: 2px 5px;
   border-radius: 3px;
   font-size: 10px;
+  background: var(--surface);
+  color: var(--muted);
 }
 .repo-link {
   color: var(--muted);
   text-decoration: none;
   font: 12px var(--mono);
-  white-space: nowrap;
 }
 .sidebar {
   top: var(--header-height);

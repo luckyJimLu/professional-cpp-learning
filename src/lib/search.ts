@@ -149,12 +149,10 @@ export function searchCode(
     });
 }
 
-export function getCategoryCounts(
-  query: string,
-  kind: string = "all",
-  options: Omit<SearchOptions, "category"> = {},
-): Record<string, number> {
-  const rawQuery = query.trim();
+const defaultCountsByKind: Record<string, Record<string, number>> = {};
+
+function getDefaultCounts(kind: string): Record<string, number> {
+  if (defaultCountsByKind[kind]) return defaultCountsByKind[kind];
   const counts: Record<string, number> = {
     all: 0,
     daily: 0,
@@ -162,17 +160,37 @@ export function getCategoryCounts(
     examples: 0,
     patterns: 0,
   };
-
-  if (!rawQuery) {
-    for (const entry of codeEntries) {
-      if (kind !== "all" && entry.kind !== kind) continue;
-      counts.all++;
-      if (entry.category in counts) {
-        counts[entry.category]++;
-      }
+  for (const entry of codeEntries) {
+    if (kind !== "all" && entry.kind !== kind) continue;
+    counts.all++;
+    if (entry.category in counts) {
+      counts[entry.category]++;
     }
-    return counts;
   }
+  defaultCountsByKind[kind] = counts;
+  return counts;
+}
+
+export const totalFileCount = codeEntries.filter((entry) => entry.kind === "file").length;
+export const totalSnippetCount = codeEntries.filter((entry) => entry.kind === "snippet").length;
+
+export function getCategoryCounts(
+  query: string,
+  kind: string = "all",
+  options: Omit<SearchOptions, "category"> = {},
+): Record<string, number> {
+  const rawQuery = query.trim();
+  if (!rawQuery) {
+    return getDefaultCounts(kind);
+  }
+
+  const counts: Record<string, number> = {
+    all: 0,
+    daily: 0,
+    topics: 0,
+    examples: 0,
+    patterns: 0,
+  };
 
   const results = searchCode(query, kind, { ...options, category: "all" });
   for (const { entry } of results) {

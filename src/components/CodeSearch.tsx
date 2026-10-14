@@ -3,10 +3,11 @@ import {
   codeEntries,
   searchCode,
   getCategoryCounts,
+  totalFileCount,
+  totalSnippetCount,
   type SearchOptions,
 } from "../lib/search";
 import { navigate, useLocationParams } from "../lib/navigation";
-import { topics } from "../lib/topics";
 
 function Highlight({
   text,
@@ -147,12 +148,10 @@ export function CodeSearch() {
 
   return (
     <div>
-      <header className="page-header">
-        <span className="eyebrow">SOURCE EXPLORER</span>
+      <header className="page-header search-header-compact">
         <h1>代码搜索</h1>
         <p>
-          检索课程、专题中的 C / C++
-          代码块与源码文件。支持符号、代码片段和文件路径。
+          检索课程与工程专题中的 C/C++ 代码及文件
         </p>
       </header>
 
@@ -165,7 +164,9 @@ export function CodeSearch() {
           if (!composing.current) updateQuery(draft);
         }}
       >
-        <label htmlFor="code-query">搜索代码</label>
+        <label htmlFor="code-query" className="visually-hidden">
+          搜索代码
+        </label>
         <div className="search-input-row">
           <input
             id="code-query"
@@ -303,7 +304,7 @@ export function CodeSearch() {
       <p className="search-summary" role="status">
         {query.trim()
           ? `${results.length} 处匹配 · 第 ${page} / ${Math.max(1, Math.ceil(results.length / 30))} 页`
-          : `已索引 ${codeEntries.filter((entry) => entry.kind === "file").length} 个源码文件与 ${codeEntries.filter((entry) => entry.kind === "snippet").length} 个代码块`}
+          : `已索引 ${totalFileCount} 个源码文件与 ${totalSnippetCount} 个代码块`}
       </p>
 
       {!query.trim() && (
@@ -433,7 +434,9 @@ export function CodeSearch() {
                 在在线 Lab 中运行 ▶
               </button>
 
-              {topics.some((topic) => topic.path === selected.path) && (
+              {selected.path.endsWith(".md") &&
+                (selected.category === "topics" ||
+                  selected.category === "patterns") && (
                 <button
                   className="action-pill"
                   onClick={() =>

@@ -17,8 +17,9 @@ import { ProgressView } from "./components/views/ProgressView";
 const Topics = lazy(() =>
   import("./components/Topics").then((module) => ({ default: module.Topics })),
 );
+export const preloadCodeSearch = () => import("./components/CodeSearch");
 const CodeSearch = lazy(() =>
-  import("./components/CodeSearch").then((module) => ({
+  preloadCodeSearch().then((module) => ({
     default: module.CodeSearch,
   })),
 );
@@ -27,7 +28,9 @@ export default function App() {
   const params = useLocationParams();
   const requestedView = params.get("view");
   const view: View =
-    requestedView === "lesson" || NAV.some((item) => item.id === requestedView)
+    requestedView === "search" ||
+    requestedView === "lesson" ||
+    NAV.some((item) => item.id === requestedView)
       ? (requestedView as View)
       : "today";
   const setView = (value: View) => navigate({ view: value });
@@ -46,10 +49,26 @@ export default function App() {
   );
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const idle =
+        "requestIdleCallback" in window
+          ? (
+              window as unknown as {
+                requestIdleCallback: (cb: () => void) => number;
+              }
+            ).requestIdleCallback
+          : (cb: () => void) => setTimeout(cb, 1000);
+      idle(preloadCodeSearch);
+    }
+  }, []);
+
+  useEffect(() => {
     const title =
       view === "lesson"
         ? selectedLesson?.title
-        : NAV.find((item) => item.id === view)?.label;
+        : view === "search"
+          ? "代码搜索"
+          : NAV.find((item) => item.id === view)?.label;
     document.title = `${title ?? "学习文档"} · Professional C++`;
   }, [view, selectedLesson]);
 
@@ -144,7 +163,12 @@ export default function App() {
   }
 
   return (
-    <Shell view={view} setView={setView} currentDay={currentLearningDay}>
+    <Shell
+      view={view}
+      setView={setView}
+      currentDay={currentLearningDay}
+      onPreloadSearch={preloadCodeSearch}
+    >
       {page}
     </Shell>
   );
