@@ -13,7 +13,7 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build-and-deploy:
@@ -21,6 +21,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -44,6 +45,20 @@ jobs:
           GITHUB_PAGES: "true"
         run: npm run build
 
+      - name: Show dist diagnostics
+        run: |
+          echo "=== Dist directory size ==="
+          du -sh ./dist || true
+          echo "=== Top-level dist files ==="
+          ls -la ./dist || true
+          if [ -f ./dist/index.html ]; then
+            echo "=== index.html head ==="
+            head -n 20 ./dist/index.html
+          else
+            echo "ERROR: ./dist/index.html missing!"
+            exit 1
+          fi
+
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
 
@@ -55,3 +70,6 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          timeout: 1200000
+          error_count: 20
