@@ -18,15 +18,15 @@
   --amber: #b35c00;
   --code: #10151c;
   --code-ink: #dbe7f3;
-  --sidebar: 228px;
+  --sidebar: 248px;
   --radius: 12px;
   --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   --page-padding: 28px;
-  --font-h1: clamp(28px, 5vw, 36px);
-  --font-h2: 22px;
+  --font-h1: clamp(30px, 4vw, 42px);
+  --font-h2: 24px;
   --font-body: 16px;
   --font-aux: 13px;
-  --line-height-base: 1.6;
+  --line-height-base: 1.7;
 }
 
 @media (max-width: 760px) {
@@ -36,6 +36,7 @@
     --font-h2: 22px;
     --font-body: 16px;
     --font-aux: 13px;
+    --line-height-base: 1.6;
   }
 }
 
@@ -115,8 +116,8 @@ summary:focus-visible {
 }
 
 .brand div span:last-child {
-  color: var(--muted);
-  font: 11px/1.2 var(--mono);
+  color: #475569;
+  font: 12px/1.3 var(--mono);
 }
 
 .side-nav {
@@ -127,51 +128,68 @@ summary:focus-visible {
 
 .nav-item {
   display: flex;
-  min-height: 42px;
+  min-height: 44px;
   align-items: center;
   justify-content: space-between;
-  padding: 0 11px;
+  padding: 12px 14px;
   border: 0;
   border-radius: 8px;
-  color: #525d68;
+  color: #475569;
   background: transparent;
   cursor: pointer;
   text-align: left;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .nav-item:hover {
-  background: #f2f4f6;
+  background: #f1f5f9;
+  color: var(--ink);
 }
 
 .nav-item.is-active {
   color: var(--blue);
   background: var(--blue-soft);
-  font-weight: 650;
+  font-weight: 600;
 }
 
 .nav-item small {
-  font: 10px/1 var(--mono);
-  color: var(--muted);
+  font: 600 13px/1 var(--mono);
+  color: #475569;
+  background: var(--canvas);
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+}
+
+.nav-item.is-active small {
+  color: var(--blue);
+  border-color: rgba(0, 89, 156, 0.2);
+  background: #ffffff;
 }
 
 .sidebar-status {
   display: grid;
-  gap: 7px;
+  gap: 8px;
   margin-top: auto;
-  padding: 13px;
+  padding: 14px;
   border: 1px solid var(--line);
   border-radius: 10px;
   background: #fbfcfd;
 }
 
 .sidebar-status span {
-  color: var(--muted);
-  font: 10px/1.3 var(--mono);
+  color: #475569;
+  font: 600 13px/1.4 var(--mono);
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
 .sidebar-status strong {
-  font: 600 13px/1.2 var(--mono);
+  font: 600 13px/1.3 var(--mono);
+  color: var(--ink);
 }
 
 .mini-progress,
@@ -213,9 +231,9 @@ summary:focus-visible {
 
 .eyebrow {
   display: inline-block;
-  color: var(--muted);
-  font: 600 11px/1.2 var(--mono);
-  letter-spacing: 0.09em;
+  color: #475569;
+  font: 600 13px/1.4 var(--mono);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
@@ -230,8 +248,8 @@ summary:focus-visible {
 .page-header p {
   max-width: 680px;
   margin: 0;
-  color: var(--muted);
-  font-size: 15px;
+  color: #475569;
+  font-size: 16px;
   line-height: 1.7;
 }
 
@@ -259,11 +277,13 @@ summary:focus-visible {
 }
 
 .lesson-meta span {
-  padding: 5px 7px;
+  padding: 4px 10px;
   border: 1px solid var(--line);
-  border-radius: 5px;
-  color: var(--muted);
-  font: 600 10px/1 var(--mono);
+  border-radius: 6px;
+  color: #334155;
+  background: var(--surface);
+  font: 600 13px/1.3 var(--mono);
+  letter-spacing: 0.03em;
 }
 
 .hero-copy h2 {
@@ -349,7 +369,7 @@ summary:focus-visible {
   justify-content: space-between;
   gap: 16px;
   color: #8ea0b3;
-  font: 10px/1.3 var(--mono);
+  font: 600 12px/1.4 var(--mono);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -378,7 +398,7 @@ summary:focus-visible {
   display: block;
   overflow: hidden;
   margin-bottom: 9px;
-  font: 600 9px/1 var(--mono);
+  font: 600 12px/1.2 var(--mono);
   text-overflow: ellipsis;
 }
 
@@ -432,7 +452,7 @@ summary:focus-visible {
   padding-top: 14px;
   border-top: 1px solid #293340;
   color: #8795a5;
-  font: 11px/1.5 var(--mono);
+  font: 12px/1.5 var(--mono);
 }
 
 .build-prompt {
@@ -514,14 +534,14 @@ summary:focus-visible {
 
 .toc-list span,
 .toc-list i {
-  color: var(--muted);
-  font: 10px/1 var(--mono);
+  color: #475569;
+  font: 600 12px/1.2 var(--mono);
   font-style: normal;
 }
 
 .toc-list strong {
   overflow: hidden;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 550;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -563,9 +583,9 @@ summary:focus-visible {
 
 .section-check {
   flex: 0 0 auto;
-  min-height: 34px;
-  color: var(--muted);
-  font: 600 11px/1 var(--mono);
+  min-height: 36px;
+  color: #475569;
+  font: 600 13px/1 var(--mono);
 }
 
 .section-check.is-complete {
@@ -600,15 +620,15 @@ summary:focus-visible {
 
 .session-panel dt {
   margin-bottom: 4px;
-  color: var(--muted);
-  font-size: 10px;
+  color: #475569;
+  font-size: 13px;
 }
 
 .session-panel dd {
   overflow-wrap: anywhere;
   margin: 0;
-  font-size: 11px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .build-success {
@@ -761,11 +781,13 @@ summary:focus-visible {
 
 .week-marker span {
   color: var(--blue);
-  font: 600 10px/1 var(--mono);
+  font: 600 13px/1.2 var(--mono);
+  letter-spacing: 0.04em;
 }
 
 .week-marker strong {
-  font-size: 15px;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .week-lessons {
@@ -779,11 +801,11 @@ summary:focus-visible {
 .week-lessons button,
 .roadmap-placeholder {
   display: grid;
-  grid-template-columns: 22px 70px minmax(0, 1fr) 50px;
-  gap: 9px;
+  grid-template-columns: 24px 84px minmax(0, 1fr) 68px;
+  gap: 10px;
   align-items: center;
-  min-height: 49px;
-  padding: 0 13px;
+  min-height: 50px;
+  padding: 0 14px;
   border: 0;
   border-bottom: 1px solid var(--line);
   background: transparent;
@@ -802,18 +824,28 @@ summary:focus-visible {
   background: #f7f9fa;
 }
 
+.week-lessons .mono {
+  font: 600 13px/1.3 var(--mono);
+  color: var(--blue);
+}
+
 .week-lessons strong,
 .roadmap-placeholder strong {
   overflow: hidden;
-  font-size: 13px;
+  font-size: 15px;
+  font-weight: 500;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
 .week-lessons small {
-  color: var(--muted);
-  font: 10px/1 var(--mono);
+  color: #334155;
+  font: 600 13px/1.3 var(--mono);
   text-align: right;
+  background: #f1f5f9;
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid var(--line);
 }
 
 .roadmap-state {
@@ -877,13 +909,14 @@ summary:focus-visible {
 }
 
 .lesson-index button > span {
-  color: var(--muted);
-  font-size: 11px;
+  color: #475569;
+  font: 600 13px/1.3 var(--mono);
 }
 
 .lesson-index button strong {
   overflow: hidden;
-  font-size: 13px;
+  font-size: 15px;
+  font-weight: 500;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -985,7 +1018,7 @@ summary:focus-visible {
   padding: 12px 18px;
   border-top: 1px solid #293340;
   color: #8795a5;
-  font: 10px/1 var(--mono);
+  font: 12px/1.3 var(--mono);
 }
 
 /* Review / guideline */
@@ -1014,14 +1047,14 @@ summary:focus-visible {
 }
 
 .review-list article p {
-  color: var(--muted);
-  font-size: 13px;
+  color: #475569;
+  font-size: 14px;
   line-height: 1.6;
 }
 
 .review-list article > strong {
   color: var(--green);
-  font: 600 10px/1 var(--mono);
+  font: 600 13px/1 var(--mono);
 }
 
 .document-card {
@@ -1073,8 +1106,8 @@ summary:focus-visible {
 }
 
 .skill-row span {
-  color: var(--muted);
-  font: 10px/1 var(--mono);
+  color: #475569;
+  font: 600 12px/1.2 var(--mono);
 }
 
 .skill-bar {
@@ -1150,13 +1183,13 @@ summary:focus-visible {
   }
 
   .brand.compact .brand-mark {
-    width: 30px;
-    height: 30px;
-    font-size: 10px;
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
   }
 
   .brand.compact strong {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .content {
@@ -1184,9 +1217,9 @@ summary:focus-visible {
   .bottom-nav button {
     border: 0;
     border-radius: 9px;
-    color: var(--muted);
+    color: #475569;
     background: transparent;
-    font: 600 11px/1 var(--mono);
+    font: 600 12px/1 var(--mono);
   }
 
   .bottom-nav button.is-active {
@@ -1213,7 +1246,7 @@ summary:focus-visible {
   }
 
   .rail-label {
-    font-size: 7px;
+    font-size: 12px;
   }
 
   .focus-grid {
@@ -1321,14 +1354,14 @@ summary:focus-visible {
 }
 
 .review-later {
-  min-height: 34px;
+  min-height: 36px;
   padding: 0 12px;
   border: 1px solid var(--line-strong);
   border-radius: 8px;
-  color: var(--muted);
+  color: #475569;
   background: var(--surface);
   cursor: pointer;
-  font: 600 11px/1 var(--mono);
+  font: 600 13px/1 var(--mono);
 }
 
 .review-later:hover {
@@ -1394,14 +1427,14 @@ summary:focus-visible {
 
 .weak-point-list button {
   flex: 0 0 auto;
-  min-height: 30px;
+  min-height: 32px;
   padding: 0 10px;
   border: 1px solid #a8d8bd;
   border-radius: 7px;
   color: var(--green);
   background: var(--green-soft);
   cursor: pointer;
-  font: 600 10px/1 var(--mono);
+  font: 600 12px/1 var(--mono);
 }
 
 @media (max-width: 760px) {
@@ -1445,8 +1478,8 @@ summary:focus-visible {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--muted);
-  font-size: 10px;
+  color: #475569;
+  font-size: 12px;
 }
 
 .runtime-dot {
@@ -1512,14 +1545,14 @@ summary:focus-visible {
 
 .compile-button {
   margin-left: auto;
-  min-height: 32px;
-  padding: 0 12px;
+  min-height: 34px;
+  padding: 0 14px;
   border: 1px solid #4c9a72;
   border-radius: 7px;
   color: #dff5e8;
   background: #176941;
   cursor: pointer;
-  font: 650 10px/1 var(--mono);
+  font: 650 12px/1 var(--mono);
 }
 
 .compile-button:hover:not(:disabled) {
@@ -1553,7 +1586,7 @@ summary:focus-visible {
   padding: 17px 18px;
   white-space: pre-wrap;
   word-break: break-word;
-  font: 11px/1.65 var(--mono);
+  font: 12px/1.65 var(--mono);
 }
 
 .compiler-output footer {
@@ -1562,7 +1595,7 @@ summary:focus-visible {
   padding: 9px 18px;
   border-top: 1px solid #202a35;
   color: #7f91a4;
-  font: 10px/1 var(--mono);
+  font: 12px/1.3 var(--mono);
 }
 
 .compiler-output.success {
@@ -1599,7 +1632,7 @@ summary:focus-visible {
 .compiler-loading p {
   margin: 10px 0 0;
   color: #8ea0b3;
-  font: 10px/1.5 var(--mono);
+  font: 12px/1.5 var(--mono);
 }
 
 @media (max-width: 900px) {
@@ -1621,7 +1654,7 @@ summary:focus-visible {
   .code-panel.editable textarea {
     min-height: 360px;
     padding: 16px;
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .compile-button {
@@ -1672,7 +1705,7 @@ summary:focus-visible {
   user-select: none;
 }
 .code-block-lang {
-  font: 600 11px var(--mono);
+  font: 600 12px var(--mono);
   letter-spacing: 0.06em;
   color: #8b99a8;
 }
@@ -1680,12 +1713,12 @@ summary:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 11px;
+  font-size: 12px;
   color: #8b99a8;
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 3px 7px;
+  padding: 4px 8px;
   border-radius: 4px;
   transition: all 0.15s ease;
 }
@@ -1755,8 +1788,8 @@ summary:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 11px;
-  color: var(--muted);
+  font-size: 12px;
+  color: #475569;
   text-decoration: none;
   padding: 4px 8px;
   border-radius: 4px;
