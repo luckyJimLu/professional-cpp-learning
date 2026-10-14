@@ -15,8 +15,8 @@
 
 ## 当前进度
 
-- **已发布：Day 1–48**
-- **下一课：Day 49**
+- **已发布：Day 1–49**
+- **下一课：Day 50**
 - 当前主线：**Chapter 6 · Designing for Reuse**
 - 更新方式：**GitHub Markdown only**
 
@@ -49,11 +49,11 @@
 
 ## 最近课程
 
+- [Day 49 · Consider the Audience and Purpose](daily/day-049-consider-audience-purpose.md)
 - [Day 48 · Design Usable Interfaces](daily/day-048-design-usable-interfaces.md)
 - [Day 47 · Design for Extensibility](daily/day-047-design-for-extensibility.md)
 - [Day 46 · Provide Appropriate Checks and Safeguards](daily/day-046-checks-safeguards.md)
 - [Day 45 · Use Templates for Generic Data Structures and Algorithms](daily/day-045-templates-generic-data-structures-algorithms.md)
-- [Day 44 · Avoid Combining Unrelated or Logically Separate Concepts](daily/day-044-separate-unrelated-concepts.md)
 
 ## 每日课程结构
 
@@ -63,12 +63,14 @@
 2. 昨日复习 3 问
 3. 核心概念讲解
 4. C 写法 vs Modern C++
-5. 今日编码规范
-6. 可编译小实验 / 代码练习
-7. 3 个常见坑
-8. 2 道检查题
+5. 设计模式映射：变化轴、稳定边界、Pattern 是否值得使用
+6. Embedded / System Design 场景
+7. 今日编码规范
+8. 可编译 Lab / 修复违规代码
+9. 3 个常见坑与 Pattern 滥用
+10. 2 道检查题 + 1 道设计题
 
-每 7 天安排一次工程化周复盘。
+每 7 天安排一次工程化周复盘，并增加 Design Review：变化轴、稳定边界、Pattern 选择、ownership/lifetime 与 overengineering 检查。
 
 ## 仓库结构
 
@@ -86,7 +88,7 @@
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-048-*.md
+│   └── day-049-*.md
 ├── examples/
 │   └── day-XXX/
 ├── weekly/
