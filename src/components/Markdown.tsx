@@ -3,6 +3,8 @@ import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { resolveAsset } from "../lib/contentAssets";
 import { MermaidDiagram } from "./MermaidDiagram";
+import { PlantUmlDiagram, isPlantUmlSource } from "./PlantUmlDiagram";
+import { CodeBlock } from "./CodeBlock";
 
 function headingText(value: ReactNode): string {
   if (typeof value === "string" || typeof value === "number")
@@ -28,12 +30,32 @@ const components: Components = {
   },
   pre({ children, node: _node, ...props }) {
     if (
-      isValidElement<{ className?: string; children?: ReactNode }>(children) &&
-      /(?:^|\s)language-mermaid(?:\s|$)/.test(children.props.className ?? "")
+      isValidElement<{ className?: string; children?: ReactNode }>(children)
     ) {
+      const match = /(?:^|\s)language-([^\s]+)(?:\s|$)/.exec(
+        children.props.className ?? "",
+      );
+      const lang = match ? match[1].toLowerCase() : "";
+      const codeString = String(children.props.children ?? "").replace(
+        /\n$/,
+        "",
+      );
+
+      if (lang === "mermaid") {
+        return <MermaidDiagram source={codeString} />;
+      }
+
+      if (
+        ["plantuml", "puml", "uml"].includes(lang) ||
+        isPlantUmlSource(codeString)
+      ) {
+        return <PlantUmlDiagram key={codeString} code={codeString} />;
+      }
+
       return (
-        <MermaidDiagram
-          source={String(children.props.children ?? "").replace(/\n$/, "")}
+        <CodeBlock
+          lang={lang}
+          codeString={codeString}
         />
       );
     }

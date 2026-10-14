@@ -1626,3 +1626,178 @@ summary:focus-visible {
 .topic-index { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem; }
 .topic-index button { white-space: normal; text-align: left; }
 .topic-index button[aria-pressed="true"] { background: var(--blue-soft); color: var(--blue); border-color: var(--blue); }
+
+/* Code Block Cards with syntax highlighting & copy */
+.markdown .code-block-card {
+  margin: 18px 0;
+  border-radius: 10px;
+  border: 1px solid #232c38;
+  background: var(--code);
+  overflow: hidden;
+}
+.markdown .code-block-card pre {
+  margin: 0;
+  padding: 16px 18px;
+  border-radius: 0;
+  background: transparent;
+}
+.markdown .code-block-card pre code.hljs {
+  background: transparent;
+  padding: 0;
+  font-family: var(--mono);
+}
+.code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 14px;
+  background: #161d26;
+  border-bottom: 1px solid #232c38;
+  user-select: none;
+}
+.code-block-lang {
+  font: 600 11px var(--mono);
+  letter-spacing: 0.06em;
+  color: #8b99a8;
+}
+.code-block-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #8b99a8;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 3px 7px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+.code-block-copy-btn:hover {
+  color: #e6edf3;
+  background: #232c38;
+}
+.code-block-copy-text.text-success {
+  color: #3fb950;
+}
+.code-block-icon.icon-success {
+  stroke: #3fb950;
+}
+
+/* PlantUML Diagram Container & Viewport */
+.markdown .plantuml-diagram {
+  margin: 1.5rem 0;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden;
+}
+.plantuml-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 14px;
+  background: #f1f4f7;
+  border-bottom: 1px solid var(--line);
+  user-select: none;
+}
+.plantuml-tabs {
+  display: inline-flex;
+  gap: 2px;
+  background: #e2e7ec;
+  padding: 2px;
+  border-radius: 6px;
+}
+.plantuml-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: none;
+  background: transparent;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.15s ease;
+}
+.plantuml-tab-btn.is-active {
+  background: #ffffff;
+  color: var(--ink);
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.plantuml-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.plantuml-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.plantuml-action-btn:hover {
+  background: #e2e7ec;
+  color: var(--ink);
+}
+.plantuml-viewport {
+  overflow-x: auto;
+  max-width: 100%;
+  max-height: min(75vh, 800px);
+  padding: 1.25rem;
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.plantuml-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+.plantuml-error {
+  padding: 1rem 1.25rem;
+  background: #fff8eb;
+  color: #794300;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.plantuml-error-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.plantuml-retry-btn {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  text-decoration: underline;
+  cursor: pointer;
+  color: var(--amber);
+  font-size: 12px;
+}
+.plantuml-source-pre {
+  margin: 0;
+  padding: 16px;
+  background: var(--code);
+  color: var(--code-ink);
+  overflow-x: auto;
+  font: 12px/1.65 var(--mono);
+}
+

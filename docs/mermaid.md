@@ -55,6 +55,33 @@ sequenceDiagram
 
 取消请求不等于回调已经结束。释放缓冲区之前仍需确认操作的完成契约。
 
+## PlantUML 架构与时序图
+
+除 Mermaid 之外，文档系统还支持 PlantUML 流程图与时序图，使用 ```` ```plantuml ````（或 ```` ```puml ````、包含 `@startuml`）代码块编写：
+
+```plantuml
+@startuml
+skinparam shadowing false
+hide stereotype
+
+participant "应用线程" as App
+participant "RingBuffer" as RB
+participant "后台写盘线程" as Disk
+
+App -> RB: try_push(log_entry)
+activate RB
+RB --> App: success
+deactivate RB
+RB -> Disk: notify_data_ready()
+activate Disk
+Disk -> RB: pop_batch()
+Disk -> Disk: write_to_file()
+deactivate Disk
+@enduml
+```
+
+在阅读器中，PlantUML 会自动渲染为矢量图，支持横向滚动、在“流程图”与“源码”之间切换、一键复制代码及打开外部 SVG。
+
 ## 编写检查
 
 1. 一张图只解释一个决策、状态机或调用关系，避免把整个章节塞进单图。
