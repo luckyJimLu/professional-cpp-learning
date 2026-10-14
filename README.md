@@ -6,6 +6,13 @@
 
 > C 思维 → Modern C++ → Professional C++ → Embedded / Systems Engineering
 
+## 在线学习平台 (GitHub Pages)
+
+- 🌐 **在线控制台 / Web Console**: [https://luckyJimLu.github.io/professional-cpp-learning/](https://luckyJimLu.github.io/professional-cpp-learning/)
+  - 支持每日课程阅读与 8 阶段 Compile Rail 学习流水线
+  - 内置基于 WebAssembly Clang 22 的在线 C++23 交互式编译实验工作台 (Lab)
+  - 全局代码与 Markdown 代码块即时搜索与行级高亮 (Code Search)
+
 ## 当前进度
 
 - **已发布：Day 1–48**
@@ -15,6 +22,7 @@
 
 ## 快速入口
 
+- 🚀 **[在线学习控制台 (GitHub Pages)](https://luckyJimLu.github.io/professional-cpp-learning/)**
 - [16 周学习路线](docs/learning-plan.md)
 - [完整学习进度](progress.md)
 - [C++ Design Patterns · 工程化专题](patterns/)
@@ -104,6 +112,8 @@
 ## Learning Console
 
 仓库包含 **Professional C++ Learning Console**。课程 Markdown 是唯一内容源，Web UI 负责学习流、Lab、复盘与进度状态。
+
+- 🌐 **在线体验 (GitHub Pages)**: [https://luckyJimLu.github.io/professional-cpp-learning/](https://luckyJimLu.github.io/professional-cpp-learning/)
 
 ### 本地运行
 

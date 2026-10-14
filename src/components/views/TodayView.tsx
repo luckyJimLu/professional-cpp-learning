@@ -4,6 +4,7 @@ import {
   lessonByDay,
   type StepKey,
 } from "../../lib/course";
+import { calculateReadingStats } from "../../lib/readingTime";
 import { PageHeader } from "../common/PageHeader";
 import { CompileRail } from "../common/CompileRail";
 
@@ -51,6 +52,7 @@ export function TodayView({
             <span>
               {planned?.chapter ? `CHAPTER ${planned.chapter}` : "NEXT"}
             </span>
+            <span>约 {calculateReadingStats(target.raw).minutes} 分钟阅读</span>
           </div>
 
           <h2>{planned?.title ?? `Next learning unit · Day ${currentDay}`}</h2>

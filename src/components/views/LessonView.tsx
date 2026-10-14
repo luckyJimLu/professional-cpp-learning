@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { STEP_DEFS, type Lesson, type StepKey } from "../../lib/course";
+import { calculateReadingStats } from "../../lib/readingTime";
 import { CompileRail } from "../common/CompileRail";
 import { Markdown } from "../Markdown";
 
@@ -42,6 +43,11 @@ export function LessonView({
     }
   };
 
+  const readingStats = useMemo(
+    () => calculateReadingStats(lesson.raw),
+    [lesson.raw],
+  );
+
   return (
     <div className="lesson-layout">
       <aside className="lesson-toc">
@@ -69,6 +75,7 @@ export function LessonView({
             <span>DAY {lesson.day}</span>
             <span>WEEK {lesson.week}</span>
             {lesson.chapter && <span>CHAPTER {lesson.chapter}</span>}
+            <span>约 {readingStats.minutes} 分钟阅读 · {readingStats.wordCount.toLocaleString()} 字</span>
           </div>
           <h1>{lesson.title}</h1>
           <CompileRail
@@ -139,6 +146,12 @@ export function LessonView({
         <span className="eyebrow">SESSION</span>
         <strong>{lesson.duration} min</strong>
         <dl>
+          <div>
+            <dt>Reading</dt>
+            <dd>
+              约 {readingStats.minutes} 分钟 ({readingStats.wordCount.toLocaleString()} 字)
+            </dd>
+          </div>
           <div>
             <dt>Chapter</dt>
             <dd>

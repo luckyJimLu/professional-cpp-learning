@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { lessons } from "../../lib/course";
+import { calculateReadingStats } from "../../lib/readingTime";
 import { PageHeader } from "../common/PageHeader";
 
 export function LessonsView({
@@ -64,7 +65,8 @@ export function LessonsView({
             <span>
               {lesson.chapter
                 ? `Chapter ${lesson.chapter}`
-                : `Week ${lesson.week}`}
+                : `Week ${lesson.week}`}{" "}
+              · 约 {calculateReadingStats(lesson.raw).minutes} 分钟阅读
             </span>
             <i>{isDayComplete(lesson.day) ? "●" : "○"}</i>
           </button>

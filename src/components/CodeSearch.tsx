@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   codeEntries,
   searchCode,
@@ -69,6 +69,10 @@ export function CodeSearch() {
   const [previousQuery, setPreviousQuery] = useState(query);
   const [copied, setCopied] = useState(false);
   const composing = useRef(false);
+
+  useEffect(() => {
+    input.current?.focus();
+  }, []);
 
   if (previousQuery !== query) {
     setPreviousQuery(query);
