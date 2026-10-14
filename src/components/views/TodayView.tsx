@@ -31,27 +31,39 @@ export function TodayView({
       <article className="guide-document">
         <header className="guide-title" id="introduction">
           <div className="guide-kicker">
-            <span>PROFESSIONAL C++</span>
-            <span>第六版 · C++23</span>
+            <span>PROFESSIONAL C++ · 第六版 · C++23</span>
           </div>
-          <h1>
-            从 C 出发，
-            <br />
-            写出专业的 C++。
-          </h1>
-          <p className="guide-lead">面向 C / 嵌入式开发者的工程化学习手册。</p>
-          <p>
-            沿着《Professional
-            C++》的章节，从语言机制走向系统设计。读懂一个概念，改写一段代码，再用可运行的实验验证理解。
+          <h1>从 C 出发，写出专业的 C++</h1>
+          <p className="guide-lead">
+            面向 C / 嵌入式开发者的现代 C++ 工程化学习手册，沿着原书章节以可运行实验从语言机制走向系统架构。
           </p>
+          <div className="guide-hero-cta">
+            <button
+              type="button"
+              className="primary-button hero-cta-btn"
+              onClick={() => openLesson(currentDay > 1 ? target?.day ?? 1 : 1)}
+            >
+              {currentDay > 1
+                ? `继续学习 · Day ${target?.day ?? 1} →`
+                : "开始 Day 1 →"}
+            </button>
+          </div>
         </header>
-        <aside className="docs-note">
-          <strong>学习之前</strong>
+        <details className="docs-note docs-note-collapsible">
+          <summary>
+            <strong>学习之前</strong>
+            <span className="docs-note-summary-text">
+              建议具备 C 与基础嵌入式开发经验
+            </span>
+            <span className="docs-note-chevron" aria-hidden="true">
+              ▾
+            </span>
+          </summary>
           <p>
             建议具备 C 语言和基础嵌入式开发经验。课程以 Modern C++ 为主线，结合
-            Modem、Driver 与资源受限系统的实际问题。
+            Modem、Driver 与资源受限系统的实际工程问题。
           </p>
-        </aside>
+        </details>
         <section id="start-learning" className="guide-section">
           <h2>
             开始学习{" "}

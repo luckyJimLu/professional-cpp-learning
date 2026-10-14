@@ -21,6 +21,22 @@
   --sidebar: 228px;
   --radius: 12px;
   --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --page-padding: 28px;
+  --font-h1: clamp(28px, 5vw, 36px);
+  --font-h2: 22px;
+  --font-body: 16px;
+  --font-aux: 13px;
+  --line-height-base: 1.6;
+}
+
+@media (max-width: 760px) {
+  :root {
+    --page-padding: 16px;
+    --font-h1: clamp(28px, 6vw, 32px);
+    --font-h2: 22px;
+    --font-body: 16px;
+    --font-aux: 13px;
+  }
 }
 
 * {

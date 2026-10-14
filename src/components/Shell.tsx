@@ -116,88 +116,158 @@ export function Shell({
         跳到正文
       </a>
       <header className="docs-header">
+        <details className="mobile-menu mobile-drawer">
+          <summary className="mobile-menu-trigger" aria-label="打开导航菜单">
+            <span className="hamburger-icon" aria-hidden="true">
+              ☰
+            </span>
+          </summary>
+          <div
+            className="drawer-overlay"
+            aria-hidden="true"
+            onClick={(e) => {
+              e.currentTarget.closest("details")?.removeAttribute("open");
+            }}
+          />
+          <div className="drawer-content">
+            <div className="drawer-header">
+              <span className="drawer-title">导航 · {label}</span>
+              <button
+                type="button"
+                className="drawer-close-btn"
+                aria-label="关闭导航菜单"
+                onClick={(e) => {
+                  e.currentTarget.closest("details")?.removeAttribute("open");
+                }}
+              >
+                ✕
+              </button>
+            </div>
+            <nav aria-label="Mobile navigation">
+              {NAV.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  aria-current={
+                    view === item.id ||
+                    (view === "lesson" && item.id === "lessons")
+                      ? "page"
+                      : undefined
+                  }
+                  onClick={(event) => {
+                    setView(item.id);
+                    event.currentTarget
+                      .closest("details")
+                      ?.removeAttribute("open");
+                  }}
+                >
+                  {item.label}
+                </button>
+              ))}
+              <button
+                key="search"
+                type="button"
+                aria-current={view === "search" ? "page" : undefined}
+                onClick={(event) => {
+                  setView("search");
+                  event.currentTarget
+                    .closest("details")
+                    ?.removeAttribute("open");
+                }}
+              >
+                代码搜索
+              </button>
+            </nav>
+          </div>
+        </details>
+
         <a
           className="brand"
           href="?view=today"
           aria-label="Professional C++ 学习指南"
         >
           <span className="brand-mark">C++</span>
-          <div>
-            <strong>Professional C++</strong>
-            <span>学习文档</span>
+          <div className="brand-copy">
+            <strong className="brand-title">
+              <span className="title-desktop">Professional C++</span>
+              <span className="title-mobile">C++ 学习</span>
+            </strong>
+            <span className="brand-subtitle">学习文档</span>
           </div>
         </a>
         <div className="header-actions">
-          <div
-            className={`shell-search ${isSearchExpanded ? "is-expanded" : ""}`}
-            onMouseEnter={onPreloadSearch}
-            onFocus={onPreloadSearch}
-          >
-            <button
-              type="button"
-              className="shell-search-icon-btn"
-              title="搜索代码 (Ctrl+K)"
-              aria-label="搜索代码 (Ctrl+K)"
-              onClick={handleHeaderSearchClick}
+          {view !== "search" && (
+            <div
+              className={`shell-search ${isSearchExpanded ? "is-expanded" : ""}`}
+              onMouseEnter={onPreloadSearch}
+              onFocus={onPreloadSearch}
             >
-              <svg
-                className="search-icon"
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-            </button>
-
-            {isSearchExpanded ? (
-              <input
-                ref={headerInputRef}
-                type="text"
-                className="header-search-input"
-                aria-label="全局快速搜索"
-                placeholder="搜索代码与示例…"
-                value={headerDraft}
-                autoComplete="off"
-                spellCheck={false}
-                onChange={handleHeaderInputChange}
-                onKeyDown={(event) => {
-                  if (event.key === "Escape") {
-                    if (view !== "search") {
-                      setIsSearchExpanded(false);
-                    }
-                  } else if (event.key === "Enter") {
-                    if (view !== "search") {
-                      setView("search");
-                    }
-                    triggerMainSearchFocus();
-                  }
-                }}
-              />
-            ) : (
-              <span
-                className="shell-search-trigger"
+              <button
+                type="button"
+                className="shell-search-icon-btn"
+                title="搜索代码 (Ctrl+K)"
+                aria-label="搜索代码 (Ctrl+K)"
                 onClick={handleHeaderSearchClick}
               >
-                <span className="search-placeholder">搜索代码与示例…</span>
-              </span>
-            )}
+                <svg
+                  className="search-icon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+              </button>
 
-            <kbd
-              className="search-shortcut"
-              title="快捷键 Ctrl+K"
-              onClick={handleHeaderSearchClick}
-            >
-              Ctrl K
-            </kbd>
-          </div>
+              {isSearchExpanded ? (
+                <input
+                  ref={headerInputRef}
+                  type="text"
+                  className="header-search-input"
+                  aria-label="全局快速搜索"
+                  placeholder="搜索代码与示例…"
+                  value={headerDraft}
+                  autoComplete="off"
+                  spellCheck={false}
+                  onChange={handleHeaderInputChange}
+                  onKeyDown={(event) => {
+                    if (event.key === "Escape") {
+                      if (view !== "search") {
+                        setIsSearchExpanded(false);
+                      }
+                    } else if (event.key === "Enter") {
+                      if (view !== "search") {
+                        setView("search");
+                      }
+                      triggerMainSearchFocus();
+                    }
+                  }}
+                />
+              ) : (
+                <span
+                  className="shell-search-trigger"
+                  onClick={handleHeaderSearchClick}
+                >
+                  <span className="search-placeholder">搜索代码与示例…</span>
+                </span>
+              )}
+
+              <kbd
+                className="search-shortcut"
+                title="快捷键 Ctrl+K"
+                onClick={handleHeaderSearchClick}
+              >
+                Ctrl K
+              </kbd>
+            </div>
+          )}
           <a
             className="repo-link"
             href="https://github.com/luckyJimLu/professional-cpp-learning"
@@ -244,48 +314,6 @@ export function Shell({
         </div>
       </aside>
       <div className="main-shell">
-        <div className="workspace-header">
-          <span className="mono">
-            C++ / <strong>{label}</strong>
-          </span>
-        </div>
-        <details className="mobile-menu">
-          <summary>导航 · {label}</summary>
-          <nav aria-label="Mobile navigation">
-            {NAV.map((item) => (
-              <button
-                key={item.id}
-                aria-current={
-                  view === item.id ||
-                  (view === "lesson" && item.id === "lessons")
-                    ? "page"
-                    : undefined
-                }
-                onClick={(event) => {
-                  setView(item.id);
-                  event.currentTarget
-                    .closest("details")
-                    ?.removeAttribute("open");
-                }}
-              >
-                {item.label}
-              </button>
-            ))}
-            <button
-              key="search"
-              type="button"
-              aria-current={view === "search" ? "page" : undefined}
-              onClick={(event) => {
-                setView("search");
-                event.currentTarget
-                  .closest("details")
-                  ?.removeAttribute("open");
-              }}
-            >
-              代码搜索
-            </button>
-          </nav>
-        </details>
         <main className="content" id="main-content" tabIndex={-1}>
           {children}
         </main>
