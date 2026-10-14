@@ -2,7 +2,10 @@
 
 主教材：*Professional C++, Sixth Edition*（Marc Gregoire，C++23）
 
-辅教材：*Embedded C++ Coding Guideline · Google-based · v1.0*
+辅教材：
+
+- *Embedded C++ Coding Guideline · Google-based · v1.0*
+- *Design Patterns in Modern C++*：作为设计模式辅线；只在当天主教材主题确有变化轴/稳定边界时引入，不改变《Professional C++》章节顺序。
 
 ## 目标
 
@@ -54,11 +57,13 @@
 1. 今日章节与建议阅读范围
 2. 昨日复习 3 问
 3. 核心概念讲解
-4. C 写法 vs 现代 C++ 写法
-5. 今日编码规范
-6. 可编译小实验 / 代码练习
-7. 3 个常见坑
-8. 2 道检查题
+4. C 写法 vs Modern C++
+5. 设计模式映射：变化轴 → 稳定边界 → 是否需要 Pattern → ownership/lifetime
+6. Embedded / System Design 场景
+7. 今日编码规范（MUST/SHOULD/MAY + 错误/推荐对照）
+8. 可编译 Lab / 修复违规代码
+9. 3 个常见坑与 Pattern 滥用
+10. 2 道检查题 + 1 道设计题
 
 ## 每 7 天复盘
 
@@ -72,6 +77,14 @@
 - ISR / volatile
 - magic number
 - 边界测试
+
+并增加 Design Review：
+
+- 本周变化轴与稳定边界
+- Strategy / Factory / Adapter / Observer / State / Command 等模式是否真的需要
+- value semantics / composition / runtime polymorphism / static polymorphism 的选择
+- ownership / borrow / callback lifetime / teardown
+- 过度 virtual、过度 shared_ptr、service locator、无界 runtime registration 等 overengineering 风险
 
 ## GitHub 目录
 
