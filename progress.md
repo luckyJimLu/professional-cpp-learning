@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 47**。下一课从 **Day 48** 继续。
+当前仓库课程已发布到 **Day 48**。下一课从 **Day 49** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -51,15 +51,16 @@
 | 45 | Use Templates for Generic Data Structures and Algorithms | 已发布 | [day-045](daily/day-045-templates-generic-data-structures-algorithms.md) |
 | 46 | Provide Appropriate Checks and Safeguards | 已发布 | [day-046](daily/day-046-checks-safeguards.md) |
 | 47 | Design for Extensibility | 已发布 | [day-047](daily/day-047-design-for-extensibility.md) |
+| 48 | Design Usable Interfaces | 已发布 | [day-048](daily/day-048-design-usable-interfaces.md) |
 
 ## 最新发布详情
 
-- **日期**：2026-10-13
+- **日期**：2026-10-14
 - **章节**：Chapter 6 · Designing for Reuse
-- **主题**：Design for Extensibility
-- **关键知识点**：Open/Closed Principle、customization points、dependency injection、runtime vs compile-time extensibility、embedded 有界扩展
-- **Lab**：[examples/day-047/main.cpp](examples/day-047/main.cpp)
-- **上一课**：[Day 46 · Provide Appropriate Checks and Safeguards](daily/day-046-checks-safeguards.md)
+- **主题**：Design Usable Interfaces
+- **关键知识点**：usable contracts、type-safe units、`std::span` buffer boundary、explicit timeout、error model、隐藏平台实现细节
+- **Lab**：[examples/day-048/main.cpp](examples/day-048/main.cpp)
+- **上一课**：[Day 47 · Design for Extensibility](daily/day-047-design-for-extensibility.md)
 
 ## 规则
 
