@@ -1,0 +1,482 @@
+/* C++ 内存与生命周期可视化器样式 */
+
+.visualizer-workbench {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--code, #10151c);
+  border: 1px solid #1e2633;
+  border-radius: var(--radius, 12px);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  color: var(--code-ink, #dbe7f3);
+}
+
+.visualizer-main-split {
+  display: grid;
+  grid-template-columns: minmax(360px, 1.1fr) minmax(380px, 1.2fr);
+  min-height: 480px;
+  max-height: 640px;
+  border-top: 1px solid #1c2430;
+  border-bottom: 1px solid #1c2430;
+}
+
+@media (max-width: 900px) {
+  .visualizer-main-split {
+    grid-template-columns: 1fr;
+    max-height: none;
+  }
+}
+
+/* ========================================================
+ * CodeMirror 编辑器外框
+ * ======================================================== */
+.cm-editor-host {
+  height: 100%;
+  overflow: auto;
+  background: #10151c;
+}
+
+.cm-editor-host .cm-editor {
+  height: 100%;
+}
+
+.cm-editor-host .cm-scroller {
+  overflow: auto;
+}
+
+/* ========================================================
+ * VCR 播放控制器 (Toolbar)
+ * ======================================================== */
+.vcr-controls-container {
+  display: flex;
+  flex-direction: column;
+  background: #0d1117;
+  border-bottom: 1px solid #1c2430;
+  padding: 8px 16px;
+  gap: 8px;
+}
+
+.vcr-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.vcr-buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.vcr-btn {
+  background: #161b22;
+  color: #c9d1d9;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vcr-btn:hover:not(:disabled) {
+  background: #21262d;
+  border-color: #8b949e;
+  color: #ffffff;
+}
+
+.vcr-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.vcr-btn.play-btn {
+  background: #00599c;
+  border-color: #1a73e8;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 4px 14px;
+}
+
+.vcr-btn.play-btn.active {
+  background: #b35c00;
+  border-color: #d97706;
+}
+
+.vcr-slider-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  max-width: 380px;
+}
+
+.vcr-slider {
+  flex: 1;
+  accent-color: #38bdf8;
+  cursor: pointer;
+  height: 4px;
+}
+
+.vcr-step-counter {
+  font-family: var(--mono, monospace);
+  font-size: 12px;
+  color: #8b949e;
+  white-space: nowrap;
+}
+
+.vcr-step-counter strong {
+  color: #58a6ff;
+}
+
+.vcr-speed-select {
+  background: #161b22;
+  color: #c9d1d9;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.vcr-action-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 6px;
+  padding: 6px 10px;
+}
+
+.vcr-action-tag {
+  background: #00599c;
+  color: #ffffff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: var(--mono, monospace);
+  font-weight: bold;
+}
+
+.vcr-action-text {
+  color: #f0f6fc;
+  font-weight: 500;
+  flex: 1;
+}
+
+.vcr-warning-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid #ef4444;
+  color: #fca5a5;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  animation: pulse-border 1.5s infinite;
+}
+
+/* ========================================================
+ * 内存画布 (Memory Canvas)
+ * ======================================================== */
+.memory-canvas-root {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 12px;
+  background: #090d13;
+  overflow: auto;
+  height: 100%;
+}
+
+.memory-edges-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.memory-edge-path {
+  transition: stroke 0.2s ease, stroke-width 0.2s ease;
+}
+
+.dangling-edge {
+  animation: dash 1s linear infinite;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -18;
+  }
+}
+
+.memory-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #111620;
+  border: 1px solid #1d2533;
+  border-radius: 8px;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.zone-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #1f2736;
+}
+
+.zone-header h3 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #c9d1d9;
+}
+
+.zone-count {
+  margin-left: auto;
+  font-size: 11px;
+  background: #1f2736;
+  color: #8b949e;
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+.empty-zone-tip {
+  font-size: 12px;
+  color: #6e7681;
+  text-align: center;
+  padding: 30px 10px;
+  font-style: italic;
+}
+
+/* 栈帧卡片 */
+.stack-frame-card {
+  background: #171d29;
+  border: 1px solid #283347;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.frame-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1c2433;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-family: var(--mono, monospace);
+  color: #58a6ff;
+  border-bottom: 1px solid #283347;
+}
+
+.frame-depth {
+  color: #8b949e;
+  font-size: 10px;
+}
+
+.frame-variables {
+  display: flex;
+  flex-direction: column;
+}
+
+.var-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  border-bottom: 1px solid #1a222f;
+  font-size: 12px;
+  font-family: var(--mono, monospace);
+  transition: background 0.15s ease;
+}
+
+.var-row:last-child {
+  border-bottom: none;
+}
+
+.var-row:hover,
+.var-row.var-hovered {
+  background: rgba(56, 189, 248, 0.15);
+}
+
+.var-meta {
+  display: flex;
+  gap: 6px;
+}
+
+.var-type {
+  color: #ec4899;
+  font-weight: 500;
+}
+
+.var-name {
+  color: #e2e8f0;
+}
+
+.var-val-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.var-value {
+  color: #a5f3fc;
+}
+
+.var-value.pointer-val {
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.var-anchor-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #38bdf8;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #38bdf8;
+}
+
+/* 变量生命周期状态 */
+.var-status-created {
+  animation: var-pulse-green 1s ease-out;
+}
+
+.var-status-modified {
+  animation: var-pulse-yellow 1s ease-out;
+}
+
+.var-status-destroyed {
+  opacity: 0.4;
+  text-decoration: line-through;
+  background: rgba(239, 68, 68, 0.05);
+}
+
+@keyframes var-pulse-green {
+  0% {
+    background: rgba(16, 185, 129, 0.4);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+@keyframes var-pulse-yellow {
+  0% {
+    background: rgba(245, 158, 11, 0.4);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+/* 堆块卡片 */
+.heap-block-card {
+  position: relative;
+  background: #171d29;
+  border: 1px solid #283347;
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 8px;
+  transition: all 0.2s ease;
+}
+
+.heap-status-alive {
+  border-left: 3px solid #10b981;
+}
+
+.heap-status-freed {
+  border: 1px dashed #4b5563;
+  opacity: 0.45;
+  background: #0f131a;
+}
+
+.heap-status-leaked {
+  border: 2px solid #ef4444;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+  animation: pulse-border 1.5s infinite;
+}
+
+@keyframes pulse-border {
+  0%, 100% {
+    border-color: #ef4444;
+  }
+  50% {
+    border-color: #f87171;
+  }
+}
+
+.heap-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-family: var(--mono, monospace);
+  margin-bottom: 4px;
+}
+
+.heap-tag {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.heap-size {
+  color: #8b949e;
+  font-size: 11px;
+}
+
+.heap-card-body {
+  font-size: 11.5px;
+  color: #cbd5e1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.heap-addr {
+  font-family: var(--mono, monospace);
+  color: #64748b;
+  font-size: 10.5px;
+}
+
+.heap-badge {
+  display: inline-block;
+  align-self: flex-start;
+  margin-top: 4px;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.freed-badge {
+  background: #374151;
+  color: #9ca3af;
+}
+
+.leaked-badge {
+  background: #7f1d1d;
+  color: #fca5a5;
+}
+
+.alive-badge {
+  background: #064e3b;
+  color: #6ee7b7;
+}

@@ -3,10 +3,35 @@ import { type Lesson, type StepKey } from "../../lib/course";
 import { compileAndRun, type CompileRunResult } from "../../lib/browserCompiler";
 import { PageHeader } from "../common/PageHeader";
 import { Markdown } from "../Markdown";
+import { VisualizerWorkbench } from "../../visualizer/VisualizerWorkbench";
+import { parseTraceOutput, computeSnapshots } from "../../visualizer/reducer";
+import type { MemorySnapshot } from "../../visualizer/types";
 
 function cx(...values: Array<string | false | undefined>) {
   return values.filter(Boolean).join(" ");
 }
+
+const VISUALIZER_DEMO_CODE = `#include "visualizer.h"
+#include <iostream>
+
+struct Resource {
+    int id;
+};
+
+int main() {
+    VIS_SCOPE("main");
+
+    Resource res{1};
+    VIS_TRACK(res, Resource);
+
+    int* p = new int(100);
+    VIS_PTR(p, p);
+
+    delete p;
+    VIS_STEP_L("堆内存释放完成");
+    return 0;
+}
+`;
 
 export function LabView({
   lesson,
@@ -47,6 +72,9 @@ export function LabView({
   const [result, setResult] = useState<CompileRunResult | null>(null);
   const [compilerError, setCompilerError] = useState("");
 
+  const [snapshots, setSnapshots] = useState<MemorySnapshot[]>([]);
+  const [currentStep, setCurrentStep] = useState(0);
+
   const resetToLessonSource = () => {
     try {
       sessionStorage.removeItem("lab_custom_code");
@@ -58,7 +86,16 @@ export function LabView({
     setCode(sourceCode);
     setResult(null);
     setCompilerError("");
+    setSnapshots([]);
     setCompilerState("idle");
+  };
+
+  const loadVisualizerDemo = () => {
+    setCode(VISUALIZER_DEMO_CODE);
+    setCustomOrigin("生命周期可视化示例 (RAII & Heap)");
+    setResult(null);
+    setCompilerError("");
+    setSnapshots([]);
   };
 
   useEffect(() => {
@@ -78,6 +115,7 @@ export function LabView({
     setCompilerProgress(0);
     setResult(null);
     setCompilerError("");
+    setSnapshots([]);
   }, [lesson.day, sourceCode]);
 
   const runCompiler = async () => {
@@ -96,12 +134,24 @@ export function LabView({
       if (next.exitCode === 0 && next.errors.length === 0) {
         setCompilerState("success");
         markStep(lesson.day, "lab");
+
+        // 提取并在内存画布中生成快照
+        const { events } = parseTraceOutput(next.stdout);
+        if (events.length > 0) {
+          const snaps = computeSnapshots(events);
+          setSnapshots(snaps);
+          setCurrentStep(0);
+        } else {
+          setSnapshots([]);
+        }
       } else {
         setCompilerState("failure");
+        setSnapshots([]);
       }
     } catch (error) {
       setCompilerState("failure");
       setCompilerError(error instanceof Error ? error.message : String(error));
+      setSnapshots([]);
     }
   };
 
@@ -194,6 +244,16 @@ export function LabView({
             >
               Reset source
             </button>
+            <button
+              className="ghost-button"
+              onClick={loadVisualizerDemo}
+              disabled={compilerBusy}
+              type="button"
+              style={{ color: "#38bdf8", borderColor: "rgba(56, 189, 248, 0.4)" }}
+              title="载入带有 visualizer.h 探针的 RAII 内存可视化示例代码"
+            >
+              ⚡ 体验生命周期可视化
+            </button>
           </div>
 
           {hint && (
@@ -212,91 +272,18 @@ export function LabView({
           )}
         </section>
 
-        <section className="code-workbench">
-          <div className="code-panel editable">
-            <div className="panel-title">
-              <span>
-                {lesson.labPath ??
-                  `day-${String(lesson.day).padStart(3, "0")}/main.cpp`}
-              </span>
-              <span>EDITABLE · C++23</span>
-            </div>
-
-            <textarea
-              aria-label="C++ lab source editor"
-              className="resize-none"
-              value={code}
-              onChange={(event) => setCode(event.target.value)}
-              spellCheck={false}
-            />
-
-            <footer>
-              <span>-Wall</span>
-              <span>-Wextra</span>
-              <span>-Wconversion</span>
-              <span>-Wpedantic</span>
-              <button
-                className="compile-button"
-                disabled={compilerBusy || !code.trim()}
-                onClick={runCompiler}
-                type="button"
-              >
-                {compilerBusy ? "Working…" : "Compile & Run ▶"}
-              </button>
-            </footer>
-          </div>
-
-          <section className={cx("compiler-output", compilerState)}>
-            <div className="panel-title">
-              <span>TERMINAL</span>
-              {result && (
-                <span>
-                  compile {Math.round(result.compileMs)}ms
-                  {result.runMs !== null
-                    ? ` · run ${Math.round(result.runMs)}ms`
-                    : ""}
-                </span>
-              )}
-            </div>
-
-            {compilerState === "loading" && (
-              <div className="compiler-loading">
-                <div>
-                  <i
-                    style={{ width: `${Math.round(compilerProgress * 100)}%` }}
-                  />
-                </div>
-                <p>
-                  First run downloads the browser toolchain. Later runs reuse it
-                  for this page session.
-                </p>
-              </div>
-            )}
-
-            {compilerState === "idle" ? (
-              <pre>
-                <code>
-                  $ clang++ main.cpp -std=gnu++23 -Wall -Wextra -Wconversion
-                  -Wpedantic{"\n"}$ ./main
-                </code>
-              </pre>
-            ) : displayOutput ? (
-              <pre>
-                <code>{displayOutput}</code>
-              </pre>
-            ) : compilerState === "compiling" ? (
-              <pre>
-                <code>Compiling and linking…</code>
-              </pre>
-            ) : null}
-
-            {result && (
-              <footer>
-                <span>exit {result.exitCode ?? "compile-error"}</span>
-                <span>{result.errors.length} compiler error(s)</span>
-              </footer>
-            )}
-          </section>
+        <section className="code-workbench" style={{ display: "block" }}>
+          <VisualizerWorkbench
+            code={code}
+            onChangeCode={setCode}
+            snapshots={snapshots}
+            currentStep={currentStep}
+            onStepChange={setCurrentStep}
+            compilerState={compilerState}
+            compilerProgress={compilerProgress}
+            terminalOutput={displayOutput}
+            onRun={runCompiler}
+          />
         </section>
       </div>
     </div>

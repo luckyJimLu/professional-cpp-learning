@@ -1,3 +1,5 @@
+import { preprocessCppCode } from "../visualizer/embeddedHeader";
+
 export interface CompileRunResult {
   stdout: string;
   stderr: string;
@@ -74,10 +76,11 @@ export function compileAndRun(
 
   return new Promise((resolve, reject) => {
     pending.set(id, { resolve, reject, onProgress });
+    const processedCode = preprocessCppCode(code);
     getWorker().postMessage({
       type: "run",
       id,
-      code,
+      code: processedCode,
       baseUrl: compilerBaseUrl(),
     });
   });
