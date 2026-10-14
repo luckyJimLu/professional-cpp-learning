@@ -47,6 +47,16 @@
 - policy、mechanism、observation 若具有独立变化原因，应拆成可组合组件；上层负责 orchestration。
 - 解耦不能以隐藏 ownership、service locator 或无界运行时注册为代价，尤其是实时路径。
 
+### Usable Interfaces
+
+- 公共 API 应让正确用法自然、错误用法困难；不要把关键 contract 留在注释、magic value 或调用顺序约定中。
+- 时间、长度、频率等物理单位优先编码进类型；例如 `std::chrono::milliseconds` 优于无单位整数。
+- buffer 参数优先同时携带地址与边界，例如 `std::span`；避免可分离的裸 pointer + length。
+- 多个同基础类型的位置参数容易产生 parameter blindness；优先 `enum class`、config/options 类型或强类型包装。
+- reusable interface 不泄漏与业务语义无关的 HAL handle、RTOS object、Linux fd 或 DMA channel；平台细节留在 adapter 内。
+- 错误模型应保留调用者做恢复决策所需的原因；不要把 timeout、busy、invalid input、transport failure 全部压缩成 `bool` 或 `-1`。
+- required borrow 优先引用；optional borrow 才使用具有明确 `nullptr` 语义的裸指针。
+
 ### Extensibility
 
 - 只为已识别的真实变化轴建立 customization point，不为假想未来设计万能插件接口。
