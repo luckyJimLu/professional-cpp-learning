@@ -199,13 +199,14 @@ body {
   font-size: 11px;
 }
 .content {
-  width: min(1200px, calc(100% - 80px));
-  padding-top: 38px;
+  width: min(1520px, 100%);
+  margin: 0;
+  padding: 28px clamp(24px, 2.5vw, 36px) 72px;
 }
 .docs-layout {
   display: grid;
-  grid-template-columns: minmax(0, 760px) 180px;
-  gap: clamp(30px, 5vw, 80px);
+  grid-template-columns: minmax(0, 1fr) 210px;
+  gap: clamp(24px, 2.5vw, 36px);
   align-items: start;
 }
 .guide-document {
@@ -401,6 +402,8 @@ body {
   gap: 2px;
   padding-left: 18px;
   border-left: 1px solid var(--line);
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
 .on-this-page .eyebrow {
   margin-bottom: 16px;
@@ -425,8 +428,8 @@ body {
   padding-top: 16px;
 }
 .lesson-layout {
-  grid-template-columns: minmax(0, 1fr) 190px;
-  gap: 48px;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: clamp(24px, 2.5vw, 36px);
 }
 .lesson-document {
   grid-column: 1;
@@ -441,6 +444,8 @@ body {
   overflow: auto;
   border-left: 1px solid var(--line);
   padding-left: 18px;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
 .lesson-toc h2 {
   font-size: 13px;
