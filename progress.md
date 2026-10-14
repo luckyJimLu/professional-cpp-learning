@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 48**。下一课从 **Day 49** 继续。
+当前仓库课程已发布到 **Day 49**。下一课从 **Day 50** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -52,15 +52,18 @@
 | 46 | Provide Appropriate Checks and Safeguards | 已发布 | [day-046](daily/day-046-checks-safeguards.md) |
 | 47 | Design for Extensibility | 已发布 | [day-047](daily/day-047-design-for-extensibility.md) |
 | 48 | Design Usable Interfaces | 已发布 | [day-048](daily/day-048-design-usable-interfaces.md) |
+| 49 | Consider the Audience and Purpose | 已发布 | [day-049](daily/day-049-consider-audience-purpose.md) |
 
 ## 最新发布详情
 
-- **日期**：2026-10-14
+- **日期**：2026-10-15
 - **章节**：Chapter 6 · Designing for Reuse
-- **主题**：Design Usable Interfaces
-- **关键知识点**：usable contracts、type-safe units、`std::span` buffer boundary、explicit timeout、error model、隐藏平台实现细节
-- **Lab**：[examples/day-048/main.cpp](examples/day-048/main.cpp)
-- **上一课**：[Day 47 · Design for Extensibility](daily/day-047-design-for-extensibility.md)
+- **主题**：Consider the Audience and Purpose
+- **关键知识点**：audience/purpose、small interfaces、Adapter、explicit dependency injection、ownership/lifetime、避免 abstraction leakage
+- **设计模式 / 稳定边界**：Adapter 隔离平台变化；按 audience/purpose 暴露最小调用接口；不为假想需求过度抽象
+- **Lab**：[examples/day-049/main.cpp](examples/day-049/main.cpp)
+- **周复盘**：[Week 07 Review](weekly/week-07-review.md)
+- **上一课**：[Day 48 · Design Usable Interfaces](daily/day-048-design-usable-interfaces.md)
 
 ## 规则
 
