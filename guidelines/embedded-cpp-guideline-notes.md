@@ -57,6 +57,16 @@
 - 错误模型应保留调用者做恢复决策所需的原因；不要把 timeout、busy、invalid input、transport failure 全部压缩成 `bool` 或 `-1`。
 - required borrow 优先引用；optional borrow 才使用具有明确 `nullptr` 语义的裸指针。
 
+
+### Audience 与 Purpose
+
+- 设计公共 API 前先明确 caller / audience 与其真实任务；不要因为底层“能做”就把能力全部暴露给上层。
+- 不同 audience 具有不同 purpose 时，优先小接口、小 view 或 composition；避免一个万能接口同时服务 application、diagnostics、manufacturing 与 driver。
+- application-facing contract 应表达业务意图，而不是暴露 HAL handle、RTOS object、POSIX fd 或 service locator。
+- required non-owning dependency 继续优先引用；接口拆分不能掩盖 borrower lifetime、teardown 顺序和线程安全责任。
+- Adapter 用于隔离真实的平台/第三方接口差异；如果没有实际变化轴，不为“未来可能”提前制造多层 interface/factory。
+- reusable 不等于 maximum capability；可复用性来自稳定、最小、语义清楚、可测试的边界。
+
 ### Extensibility
 
 - 只为已识别的真实变化轴建立 customization point，不为假想未来设计万能插件接口。
