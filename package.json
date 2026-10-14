@@ -4,8 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0 --port 3000",
     "build": "tsc --noEmit && vite build",
+    "build:pages": "GITHUB_PAGES=true npm run build",
     "preview": "vite preview",
     "prepare:clang": "clang-wasm-copy-assets public/clang",
     "predev": "npm run prepare:clang",

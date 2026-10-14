@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>Professional C++ Learning Console</title>
+    <script>
+      // Single Page App redirect for GitHub Pages
+      var l = window.location;
+      var parts = l.pathname.split("/").filter(Boolean);
+      var repoBase = parts.length > 0 ? "/" + parts[0] + "/" : "/";
+      var search = l.search || "";
+      var hash = l.hash || "";
+      l.replace(
+        l.protocol + "//" + l.hostname + (l.port ? ":" + l.port : "") +
+        repoBase + search + hash
+      );
+    </script>
+  </head>
+  <body>
+    <p>正在跳转到 Professional C++ Learning Console...</p>
+  </body>
+</html>

@@ -1312,16 +1312,6 @@
       "sha256": "1c01285ac8c3cf42fbb85e16b33ecfc3145106cf883ad3fe9f80a3cf068f7a7e"
     },
     {
-      "source": "pdfs/Boost.Asio C++ Network Programming Cookbook.pdf",
-      "destination": "references/system-design-notes/pdfs/Boost.Asio C++ Network Programming Cookbook.pdf",
-      "sha256": "f8064c135f7c744cb5fdeca5a88e8076326ef49b8e5ea5260a9fa623c8cb6660"
-    },
-    {
-      "source": "pdfs/C++ Concurrency in Action.pdf",
-      "destination": "references/system-design-notes/pdfs/C++ Concurrency in Action.pdf",
-      "sha256": "4a90a39395976889074b2e3593e745659f7a6a7666779c1a5bed7d972322cef0"
-    },
-    {
       "source": "scripts/check-cpp-examples.sh",
       "destination": "references/system-design-notes/scripts/check-cpp-examples.sh",
       "sha256": "fda02d758fb20b12b7f17cfb9d079e26c1b42a86ab133406fc8c8052b641cfbb"
