@@ -1,12 +1,8 @@
-import { lazy, useMemo, type ReactNode } from "react";
+import { lazy, useEffect, useMemo, type ReactNode } from "react";
 import { DeferredContent } from "./components/DeferredContent";
 import { Shell } from "./components/Shell";
 import { NAV, navigate, useLocationParams, type View } from "./lib/navigation";
-import {
-  latestLesson,
-  lessonByDay,
-  repoCompletedDay,
-} from "./lib/course";
+import { latestLesson, lessonByDay, repoCompletedDay } from "./lib/course";
 import { useLearningProgress } from "./lib/progress";
 
 import { TodayView } from "./components/views/TodayView";
@@ -48,6 +44,14 @@ export default function App() {
     () => lessonByDay(selectedDay) ?? latestLesson(),
     [selectedDay],
   );
+
+  useEffect(() => {
+    const title =
+      view === "lesson"
+        ? selectedLesson?.title
+        : NAV.find((item) => item.id === view)?.label;
+    document.title = `${title ?? "学习文档"} · Professional C++`;
+  }, [view, selectedLesson]);
 
   const openLesson = (day: number) => {
     navigate({ view: "lesson", day: String(day) });
@@ -128,6 +132,7 @@ export default function App() {
     case "lesson":
       page = selectedLesson ? (
         <LessonView
+          key={selectedLesson.day}
           lesson={selectedLesson}
           markStep={progress.markStep}
           isStepComplete={progress.isStepComplete}

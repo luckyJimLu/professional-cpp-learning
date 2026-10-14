@@ -11,7 +11,7 @@ function markdownFiles(directory: string): string[] {
 
 async function openDayOne(page: import("@playwright/test").Page) {
   await page.goto("/");
-  await page.getByRole("button", { name: "Lessons", exact: true }).click();
+  await page.getByRole("button", { name: "每日课程", exact: true }).click();
   await page.getByRole("button", { name: /DAY 001/ }).click();
 }
 

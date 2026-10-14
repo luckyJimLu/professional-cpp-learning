@@ -66,9 +66,9 @@ All destinations, including code search, are reachable on mobile through the sha
 
 Desktop:
 
-- left: Day TOC / 8 stages
+- left: shared grouped site navigation
 - center: lesson document
-- right: session metadata
+- right: Day TOC / 8 stages followed by session metadata
 
 The right column MUST NOT contain recommendations, social content, ads, or unrelated cards.
 
@@ -165,3 +165,14 @@ Skill bars MUST be described as coverage/evidence, not objective mastery scores 
 | Scrollbar | `src/workspace.css` | Global token baseline and forced-colors fallback |
 
 Search stores query, type, page and preview location in the URL. Local search updates immediately, suspends commits during IME composition, and clear restores input focus. Empty query and no matches have distinct guidance. Code previews show original file line numbers, escaped text and highlighted matches. Viewing search results does not mark lessons complete. PDF reference files are downloadable; source files and diagram assets remain usable after static deployment.
+
+## 12. Documentation navigation
+
+`Shell.tsx` owns the sticky site header and grouped desktop/mobile navigation.
+`OnThisPage.tsx` owns the homepage anchor index and scroll-position highlight.
+`LessonView.tsx` retains the canonical eight-stage navigation and progress;
+its right TOC follows the visible section and adjacent-course links use published
+Markdown lessons only. Anchor targets clear the sticky header. Navigation uses
+query URLs compatible with the GitHub Pages repository base path.
+`App.tsx` owns localized document titles. The homepage is a learning guide and
+shows the latest published lesson when the next lesson is unavailable.

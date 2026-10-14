@@ -36,17 +36,33 @@ export function Shell({
       <a className="skip-link" href="#main-content">
         跳到正文
       </a>
-      <aside className="sidebar">
-        <div className="brand">
+      <header className="docs-header">
+        <a
+          className="brand"
+          href="?view=today"
+          aria-label="Professional C++ 学习指南"
+        >
           <span className="brand-mark">C++</span>
           <div>
             <strong>Professional C++</strong>
-            <span>Learning Workspace</span>
+            <span>学习文档</span>
           </div>
-        </div>
+        </a>
         <button className="shell-search" onClick={() => setView("search")}>
-          搜索代码 <kbd>⌘ / Ctrl K</kbd>
+          <span>搜索代码与示例…</span> <kbd>Ctrl K</kbd>
         </button>
+        <a
+          className="repo-link"
+          href="https://github.com/luckyJimLu/professional-cpp-learning"
+        >
+          GitHub ↗
+        </a>
+      </header>
+      <aside className="sidebar">
+        <div className="sidebar-edition">
+          <span className="eyebrow">学习手册</span>
+          <span>C++23</span>
+        </div>
         <nav className="side-nav" aria-label="Primary navigation">
           {["学习路径", "知识与实践", "学习记录"].map((group) => (
             <div className="nav-group" key={group}>
@@ -55,8 +71,13 @@ export function Shell({
                 <button
                   key={item.id}
                   type="button"
-                  className={`nav-item ${view === item.id ? "is-active" : ""}`}
-                  aria-current={view === item.id ? "page" : undefined}
+                  className={`nav-item ${view === item.id || (view === "lesson" && item.id === "lessons") ? "is-active" : ""}`}
+                  aria-current={
+                    view === item.id ||
+                    (view === "lesson" && item.id === "lessons")
+                      ? "page"
+                      : undefined
+                  }
                   onClick={() => setView(item.id)}
                 >
                   <span>{item.label}</span>
@@ -67,7 +88,7 @@ export function Shell({
           ))}
         </nav>
         <div className="sidebar-status">
-          <span>课程进度</span>
+          <span>仓库课程进度</span>
           <strong>Day {repoCompletedDay} / 112</strong>
           <div className="mini-progress">
             <i style={{ width: `${(repoCompletedDay / 112) * 100}%` }} />
@@ -75,21 +96,26 @@ export function Shell({
         </div>
       </aside>
       <div className="main-shell">
-        <header className="workspace-header">
+        <div className="workspace-header">
           <span className="mono">
             C++ / <strong>{label}</strong>
           </span>
           <button className="ghost-button" onClick={() => setView("search")}>
             代码搜索
           </button>
-        </header>
+        </div>
         <details className="mobile-menu">
           <summary>导航 · {label}</summary>
           <nav aria-label="Mobile navigation">
             {NAV.map((item) => (
               <button
                 key={item.id}
-                aria-current={view === item.id ? "page" : undefined}
+                aria-current={
+                  view === item.id ||
+                  (view === "lesson" && item.id === "lessons")
+                    ? "page"
+                    : undefined
+                }
                 onClick={(event) => {
                   setView(item.id);
                   event.currentTarget

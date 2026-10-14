@@ -99,8 +99,37 @@ Shared Markdown rendering lives in `src/components/Markdown.tsx`; diagrams use `
 
 The existing Engineering Notebook × Compiler identity is preserved. `src/styles.css` owns runtime tokens: Canvas → `--canvas`, Ink → `--ink`, C++ Blue → `--blue`, Compile Green → `--green`, Warning Amber → `--amber`, Code Surface → `--code`. IBM Plex Sans/system CJK fallbacks serve reading; IBM Plex Mono serves paths, line numbers and compiler output.
 
-`Shell.tsx` owns grouped primary navigation and the shared search entry. Desktop uses the 228px workspace sidebar; mobile uses an inline disclosure containing every destination. `Topics.tsx` uses a 245px classified reading rail and flexible document column. `CodeSearch.tsx` uses source rows and a dark line-numbered code preview: the code itself is the signature visual. At narrow widths the selected preview precedes results and document navigation collapses above reading.
+`Shell.tsx` owns grouped primary navigation and the shared search entry. Desktop uses the 248px documentation sidebar; mobile uses an inline disclosure containing every destination. `Topics.tsx` uses a 245px classified reading rail and flexible document column. `CodeSearch.tsx` uses source rows and a dark line-numbered code preview: the code itself is the signature visual. At narrow widths the selected preview precedes results and document navigation collapses above reading.
 
 Use existing white surfaces, 12px panel radius and blue selection accents. No new brand palette. `src/workspace.css` defines global scrollbars using `--scroll-thumb`, `--scroll-track`, `--scroll-hover`, `--scroll-active`; reduced-motion and forced-colors modes respect platform preferences.
 
 Reconciliation: prior topic button wrapping did not scale to the imported corpus; replaced with classified disclosure navigation. Prior mobile navigation omitted secondary destinations; all destinations now remain accessible. Existing color tokens remain unchanged.
+
+## Documentation UX · October 2026
+
+Reference: https://opencode.ai/docs/ — persistent header, grouped navigation,
+readable document measure and on-page orientation. This is a Chinese learning
+product for C / embedded engineers, not a marketing landing page.
+
+The existing palette is retained: canvas #F6F7F9, white surface #FFFFFF,
+ink #15191F, blue #00599C, green #18794E, amber #B35C00, code #10151C.
+Runtime ownership remains Model B: `styles.css` semantic tokens →
+`workspace.css` shared components → `docs.css` documentation layout.
+`docs.css` owns --sidebar (248px) and --header-height (72px; 64px on mobile).
+Typography keeps system CJK reading fallbacks and the existing mono stack for
+brand, paths and pipeline labels. No external font dependency is introduced.
+
+The signature is the real eight-stage learning pipeline, surrounded by quiet
+white reading space. Homepage: introductory guide, two starting points, latest
+published lesson, daily method and engineering resources. Course counts and
+latest lesson always derive from the Markdown index. No duplicated course data.
+
+Desktop: 248px left navigation, flexible document (home max 760px), right TOC.
+At 1200px the home TOC becomes an inline section index; below 980px lesson TOC
+moves above the article; below 760px primary navigation is a disclosure.
+Header search and all destinations remain accessible. Lesson metadata belongs
+below its right TOC. Search and Lab retain task-specific working layouts.
+
+Reconciliation: replaces dashboard-style homepage and four-column lesson
+reading with documentation-first navigation. Existing 12px application panels
+remain; documentation links and callouts use a restrained 6px radius.

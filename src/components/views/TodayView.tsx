@@ -1,12 +1,18 @@
 import {
   latestLesson,
-  latestNextSummary,
   lessonByDay,
+  lessons,
   type StepKey,
 } from "../../lib/course";
-import { calculateReadingStats } from "../../lib/readingTime";
-import { PageHeader } from "../common/PageHeader";
 import { CompileRail } from "../common/CompileRail";
+import { OnThisPage } from "../common/OnThisPage";
+
+const contents = [
+  { id: "introduction", label: "关于这份学习手册" },
+  { id: "start-learning", label: "开始学习" },
+  { id: "learning-method", label: "每天一小时" },
+  { id: "explore", label: "深入工程实践" },
+];
 
 export function TodayView({
   currentDay,
@@ -17,119 +23,152 @@ export function TodayView({
   openLesson: (day: number) => void;
   isStepComplete: (day: number, step: StepKey) => boolean;
 }) {
+  const latest = latestLesson();
   const planned = lessonByDay(currentDay);
-  const latestPublished = latestLesson();
-  const baseline = lessonByDay(currentDay - 1);
-  const nextSummary = latestNextSummary();
-
-  if (!latestPublished) {
-    return <PageHeader eyebrow="TODAY" title="No lessons published yet" />;
-  }
-
-  const target = planned ?? latestPublished;
-
+  const target = planned ?? latest;
   return (
-    <div className="today-page">
-      <PageHeader
-        eyebrow="TODAY"
-        title={
-          planned
-            ? `Continue Day ${planned.day}`
-            : `Day ${currentDay} · Ready for content`
-        }
-        description={
-          planned
-            ? "One focused session. Read → recall → refactor → compile."
-            : "下一课尚未发布，可以复习最近课程并完成实验。"
-        }
-      />
-
-      <section className="hero-card">
-        <div className="hero-copy">
-          <div className="lesson-meta">
-            <span>DAY {planned?.day ?? currentDay}</span>
-            <span>WEEK {planned?.week ?? Math.ceil(currentDay / 7)}</span>
-            <span>
-              {planned?.chapter ? `CHAPTER ${planned.chapter}` : "NEXT"}
-            </span>
-            <span>约 {calculateReadingStats(target.raw).minutes} 分钟阅读</span>
+    <div className="docs-layout">
+      <article className="guide-document">
+        <header className="guide-title" id="introduction">
+          <div className="guide-kicker">
+            <span>PROFESSIONAL C++</span>
+            <span>第六版 · C++23</span>
           </div>
-
-          <h2>{planned?.title ?? `Next learning unit · Day ${currentDay}`}</h2>
-          <p className="hero-summary">
-            {planned
-              ? (planned.nextSummary ??
-                "Continue the current Professional C++ learning path.")
-              : nextSummary ||
-                "Continue Chapter 5 with polymorphism, virtual interface cost, and embedded trade-offs."}
-          </p>
-
-          <div className="session-row">
-            <span className="mono">{planned?.duration ?? 60} min session</span>
-            <span className="muted">
-              {planned ? "课程已发布" : "下一课准备中"}
-            </span>
-          </div>
-
-          <button
-            className="primary-button"
-            onClick={() => openLesson(target.day)}
-            type="button"
-          >
-            {planned
-              ? "Continue learning →"
-              : `Review Day ${latestPublished.day} →`}
-          </button>
-        </div>
-
-        <div className="hero-pipeline">
-          <div className="terminal-caption">
-            <span>compile.pipeline</span>
-            <span>{planned ? "ACTIVE" : "WAITING FOR SOURCE"}</span>
-          </div>
-          <CompileRail
-            lesson={target}
-            active={
-              planned
-                ? target.sections.find((section) => section.step)?.step
-                : undefined
-            }
-            isStepComplete={isStepComplete}
-          />
-          <div className="build-line">
-            <span className="build-prompt">$</span>
-            <span>
-              {planned
-                ? `lesson --day ${planned.day} --mode focused`
-                : `review --day ${latestPublished.day} --mode focused`}
-            </span>
-          </div>
-        </div>
-      </section>
-
-      <section className="focus-grid">
-        <article>
-          <span className="eyebrow">COMPLETED BASELINE</span>
-          <strong>Day {currentDay - 1}</strong>
-          <p>{baseline?.title ?? "已完成课程"}</p>
-        </article>
-        <article>
-          <span className="eyebrow">NEXT ACTION</span>
-          <strong>
-            {planned ? "Continue" : `复习 Day ${latestPublished.day}`}
-          </strong>
+          <h1>
+            从 C 出发，
+            <br />
+            写出专业的 C++。
+          </h1>
+          <p className="guide-lead">面向 C / 嵌入式开发者的工程化学习手册。</p>
           <p>
-            {planned
-              ? "Resume at the first incomplete compile-rail stage."
-              : "复习上一课，整理仍不确定的概念与实验结果。"}
+            沿着《Professional
+            C++》的章节，从语言机制走向系统设计。读懂一个概念，改写一段代码，再用可运行的实验验证理解。
           </p>
-        </article>
-        <article>
-          <span className="eyebrow">学习方法</span>
-          <strong>阅读 → 实践 → 自测</strong>
-          <p>先解释概念，再运行实验，最后用自测检查理解。</p>
-        </article>
-      </section>
+        </header>
+        <aside className="docs-note">
+          <strong>学习之前</strong>
+          <p>
+            建议具备 C 语言和基础嵌入式开发经验。课程以 Modern C++ 为主线，结合
+            Modem、Driver 与资源受限系统的实际问题。
+          </p>
+        </aside>
+        <section id="start-learning" className="guide-section">
+          <h2>
+            开始学习{" "}
+            <a href="#start-learning" aria-label="链接到开始学习">
+              #
+            </a>
+          </h2>
+          <p>第一次来，从 Day 1 开始；已经在学习，可以回到最近发布的课程。</p>
+          <div className="start-links">
+            <a href="?view=lesson&day=1">
+              <span className="link-icon">01</span>
+              <strong>从第一课开始</strong>
+              <span>C 思维 → Modern C++</span>
+              <b aria-hidden="true">↗</b>
+            </a>
+            <a href="?view=roadmap">
+              <span className="link-icon">→</span>
+              <strong>浏览学习路线</strong>
+              <span>16 周 · 从基础到系统工程</span>
+              <b aria-hidden="true">↗</b>
+            </a>
+          </div>
+          {target ? (
+            <div className="continue-reading">
+              <div>
+                <span className="eyebrow">
+                  {planned ? "继续学习" : "最近发布"} / DAY {target.day}
+                </span>
+                <h3>{target.title}</h3>
+                <p>
+                  已发布 {lessons.length} 节课程
+                  {!planned && ` · Day ${currentDay} 尚未发布`}
+                </p>
+              </div>
+              <button
+                className="primary-button"
+                onClick={() => openLesson(target.day)}
+              >
+                阅读课程 →
+              </button>
+            </div>
+          ) : (
+            <p>课程准备中，先浏览学习路线。</p>
+          )}
+        </section>
+        <section id="learning-method" className="guide-section">
+          <h2>
+            每天一小时{" "}
+            <a href="#learning-method" aria-label="链接到每天一小时">
+              #
+            </a>
+          </h2>
+          <p>
+            用八个阶段完成一次学习闭环。阅读不等于完成，解释清楚、运行通过，再记录你的学习进度。
+          </p>
+          {target && (
+            <div className="guide-pipeline">
+              <div className="terminal-caption">
+                <span>learning.pipeline</span>
+                <span>约 60 min / 天</span>
+              </div>
+              <CompileRail
+                lesson={target}
+                isStepComplete={isStepComplete}
+                onSelect={(step) => {
+                  window.location.href = `?view=lesson&day=${target.day}#section-${step}`;
+                }}
+              />
+              <div className="pipeline-caption">
+                阅读 → 回忆 → 理解 → 重构 → 规范 → 实验 → 避坑 → 自测
+              </div>
+            </div>
+          )}
+          <p className="guide-footnote">
+            完成状态保存在当前浏览器。课程与代码来自仓库，可随时查看原文。
+          </p>
+        </section>
+        <section id="explore" className="guide-section">
+          <h2>
+            深入工程实践{" "}
+            <a href="#explore" aria-label="链接到深入工程实践">
+              #
+            </a>
+          </h2>
+          <div className="resource-links">
+            <a href="?view=topics">
+              <strong>
+                专题知识库 <span>↗</span>
+              </strong>
+              <p>设计模式、所有权、Asio 与系统架构。</p>
+            </a>
+            <a href="?view=lab">
+              <strong>
+                在线编译实验 <span>↗</span>
+              </strong>
+              <p>修改真实课程代码，在浏览器中编译 C++23。</p>
+            </a>
+            <a href="?view=guidelines">
+              <strong>
+                嵌入式编码规范 <span>↗</span>
+              </strong>
+              <p>把生命周期、接口与资源约束落实到代码。</p>
+            </a>
+          </div>
+        </section>
+        <footer className="docs-footer">
+          <a href="https://github.com/luckyJimLu/professional-cpp-learning">
+            在 GitHub 查看源码 ↗
+          </a>
+          <span>以实验验证理解</span>
+        </footer>
+        <a className="next-doc" href="?view=roadmap">
+          <span>下一步</span>
+          <strong>学习路线 →</strong>
+        </a>
+      </article>
+      <OnThisPage items={contents} />
     </div>
   );
 }

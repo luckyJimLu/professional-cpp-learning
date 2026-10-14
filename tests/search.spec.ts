@@ -112,8 +112,8 @@ test("failed search chunk keeps navigation available and reload recovers", async
   await page.route(/\/assets\/CodeSearch[^/]*\.js$/, (route) => route.abort());
   await page.goto("/?view=search");
   await expect(page.getByRole("alert")).toContainText("代码搜索加载失败");
-  await page.getByRole("button", { name: /^Today/ }).click();
-  await expect(page.locator(".hero-card")).toBeVisible();
+  await page.getByRole("button", { name: /^学习指南/ }).click();
+  await expect(page.locator(".guide-document")).toBeVisible();
   await page.unroute(/\/assets\/CodeSearch[^/]*\.js$/);
   await page.goto("/?view=search");
   await expect(page.getByRole("searchbox")).toBeVisible();
