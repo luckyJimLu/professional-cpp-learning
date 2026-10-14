@@ -8,8 +8,8 @@
 
 ## 当前进度
 
-- **已发布：Day 1–47**
-- **下一课：Day 48**
+- **已发布：Day 1–48**
+- **下一课：Day 49**
 - 当前主线：**Chapter 6 · Designing for Reuse**
 - 更新方式：**GitHub Markdown only**
 
@@ -41,11 +41,11 @@
 
 ## 最近课程
 
+- [Day 48 · Design Usable Interfaces](daily/day-048-design-usable-interfaces.md)
 - [Day 47 · Design for Extensibility](daily/day-047-design-for-extensibility.md)
 - [Day 46 · Provide Appropriate Checks and Safeguards](daily/day-046-checks-safeguards.md)
 - [Day 45 · Use Templates for Generic Data Structures and Algorithms](daily/day-045-templates-generic-data-structures-algorithms.md)
 - [Day 44 · Avoid Combining Unrelated or Logically Separate Concepts](daily/day-044-separate-unrelated-concepts.md)
-- [Day 43 · Structure Your Code for Optimal Reuse：按职责与依赖方向组织代码](daily/day-043-structure-code-for-optimal-reuse.md)
 
 ## 每日课程结构
 
@@ -78,7 +78,7 @@
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-047-*.md
+│   └── day-048-*.md
 ├── examples/
 │   └── day-XXX/
 ├── weekly/
