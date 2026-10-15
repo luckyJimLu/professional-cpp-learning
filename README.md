@@ -9,14 +9,14 @@
 ## 在线学习平台 (GitHub Pages)
 
 - 🌐 **在线控制台 / Web Console**: [https://luckyJimLu.github.io/professional-cpp-learning/](https://luckyJimLu.github.io/professional-cpp-learning/)
-  - 支持每日课程阅读与 8 阶段 Compile Rail 学习流水线
+  - 支持每日课程阅读与 Compile Rail 学习流水线
   - 内置基于 WebAssembly Clang 22 的在线 C++23 交互式编译实验工作台 (Lab)
   - 全局代码与 Markdown 代码块即时搜索与行级高亮 (Code Search)
 
 ## 当前进度
 
-- **已发布：Day 1–49**
-- **下一课：Day 50**
+- **已发布：Day 1–50**
+- **下一课：Day 51**
 - 当前主线：**Chapter 6 · Designing for Reuse**
 - 更新方式：**GitHub Markdown only**
 
@@ -37,7 +37,7 @@
 设计模式专题不占用每日 Day 编号，用于提前建立 Chapter 33 的全局认知：
 
 - **[C++ Design Patterns · 工程化学习指南](patterns/README.md)**：以“稳定边界”为主线整理 Strategy、Factory、Adapter、Proxy、Iterator、Observer、Decorator、Chain of Responsibility、Singleton 等模式，并结合 Embedded / Modem / Driver 场景。
-- **[Design Patterns 下的 Ownership 与 Smart Pointers](patterns/ownership-and-smart-pointers.md)**：系统说明 `T&`、`T*`、`std::unique_ptr`、`std::shared_ptr`、`std::weak_ptr` 在各模式中的所有权与生命周期含义；新增三个判断问题、Mermaid 决策流程图、UML 类图与时序图，以及 [可运行生命周期实验](examples/pointer-choice.cpp)。
+- **[Design Patterns 下的 Ownership 与 Smart Pointers](patterns/ownership-and-smart-pointers.md)**：系统说明 `T&`、`T*`、`std::unique_ptr`、`std::shared_ptr`、`std::weak_ptr` 在各模式中的所有权与生命周期含义；包含三个判断问题、Mermaid 决策流程图、UML 类图与时序图，以及 [可运行生命周期实验](examples/pointer-choice.cpp)。
 
 核心原则：**先识别变化，再建立稳定边界；先设计 lifetime，再选择 pointer。**
 
@@ -49,11 +49,11 @@
 
 ## 最近课程
 
+- [Day 50 · Design Interfaces That Are Easy to Use](daily/day-050-easy-to-use-interfaces.md)
 - [Day 49 · Consider the Audience and Purpose](daily/day-049-consider-audience-purpose.md)
 - [Day 48 · Design Usable Interfaces](daily/day-048-design-usable-interfaces.md)
 - [Day 47 · Design for Extensibility](daily/day-047-design-for-extensibility.md)
 - [Day 46 · Provide Appropriate Checks and Safeguards](daily/day-046-checks-safeguards.md)
-- [Day 45 · Use Templates for Generic Data Structures and Algorithms](daily/day-045-templates-generic-data-structures-algorithms.md)
 
 ## 每日课程结构
 
@@ -88,7 +88,7 @@
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-049-*.md
+│   └── day-050-*.md
 ├── examples/
 │   └── day-XXX/
 ├── weekly/
@@ -136,7 +136,7 @@ npm run preview
 - Today：根据 `progress.md` 和现有 Day 自动确定当前位置
 - Roadmap：按 Week / Part 生成纵向课程路径
 - Lessons：从 `daily/*.md` 自动建立课程索引
-- Lesson：Compile Rail + 8 阶段学习流，支持 Mermaid 流程图、状态图、类图与时序图
+- Lesson：Compile Rail + 课程学习流，支持 Mermaid 流程图、状态图、类图与时序图
 - 专题：设计模式、所有权、Asio 框架与图表指南
 - Lab：可编辑 C++ 代码 + 浏览器内 Clang/WASM Compile & Run
 - Review：每 7 天复盘入口
@@ -168,9 +168,9 @@ npm run test:e2e
 从 `system-design-notes` 导入的资料位于 `references/system-design-notes/`，包含架构、Asio、并发编程及相关嵌入式实践。详见 [迁移说明](docs/content-migration.md)。原项目文件保留。
 
 ```bash
-npm run check:migration      # 校验 265 个迁移文件
+npm run check:migration      # 校验迁移文件
 npm run check:course         # 每日课程结构
-npm run build               # TypeScript + 生产构建
-npm run test:e2e            # 搜索、阅读、图表与浏览器编译
-npm run check:reference-cpp # 迁移示例（要求 Boost 1.83.0）
+npm run build                # TypeScript + 生产构建
+npm run test:e2e             # 搜索、阅读、图表与浏览器编译
+npm run check:reference-cpp  # 迁移示例
 ```
