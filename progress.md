@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 49**。下一课从 **Day 50** 继续。
+当前仓库课程已发布到 **Day 50**。下一课从 **Day 51** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -53,17 +53,17 @@
 | 47 | Design for Extensibility | 已发布 | [day-047](daily/day-047-design-for-extensibility.md) |
 | 48 | Design Usable Interfaces | 已发布 | [day-048](daily/day-048-design-usable-interfaces.md) |
 | 49 | Consider the Audience and Purpose | 已发布 | [day-049](daily/day-049-consider-audience-purpose.md) |
+| 50 | Design Interfaces That Are Easy to Use | 已发布 | [day-050](daily/day-050-easy-to-use-interfaces.md) |
 
 ## 最新发布详情
 
 - **日期**：2026-10-15
 - **章节**：Chapter 6 · Designing for Reuse
-- **主题**：Consider the Audience and Purpose
-- **关键知识点**：audience/purpose、small interfaces、Adapter、explicit dependency injection、ownership/lifetime、避免 abstraction leakage
-- **设计模式 / 稳定边界**：Adapter 隔离平台变化；按 audience/purpose 暴露最小调用接口；不为假想需求过度抽象
-- **Lab**：[examples/day-049/main.cpp](examples/day-049/main.cpp)
-- **周复盘**：[Week 07 Review](weekly/week-07-review.md)
-- **上一课**：[Day 48 · Design Usable Interfaces](daily/day-048-design-usable-interfaces.md)
+- **主题**：Design Interfaces That Are Easy to Use
+- **关键知识点**：familiar C++ idioms、RAII、common-case API、Options、uncluttered interfaces、documentation contract
+- **设计模式 / 稳定边界**：Facade 隔离复杂子系统并保持常用路径简单；Adapter 只隔离平台差异；显式 DI 表达 required borrow；避免 Facade/Factory/Observer 的无必要叠加
+- **Lab**：[examples/day-050/main.cpp](examples/day-050/main.cpp)
+- **上一课**：[Day 49 · Consider the Audience and Purpose](daily/day-049-consider-audience-purpose.md)
 
 ## 规则
 
