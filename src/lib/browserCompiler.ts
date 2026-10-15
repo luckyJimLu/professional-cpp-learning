@@ -1,7 +1,7 @@
 import { preprocessCppCode } from "../visualizer/embeddedHeader";
-import { simulateCppStdout } from "../visualizer/reducer";
 
 export interface CompileRunResult {
+  mode: "clang-wasm";
   stdout: string;
   stderr: string;
   output: string;
@@ -12,7 +12,6 @@ export interface CompileRunResult {
 }
 
 interface PendingRequest {
-  code: string;
   resolve: (result: CompileRunResult) => void;
   reject: (error: Error) => void;
   onProgress?: (value: number) => void;
@@ -30,19 +29,6 @@ export function compilerBaseUrl() {
   } catch {
     return path;
   }
-}
-
-export function simulateCppExecution(code: string): CompileRunResult {
-  const stdout = simulateCppStdout(code);
-  return {
-    stdout,
-    stderr: "",
-    output: stdout || "Program executed successfully.",
-    errors: [],
-    exitCode: 0,
-    compileMs: 32,
-    runMs: 2,
-  };
 }
 
 function getWorker() {
@@ -76,19 +62,13 @@ function getWorker() {
         return;
       }
 
-      // If Clang WASM toolchain fails (e.g. manifest fetch error, network failure, out of memory):
-      // Fallback gracefully to high-precision simulation engine so the user experience is smooth!
-      console.warn(
-        "Clang WASM toolchain error, falling back to simulated execution engine:",
-        message.message,
-      );
-      request.resolve(simulateCppExecution(request.code));
+      request.reject(new Error(message.message));
     };
 
     worker.onerror = (event) => {
       console.warn("Clang worker encountered error, activating simulation fallback:", event);
       for (const [id, request] of pending.entries()) {
-        request.resolve(simulateCppExecution(request.code));
+        request.reject(new Error("Clang WASM Worker 运行失败"));
         pending.delete(id);
       }
       worker?.terminate();
@@ -108,12 +88,12 @@ export function compileAndRun(
   const id = ++sequence;
 
   return new Promise((resolve, reject) => {
-    pending.set(id, { code, resolve, reject, onProgress });
+    pending.set(id, { resolve, reject, onProgress });
 
     try {
       const w = getWorker();
       if (!w) {
-        resolve(simulateCppExecution(code));
+        reject(new Error("无法初始化 Clang WASM Worker"));
         pending.delete(id);
         return;
       }
@@ -125,8 +105,8 @@ export function compileAndRun(
         code: processedCode,
         baseUrl: compilerBaseUrl(),
       });
-    } catch {
-      resolve(simulateCppExecution(code));
+    } catch (error) {
+      reject(error instanceof Error ? error : new Error(String(error)));
       pending.delete(id);
     }
   });

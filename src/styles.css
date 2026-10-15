@@ -1,4 +1,6 @@
 :root {
+  --z-backdrop: 500;
+  --z-dialog: 600;
   color-scheme: light;
   font-family: "IBM Plex Sans", "Noto Sans SC", Inter, system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
@@ -1795,4 +1797,3 @@ summary:focus-visible {
   overflow-x: auto;
   font: 12px/1.65 var(--mono);
 }
-

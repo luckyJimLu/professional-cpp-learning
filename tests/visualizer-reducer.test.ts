@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parseTraceOutput, computeSnapshots, generateSnapshotsFromCodeAndOutput } from "../src/visualizer/reducer.ts";
+import { parseTraceOutput, computeSnapshots, computeSnapshotsWithDiagnostics, generateSnapshotsFromCodeAndOutput, inferTraceEventsFromCodeAndOutput, MAX_EVENTS, MAX_SNAPSHOTS } from "../src/visualizer/reducer.ts";
+import { preprocessCppCode } from "../src/visualizer/embeddedHeader.ts";
 
 test("parseTraceOutput separates [VIS] events from standard stdout", () => {
   const raw = `
@@ -13,15 +14,87 @@ Result is 42
 `.trim();
 
   const { events, cleanStdout } = parseTraceOutput(raw);
-  assert.equal(events.length, 3);
-  assert.equal(events[0].op, "scope_enter");
-  assert.equal(events[1].op, "var_decl");
-  assert.equal(events[2].op, "scope_exit");
+  assert.deepEqual(events.map((event) => event.op), [
+    "stdout", "scope_enter", "stdout", "var_decl", "stdout", "scope_exit",
+  ]);
 
   assert.ok(cleanStdout.includes("Hello, World!"));
   assert.ok(cleanStdout.includes("Computing data..."));
   assert.ok(cleanStdout.includes("Result is 42"));
   assert.ok(!cleanStdout.includes("[VIS]"));
+});
+
+test("block scope exit invalidates pointers to destroyed stack variables", () => {
+  const snapshots = computeSnapshots([
+    { op: "scope_enter", line: 1, name: "main" },
+    { op: "var_decl", line: 2, name: "p", type: "int*", value: "0x0", addr: "0x10" },
+    { op: "enter_scope", line: 3, name: "inner" },
+    { op: "var_decl", line: 4, name: "value", type: "int", value: "42", addr: "0x20" },
+    { op: "ptr_set", line: 5, var: "p", to: "0x20", type: "int*" },
+    { op: "exit_scope", line: 6, name: "inner" },
+  ]);
+  assert.equal(snapshots[4].pointers[0].target?.kind, "stack");
+  assert.equal(snapshots[5].callStack[0].variables.some((v) => v.name === "value"), false);
+  assert.equal(snapshots[5].pointers[0].isDangling, true);
+  assert.equal(snapshots[5].pointers[0].relationKind, "dangling_ptr");
+});
+
+test("regex inference frees the named allocation instead of the latest allocation", () => {
+  const code = `int main() {
+    int* x = new int(1);
+    int* y = new int(2);
+    delete x;
+    return 0;
+  }`;
+  const snapshots = computeSnapshots(inferTraceEventsFromCodeAndOutput(code, "", 0));
+  const final = snapshots.at(-1)!;
+  assert.equal(final.heap[0].status, "freed");
+  assert.equal(final.heap[1].status, "leaked");
+});
+
+test("address reuse keeps distinct allocation identities", () => {
+  const snapshots = computeSnapshots([
+    { op: "scope_enter", line: 1, name: "main" },
+    { op: "heap_alloc", line: 2, addr: "0x100", size: 4 },
+    { op: "heap_free", line: 3, addr: "0x100" },
+    { op: "heap_alloc", line: 4, addr: "0x100", size: 8 },
+  ]);
+  const heap = snapshots.at(-1)!.heap;
+  assert.equal(heap.length, 2);
+  assert.notEqual(heap[0].allocationId, heap[1].allocationId);
+  assert.equal(heap[0].status, "freed");
+  assert.equal(heap[1].status, "alive");
+});
+
+test("trace computation applies event and snapshot hard caps", () => {
+  const events = [
+    { op: "scope_enter" as const, line: 1, name: "main" },
+    ...Array.from({ length: MAX_EVENTS + 25 }, (_, index) => ({
+      op: "step" as const,
+      line: index + 2,
+      label: `step ${index}`,
+    })),
+  ];
+  const result = computeSnapshotsWithDiagnostics(events);
+  assert.equal(result.snapshots.length, MAX_SNAPSHOTS);
+  assert.ok(result.diagnostics.some((message) => message.includes(String(MAX_EVENTS))));
+  assert.ok(result.diagnostics.some((message) => message.includes(String(MAX_SNAPSHOTS))));
+});
+
+test("invalid events are diagnosed and later valid events still reduce", () => {
+  const result = computeSnapshotsWithDiagnostics([
+    { op: "heap_alloc", line: 1 } as never,
+    { op: "scope_enter", line: 2, name: "main" },
+  ]);
+  assert.equal(result.snapshots.length, 1);
+  assert.equal(result.snapshots[0].callStack[0].name, "main");
+  assert.ok(result.diagnostics.some((message) => message.includes("不合法事件")));
+});
+
+test("embedded visualizer header restores main.cpp line numbering", () => {
+  const processed = preprocessCppCode('#include "visualizer.h"\nint main() { return 0; }');
+  assert.match(processed, /#line 1 "visualizer\.h"/);
+  assert.match(processed, /#line 2 "main\.cpp"/);
 });
 
 test("computeSnapshots tracks stack frames and local objects", () => {
@@ -101,7 +174,7 @@ test("computeSnapshots tracks std::move ownership transfer", () => {
   const p2 = frame.variables.find((v) => v.name === "p2");
 
   assert.ok(p1 && p2);
-  assert.equal(p1.value, "nullptr");
+  assert.equal(p1.value, "moved (nullptr)");
   assert.equal(p1.pointsToRaw, null);
 
   assert.equal(p2.value, "0x2000");
@@ -155,4 +228,3 @@ int main() {
   assert.ok(dtorSnaps[0].description.includes("board_a"));
   assert.ok(dtorSnaps[1].description.includes("gpio_reset"));
 });
-

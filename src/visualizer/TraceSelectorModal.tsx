@@ -1,5 +1,6 @@
-import { useState, useRef } from "react";
-import { PRESET_TRACES_META, type PresetTraceMeta } from "./presetTraces";
+import { useEffect, useState, useRef } from "react";
+import { PRESET_TRACES_META } from "./presetTraces";
+import { normalizeVisualizerTrace } from "./traceProtocol";
 import type { VisualizerTrace } from "./types";
 
 export function TraceSelectorModal({
@@ -19,6 +20,35 @@ export function TraceSelectorModal({
   const [pasteText, setPasteText] = useState("");
   const [parseError, setParseError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+      if (event.key !== "Tab" || !dialogRef.current) return;
+      const focusable = Array.from(dialogRef.current.querySelectorAll<HTMLElement>("button, input, textarea, [tabindex]:not([tabindex='-1'])"));
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      previousFocusRef.current?.focus();
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -31,10 +61,7 @@ export function TraceSelectorModal({
     reader.onload = (event) => {
       try {
         const content = event.target?.result as string;
-        const parsed = JSON.parse(content) as VisualizerTrace;
-        if (!parsed.snapshots || !Array.isArray(parsed.snapshots)) {
-          throw new Error("JSON 缺少 snapshots 数组字段");
-        }
+        const parsed = normalizeVisualizerTrace(JSON.parse(content));
         onImportCustomTrace(parsed);
         onClose();
       } catch (err) {
@@ -49,10 +76,7 @@ export function TraceSelectorModal({
     if (!pasteText.trim()) return;
 
     try {
-      const parsed = JSON.parse(pasteText) as VisualizerTrace;
-      if (!parsed.snapshots || !Array.isArray(parsed.snapshots)) {
-        throw new Error("JSON 缺少 snapshots 数组字段");
-      }
+      const parsed = normalizeVisualizerTrace(JSON.parse(pasteText));
       onImportCustomTrace(parsed);
       onClose();
     } catch (err) {
@@ -65,7 +89,7 @@ export function TraceSelectorModal({
       style={{
         position: "fixed",
         inset: 0,
-        zIndex: 9999,
+        zIndex: "var(--z-dialog)",
         background: "rgba(3, 7, 18, 0.75)",
         backdropFilter: "blur(6px)",
         display: "flex",
@@ -76,6 +100,10 @@ export function TraceSelectorModal({
       onClick={onClose}
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="trace-dialog-title"
         style={{
           background: "#0d131d",
           border: "1px solid #1e293b",
@@ -103,11 +131,13 @@ export function TraceSelectorModal({
         >
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <span style={{ fontSize: "16px" }}>📂</span>
-            <span style={{ fontSize: "14px", fontWeight: 600, color: "#f8fafc" }}>
+            <span id="trace-dialog-title" style={{ fontSize: "14px", fontWeight: 600, color: "#f8fafc" }}>
               C++ 内存执行轨迹剧本库 (Trace Library)
             </span>
           </div>
           <button
+            ref={closeButtonRef}
+            aria-label="关闭轨迹剧本库"
             type="button"
             onClick={onClose}
             style={{
@@ -194,7 +224,8 @@ export function TraceSelectorModal({
               {PRESET_TRACES_META.map((item) => {
                 const isSelected = currentTraceId === item.id;
                 return (
-                  <div
+                  <button
+                    type="button"
                     key={item.id}
                     onClick={() => {
                       onSelectPreset(item.id);
@@ -210,6 +241,8 @@ export function TraceSelectorModal({
                       alignItems: "center",
                       justifyContent: "space-between",
                       transition: "all 0.15s ease",
+                      width: "100%",
+                      textAlign: "left",
                     }}
                   >
                     <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
@@ -234,7 +267,7 @@ export function TraceSelectorModal({
                       </span>
                     </div>
                     <span style={{ fontSize: "12px", color: "#38bdf8" }}>载入 ▶</span>
-                  </div>
+                  </button>
                 );
               })}
             </div>
@@ -257,7 +290,7 @@ export function TraceSelectorModal({
             >
               <div style={{ fontSize: "32px" }}>📄</div>
               <div style={{ fontSize: "13px", color: "#e2e8f0", fontWeight: 500 }}>
-                将平时写作时 AI 生成的 .json 轨迹文件拖入此处，或点击浏览
+                选择符合协议的 .json 轨迹文件并在浏览器中校验
               </div>
               <div style={{ fontSize: "11px", color: "#64748b", maxWidth: "360px" }}>
                 符合规范的轨迹文件将直接由浏览器前端引擎读取渲染，零服务器开销。
@@ -295,6 +328,8 @@ export function TraceSelectorModal({
                 直接粘贴包含 sourceCode 与 snapshots 数组的 JSON 剧本：
               </div>
               <textarea
+                className="resize-none"
+                aria-label="粘贴轨迹 JSON"
                 value={pasteText}
                 onChange={(e) => setPasteText(e.target.value)}
                 placeholder='{\n  "sourceCode": "...",\n  "snapshots": [ ... ]\n}'
@@ -309,7 +344,7 @@ export function TraceSelectorModal({
                   fontFamily: "var(--mono, monospace)",
                   fontSize: "12px",
                   lineHeight: "1.5",
-                  resize: "vertical",
+                  resize: "none",
                 }}
               />
               <button
@@ -335,6 +370,7 @@ export function TraceSelectorModal({
 
           {parseError && (
             <div
+              role="alert"
               style={{
                 marginTop: "12px",
                 padding: "8px 12px",

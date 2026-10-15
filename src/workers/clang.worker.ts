@@ -64,6 +64,7 @@ self.onmessage = async (event: MessageEvent<IncomingMessage>) => {
       type: "result",
       id: message.id,
       result: {
+        mode: "clang-wasm",
         stdout: result.stdout,
         stderr: result.stderr,
         output: result.output,

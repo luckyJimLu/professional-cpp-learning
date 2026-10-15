@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { PageHeader } from "../common/PageHeader";
 import { VisualizerWorkbench } from "../../visualizer/VisualizerWorkbench";
-import { generateSnapshotsFromCodeAndOutput } from "../../visualizer/reducer";
 import { loadPresetTrace } from "../../visualizer/presetTraces";
-import type { MemorySnapshot } from "../../visualizer/types";
+import { useTraceSession } from "../../visualizer/useTraceSession";
 
 const DEFAULT_DEMO_CODE = `#include <iostream>
 #include <memory>
@@ -20,9 +19,7 @@ int main() {
 }`;
 
 export function VisualizerView() {
-  const [code, setCode] = useState(DEFAULT_DEMO_CODE);
-  const [snapshots, setSnapshots] = useState<MemorySnapshot[]>([]);
-  const [currentStep, setCurrentStep] = useState(0);
+  const traceSession = useTraceSession(DEFAULT_DEMO_CODE);
 
   // 初始化载入智能指针案例
   useEffect(() => {
@@ -33,33 +30,21 @@ export function VisualizerView() {
     loadPresetTrace(traceParam).then((trace) => {
       if (isCancelled) return;
       if (trace) {
-        setCode(trace.sourceCode);
-        setSnapshots(trace.snapshots);
-        setCurrentStep(0);
-      } else {
-        const fallbackSnaps = generateSnapshotsFromCodeAndOutput(DEFAULT_DEMO_CODE, "", 0);
-        setSnapshots(fallbackSnaps);
-        setCurrentStep(0);
+        traceSession.loadTrace(trace);
       }
     });
 
     return () => {
       isCancelled = true;
     };
-  }, []);
-
-  const handleRunSimulation = () => {
-    const snaps = generateSnapshotsFromCodeAndOutput(code, "", 0);
-    setSnapshots(snaps);
-    setCurrentStep(0);
-  };
+  }, [traceSession.loadTrace]);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "16px", minHeight: "85vh" }}>
       <PageHeader
-        eyebrow="GITHUB PAGES READY · 纯静态拓扑引擎"
+        eyebrow="GITHUB PAGES READY · 确定性内存视图"
         title="C++ 内存拓扑与生命周期可视化"
-        description="基于 React + XYFlow + ELKjs 的纯前端内存可视化引擎。零服务器后端、极速首屏，支持 VCR 逐行单步调试、指针跳转、智能指针所有权转移与悬挂指针检测。"
+        description="基于 Trace Reducer 与 DOM/SVG 的纯前端内存可视化引擎。支持 VCR 逐行回放、块级作用域、智能指针所有权转移与悬挂指针检测。"
       />
 
       {/* GitHub Pages 部署特性说明横幅 */}
@@ -81,7 +66,7 @@ export function VisualizerView() {
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <span style={{ fontSize: "16px" }}>⚡</span>
           <span>
-            <strong>纯前端 0 Token 消耗</strong>：运行期直接解析预置静态 JSON 轨迹（<code>/public/traces/</code>），毫秒级自动算力导排版，无任何 Node.js/Python 依赖。
+            <strong>预置轨迹快速路径</strong>：直接解析静态 JSON 快照（<code>/public/traces/</code>），无需编译即可开始回放。
           </span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -94,15 +79,12 @@ export function VisualizerView() {
       {/* 主工作区 */}
       <div style={{ flex: 1, minHeight: "680px" }}>
         <VisualizerWorkbench
-          code={code}
-          onChangeCode={setCode}
-          snapshots={snapshots}
-          currentStep={currentStep}
-          onStepChange={setCurrentStep}
-          compilerState="idle"
-          compilerProgress={1}
-          terminalOutput=""
-          onRun={handleRunSimulation}
+          session={traceSession.state}
+          onChangeCode={traceSession.setCode}
+          onStepChange={traceSession.setStep}
+          onRun={traceSession.run}
+          onRunApproximate={() => traceSession.runApproximate()}
+          onLoadTrace={traceSession.loadTrace}
           className="standalone-workbench"
         />
       </div>

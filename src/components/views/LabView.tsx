@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { type Lesson, type StepKey } from "../../lib/course";
-import { compileAndRun, type CompileRunResult } from "../../lib/browserCompiler";
 import { Markdown } from "../Markdown";
 import { VisualizerWorkbench } from "../../visualizer/VisualizerWorkbench";
-import { parseTraceOutput, computeSnapshots, generateSnapshotsFromCodeAndOutput } from "../../visualizer/reducer";
-import type { MemorySnapshot } from "../../visualizer/types";
+import { inferTraceEventsFromCodeAndOutput } from "../../visualizer/reducer";
+import { useTraceSession } from "../../visualizer/useTraceSession";
 
 const VISUALIZER_DEMO_CODE = `#include "visualizer.h"
 #include <iostream>
@@ -50,7 +49,7 @@ export function LabView({
   });
 
   const [hint, setHint] = useState(false);
-  const [code, setCode] = useState(() => {
+  const initialCode = (() => {
     try {
       const custom = sessionStorage.getItem("lab_custom_code");
       if (custom) return custom;
@@ -58,17 +57,8 @@ export function LabView({
       // ignore
     }
     return sourceCode;
-  });
-
-  const [compilerState, setCompilerState] = useState<
-    "idle" | "loading" | "compiling" | "success" | "failure"
-  >("idle");
-  const [compilerProgress, setCompilerProgress] = useState(0);
-  const [result, setResult] = useState<CompileRunResult | null>(null);
-  const [compilerError, setCompilerError] = useState("");
-
-  const [snapshots, setSnapshots] = useState<MemorySnapshot[]>([]);
-  const [currentStep, setCurrentStep] = useState(0);
+  })();
+  const traceSession = useTraceSession(initialCode);
 
   const resetToLessonSource = () => {
     try {
@@ -78,172 +68,55 @@ export function LabView({
       // ignore
     }
     setCustomOrigin(null);
-    setCode(sourceCode);
-    setResult(null);
-    setCompilerError("");
-    setSnapshots([]);
-    setCompilerState("idle");
+    traceSession.reset(sourceCode);
   };
 
   const runStepDebugger = () => {
     try {
-      const { events, cleanStdout } = parseTraceOutput(code);
-      let snaps: MemorySnapshot[];
-      if (events.length > 0) {
-        snaps = computeSnapshots(events, cleanStdout);
-      } else {
-        snaps = generateSnapshotsFromCodeAndOutput(code, "", 0);
-      }
-      setSnapshots(snaps);
-      setCurrentStep(0);
-      setCompilerState("success");
+      traceSession.runApproximate();
       markStep(lesson.day, "lab");
-      if (!result) {
-        setResult({
-          stdout: "",
-          stderr: "",
-          output: "逐行调试模拟就绪，请使用控制条进行步进。",
-          errors: [],
-          exitCode: 0,
-          compileMs: 15,
-          runMs: 1,
-        });
-      }
     } catch (err) {
       console.warn("Step debugger failed:", err);
     }
   };
 
   const loadVisualizerDemo = () => {
-    setCode(VISUALIZER_DEMO_CODE);
+    traceSession.loadTrace({
+      schemaVersion: 2,
+      title: "生命周期可视化示例",
+      sourceCode: VISUALIZER_DEMO_CODE,
+      mode: "regex",
+      accuracy: "approximate",
+      events: inferTraceEventsFromCodeAndOutput(VISUALIZER_DEMO_CODE, "", 0),
+    });
     setCustomOrigin("生命周期可视化示例 (RAII & Heap)");
-    setResult(null);
-    setCompilerError("");
-    try {
-      const snaps = generateSnapshotsFromCodeAndOutput(VISUALIZER_DEMO_CODE, "", 0);
-      setSnapshots(snaps);
-      setCurrentStep(0);
-      setCompilerState("success");
-    } catch {
-      // ignore
-    }
   };
 
   useEffect(() => {
-    let currentCode = sourceCode;
+    let nextCode = sourceCode;
+    let nextOrigin: string | null = null;
     try {
       const custom = sessionStorage.getItem("lab_custom_code");
       if (custom) {
-        currentCode = custom;
-        setCode(custom);
-        setCustomOrigin(sessionStorage.getItem("lab_custom_title"));
-      } else {
-        setCode(sourceCode);
-        setCustomOrigin(null);
+        nextCode = custom;
+        nextOrigin = sessionStorage.getItem("lab_custom_title");
       }
     } catch {
-      setCode(sourceCode);
+      // sessionStorage can be unavailable in restricted browsing contexts.
     }
-    setCompilerState("idle");
-    setCompilerProgress(0);
-    setResult(null);
-    setCompilerError("");
-
-    // 预先生成结构化单步调试快照，保证无需等待下载工具链即可分步执行
-    try {
-      const snaps = generateSnapshotsFromCodeAndOutput(currentCode, "", 0);
-      setSnapshots(snaps);
-      setCurrentStep(0);
-    } catch {
-      setSnapshots([]);
-    }
+    setCustomOrigin(nextOrigin);
+    traceSession.reset(nextCode);
   }, [lesson.day, sourceCode]);
 
   const runCompiler = async () => {
-    setResult(null);
-    setCompilerError("");
-    setCompilerState("loading");
-    setCompilerProgress(0);
-
-    try {
-      const next = await compileAndRun(code, (value) => {
-        setCompilerProgress(value);
-        if (value >= 1) setCompilerState("compiling");
-      });
-
-      setResult(next);
-      const isSuccess = next.exitCode === 0;
-
-      if (isSuccess) {
-        setCompilerState("success");
-        markStep(lesson.day, "lab");
-
-        // 提取并在内存画布中生成快照
-        const { events, cleanStdout } = parseTraceOutput(next.stdout || "");
-        if (events.length > 0) {
-          const snaps = computeSnapshots(events, cleanStdout);
-          setSnapshots(snaps);
-          setCurrentStep(0);
-        } else {
-          // 自动为标准 C++ 代码生成结构化生命周期与调用栈快照
-          const snaps = generateSnapshotsFromCodeAndOutput(
-            code,
-            cleanStdout || next.stdout || "",
-            next.exitCode ?? 0,
-          );
-          setSnapshots(snaps);
-          setCurrentStep(0);
-        }
-      } else {
-        setCompilerState("failure");
-        setSnapshots([]);
-      }
-    } catch (error) {
-      console.warn("Compiler run threw, falling back to simulator:", error);
-      // 容错降级：如果网络环境无法拉取 Clang WASM 二进制文件，自动运行仿真器
-      const snaps = generateSnapshotsFromCodeAndOutput(code, "", 0);
-      setSnapshots(snaps);
-      setCurrentStep(0);
-      setCompilerState("success");
+    const succeeded = await traceSession.run();
+    if (succeeded) {
       markStep(lesson.day, "lab");
     }
   };
 
   const compilerBusy =
-    compilerState === "loading" || compilerState === "compiling";
-
-  const displayOutput = (() => {
-    if (compilerError) return `Compilation / Execution Error:\n${compilerError}`;
-    if (!result) return "";
-
-    const lines: string[] = [];
-    lines.push("$ clang++ main.cpp -std=gnu++23 -Wall -Wextra -Wconversion -Wpedantic");
-
-    if (result.errors && result.errors.length > 0) {
-      lines.push(result.errors.join("\n"));
-    }
-
-    if (result.compileMs > 0) {
-      lines.push(`[Compilation finished in ${result.compileMs}ms]`);
-    }
-
-    lines.push("");
-    lines.push("$ ./main");
-
-    const { cleanStdout } = parseTraceOutput(result.stdout || "");
-    const effectiveOutput = cleanStdout || result.stdout || result.output || "";
-
-    if (effectiveOutput.trim()) {
-      lines.push(effectiveOutput.trimEnd());
-    } else if (result.exitCode === 0) {
-      lines.push("Program exited successfully with no output.");
-    }
-
-    lines.push("");
-    lines.push(`Process finished with exit ${result.exitCode ?? 0} (execution: ${result.runMs ?? 0}ms)`);
-
-    return lines.join("\n");
-  })();
+    traceSession.state.status === "loading" || traceSession.state.status === "running";
 
   return (
     <div className="lab-page-container">
@@ -298,7 +171,7 @@ export function LabView({
             <button
               className="ghost-button"
               onClick={resetToLessonSource}
-              disabled={compilerBusy || (code === sourceCode && !customOrigin)}
+              disabled={compilerBusy || (traceSession.state.code === sourceCode && !customOrigin)}
               type="button"
             >
               Reset source
@@ -333,16 +206,12 @@ export function LabView({
 
         <section className="code-workbench" style={{ display: "block" }}>
           <VisualizerWorkbench
-            code={code}
-            onChangeCode={setCode}
-            snapshots={snapshots}
-            currentStep={currentStep}
-            onStepChange={setCurrentStep}
-            compilerState={compilerState}
-            compilerProgress={compilerProgress}
-            terminalOutput={displayOutput}
+            session={traceSession.state}
+            onChangeCode={traceSession.setCode}
+            onStepChange={traceSession.setStep}
             onRun={runCompiler}
-            onStepDebug={runStepDebugger}
+            onRunApproximate={runStepDebugger}
+            onLoadTrace={traceSession.loadTrace}
           />
         </section>
       </div>

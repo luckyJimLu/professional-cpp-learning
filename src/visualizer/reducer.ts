@@ -7,6 +7,14 @@ import type {
   TraceEvent,
 } from "./types";
 
+export const MAX_EVENTS = 1000;
+export const MAX_SNAPSHOTS = 300;
+
+export interface SnapshotComputationResult {
+  snapshots: MemorySnapshot[];
+  diagnostics: string[];
+}
+
 /**
  * 格式化地址为规范化十六进制字符串（如 0x1000）
  */
@@ -32,9 +40,11 @@ function normalizeAddr(addr: number | string | null | undefined): string {
 export function parseTraceOutput(rawStdout: string): {
   events: TraceEvent[];
   cleanStdout: string;
+  diagnostics: string[];
 } {
   const events: TraceEvent[] = [];
   const stdoutLines: string[] = [];
+  const diagnostics: string[] = [];
 
   const lines = rawStdout.split(/\r?\n/);
   for (const line of lines) {
@@ -42,20 +52,74 @@ export function parseTraceOutput(rawStdout: string): {
     if (trimmed.startsWith("[VIS]")) {
       const jsonStr = trimmed.slice(5).trim();
       try {
-        const parsed = JSON.parse(jsonStr) as TraceEvent;
-        events.push(parsed);
+        const parsed = JSON.parse(jsonStr) as unknown;
+        if (isTraceEvent(parsed)) {
+          events.push(parsed);
+        } else {
+          diagnostics.push(`忽略不合法的 VIS 事件: ${jsonStr.slice(0, 120)}`);
+        }
       } catch (err) {
         console.warn("Failed to parse [VIS] payload:", jsonStr, err);
+        diagnostics.push(`无法解析 VIS 事件: ${jsonStr.slice(0, 120)}`);
       }
     } else if (line.length > 0) {
       stdoutLines.push(line);
+      events.push({ op: "stdout", text: `${line}\n` });
     }
   }
 
   return {
     events,
     cleanStdout: stdoutLines.join("\n"),
+    diagnostics,
   };
+}
+
+const TRACE_OPS = new Set<TraceEvent["op"]>([
+  "scope_enter",
+  "scope_exit",
+  "enter_scope",
+  "exit_scope",
+  "var_decl",
+  "var_set",
+  "obj_ctor",
+  "obj_dtor",
+  "heap_alloc",
+  "heap_free",
+  "ptr_set",
+  "ptr_move",
+  "step",
+  "stdout",
+]);
+
+export function isTraceEvent(value: unknown): value is TraceEvent {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as Record<string, unknown>;
+  if (typeof candidate.op !== "string" || !TRACE_OPS.has(candidate.op as TraceEvent["op"])) {
+    return false;
+  }
+  const finiteLine = typeof candidate.line === "number" && Number.isFinite(candidate.line);
+  const string = (key: string) => typeof candidate[key] === "string" && candidate[key] !== "";
+  const address = (key: string) =>
+    (typeof candidate[key] === "string" && candidate[key] !== "") ||
+    (typeof candidate[key] === "number" && Number.isFinite(candidate[key]));
+  switch (candidate.op) {
+    case "stdout": return typeof candidate.text === "string";
+    case "scope_exit": return candidate.line === undefined || finiteLine;
+    case "scope_enter": return finiteLine && string("name");
+    case "enter_scope":
+    case "exit_scope":
+    case "step": return finiteLine;
+    case "var_decl": return finiteLine && string("name") && string("type");
+    case "var_set": return finiteLine && string("name") && typeof candidate.value === "string";
+    case "obj_ctor": return finiteLine && string("id") && string("type");
+    case "obj_dtor": return finiteLine && string("id");
+    case "heap_alloc": return finiteLine && address("addr") && typeof candidate.size === "number" && Number.isFinite(candidate.size) && candidate.size >= 0;
+    case "heap_free": return finiteLine && address("addr");
+    case "ptr_set": return finiteLine && string("var") && (candidate.to === null || address("to"));
+    case "ptr_move": return finiteLine && string("from") && string("toVar") && address("addr");
+    default: return false;
+  }
 }
 
 /**
@@ -65,11 +129,22 @@ export function computeSnapshots(
   events: TraceEvent[],
   initialStdout = "",
 ): MemorySnapshot[] {
+  return computeSnapshotsWithDiagnostics(events, initialStdout).snapshots;
+}
+
+export function computeSnapshotsWithDiagnostics(
+  events: TraceEvent[],
+  initialStdout = "",
+): SnapshotComputationResult {
   const snapshots: MemorySnapshot[] = [];
+  const diagnostics: string[] = [];
 
   let currentFrames: StackFrame[] = [];
-  let currentHeap: Map<string, HeapBlock> = new Map();
+  const currentHeap: Map<string, HeapBlock> = new Map();
+  const activeAllocationByAddress = new Map<string, string>();
+  const destroyedStackAddresses = new Set<string>();
   let heapCounter = 0;
+  let variableCounter = 0;
   let stdoutAccumulator = initialStdout;
 
   // 辅助函数：根据当前内存状态构建不可变深拷贝快照
@@ -78,16 +153,21 @@ export function computeSnapshots(
     activeOp: TraceEvent["op"],
     description: string,
   ) => {
+    if (snapshots.length >= MAX_SNAPSHOTS) return;
     // 拷贝栈帧
     const clonedFrames: StackFrame[] = currentFrames.map((frame) => ({
       ...frame,
-      variables: frame.variables.map((v) => ({ ...v })),
+      variables: frame.variables.map((v) => ({
+        ...v,
+        fields: v.fields ? { ...v.fields } : undefined,
+      })),
     }));
 
     // 拷贝堆块
     const clonedHeap: HeapBlock[] = Array.from(currentHeap.values()).map(
       (b) => ({
         ...b,
+        fields: b.fields ? { ...b.fields } : undefined,
       }),
     );
 
@@ -98,19 +178,42 @@ export function computeSnapshots(
     for (const frame of clonedFrames) {
       for (const v of frame.variables) {
         if (v.isPointer && v.pointsToRaw && v.pointsToRaw !== "0x0") {
-          const targetHeap = currentHeap.get(v.pointsToRaw);
-          const isDangling = Boolean(
-            !targetHeap || targetHeap.status === "freed",
-          );
+          const allocationId = v.pointsToAllocationId ?? activeAllocationByAddress.get(v.pointsToRaw);
+          const targetHeap = allocationId ? currentHeap.get(allocationId) : undefined;
+          const stackTarget = clonedFrames.flatMap((candidateFrame) =>
+            candidateFrame.variables.map((candidate) => ({ candidateFrame, candidate })),
+          ).find(({ candidate }) => candidate.rawAddress === v.pointsToRaw);
+          const target = targetHeap
+            ? {
+                kind: "heap" as const,
+                allocationId: targetHeap.allocationId ?? allocationId ?? targetHeap.rawAddr,
+                rawAddr: targetHeap.rawAddr,
+              }
+            : stackTarget
+              ? {
+                  kind: "stack" as const,
+                  frameId: stackTarget.candidateFrame.id,
+                  variableId: stackTarget.candidate.variableId!,
+                  rawAddr: v.pointsToRaw,
+                }
+              : { kind: "unknown" as const, rawAddr: v.pointsToRaw };
+          const isDangling =
+            (target.kind === "heap" && targetHeap?.status === "freed") ||
+            (target.kind === "unknown" && destroyedStackAddresses.has(v.pointsToRaw));
 
           pointers.push({
-            id: `edge-${frame.id}-${v.name}-to-${v.pointsToRaw}`,
+            id: `edge-${frame.id}-${v.name}-to-${target.kind}-${v.pointsToRaw}`,
             fromVar: v.name,
             fromFrameId: frame.id,
+            fromVariableId: v.variableId,
             toRawAddr: v.pointsToRaw,
             toLabel: v.pointsToLabel ?? targetHeap?.label ?? v.pointsToRaw,
             isSmart: v.isSmartPointer,
             isDangling,
+            relationKind: isDangling
+              ? "dangling_ptr"
+              : v.relationKind ?? (v.isSmartPointer ? "smart_ptr" : "raw_ptr"),
+            target,
           });
 
           if (isDangling) {
@@ -135,7 +238,21 @@ export function computeSnapshots(
     });
   };
 
-  for (const event of events) {
+  const validEvents = (events as unknown[]).filter((event, index): event is TraceEvent => {
+    if (isTraceEvent(event)) return true;
+    diagnostics.push(`忽略第 ${index + 1} 条不合法事件。`);
+    return false;
+  });
+  const boundedEvents = validEvents.slice(0, MAX_EVENTS);
+  if (events.length > MAX_EVENTS) {
+    diagnostics.push(`轨迹事件超过 ${MAX_EVENTS} 条，已安全截断。`);
+  }
+
+  for (const event of boundedEvents) {
+    if (snapshots.length >= MAX_SNAPSHOTS) {
+      diagnostics.push(`快照超过 ${MAX_SNAPSHOTS} 帧，已安全截断。`);
+      break;
+    }
     switch (event.op) {
       case "scope_enter": {
         const frameId = `frame_${currentFrames.length}_${event.name}`;
@@ -143,6 +260,7 @@ export function computeSnapshots(
           id: frameId,
           name: event.name,
           variables: [],
+          scopeDepth: 0,
         });
         pushSnapshot(
           event.line,
@@ -153,7 +271,11 @@ export function computeSnapshots(
       }
 
       case "scope_exit": {
-        const exitedFrame = currentFrames.pop();
+        const exitedFrame = currentFrames[currentFrames.length - 1];
+        for (const variable of [...(exitedFrame?.variables ?? [])].reverse()) {
+          if (variable.rawAddress) destroyedStackAddresses.add(variable.rawAddress);
+        }
+        currentFrames.pop();
         const frameName = exitedFrame?.name ?? "scope";
         pushSnapshot(
           event.line ?? (snapshots.length > 0 ? snapshots[snapshots.length - 1].line : 1),
@@ -163,20 +285,52 @@ export function computeSnapshots(
         break;
       }
 
+      case "enter_scope": {
+        const currentFrame = currentFrames[currentFrames.length - 1];
+        if (!currentFrame) break;
+        currentFrame.scopeDepth = (currentFrame.scopeDepth ?? 0) + 1;
+        pushSnapshot(event.line, event.op, `进入块级作用域${event.name ? `: ${event.name}` : ""}`);
+        break;
+      }
+
+      case "exit_scope": {
+        const currentFrame = currentFrames[currentFrames.length - 1];
+        if (!currentFrame) break;
+        const exitingDepth = currentFrame.scopeDepth ?? 0;
+        const exiting = currentFrame.variables
+          .filter((variable) => (variable.scopeDepth ?? 0) >= exitingDepth)
+          .reverse();
+        for (const variable of exiting) {
+          if (variable.rawAddress) destroyedStackAddresses.add(variable.rawAddress);
+        }
+        currentFrame.variables = currentFrame.variables.filter(
+          (variable) => (variable.scopeDepth ?? 0) < exitingDepth,
+        );
+        currentFrame.scopeDepth = Math.max(0, exitingDepth - 1);
+        pushSnapshot(event.line, event.op, `离开块级作用域${event.name ? `: ${event.name}` : ""}`);
+        break;
+      }
+
       case "var_decl": {
         const currentFrame = currentFrames[currentFrames.length - 1];
         if (currentFrame) {
-          const isPtr = event.type.includes("*");
+          const isReference = event.type.includes("&");
+          const isPtr = event.type.includes("*") || isReference;
           const pointsToRaw = isPtr && event.value ? normalizeAddr(event.value) : null;
-          const targetBlock = pointsToRaw ? currentHeap.get(pointsToRaw) : null;
+          const allocationId = pointsToRaw ? activeAllocationByAddress.get(pointsToRaw) : undefined;
+          const targetBlock = allocationId ? currentHeap.get(allocationId) : undefined;
 
           const variable: StackVariable = {
+            variableId: `variable_${++variableCounter}`,
             name: event.name,
             type: event.type,
             value: event.value ?? "uninitialized",
             isPointer: isPtr,
+            relationKind: isReference ? "reference" : isPtr ? "raw_ptr" : undefined,
+            scopeDepth: currentFrame.scopeDepth ?? 0,
             rawAddress: normalizeAddr(event.addr),
             pointsToRaw,
+            pointsToAllocationId: allocationId ?? null,
             pointsToLabel: targetBlock ? targetBlock.label : null,
             status: "created",
           };
@@ -193,7 +347,7 @@ export function computeSnapshots(
       case "var_set": {
         const currentFrame = currentFrames[currentFrames.length - 1];
         if (currentFrame) {
-          const v = currentFrame.variables.find((x) => x.name === event.name);
+          const v = [...currentFrame.variables].reverse().find((x) => x.name === event.name);
           if (v) {
             v.value = event.value;
             v.status = "modified";
@@ -211,12 +365,14 @@ export function computeSnapshots(
         const currentFrame = currentFrames[currentFrames.length - 1];
         if (currentFrame) {
           const variable: StackVariable = {
+            variableId: `variable_${++variableCounter}`,
             name: event.id,
             type: event.type,
             value: `{${event.type}}`,
             rawAddress: normalizeAddr(event.addr),
             fields: event.fields,
             status: "created",
+            scopeDepth: currentFrame.scopeDepth ?? 0,
           };
           currentFrame.variables.push(variable);
           pushSnapshot(
@@ -231,7 +387,7 @@ export function computeSnapshots(
       case "obj_dtor": {
         const currentFrame = currentFrames[currentFrames.length - 1];
         if (currentFrame) {
-          const v = currentFrame.variables.find((x) => x.name === event.id);
+          const v = [...currentFrame.variables].reverse().find((x) => x.name === event.id);
           if (v) {
             v.status = "destroyed";
             pushSnapshot(
@@ -248,13 +404,16 @@ export function computeSnapshots(
         const rawAddr = normalizeAddr(event.addr);
         heapCounter++;
         const label = event.label ?? `Heap #${heapCounter}`;
-        currentHeap.set(rawAddr, {
+        const allocationId = `allocation_${heapCounter}`;
+        currentHeap.set(allocationId, {
+          allocationId,
           rawAddr,
           label,
           size: event.size,
           type: event.type ?? "raw",
           status: "alive",
         });
+        activeAllocationByAddress.set(rawAddr, allocationId);
         pushSnapshot(
           event.line,
           event.op,
@@ -265,9 +424,11 @@ export function computeSnapshots(
 
       case "heap_free": {
         const rawAddr = normalizeAddr(event.addr);
-        const block = currentHeap.get(rawAddr);
+        const allocationId = activeAllocationByAddress.get(rawAddr);
+        const block = allocationId ? currentHeap.get(allocationId) : undefined;
         if (block) {
           block.status = "freed";
+          activeAllocationByAddress.delete(rawAddr);
           pushSnapshot(
             event.line,
             event.op,
@@ -280,19 +441,24 @@ export function computeSnapshots(
       case "ptr_set": {
         const currentFrame = currentFrames[currentFrames.length - 1];
         if (currentFrame) {
-          let v = currentFrame.variables.find((x) => x.name === event.var);
+          let v = [...currentFrame.variables].reverse().find((x) => x.name === event.var);
           const rawTo = event.to !== null ? normalizeAddr(event.to) : null;
-          const targetBlock = rawTo ? currentHeap.get(rawTo) : null;
+          const allocationId = rawTo ? activeAllocationByAddress.get(rawTo) : undefined;
+          const targetBlock = allocationId ? currentHeap.get(allocationId) : undefined;
 
           if (!v) {
             // 如果此前未声明，自动隐式声明指针变量
             v = {
+              variableId: `variable_${++variableCounter}`,
               name: event.var,
               type: event.type ?? "pointer",
               value: rawTo ?? "nullptr",
               isPointer: true,
               isSmartPointer: event.isSmart,
+              relationKind: event.isSmart ? "smart_ptr" : "raw_ptr",
+              scopeDepth: currentFrame.scopeDepth ?? 0,
               pointsToRaw: rawTo,
+              pointsToAllocationId: allocationId ?? null,
               pointsToLabel: targetBlock?.label ?? null,
               status: "created",
             };
@@ -302,6 +468,7 @@ export function computeSnapshots(
             v.isSmartPointer = event.isSmart ?? v.isSmartPointer;
             v.value = rawTo ?? "nullptr";
             v.pointsToRaw = rawTo;
+            v.pointsToAllocationId = allocationId ?? null;
             v.pointsToLabel = targetBlock?.label ?? null;
             v.status = "modified";
           }
@@ -319,26 +486,32 @@ export function computeSnapshots(
       case "ptr_move": {
         const currentFrame = currentFrames[currentFrames.length - 1];
         if (currentFrame) {
-          const fromV = currentFrame.variables.find((x) => x.name === event.from);
-          let toV = currentFrame.variables.find((x) => x.name === event.toVar);
+          const fromV = [...currentFrame.variables].reverse().find((x) => x.name === event.from);
+          let toV = [...currentFrame.variables].reverse().find((x) => x.name === event.toVar);
           const rawAddr = normalizeAddr(event.addr);
-          const targetBlock = currentHeap.get(rawAddr);
+          const allocationId = activeAllocationByAddress.get(rawAddr);
+          const targetBlock = allocationId ? currentHeap.get(allocationId) : undefined;
 
           if (fromV) {
-            fromV.value = "nullptr";
+            fromV.value = "moved (nullptr)";
             fromV.pointsToRaw = null;
+            fromV.pointsToAllocationId = null;
             fromV.pointsToLabel = null;
-            fromV.status = "modified";
+            fromV.status = "moved_from";
           }
 
           if (!toV) {
             toV = {
+              variableId: `variable_${++variableCounter}`,
               name: event.toVar,
               type: fromV?.type ?? "unique_ptr",
               value: rawAddr,
               isPointer: true,
               isSmartPointer: true,
+              relationKind: "smart_ptr",
+              scopeDepth: currentFrame.scopeDepth ?? 0,
               pointsToRaw: rawAddr,
+              pointsToAllocationId: allocationId ?? null,
               pointsToLabel: targetBlock?.label ?? null,
               status: "created",
             };
@@ -346,6 +519,7 @@ export function computeSnapshots(
           } else {
             toV.value = rawAddr;
             toV.pointsToRaw = rawAddr;
+            toV.pointsToAllocationId = allocationId ?? null;
             toV.pointsToLabel = targetBlock?.label ?? null;
             toV.status = "modified";
           }
@@ -385,6 +559,10 @@ export function computeSnapshots(
       const lastSnap = snapshots[snapshots.length - 1];
       for (const leaked of leakedBlocks) {
         leaked.status = "leaked";
+        const leakedSnapshotBlock = lastSnap.heap.find(
+          (block) => (block.allocationId ?? block.rawAddr) === (leaked.allocationId ?? leaked.rawAddr),
+        );
+        if (leakedSnapshotBlock) leakedSnapshotBlock.status = "leaked";
         lastSnap.warnings.push(
           `🛑 内存泄漏警告: ${leaked.label} (${leaked.size} 字节) 在程序结束时未释放！`,
         );
@@ -392,7 +570,7 @@ export function computeSnapshots(
     }
   }
 
-  return snapshots;
+  return { snapshots, diagnostics };
 }
 
 /**
@@ -459,11 +637,11 @@ export function simulateCppStdout(code: string): string {
  * - RAII 局部变量 LIFO 逆序析构
  * - 控制台 std::cout 逐步打印
  */
-export function generateSnapshotsFromCodeAndOutput(
+export function inferTraceEventsFromCodeAndOutput(
   code: string,
   stdout: string,
   exitCode = 0,
-): MemorySnapshot[] {
+): TraceEvent[] {
   const events: TraceEvent[] = [];
   const lines = code.split(/\r?\n/);
   const effectiveStdout = stdout || simulateCppStdout(code);
@@ -523,7 +701,7 @@ export function generateSnapshotsFromCodeAndOutput(
   let inMain = false;
   let mainBraceCount = 0;
   const constructedObjects: Array<{ id: string; type: string; line: number }> = [];
-  const allocatedHeaps: Array<{ addr: string; label: string }> = [];
+  const allocatedHeaps = new Map<string, { addr: string; label: string; smart: boolean }>();
   const stackVarAddresses = new Map<string, string>();
   let heapCounter = 0;
 
@@ -568,7 +746,11 @@ export function generateSnapshotsFromCodeAndOutput(
       const varName = smartPtrMatch[2];
       const addr = `0x${(0x2000 + heapCounter * 0x40).toString(16)}`;
       const isShared = line.includes("shared_ptr") || line.includes("make_shared");
-      allocatedHeaps.push({ addr, label: `${type} (Heap #${heapCounter})` });
+      allocatedHeaps.set(varName, {
+        addr,
+        label: `${type} (Heap #${heapCounter})`,
+        smart: true,
+      });
 
       events.push({
         op: "heap_alloc",
@@ -603,7 +785,11 @@ export function generateSnapshotsFromCodeAndOutput(
       const type = newMatch[3] || "int";
       const varName = newMatch[2];
       const addr = `0x${(0x2000 + heapCounter * 0x40).toString(16)}`;
-      allocatedHeaps.push({ addr, label: `${type} (Heap #${heapCounter})` });
+      allocatedHeaps.set(varName, {
+        addr,
+        label: `${type} (Heap #${heapCounter})`,
+        smart: false,
+      });
 
       events.push({
         op: "heap_alloc",
@@ -634,13 +820,14 @@ export function generateSnapshotsFromCodeAndOutput(
     const deleteMatch = line.match(/(?:delete\s+(?:\[\]\s*)?([A-Za-z_][A-Za-z0-9_]*)|([A-Za-z_][A-Za-z0-9_]*)\.reset\(\))\s*;/);
     if (deleteMatch) {
       const varName = deleteMatch[1] || deleteMatch[2];
-      const heap = allocatedHeaps.pop();
+      const heap = allocatedHeaps.get(varName);
       if (heap) {
         events.push({
           op: "heap_free",
           line: lineNum,
           addr: heap.addr,
         });
+        allocatedHeaps.delete(varName);
       }
       events.push({
         op: "step",
@@ -865,7 +1052,18 @@ export function generateSnapshotsFromCodeAndOutput(
     });
   }
 
-  // 5. 离开 main 作用域
+  // 5. 智能指针在离开 main 作用域时自动释放所有权资源
+  for (const [varName, heap] of allocatedHeaps.entries()) {
+    if (!heap.smart) continue;
+    events.push({ op: "heap_free", line: mainLine, addr: heap.addr });
+    events.push({
+      op: "step",
+      line: mainLine,
+      label: `智能指针 [${varName}] 离开作用域，自动释放 ${heap.label}`,
+    });
+  }
+
+  // 6. 离开 main 作用域
   events.push({
     op: "scope_exit",
     name: "main",
@@ -898,6 +1096,13 @@ export function generateSnapshotsFromCodeAndOutput(
     });
   }
 
-  return computeSnapshots(events, "");
+  return events;
 }
 
+export function generateSnapshotsFromCodeAndOutput(
+  code: string,
+  stdout: string,
+  exitCode = 0,
+): MemorySnapshot[] {
+  return computeSnapshots(inferTraceEventsFromCodeAndOutput(code, stdout, exitCode));
+}

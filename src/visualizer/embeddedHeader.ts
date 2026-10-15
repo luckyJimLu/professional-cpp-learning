@@ -191,6 +191,11 @@ export function preprocessCppCode(source: string): string {
   if (!includePattern.test(source)) {
     return source;
   }
-  // 用内联源码替换掉 #include 行
-  return source.replace(includePattern, `// --- Begin Builtin visualizer.h ---\n${VISUALIZER_HEADER_SOURCE}\n// --- End Builtin visualizer.h ---`);
+  const match = includePattern.exec(source);
+  if (!match) return source;
+  const includeLine = source.slice(0, match.index).split(/\r?\n/).length;
+  return source.replace(
+    includePattern,
+    `#line 1 "visualizer.h"\n${VISUALIZER_HEADER_SOURCE}\n#line ${includeLine + 1} "main.cpp"`,
+  );
 }

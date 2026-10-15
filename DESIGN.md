@@ -133,3 +133,14 @@ below its right TOC. Search and Lab retain task-specific working layouts.
 Reconciliation: replaces dashboard-style homepage and four-column lesson
 reading with documentation-first navigation. Existing 12px application panels
 remain; documentation links and callouts use a restrained 6px radius.
+
+## Memory visualizer
+
+The C++ memory visualizer uses one deterministic DOM/SVG stack-and-heap view.
+Its signature is the pointer line between real variable and allocation cards;
+layout remains quiet and stable while the VCR advances. Runtime tokens remain
+owned by `styles.css`, while `visualizer.css` owns the dark code surface and
+semantic pointer treatments: raw green, smart blue, reference gray and
+dangling red. Approximate regex traces are always labeled and never presented
+as exact runtime evidence. Graph-layout libraries and force-directed motion are
+not part of this product surface.

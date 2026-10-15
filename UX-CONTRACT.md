@@ -88,6 +88,10 @@ Phase 1:
 
 Browser compilation is implemented as a lazy-loaded Web Worker. It MUST remain optional infrastructure around the Markdown Lab source and MUST NOT change the Markdown content model.
 
+Memory visualization has one canonical session shared by Lab and the standalone visualizer. Preset snapshots are the fast path; Clang `[VIS]` events are exact runtime evidence; regex inference is explicitly labeled approximate. A compiler/toolchain failure remains an error and may only enter approximation after an explicit user action. Editing code preserves the previous trace for inspection and marks it stale until the next run.
+
+The canonical renderer is the deterministic DOM/SVG stack-and-heap view. Stack, heap, and pointer SVG share one scroll owner so geometry cannot detach while scrolling. VCR steps are clamped, autoplay stops at the final frame, and a new trace resets playback to its first frame.
+
 The Lab source shown in the editor starts from the repository source. Browser edits are ephemeral unless a future explicit save workflow is introduced.
 
 ## 7. Daily frontmatter
