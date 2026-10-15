@@ -27,6 +27,7 @@
 - [完整学习进度](progress.md)
 - [C++ Design Patterns · 工程化专题](patterns/)
 - [经典工业级框架解构 · Asio](frameworks/asio/)
+- [TRACE32 · RTOS 稳定性分析工程实战](frameworks/trace32/README.md)
 - [Embedded C++ 编码规范索引](guidelines/embedded-cpp-guideline-notes.md)
 - [每日课程目录](daily/)
 - [周复盘目录](weekly/)
@@ -46,6 +47,14 @@
 除了跟随教材逐步推进，本仓库还设立工业级框架深度解构专题，将抽象语言机制与顶级生产级基础设施直接对照：
 
 - **[Asio 框架解构专栏](frameworks/asio/)**：总体分层架构、异步生命周期与 C++20 协程实战。
+
+## TRACE32 · RTOS 稳定性分析专题
+
+新增面向 C / Embedded 开发者的独立实战章节，覆盖现场保全、离线 Dump、HardFault、任务死锁、栈与堆、DMA / Cache、硬件 Trace、自动采集与 C++ 生命周期修复。不占用 Day 编号。
+
+- [章节与操作路线](frameworks/trace32/README.md)
+- [在线阅读：专题知识库 → 嵌入式系统 → TRACE32](https://luckyJimLu.github.io/professional-cpp-learning/?view=topics&topic=frameworks%2Ftrace32%2FREADME.md)
+- [自动采集模板与 Host C++ 解码实验](frameworks/trace32/04-automation-and-labs.md)
 
 ## 最近课程
 

@@ -1,5 +1,8 @@
 const assets = import.meta.glob(
-  ["../../references/**/*.{svg,png,jpg,jpeg,gif,webp,pdf,cpp,hpp,py,sh,puml}"],
+  [
+    "../../references/**/*.{svg,png,jpg,jpeg,gif,webp,pdf,cpp,hpp,py,sh,puml}",
+    "../../frameworks/trace32/**/*.{cmm,cpp}",
+  ],
   { query: "?url", import: "default", eager: true },
 ) as Record<string, string>;
 const assetUrls = Object.fromEntries(

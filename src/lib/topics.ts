@@ -14,7 +14,7 @@ export function topicGroup(path: string) {
   if (/C\+\+ Concurrency/.test(path)) return "C++ 并发编程";
   if (/Boost[. ]Asio/.test(path)) return "Boost.Asio";
   if (/Cpp System/.test(path)) return "C++ 系统架构";
-  if (/embedded-systems/.test(path)) return "嵌入式系统";
+  if (/embedded-systems|frameworks\/trace32/.test(path)) return "嵌入式系统";
   if (/Development Tools/.test(path)) return "开发工具";
   if (/patterns/.test(path)) return "设计模式";
   return "框架与阅读指南";

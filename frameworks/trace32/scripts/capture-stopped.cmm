@@ -1,0 +1,69 @@
+; TEMPLATE: Armv7-M Cortex-M3/M4 only. Not validated on real hardware.
+; Run after attaching without reset and halting the intended core.
+; Args: unique_existing_directory/prefix SRAM_start SRAM_end_inclusive
+; Example: DO capture-stopped.cmm "C:/cases/run01/fault" 0x20000000 0x2003FFFF
+; Does not change run state, breakpoints, registers or target memory.
+PMACRO.EXPLICIT
+ENTRY &prefix &ram_start &ram_end
+LOCAL &pc &lr &sp &msp &psp &xpsr &cfsr &hfsr &mmfar &bfar
+
+IF STATE.RUN()
+(
+    PRINT %ERROR "Target running. Capture refused; halt and record timing first."
+    ENDDO
+)
+IF &ram_end<&ram_start
+(
+    PRINT %ERROR "Invalid SRAM range."
+    ENDDO
+)
+
+; Read current hardware context, NOT a reconstructed pre-fault context.
+&pc=Register(PC)
+&lr=Register(LR)
+&sp=Register(SP)
+&msp=Register(MSP)
+&psp=Register(PSP)
+&xpsr=Register(XPSR)
+&cfsr=Data.Long(D:0xE000ED28)
+&hfsr=Data.Long(D:0xE000ED2C)
+&mmfar=Data.Long(D:0xE000ED34)
+&bfar=Data.Long(D:0xE000ED38)
+
+OPEN #1 "&prefix-registers.txt" /Create /Write
+WRITE #1 "Current halted core context. Not necessarily fault-entry values."
+WRITE #1 "DATE=" DATE.TIME()
+WRITE #1 "PC=" %Hex &pc
+WRITE #1 "LR=" %Hex &lr
+WRITE #1 "SP=" %Hex &sp
+WRITE #1 "MSP=" %Hex &msp
+WRITE #1 "PSP=" %Hex &psp
+WRITE #1 "XPSR=" %Hex &xpsr
+WRITE #1 "R0=" %Hex Register(R0)
+WRITE #1 "R1=" %Hex Register(R1)
+WRITE #1 "R2=" %Hex Register(R2)
+WRITE #1 "R3=" %Hex Register(R3)
+WRITE #1 "R4=" %Hex Register(R4)
+WRITE #1 "R5=" %Hex Register(R5)
+WRITE #1 "R6=" %Hex Register(R6)
+WRITE #1 "R7=" %Hex Register(R7)
+WRITE #1 "R8=" %Hex Register(R8)
+WRITE #1 "R9=" %Hex Register(R9)
+WRITE #1 "R10=" %Hex Register(R10)
+WRITE #1 "R11=" %Hex Register(R11)
+WRITE #1 "R12=" %Hex Register(R12)
+WRITE #1 "CONTROL=" %Hex Register(CONTROL)
+WRITE #1 "CFSR=" %Hex &cfsr
+WRITE #1 "HFSR=" %Hex &hfsr
+WRITE #1 "MMFAR_RAW=" %Hex &mmfar
+WRITE #1 "BFAR_RAW=" %Hex &bfar
+WRITE #1 "MMARVALID=" ((&cfsr&0x80)!=0)
+WRITE #1 "BFARVALID=" ((&cfsr&0x8000)!=0)
+WRITE #1 "SRAM_START=" %Hex &ram_start
+WRITE #1 "SRAM_END_INCLUSIVE=" %Hex &ram_end
+WRITE #1 "EXPECTED_BYTES=" %Decimal (&ram_end-&ram_start+1.)
+CLOSE #1
+
+Data.SAVE.Binary "&prefix-sram.bin" D:&ram_start--&ram_end
+PRINT "Capture commands completed. Verify file length/hash and complete manifest."
+ENDDO

@@ -1,0 +1,21 @@
+; TEMPLATE: observe debugger run state; no Go, Break or breakpoint mutations.
+; Preconfigure a verified hardware fault-entry breakpoint manually.
+; Args: absolute_capture_script unique_existing_directory/prefix start end
+PMACRO.EXPLICIT
+ENTRY &capture_script &prefix &ram_start &ram_end
+LOCAL &count
+
+&count=0.
+WHILE STATE.RUN()
+(
+    IF &count>=3600.
+    (
+        PRINT "Observation timed out. No pass/fail claim; target left unchanged."
+        ENDDO
+    )
+    WAIT 1.s
+    &count=&count+1.
+)
+PRINT "Target stopped. Stop cause must be checked manually."
+DO "&capture_script" "&prefix" &ram_start &ram_end
+ENDDO
