@@ -264,7 +264,6 @@ export function VisualizerWorkbench({
       </div>
 
       {/* 移动端视图切换条 */}
-      {/* 移动端视图切换条 */}
       <div className="workbench-mobile-switcher">
         <button
           type="button"

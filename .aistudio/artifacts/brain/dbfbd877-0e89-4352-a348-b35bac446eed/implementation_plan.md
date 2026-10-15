@@ -168,19 +168,21 @@ export interface StaticTraceFile {
 
 ### Implementation Steps & Milestones
 
-1. **安装并集成核心库**：
-   - 引入 `@xyflow/react` 与轻量自动化拓扑依赖 `elkjs`（或内置轻量分层布局算法）。
-2. **构建静态轨迹资源与加载器（Trace Loader Engine）**：
-   - 在 `public/traces/` 构建 5 套经典 C++ 场景的高质量 JSON 轨迹。
-   - 实现 JSON 格式校验器、拖拽/文件上传解析器、URL `?trace=xxx` 自动探测。
-3. **实现 XYFlow 自定义节点与动态贝塞尔连接边**：
-   - `<StackFrameNode>`：清晰展示函数名、局部变量、原生/智能指针锚点。
-   - `<HeapBlockNode>`：展示堆地址、类型、结构体内部字段、alive/freed 视觉状态。
-   - `<AnimatedPointerEdge>`：带有流光箭头与悬挂指针检测样式的动态边。
-4. **接入 ELKjs 智能自动拓扑计算**：
-   - 每次步进变化时，自动计算栈在左/上、堆在右/下的整洁层次，支持全屏缩放（Pan/Zoom/FitView）。
-5. **打磨 VCR 时间轴控制器与嵌入式支持**：
-   - 支持键盘左右方向键单步调试、播放/暂停、进度拖动。
+1. **安装并集成核心库**：[COMPLETED]
+   - 引入 `@xyflow/react` 与轻量自动化拓扑依赖 `elkjs`，并在 `package.json` 中配置完毕。
+2. **构建静态轨迹资源与加载器（Trace Loader Engine）**：[COMPLETED]
+   - 在 `public/traces/` 构建经典 C++ 场景的高质量 JSON 轨迹（包含 `smart-ptr-unique.json`, `linked-list-reverse.json` 等）。
+   - 实现 JSON 格式校验器、本地自定义 JSON 导入/导出、URL `?trace=xxx` 自动识别。
+3. **实现 XYFlow 自定义节点与动态贝塞尔连接边**：[COMPLETED]
+   - `<StackFrameNode>`：结构体表格渲染、局部变量与原生/智能指针锚点。
+   - `<HeapBlockNode>`：展示堆地址、结构体内部字段、alive/freed/leaked 视觉状态。
+   - `<SmoothPointerEdge>`：带有流畅贝塞尔曲线、悬挂指针流光与智能指针语义着色。
+4. **接入 ELKjs 智能自动拓扑计算**：[COMPLETED]
+   - 基于 ELKjs layered 算法，自动计算绝不重叠的节点 [x, y] 坐标，支持全屏缩放（Pan/Zoom/FitView）。
+   - 实现优雅的回退机制，当复杂图计算微延迟时无缝降级。
+5. **打磨 VCR 时间轴控制器与去除冗余信息**：[COMPLETED]
+   - 消除移动端与桌面端重复的 TOOLCHAIN 卡片与冗余操作按钮，将运行与单步调试高内聚整合到工作区。
+   - 保持清晰纯粹的内存可视化逻辑，支持键盘左右方向键单步调试、播放/暂停、进度拖动。
    - 优化 `?embed=true` 无边框沉浸模式，确保在各类静态博客 iframe 中无缝适配。
-6. **全链路验证与编译**：
+6. **全链路验证与编译**：[COMPLETED]
    - 运行 `compile_applet` 确保 TypeScript 类型与 Vite 构建零报错，达到 GitHub Pages 纯静态开箱即用状态。
