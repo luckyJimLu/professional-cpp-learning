@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parseTraceOutput, computeSnapshots } from "../src/visualizer/reducer.ts";
+import { parseTraceOutput, computeSnapshots, generateSnapshotsFromCodeAndOutput } from "../src/visualizer/reducer.ts";
 
 test("parseTraceOutput separates [VIS] events from standard stdout", () => {
   const raw = `
@@ -111,3 +111,48 @@ test("computeSnapshots tracks std::move ownership transfer", () => {
   assert.equal(moveSnap.pointers.length, 1);
   assert.equal(moveSnap.pointers[0].fromVar, "p2");
 });
+
+test("generateSnapshotsFromCodeAndOutput generates stack frames and RAII destruction for standard C++ code", () => {
+  const code = `
+#include <iostream>
+
+class GpioResetPolicy {
+ public:
+  bool Reset() { return true; }
+};
+
+class ModemController {
+ public:
+  explicit ModemController(GpioResetPolicy& p) {}
+  bool Recover() { return true; }
+};
+
+int main() {
+  GpioResetPolicy gpio_reset;
+  ModemController board_a{gpio_reset};
+  const bool ok = board_a.Recover();
+  std::cout << "reset via GPIO\\n";
+  return 0;
+}
+  `.trim();
+
+  const stdout = "reset via GPIO\n";
+  const snapshots = generateSnapshotsFromCodeAndOutput(code, stdout, 0);
+
+  // 必须生成完整的步骤快照
+  assert.ok(snapshots.length >= 4);
+
+  // 校验包含 main 栈帧
+  assert.equal(snapshots[0].callStack[0].name, "main");
+
+  // 校验对象构造被记录
+  const objectSnap = snapshots.find((s) => s.callStack[0]?.variables.some((v) => v.name === "gpio_reset"));
+  assert.ok(objectSnap, "gpio_reset should be tracked on call stack");
+
+  // 校验 RAII 逆序析构（board_a 先析构，gpio_reset 后析构）
+  const dtorSnaps = snapshots.filter((s) => s.activeOp === "obj_dtor");
+  assert.ok(dtorSnaps.length >= 2, "Both objects should have RAII destruction events");
+  assert.ok(dtorSnaps[0].description.includes("board_a"));
+  assert.ok(dtorSnaps[1].description.includes("gpio_reset"));
+});
+

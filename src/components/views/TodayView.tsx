@@ -24,7 +24,7 @@ export function TodayView({
         <header className="guide-title" id="introduction">
           <h1>从 C 出发，写出专业的 C++</h1>
           <p className="guide-lead">
-            面向 C / 嵌入式开发者的现代 C++ 工程化学习手册，沿着原书章节以可运行实验从语言机制走向系统架构。
+            面向 C / 嵌入式开发者的现代 C++ 工程化学习手册，配合可运行实验从语言机制走向系统架构。
           </p>
           <div className="guide-hero-cta">
             <button

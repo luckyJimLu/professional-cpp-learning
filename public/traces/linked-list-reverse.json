@@ -1,0 +1,514 @@
+{
+  "id": "linked-list-reverse",
+  "title": "单链表构造与三指针就地反转",
+  "category": "data_structures",
+  "description": "经典数据结构算法：动态构造含有 3 个节点的堆链表 (1 -> 2 -> 3)，通过 prev, curr, next 三个双向迭代指针完成优雅的就地反转 (3 -> 2 -> 1)。",
+  "sourceCode": "#include <iostream>\n\nstruct Node {\n    int val;\n    Node* next;\n    Node(int v, Node* n = nullptr) : val(v), next(n) {}\n};\n\nint main() {\n    // 1. 构造链表: 1 -> 2 -> 3 -> nullptr\n    Node* head = new Node(1, new Node(2, new Node(3)));\n\n    // 2. 初始化三指针\n    Node* prev = nullptr;\n    Node* curr = head;\n\n    // 3. 逐节点转向\n    while (curr != nullptr) {\n        Node* nextTemp = curr->next;\n        curr->next = prev;\n        prev = curr;\n        curr = nextTemp;\n    }\n    head = prev; // 翻转后 head 指向原尾节点 3\n\n    return 0;\n}",
+  "snapshots": [
+    {
+      "stepIndex": 0,
+      "line": 9,
+      "description": "main() 函数入口，准备初始化单链表",
+      "activeOp": "scope_enter",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": []
+        }
+      ],
+      "heap": [],
+      "pointers": [],
+      "stdout": "",
+      "warnings": []
+    },
+    {
+      "stepIndex": 1,
+      "line": 10,
+      "description": "在堆上连续分配三个节点：Node(1) -> Node(2) -> Node(3)，head 指向首节点 (0x3010)",
+      "activeOp": "heap_alloc",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": [
+            {
+              "name": "head",
+              "type": "Node*",
+              "value": "0x3010",
+              "isPointer": true,
+              "rawAddress": "0x7ffd20",
+              "pointsToRaw": "0x3010",
+              "pointsToLabel": "Node #1 (val: 1)",
+              "status": "created"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "rawAddr": "0x3010",
+          "label": "Node #1",
+          "size": 16,
+          "type": "Node",
+          "value": "{ val: 1, next: 0x3020 }",
+          "fields": {
+            "val": "1",
+            "next": "0x3020"
+          },
+          "status": "alive"
+        },
+        {
+          "rawAddr": "0x3020",
+          "label": "Node #2",
+          "size": 16,
+          "type": "Node",
+          "value": "{ val: 2, next: 0x3030 }",
+          "fields": {
+            "val": "2",
+            "next": "0x3030"
+          },
+          "status": "alive"
+        },
+        {
+          "rawAddr": "0x3030",
+          "label": "Node #3",
+          "size": 16,
+          "type": "Node",
+          "value": "{ val: 3, next: nullptr }",
+          "fields": {
+            "val": "3",
+            "next": "0x0"
+          },
+          "status": "alive"
+        }
+      ],
+      "pointers": [
+        {
+          "id": "edge-head-to-0x3010",
+          "fromVar": "head",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x3010",
+          "toLabel": "Node #1",
+          "isSmart": false,
+          "isDangling": false
+        },
+        {
+          "id": "edge-node1-to-node2",
+          "fromVar": "Node#1->next",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x3020",
+          "toLabel": "Node #2",
+          "isSmart": false,
+          "isDangling": false
+        },
+        {
+          "id": "edge-node2-to-node3",
+          "fromVar": "Node#2->next",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x3030",
+          "toLabel": "Node #3",
+          "isSmart": false,
+          "isDangling": false
+        }
+      ],
+      "stdout": "",
+      "warnings": []
+    },
+    {
+      "stepIndex": 2,
+      "line": 14,
+      "description": "初始化反转游标：prev = nullptr, curr = head (0x3010)",
+      "activeOp": "var_decl",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": [
+            {
+              "name": "head",
+              "type": "Node*",
+              "value": "0x3010",
+              "isPointer": true,
+              "rawAddress": "0x7ffd20",
+              "pointsToRaw": "0x3010",
+              "pointsToLabel": "Node #1",
+              "status": "normal"
+            },
+            {
+              "name": "prev",
+              "type": "Node*",
+              "value": "nullptr",
+              "isPointer": true,
+              "rawAddress": "0x7ffd28",
+              "pointsToRaw": null,
+              "pointsToLabel": null,
+              "status": "created"
+            },
+            {
+              "name": "curr",
+              "type": "Node*",
+              "value": "0x3010",
+              "isPointer": true,
+              "rawAddress": "0x7ffd30",
+              "pointsToRaw": "0x3010",
+              "pointsToLabel": "Node #1",
+              "status": "created"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "rawAddr": "0x3010",
+          "label": "Node #1",
+          "size": 16,
+          "type": "Node",
+          "value": "{ val: 1, next: 0x3020 }",
+          "fields": { "val": "1", "next": "0x3020" },
+          "status": "alive"
+        },
+        {
+          "rawAddr": "0x3020",
+          "label": "Node #2",
+          "size": 16,
+          "type": "Node",
+          "value": "{ val: 2, next: 0x3030 }",
+          "fields": { "val": "2", "next": "0x3030" },
+          "status": "alive"
+        },
+        {
+          "rawAddr": "0x3030",
+          "label": "Node #3",
+          "size": 16,
+          "type": "Node",
+          "value": "{ val: 3, next: nullptr }",
+          "fields": { "val": "3", "next": "0x0" },
+          "status": "alive"
+        }
+      ],
+      "pointers": [
+        {
+          "id": "edge-head-to-0x3010",
+          "fromVar": "head",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x3010",
+          "toLabel": "Node #1",
+          "isSmart": false,
+          "isDangling": false
+        },
+        {
+          "id": "edge-curr-to-0x3010",
+          "fromVar": "curr",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x3010",
+          "toLabel": "Node #1",
+          "isSmart": false,
+          "isDangling": false
+        },
+        {
+          "id": "edge-node1-to-node2",
+          "fromVar": "Node#1->next",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x3020",
+          "toLabel": "Node #2",
+          "isSmart": false,
+          "isDangling": false
+        },
+        {
+          "id": "edge-node2-to-node3",
+          "fromVar": "Node#2->next",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x3030",
+          "toLabel": "Node #3",
+          "isSmart": false,
+          "isDangling": false
+        }
+      ],
+      "stdout": "",
+      "warnings": []
+    },
+    {
+      "stepIndex": 3,
+      "line": 19,
+      "description": "第 1 轮反转：暂存 nextTemp = 0x3020，将 Node(1)->next 改为指向 prev (nullptr)，推进 prev = 0x3010, curr = 0x3020",
+      "activeOp": "ptr_set",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": [
+            {
+              "name": "head",
+              "type": "Node*",
+              "value": "0x3010",
+              "isPointer": true,
+              "rawAddress": "0x7ffd20",
+              "pointsToRaw": "0x3010",
+              "pointsToLabel": "Node #1",
+              "status": "normal"
+            },
+            {
+              "name": "prev",
+              "type": "Node*",
+              "value": "0x3010",
+              "isPointer": true,
+              "rawAddress": "0x7ffd28",
+              "pointsToRaw": "0x3010",
+              "pointsToLabel": "Node #1",
+              "status": "modified"
+            },
+            {
+              "name": "curr",
+              "type": "Node*",
+              "value": "0x3020",
+              "isPointer": true,
+              "rawAddress": "0x7ffd30",
+              "pointsToRaw": "0x3020",
+              "pointsToLabel": "Node #2",
+              "status": "modified"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "rawAddr": "0x3010",
+          "label": "Node #1",
+          "size": 16,
+          "type": "Node",
+          "value": "{ val: 1, next: nullptr }",
+          "fields": { "val": "1", "next": "0x0" },
+          "status": "alive"
+        },
+        {
+          "rawAddr": "0x3020",
+          "label": "Node #2",
+          "size": 16,
+          "type": "Node",
+          "value": "{ val: 2, next: 0x3030 }",
+          "fields": { "val": "2", "next": "0x3030" },
+          "status": "alive"
+        },
+        {
+          "rawAddr": "0x3030",
+          "label": "Node #3",
+          "size": 16,
+          "type": "Node",
+          "value": "{ val: 3, next: nullptr }",
+          "fields": { "val": "3", "next": "0x0" },
+          "status": "alive"
+        }
+      ],
+      "pointers": [
+        {
+          "id": "edge-prev-to-node1",
+          "fromVar": "prev",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x3010",
+          "toLabel": "Node #1",
+          "isSmart": false,
+          "isDangling": false
+        },
+        {
+          "id": "edge-curr-to-node2",
+          "fromVar": "curr",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x3020",
+          "toLabel": "Node #2",
+          "isSmart": false,
+          "isDangling": false
+        },
+        {
+          "id": "edge-node2-to-node3",
+          "fromVar": "Node#2->next",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x3030",
+          "toLabel": "Node #3",
+          "isSmart": false,
+          "isDangling": false
+        }
+      ],
+      "stdout": "",
+      "warnings": []
+    },
+    {
+      "stepIndex": 4,
+      "line": 22,
+      "description": "第 2 轮反转：Node(2)->next 指向 Node(1)，推进 prev = 0x3020, curr = 0x3030",
+      "activeOp": "ptr_set",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": [
+            {
+              "name": "prev",
+              "type": "Node*",
+              "value": "0x3020",
+              "isPointer": true,
+              "rawAddress": "0x7ffd28",
+              "pointsToRaw": "0x3020",
+              "pointsToLabel": "Node #2",
+              "status": "modified"
+            },
+            {
+              "name": "curr",
+              "type": "Node*",
+              "value": "0x3030",
+              "isPointer": true,
+              "rawAddress": "0x7ffd30",
+              "pointsToRaw": "0x3030",
+              "pointsToLabel": "Node #3",
+              "status": "modified"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "rawAddr": "0x3010",
+          "label": "Node #1",
+          "size": 16,
+          "type": "Node",
+          "value": "{ val: 1, next: nullptr }",
+          "fields": { "val": "1", "next": "0x0" },
+          "status": "alive"
+        },
+        {
+          "rawAddr": "0x3020",
+          "label": "Node #2",
+          "size": 16,
+          "type": "Node",
+          "value": "{ val: 2, next: 0x3010 }",
+          "fields": { "val": "2", "next": "0x3010" },
+          "status": "alive"
+        },
+        {
+          "rawAddr": "0x3030",
+          "label": "Node #3",
+          "size": 16,
+          "type": "Node",
+          "value": "{ val: 3, next: nullptr }",
+          "fields": { "val": "3", "next": "0x0" },
+          "status": "alive"
+        }
+      ],
+      "pointers": [
+        {
+          "id": "edge-prev-to-node2",
+          "fromVar": "prev",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x3020",
+          "toLabel": "Node #2",
+          "isSmart": false,
+          "isDangling": false
+        },
+        {
+          "id": "edge-curr-to-node3",
+          "fromVar": "curr",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x3030",
+          "toLabel": "Node #3",
+          "isSmart": false,
+          "isDangling": false
+        },
+        {
+          "id": "edge-node2-to-node1",
+          "fromVar": "Node#2->next",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x3010",
+          "toLabel": "Node #1",
+          "isSmart": false,
+          "isDangling": false
+        }
+      ],
+      "stdout": "",
+      "warnings": []
+    },
+    {
+      "stepIndex": 5,
+      "line": 23,
+      "description": "完成反转：Node(3)->next 指向 Node(2)，head 指向新链表头 Node(3) (3 -> 2 -> 1 -> nullptr)",
+      "activeOp": "ptr_set",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": [
+            {
+              "name": "head",
+              "type": "Node*",
+              "value": "0x3030",
+              "isPointer": true,
+              "rawAddress": "0x7ffd20",
+              "pointsToRaw": "0x3030",
+              "pointsToLabel": "Node #3",
+              "status": "modified"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "rawAddr": "0x3030",
+          "label": "Node #3",
+          "size": 16,
+          "type": "Node",
+          "value": "{ val: 3, next: 0x3020 }",
+          "fields": { "val": "3", "next": "0x3020" },
+          "status": "alive"
+        },
+        {
+          "rawAddr": "0x3020",
+          "label": "Node #2",
+          "size": 16,
+          "type": "Node",
+          "value": "{ val: 2, next: 0x3010 }",
+          "fields": { "val": "2", "next": "0x3010" },
+          "status": "alive"
+        },
+        {
+          "rawAddr": "0x3010",
+          "label": "Node #1",
+          "size": 16,
+          "type": "Node",
+          "value": "{ val: 1, next: nullptr }",
+          "fields": { "val": "1", "next": "0x0" },
+          "status": "alive"
+        }
+      ],
+      "pointers": [
+        {
+          "id": "edge-head-to-node3",
+          "fromVar": "head",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x3030",
+          "toLabel": "Node #3",
+          "isSmart": false,
+          "isDangling": false
+        },
+        {
+          "id": "edge-node3-to-node2",
+          "fromVar": "Node#3->next",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x3020",
+          "toLabel": "Node #2",
+          "isSmart": false,
+          "isDangling": false
+        },
+        {
+          "id": "edge-node2-to-node1",
+          "fromVar": "Node#2->next",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x3010",
+          "toLabel": "Node #1",
+          "isSmart": false,
+          "isDangling": false
+        }
+      ],
+      "stdout": "",
+      "warnings": []
+    }
+  ]
+}

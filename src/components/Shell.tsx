@@ -9,6 +9,7 @@ import {
   type View,
 } from "../lib/navigation";
 import { repoCompletedDay } from "../lib/course";
+import { OpenCodeLogo } from "./OpenCodeLogo";
 
 function BackToTop() {
   const [visible, setVisible] = useState(false);
@@ -285,6 +286,23 @@ export function Shell({
     return () => window.removeEventListener("keydown", shortcut);
   }, [view, setView, onPreloadSearch]);
 
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("cpp_console_sidebar_collapsed") === "true";
+    }
+    return false;
+  });
+
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed((prev) => {
+      const next = !prev;
+      if (typeof window !== "undefined") {
+        localStorage.setItem("cpp_console_sidebar_collapsed", String(next));
+      }
+      return next;
+    });
+  };
+
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
 
   const toggleGroup = (group: string) => {
@@ -300,88 +318,115 @@ export function Shell({
       : (NAV.find((item) => item.id === view)?.label ?? "课程阅读");
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${isSidebarCollapsed ? "is-sidebar-collapsed" : ""}`}>
       <a className="skip-link" href="#main-content">
         跳到正文
       </a>
       <header className="docs-header">
-        <details className="mobile-menu mobile-drawer">
-          <summary className="mobile-menu-trigger" aria-label="打开导航菜单">
-            <span className="hamburger-icon" aria-hidden="true">
-              ☰
-            </span>
-          </summary>
-          <div
-            className="drawer-overlay"
-            aria-hidden="true"
-            onClick={(e) => {
-              e.currentTarget.closest("details")?.removeAttribute("open");
-            }}
-          />
-          <div className="drawer-content">
-            <div className="drawer-header">
-              <span className="drawer-title">导航 · {label}</span>
-              <button
-                type="button"
-                className="drawer-close-btn"
-                aria-label="关闭导航菜单"
-                onClick={(e) => {
-                  e.currentTarget.closest("details")?.removeAttribute("open");
-                }}
-              >
-                ✕
-              </button>
-            </div>
-            <nav aria-label="Mobile navigation">
-              {NAV.map((item) => (
+        <div className="header-left">
+          <details className="mobile-menu mobile-drawer">
+            <summary className="mobile-menu-trigger" aria-label="打开导航菜单">
+              <span className="hamburger-icon" aria-hidden="true">
+                ☰
+              </span>
+            </summary>
+            <div
+              className="drawer-overlay"
+              aria-hidden="true"
+              onClick={(e) => {
+                e.currentTarget.closest("details")?.removeAttribute("open");
+              }}
+            />
+            <div className="drawer-content">
+              <div className="drawer-header">
+                <span className="drawer-title">导航 · {label}</span>
                 <button
-                  key={item.id}
                   type="button"
-                  aria-current={
-                    view === item.id ||
-                    (view === "lesson" && item.id === "lessons")
-                      ? "page"
-                      : undefined
-                  }
+                  className="drawer-close-btn"
+                  aria-label="关闭导航菜单"
+                  onClick={(e) => {
+                    e.currentTarget.closest("details")?.removeAttribute("open");
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+              <nav aria-label="Mobile navigation">
+                {NAV.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    aria-current={
+                      view === item.id ||
+                      (view === "lesson" && item.id === "lessons")
+                        ? "page"
+                        : undefined
+                    }
+                    onClick={(event) => {
+                      setView(item.id);
+                      event.currentTarget
+                        .closest("details")
+                        ?.removeAttribute("open");
+                    }}
+                  >
+                    <NavIcon id={item.id} />
+                    <span>{item.label}</span>
+                  </button>
+                ))}
+                <button
+                  key="search"
+                  type="button"
+                  aria-current={view === "search" ? "page" : undefined}
                   onClick={(event) => {
-                    setView(item.id);
+                    setView("search");
+                    requestAnimationFrame(() => {
+                      triggerMainSearchFocus();
+                    });
                     event.currentTarget
                       .closest("details")
                       ?.removeAttribute("open");
                   }}
                 >
-                  <NavIcon id={item.id} />
-                  <span>{item.label}</span>
+                  <NavIcon id="search" />
+                  <span>代码搜索</span>
                 </button>
-              ))}
-              <button
-                key="search"
-                type="button"
-                aria-current={view === "search" ? "page" : undefined}
-                onClick={(event) => {
-                  setView("search");
-                  requestAnimationFrame(() => {
-                    triggerMainSearchFocus();
-                  });
-                  event.currentTarget
-                    .closest("details")
-                    ?.removeAttribute("open");
-                }}
-              >
-                <NavIcon id="search" />
-                <span>代码搜索</span>
-              </button>
-            </nav>
-          </div>
-        </details>
+              </nav>
+            </div>
+          </details>
 
-        <a
-          className="brand"
-          href="?view=today"
-          aria-label="Professional C++ 学习指南"
-        >
-          <span className="brand-mark">Professional C++</span>
-        </a>
+          <button
+            type="button"
+            className="sidebar-toggle-btn"
+            onClick={toggleSidebar}
+            aria-label={isSidebarCollapsed ? "展开侧边栏" : "收起侧边栏"}
+            title={isSidebarCollapsed ? "展开侧边栏" : "收起侧边栏"}
+          >
+            <svg
+              className="toggle-sidebar-icon"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <line x1="9" y1="3" x2="9" y2="21" />
+              <path d={isSidebarCollapsed ? "m13 10 3 2-3 2" : "m16 10-3 2 3 2"} />
+            </svg>
+          </button>
+
+          <a
+            className="brand-logo-link opencode-header-brand"
+            href="?view=today"
+            aria-label="Professional C++ 学习指南"
+          >
+            <OpenCodeLogo />
+          </a>
+        </div>
 
         <div className="header-actions">
           <button
@@ -411,13 +456,15 @@ export function Shell({
           </button>
         </div>
       </header>
-      <aside className="sidebar">
+      <aside className={`sidebar ${isSidebarCollapsed ? "is-collapsed" : ""}`}>
         <nav className="side-nav" aria-label="Primary navigation">
           <button
             type="button"
             className={`nav-item nav-item-root ${view === "today" ? "is-active" : ""}`}
             aria-current={view === "today" ? "page" : undefined}
             onClick={() => setView("today")}
+            title="学习指南"
+            aria-label="学习指南"
           >
             <NavIcon id="today" />
             <span>学习指南</span>
@@ -452,7 +499,7 @@ export function Shell({
                     <polyline points="6 9 12 15 18 9" />
                   </svg>
                 </button>
-                {!isCollapsed && (
+                {(!isCollapsed || isSidebarCollapsed) && (
                   <div className="nav-accordion-items">
                     {groupItems.map((item) => (
                       <button
@@ -466,6 +513,8 @@ export function Shell({
                             : undefined
                         }
                         onClick={() => setView(item.id)}
+                        title={item.label}
+                        aria-label={item.label}
                       >
                         <NavIcon id={item.id} />
                         <span>{item.label}</span>
@@ -477,9 +526,15 @@ export function Shell({
             );
           })}
         </nav>
-        <div className="sidebar-status">
+        <div
+          className="sidebar-status"
+          title={`仓库课程进度: Day ${repoCompletedDay} / 112`}
+        >
           <span>仓库课程进度</span>
           <strong>Day {repoCompletedDay} / 112</strong>
+          <div className="sidebar-status-compact">
+            <span className="sidebar-status-compact-day">D{repoCompletedDay}</span>
+          </div>
           <div className="mini-progress">
             <i style={{ width: `${(repoCompletedDay / 112) * 100}%` }} />
           </div>

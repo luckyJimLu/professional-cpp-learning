@@ -1,0 +1,224 @@
+{
+  "id": "smart-ptr-unique",
+  "title": "std::unique_ptr 独占所有权与移动语义",
+  "category": "smart_pointers",
+  "description": "展示现代 C++ 中 std::unique_ptr 的独占性、std::move() 所有权转移以及离开作用域时的自动析构与堆内存回收。",
+  "sourceCode": "#include <iostream>\n#include <memory>\n\nstruct Widget {\n    int id;\n    Widget(int v) : id(v) { std::cout << \"Widget(\" << id << \") created\\n\"; }\n    ~Widget() { std::cout << \"Widget(\" << id << \") destroyed\\n\"; }\n};\n\nint main() {\n    std::cout << \"--- Step 1: 创建 unique_ptr p1 ---\\n\";\n    auto p1 = std::make_unique<Widget>(42);\n\n    std::cout << \"--- Step 2: 转移所有权到 p2 ---\\n\";\n    std::unique_ptr<Widget> p2 = std::move(p1);\n\n    std::cout << \"--- Step 3: p1 已置空，p2 掌管堆内存 ---\\n\";\n    if (!p1) {\n        std::cout << \"p1 is now nullptr\\n\";\n    }\n\n    std::cout << \"--- Step 4: 退出作用域，自动回收堆内存 ---\\n\";\n    return 0;\n}",
+  "snapshots": [
+    {
+      "stepIndex": 0,
+      "line": 10,
+      "description": "进入 main() 函数，建立主栈帧",
+      "activeOp": "scope_enter",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": []
+        }
+      ],
+      "heap": [],
+      "pointers": [],
+      "stdout": "",
+      "warnings": []
+    },
+    {
+      "stepIndex": 1,
+      "line": 12,
+      "description": "调用 std::make_unique<Widget>(42)：在堆上分配 Widget，p1 取得独占指针 (0x1000)",
+      "activeOp": "heap_alloc",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": [
+            {
+              "name": "p1",
+              "type": "std::unique_ptr<Widget>",
+              "value": "0x1000",
+              "isPointer": true,
+              "isSmartPointer": true,
+              "rawAddress": "0x7ffd01",
+              "pointsToRaw": "0x1000",
+              "pointsToLabel": "Heap #1",
+              "status": "created"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "rawAddr": "0x1000",
+          "label": "Heap #1",
+          "size": 4,
+          "type": "Widget",
+          "value": "{ id: 42 }",
+          "fields": {
+            "id": "42"
+          },
+          "status": "alive"
+        }
+      ],
+      "pointers": [
+        {
+          "id": "edge-p1-to-0x1000",
+          "fromVar": "p1",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x1000",
+          "toLabel": "Heap #1",
+          "isSmart": true,
+          "isDangling": false
+        }
+      ],
+      "stdout": "--- Step 1: 创建 unique_ptr p1 ---\nWidget(42) created",
+      "warnings": []
+    },
+    {
+      "stepIndex": 2,
+      "line": 15,
+      "description": "std::move(p1) 所有权转移：p2 接管堆内存 0x1000，p1 内部指针被安全置空 (nullptr)",
+      "activeOp": "ptr_move",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": [
+            {
+              "name": "p1",
+              "type": "std::unique_ptr<Widget>",
+              "value": "nullptr (0x0)",
+              "isPointer": true,
+              "isSmartPointer": true,
+              "rawAddress": "0x7ffd01",
+              "pointsToRaw": null,
+              "pointsToLabel": null,
+              "status": "modified"
+            },
+            {
+              "name": "p2",
+              "type": "std::unique_ptr<Widget>",
+              "value": "0x1000",
+              "isPointer": true,
+              "isSmartPointer": true,
+              "rawAddress": "0x7ffd08",
+              "pointsToRaw": "0x1000",
+              "pointsToLabel": "Heap #1",
+              "status": "created"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "rawAddr": "0x1000",
+          "label": "Heap #1",
+          "size": 4,
+          "type": "Widget",
+          "value": "{ id: 42 }",
+          "fields": {
+            "id": "42"
+          },
+          "status": "alive"
+        }
+      ],
+      "pointers": [
+        {
+          "id": "edge-p2-to-0x1000",
+          "fromVar": "p2",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x1000",
+          "toLabel": "Heap #1",
+          "isSmart": true,
+          "isDangling": false
+        }
+      ],
+      "stdout": "--- Step 1: 创建 unique_ptr p1 ---\nWidget(42) created\n--- Step 2: 转移所有权到 p2 ---",
+      "warnings": []
+    },
+    {
+      "stepIndex": 3,
+      "line": 18,
+      "description": "检查 p1 状态：确认 p1 为 nullptr，杜绝二次释放或指针别名冲突",
+      "activeOp": "step",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": [
+            {
+              "name": "p1",
+              "type": "std::unique_ptr<Widget>",
+              "value": "nullptr",
+              "isPointer": true,
+              "isSmartPointer": true,
+              "rawAddress": "0x7ffd01",
+              "pointsToRaw": null,
+              "pointsToLabel": null,
+              "status": "normal"
+            },
+            {
+              "name": "p2",
+              "type": "std::unique_ptr<Widget>",
+              "value": "0x1000",
+              "isPointer": true,
+              "isSmartPointer": true,
+              "rawAddress": "0x7ffd08",
+              "pointsToRaw": "0x1000",
+              "pointsToLabel": "Heap #1",
+              "status": "normal"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "rawAddr": "0x1000",
+          "label": "Heap #1",
+          "size": 4,
+          "type": "Widget",
+          "value": "{ id: 42 }",
+          "fields": {
+            "id": "42"
+          },
+          "status": "alive"
+        }
+      ],
+      "pointers": [
+        {
+          "id": "edge-p2-to-0x1000",
+          "fromVar": "p2",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x1000",
+          "toLabel": "Heap #1",
+          "isSmart": true,
+          "isDangling": false
+        }
+      ],
+      "stdout": "--- Step 1: 创建 unique_ptr p1 ---\nWidget(42) created\n--- Step 2: 转移所有权到 p2 ---\n--- Step 3: p1 已置空，p2 掌管堆内存 ---\np1 is now nullptr",
+      "warnings": []
+    },
+    {
+      "stepIndex": 4,
+      "line": 23,
+      "description": "main() 返回，作用域结束：p2 自动析构并调用 delete，堆内存 0x1000 安全释放！",
+      "activeOp": "scope_exit",
+      "callStack": [],
+      "heap": [
+        {
+          "rawAddr": "0x1000",
+          "label": "Heap #1",
+          "size": 4,
+          "type": "Widget",
+          "value": "(freed)",
+          "fields": {
+            "id": "42"
+          },
+          "status": "freed"
+        }
+      ],
+      "pointers": [],
+      "stdout": "--- Step 1: 创建 unique_ptr p1 ---\nWidget(42) created\n--- Step 2: 转移所有权到 p2 ---\n--- Step 3: p1 已置空，p2 掌管堆内存 ---\np1 is now nullptr\n--- Step 4: 退出作用域，自动回收堆内存 ---\nWidget(42) destroyed",
+      "warnings": []
+    }
+  ]
+}

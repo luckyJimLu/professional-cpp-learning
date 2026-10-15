@@ -1,0 +1,6 @@
+{
+  "summary": "GitHub Pages 纯前端 C++ 内存拓扑与执行轨迹可视化架构方案（React + XYFlow + ELKjs + 纯静态 JSON 轨迹引擎）。包括架构选型确认、纯静态数据源设计、VCR 单步调试时间轴、XYFlow 自定义内存节点与 ELKjs 自动布局实现。",
+  "updatedAt": "2026-10-15T11:48:11.884082336Z",
+  "requestFeedback": true,
+  "userFacing": true
+}

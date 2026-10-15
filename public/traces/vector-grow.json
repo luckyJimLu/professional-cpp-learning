@@ -1,0 +1,233 @@
+{
+  "id": "vector-grow",
+  "title": "std::vector 动态扩容、深拷贝与堆搬迁",
+  "category": "data_structures",
+  "description": "深入系统级底层：观察 std::vector 在 push_back 超出 capacity 时，如何申请 2 倍新堆内存、将旧元素拷贝/移动到新空间，并释放旧堆块的全过程。",
+  "sourceCode": "#include <iostream>\n#include <vector>\n\nint main() {\n    std::vector<int> vec;\n    std::cout << \"--- Step 1: push_back(10) (capacity=1) ---\\n\";\n    vec.push_back(10);\n\n    std::cout << \"--- Step 2: push_back(20) 触发扩容 (capacity: 1 -> 2) ---\\n\";\n    vec.push_back(20);\n\n    std::cout << \"--- Step 3: push_back(30) 再次翻倍 (capacity: 2 -> 4) ---\\n\";\n    vec.push_back(30);\n\n    return 0;\n}",
+  "snapshots": [
+    {
+      "stepIndex": 0,
+      "line": 5,
+      "description": "进入 main()，在栈上分配 std::vector 结构体（内部包含 begin, end, end_of_storage 三个原生指针，初始均为 nullptr）",
+      "activeOp": "var_decl",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": [
+            {
+              "name": "vec",
+              "type": "std::vector<int>",
+              "value": "size=0, cap=0",
+              "isPointer": false,
+              "rawAddress": "0x7ffd40",
+              "fields": {
+                "size": "0",
+                "capacity": "0",
+                "data_ptr": "nullptr"
+              },
+              "status": "created"
+            }
+          ]
+        }
+      ],
+      "heap": [],
+      "pointers": [],
+      "stdout": "",
+      "warnings": []
+    },
+    {
+      "stepIndex": 1,
+      "line": 7,
+      "description": "vec.push_back(10)：初始申请 1 个 int 堆空间 (0x4010)，元素 10 存入，size=1, capacity=1",
+      "activeOp": "heap_alloc",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": [
+            {
+              "name": "vec",
+              "type": "std::vector<int>",
+              "value": "size=1, cap=1",
+              "isPointer": true,
+              "rawAddress": "0x7ffd40",
+              "pointsToRaw": "0x4010",
+              "pointsToLabel": "Buffer [1] (0x4010)",
+              "fields": {
+                "size": "1",
+                "capacity": "1"
+              },
+              "status": "modified"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "rawAddr": "0x4010",
+          "label": "Buffer (cap: 1)",
+          "size": 4,
+          "type": "int[1]",
+          "value": "[ 10 ]",
+          "fields": {
+            "[0]": "10"
+          },
+          "status": "alive"
+        }
+      ],
+      "pointers": [
+        {
+          "id": "edge-vec-to-0x4010",
+          "fromVar": "vec.data()",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x4010",
+          "toLabel": "Buffer (cap: 1)",
+          "isSmart": true,
+          "isDangling": false
+        }
+      ],
+      "stdout": "--- Step 1: push_back(10) (capacity=1) ---",
+      "warnings": []
+    },
+    {
+      "stepIndex": 2,
+      "line": 10,
+      "description": "vec.push_back(20)：容量不足触发扩容！在堆上分配 2 倍新缓冲区 (0x4020, cap=2)，将 10 复制过去并写入 20，释放旧缓冲区 0x4010",
+      "activeOp": "heap_alloc",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": [
+            {
+              "name": "vec",
+              "type": "std::vector<int>",
+              "value": "size=2, cap=2",
+              "isPointer": true,
+              "rawAddress": "0x7ffd40",
+              "pointsToRaw": "0x4020",
+              "pointsToLabel": "Buffer [2] (0x4020)",
+              "fields": {
+                "size": "2",
+                "capacity": "2"
+              },
+              "status": "modified"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "rawAddr": "0x4010",
+          "label": "Old Buffer (cap: 1)",
+          "size": 4,
+          "type": "int[1]",
+          "value": "(freed)",
+          "fields": {
+            "[0]": "10"
+          },
+          "status": "freed"
+        },
+        {
+          "rawAddr": "0x4020",
+          "label": "Buffer (cap: 2)",
+          "size": 8,
+          "type": "int[2]",
+          "value": "[ 10, 20 ]",
+          "fields": {
+            "[0]": "10",
+            "[1]": "20"
+          },
+          "status": "alive"
+        }
+      ],
+      "pointers": [
+        {
+          "id": "edge-vec-to-0x4020",
+          "fromVar": "vec.data()",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x4020",
+          "toLabel": "Buffer (cap: 2)",
+          "isSmart": true,
+          "isDangling": false
+        }
+      ],
+      "stdout": "--- Step 1: push_back(10) (capacity=1) ---\n--- Step 2: push_back(20) 触发扩容 (capacity: 1 -> 2) ---",
+      "warnings": []
+    },
+    {
+      "stepIndex": 3,
+      "line": 13,
+      "description": "vec.push_back(30)：再次触碰容量上限！扩容至 cap=4 (0x4040)，旧数据搬迁，写入 30，释放 0x4020",
+      "activeOp": "heap_alloc",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": [
+            {
+              "name": "vec",
+              "type": "std::vector<int>",
+              "value": "size=3, cap=4",
+              "isPointer": true,
+              "rawAddress": "0x7ffd40",
+              "pointsToRaw": "0x4040",
+              "pointsToLabel": "Buffer [4] (0x4040)",
+              "fields": {
+                "size": "3",
+                "capacity": "4"
+              },
+              "status": "modified"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "rawAddr": "0x4010",
+          "label": "Old Buffer #1",
+          "size": 4,
+          "type": "int[1]",
+          "value": "(freed)",
+          "status": "freed"
+        },
+        {
+          "rawAddr": "0x4020",
+          "label": "Old Buffer #2",
+          "size": 8,
+          "type": "int[2]",
+          "value": "(freed)",
+          "status": "freed"
+        },
+        {
+          "rawAddr": "0x4040",
+          "label": "Buffer (cap: 4)",
+          "size": 16,
+          "type": "int[4]",
+          "value": "[ 10, 20, 30, (empty) ]",
+          "fields": {
+            "[0]": "10",
+            "[1]": "20",
+            "[2]": "30",
+            "[3]": "(uninitialized)"
+          },
+          "status": "alive"
+        }
+      ],
+      "pointers": [
+        {
+          "id": "edge-vec-to-0x4040",
+          "fromVar": "vec.data()",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x4040",
+          "toLabel": "Buffer (cap: 4)",
+          "isSmart": true,
+          "isDangling": false
+        }
+      ],
+      "stdout": "--- Step 1: push_back(10) (capacity=1) ---\n--- Step 2: push_back(20) 触发扩容 (capacity: 1 -> 2) ---\n--- Step 3: push_back(30) 再次翻倍 (capacity: 2 -> 4) ---",
+      "warnings": []
+    }
+  ]
+}

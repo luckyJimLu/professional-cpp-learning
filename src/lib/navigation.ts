@@ -5,6 +5,7 @@ export const NAV = [
   { id: "roadmap", label: "学习路线", group: "学习路径" },
   { id: "lessons", label: "每日课程", group: "学习路径" },
   { id: "topics", label: "专题", group: "知识与实践" },
+  { id: "visualizer", label: "内存可视化", group: "知识与实践" },
   { id: "lab", label: "编译实验", group: "知识与实践" },
   { id: "review", label: "每周复盘", group: "学习记录" },
   { id: "guidelines", label: "编码规范", group: "学习记录" },

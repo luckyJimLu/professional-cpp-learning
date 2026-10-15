@@ -1,0 +1,241 @@
+{
+  "id": "smart-ptr-shared",
+  "title": "std::shared_ptr 引用计数与共享所有权",
+  "category": "smart_pointers",
+  "description": "展示现代 C++ 中 std::shared_ptr 的共享所有权模型、内部控制块（Control Block）引用计数增减与最后拥有者释放时的析构机制。",
+  "sourceCode": "#include <iostream>\n#include <memory>\n\nstruct Data {\n    int val;\n    Data(int v) : val(v) { std::cout << \"Data(\" << val << \") allocated\\n\"; }\n    ~Data() { std::cout << \"Data(\" << val << \") freed\\n\"; }\n};\n\nint main() {\n    std::cout << \"--- Step 1: 创建 shared_ptr s1 ---\\n\";\n    auto s1 = std::make_shared<Data>(100);\n\n    std::cout << \"--- Step 2: 拷贝构造 s2 (引用计数 -> 2) ---\\n\";\n    std::shared_ptr<Data> s2 = s1;\n\n    std::cout << \"--- Step 3: s1 重置/离开局部作用域 (引用计数 -> 1) ---\\n\";\n    s1.reset();\n\n    std::cout << \"--- Step 4: s2 离开作用域 (引用计数 -> 0，触发析构) ---\\n\";\n    return 0;\n}",
+  "snapshots": [
+    {
+      "stepIndex": 0,
+      "line": 10,
+      "description": "main() 函数开始执行，建立主栈帧",
+      "activeOp": "scope_enter",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": []
+        }
+      ],
+      "heap": [],
+      "pointers": [],
+      "stdout": "",
+      "warnings": []
+    },
+    {
+      "stepIndex": 1,
+      "line": 12,
+      "description": "调用 std::make_shared<Data>(100)：在堆上同时分配 Data 对象与控制块 (Control Block)，s1 指向该内存，use_count = 1",
+      "activeOp": "heap_alloc",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": [
+            {
+              "name": "s1",
+              "type": "std::shared_ptr<Data>",
+              "value": "0x2000 [ref=1]",
+              "isPointer": true,
+              "isSmartPointer": true,
+              "rawAddress": "0x7ffd10",
+              "pointsToRaw": "0x2000",
+              "pointsToLabel": "Heap #1",
+              "status": "created"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "rawAddr": "0x2000",
+          "label": "Data Object + ControlBlock",
+          "size": 8,
+          "type": "Data",
+          "value": "{ val: 100, use_count: 1 }",
+          "fields": {
+            "val": "100",
+            "use_count": "1",
+            "weak_count": "0"
+          },
+          "status": "alive"
+        }
+      ],
+      "pointers": [
+        {
+          "id": "edge-s1-to-0x2000",
+          "fromVar": "s1",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x2000",
+          "toLabel": "Data Object + ControlBlock",
+          "isSmart": true,
+          "isDangling": false
+        }
+      ],
+      "stdout": "--- Step 1: 创建 shared_ptr s1 ---\nData(100) allocated",
+      "warnings": []
+    },
+    {
+      "stepIndex": 2,
+      "line": 15,
+      "description": "std::shared_ptr<Data> s2 = s1：发生指针拷贝，控制块引用计数原子递增 (use_count: 1 -> 2)，s1 与 s2 共享同一块堆内存",
+      "activeOp": "ptr_set",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": [
+            {
+              "name": "s1",
+              "type": "std::shared_ptr<Data>",
+              "value": "0x2000 [ref=2]",
+              "isPointer": true,
+              "isSmartPointer": true,
+              "rawAddress": "0x7ffd10",
+              "pointsToRaw": "0x2000",
+              "pointsToLabel": "Data Object + ControlBlock",
+              "status": "normal"
+            },
+            {
+              "name": "s2",
+              "type": "std::shared_ptr<Data>",
+              "value": "0x2000 [ref=2]",
+              "isPointer": true,
+              "isSmartPointer": true,
+              "rawAddress": "0x7ffd18",
+              "pointsToRaw": "0x2000",
+              "pointsToLabel": "Data Object + ControlBlock",
+              "status": "created"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "rawAddr": "0x2000",
+          "label": "Data Object + ControlBlock",
+          "size": 8,
+          "type": "Data",
+          "value": "{ val: 100, use_count: 2 }",
+          "fields": {
+            "val": "100",
+            "use_count": "2",
+            "weak_count": "0"
+          },
+          "status": "alive"
+        }
+      ],
+      "pointers": [
+        {
+          "id": "edge-s1-to-0x2000",
+          "fromVar": "s1",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x2000",
+          "toLabel": "Data Object + ControlBlock",
+          "isSmart": true,
+          "isDangling": false
+        },
+        {
+          "id": "edge-s2-to-0x2000",
+          "fromVar": "s2",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x2000",
+          "toLabel": "Data Object + ControlBlock",
+          "isSmart": true,
+          "isDangling": false
+        }
+      ],
+      "stdout": "--- Step 1: 创建 shared_ptr s1 ---\nData(100) allocated\n--- Step 2: 拷贝构造 s2 (引用计数 -> 2) ---",
+      "warnings": []
+    },
+    {
+      "stepIndex": 3,
+      "line": 18,
+      "description": "s1.reset()：s1 放弃所有权并置为 nullptr，控制块引用计数递减 (use_count: 2 -> 1)。由于 use_count > 0，堆对象不会析构",
+      "activeOp": "ptr_set",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": [
+            {
+              "name": "s1",
+              "type": "std::shared_ptr<Data>",
+              "value": "nullptr (0x0)",
+              "isPointer": true,
+              "isSmartPointer": true,
+              "rawAddress": "0x7ffd10",
+              "pointsToRaw": null,
+              "pointsToLabel": null,
+              "status": "modified"
+            },
+            {
+              "name": "s2",
+              "type": "std::shared_ptr<Data>",
+              "value": "0x2000 [ref=1]",
+              "isPointer": true,
+              "isSmartPointer": true,
+              "rawAddress": "0x7ffd18",
+              "pointsToRaw": "0x2000",
+              "pointsToLabel": "Data Object + ControlBlock",
+              "status": "normal"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "rawAddr": "0x2000",
+          "label": "Data Object + ControlBlock",
+          "size": 8,
+          "type": "Data",
+          "value": "{ val: 100, use_count: 1 }",
+          "fields": {
+            "val": "100",
+            "use_count": "1",
+            "weak_count": "0"
+          },
+          "status": "alive"
+        }
+      ],
+      "pointers": [
+        {
+          "id": "edge-s2-to-0x2000",
+          "fromVar": "s2",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x2000",
+          "toLabel": "Data Object + ControlBlock",
+          "isSmart": true,
+          "isDangling": false
+        }
+      ],
+      "stdout": "--- Step 1: 创建 shared_ptr s1 ---\nData(100) allocated\n--- Step 2: 拷贝构造 s2 (引用计数 -> 2) ---\n--- Step 3: s1 重置/离开局部作用域 (引用计数 -> 1) ---",
+      "warnings": []
+    },
+    {
+      "stepIndex": 4,
+      "line": 21,
+      "description": "main() 退出，s2 析构使引用计数降为 0：触发 Data 析构函数并释放堆内存与控制块",
+      "activeOp": "scope_exit",
+      "callStack": [],
+      "heap": [
+        {
+          "rawAddr": "0x2000",
+          "label": "Data Object + ControlBlock",
+          "size": 8,
+          "type": "Data",
+          "value": "(freed)",
+          "fields": {
+            "val": "100",
+            "use_count": "0",
+            "weak_count": "0"
+          },
+          "status": "freed"
+        }
+      ],
+      "pointers": [],
+      "stdout": "--- Step 1: 创建 shared_ptr s1 ---\nData(100) allocated\n--- Step 2: 拷贝构造 s2 (引用计数 -> 2) ---\n--- Step 3: s1 重置/离开局部作用域 (引用计数 -> 1) ---\n--- Step 4: s2 离开作用域 (引用计数 -> 0，触发析构) ---\nData(100) freed",
+      "warnings": []
+    }
+  ]
+}

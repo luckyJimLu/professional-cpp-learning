@@ -20,18 +20,17 @@ export function RoadmapView({
   return (
     <div>
       <PageHeader
-        eyebrow="16-WEEK PATH"
-        title="Roadmap"
+        eyebrow="16 周进阶路径"
+        title="学习路线图"
         description="跟随 Professional C++，从语言基础逐步进入类设计、复用与系统工程。"
       />
       <div className="roadmap">
         {weeks.map((week) => {
-          const part = week.lessons.find((lesson) => lesson.part)?.part;
           return (
             <section className="roadmap-week" key={week.week}>
               <div className="week-marker">
-                <span>{part ? `PART ${part}` : "COURSE"}</span>
-                <strong>Week {String(week.week).padStart(2, "0")}</strong>
+                <span>阶段 {week.week}</span>
+                <strong>第 {week.week} 周</strong>
               </div>
               <div className="week-lessons">
                 {week.lessons.map((lesson) => {
@@ -46,9 +45,8 @@ export function RoadmapView({
                       <span className="roadmap-state">
                         {complete ? "●" : current ? "◐" : "○"}
                       </span>
-                      <span className="mono">Day {lesson.day}</span>
+                      <span className="mono">第 {lesson.day} 天</span>
                       <strong>{lesson.title}</strong>
-                      {lesson.chapter && <small>Ch {lesson.chapter}</small>}
                     </button>
                   );
                 })}
@@ -59,13 +57,13 @@ export function RoadmapView({
         {!lessonByDay(currentDay) && (
           <section className="roadmap-week upcoming">
             <div className="week-marker">
-              <span>NEXT</span>
-              <strong>Day {currentDay}</strong>
+              <span>下一阶段</span>
+              <strong>第 {currentDay} 天</strong>
             </div>
             <div className="week-lessons">
               <div className="roadmap-placeholder">
                 <span className="roadmap-state">○</span>
-                <span className="mono">Day {currentDay}</span>
+                <span className="mono">第 {currentDay} 天</span>
                 <strong>{latestNextSummary() ?? "下一课准备中"}</strong>
               </div>
             </div>
@@ -73,7 +71,7 @@ export function RoadmapView({
         )}
       </div>
       <details className="source-details">
-        <summary>查看完整 16 周学习计划</summary>
+        <summary>查看完整 16 周学习路线规划</summary>
         <Markdown>{learningPlan}</Markdown>
       </details>
     </div>

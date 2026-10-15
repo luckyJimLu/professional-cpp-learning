@@ -175,6 +175,10 @@ export interface MemorySnapshot {
 }
 
 export interface VisualizerTrace {
+  id?: string;
+  title?: string;
+  category?: string;
+  description?: string;
   sourceCode: string;
   snapshots: MemorySnapshot[];
 }

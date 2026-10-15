@@ -394,3 +394,510 @@ export function computeSnapshots(
 
   return snapshots;
 }
+
+/**
+ * 模拟标准 C++ 代码执行并生成预期控制台输出
+ * 用于快速仿真模式或工具链离线/网络受限时的降级执行
+ */
+export function simulateCppStdout(code: string): string {
+  const lines = code.split(/\r?\n/);
+  const output: string[] = [];
+  const varValues: Record<string, string> = {};
+
+  for (const rawLine of lines) {
+    const line = rawLine.replace(/\/\/.*$/, "").trim();
+    if (!line) continue;
+
+    // 追踪基础原始变量值
+    const varMatch = line.match(/(?:const\s+)?(?:int|double|float|char|bool|std::string|auto)\s+([A-Za-z_][A-Za-z0-9_]*)\s*=\s*([^;]+);/);
+    if (varMatch) {
+      varValues[varMatch[1]] = varMatch[2].trim().replace(/^["']|["']$/g, "");
+    }
+
+    // 匹配 std::cout 表达式
+    if (line.includes("std::cout")) {
+      const parts = line.replace(/std::cout\s*<<\s*/, "").split("<<");
+      let lineText = "";
+      for (const rawPart of parts) {
+        const part = rawPart.trim().replace(/;$/, "").trim();
+        if (!part) continue;
+        if (part === "std::endl" || part === "'\\n'" || part === '"\\n"') {
+          lineText += "\n";
+        } else if (part.startsWith('"') && part.endsWith('"')) {
+          lineText += part.slice(1, -1);
+        } else if (varValues[part] !== undefined) {
+          lineText += varValues[part];
+        } else if (/^[0-9]+(?:\.[0-9]+)?$/.test(part)) {
+          lineText += part;
+        } else if (part.includes("(") && part.includes(")")) {
+          lineText += `[${part}]`;
+        } else {
+          lineText += part;
+        }
+      }
+      if (lineText) {
+        output.push(lineText.replace(/\n+$/, ""));
+      }
+    } else if (line.startsWith("printf(") || line.includes("printf(")) {
+      const printfMatch = line.match(/printf\s*\(\s*"([^"]*)"/);
+      if (printfMatch) {
+        output.push(printfMatch[1].replace(/\\n/g, ""));
+      }
+    }
+  }
+
+  return output.length > 0 ? output.join("\n") + "\n" : "";
+}
+
+/**
+ * 自动分析标准 C++ 源码与运行输出，自动生成高保真结构化生命周期与调用栈快照
+ * 支持：
+ * - 逐行调试模拟（每个可执行语句都有高亮行与步进状态）
+ * - 栈帧推进与函数调用 (scope_enter / scope_exit)
+ * - 原始指针与悬挂指针检测 (int* p = &a; p = new int; delete p;)
+ * - 现代 C++ 智能指针 (std::unique_ptr, std::make_unique, std::shared_ptr)
+ * - RAII 局部变量 LIFO 逆序析构
+ * - 控制台 std::cout 逐步打印
+ */
+export function generateSnapshotsFromCodeAndOutput(
+  code: string,
+  stdout: string,
+  exitCode = 0,
+): MemorySnapshot[] {
+  const events: TraceEvent[] = [];
+  const lines = code.split(/\r?\n/);
+  const effectiveStdout = stdout || simulateCppStdout(code);
+  const stdoutLines = effectiveStdout
+    ? effectiveStdout.trim().split(/\r?\n/).filter(Boolean)
+    : [];
+  let stdoutIdx = 0;
+
+  // 1. 扫描源码中定义的自定义类型（class, struct, enum）与函数签名
+  const customTypes = new Set<string>();
+  const definedFunctions = new Map<string, { startLine: number; endLine: number; bodyLines: number[] }>();
+
+  let funcName: string | null = null;
+  let funcStart = 0;
+  let funcBraces = 0;
+  let funcBody: number[] = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const rawLine = lines[i];
+    const line = rawLine.replace(/\/\/.*$/, "").trim();
+
+    const classMatch = line.match(/(?:class|struct)\s+([A-Za-z_][A-Za-z0-9_]*)/);
+    if (classMatch) {
+      customTypes.add(classMatch[1]);
+    }
+
+    // 发现函数定义（除 main 外）
+    if (!funcName && !/^\s*(?:if|while|for|switch|catch)\b/.test(line)) {
+      const fnMatch = line.match(/^(?:(?:inline|static|virtual|constexpr)\s+)*(?:void|int|bool|double|float|auto|[A-Za-z_][A-Za-z0-9_:]*)\s+([A-Za-z_][A-Za-z0-9_]*)\s*\([^)]*\)\s*\{?/);
+      if (fnMatch && fnMatch[1] !== "main") {
+        funcName = fnMatch[1];
+        funcStart = i + 1;
+        funcBraces = 0;
+        funcBody = [];
+      }
+    }
+
+    if (funcName) {
+      for (const ch of line) {
+        if (ch === "{") funcBraces++;
+        if (ch === "}") funcBraces--;
+      }
+      funcBody.push(i + 1);
+      if (funcBraces <= 0 && line.includes("}")) {
+        definedFunctions.set(funcName, {
+          startLine: funcStart,
+          endLine: i + 1,
+          bodyLines: funcBody,
+        });
+        funcName = null;
+      }
+    }
+  }
+
+  // 2. 定位 main 函数所在行与作用域
+  let mainLine = 1;
+  let inMain = false;
+  let mainBraceCount = 0;
+  const constructedObjects: Array<{ id: string; type: string; line: number }> = [];
+  const allocatedHeaps: Array<{ addr: string; label: string }> = [];
+  const stackVarAddresses = new Map<string, string>();
+  let heapCounter = 0;
+
+  for (let i = 0; i < lines.length; i++) {
+    const lineNum = i + 1;
+    const rawLine = lines[i];
+    const line = rawLine.replace(/\/\/.*$/, "").trim(); // 去除单行注释
+
+    if (!inMain) {
+      if (/\bint\s+main\s*\(/.test(line) || /\bvoid\s+main\s*\(/.test(line)) {
+        inMain = true;
+        mainLine = lineNum;
+        events.push({
+          op: "scope_enter",
+          name: "main",
+          line: mainLine,
+        });
+        if (line.includes("{")) mainBraceCount++;
+      }
+      continue;
+    }
+
+    // 统计括号深度
+    for (const char of line) {
+      if (char === "{") mainBraceCount++;
+      if (char === "}") mainBraceCount--;
+    }
+
+    if (mainBraceCount <= 0 && inMain) {
+      // main 函数结束
+      break;
+    }
+
+    if (!line) continue;
+
+    // A. 现代 C++ 智能指针分配:
+    // auto p = std::make_unique<Resource>(1); 或 std::unique_ptr<int> p = std::make_unique<int>(100);
+    const smartPtrMatch = line.match(/(?:(?:std::)?(?:unique_ptr|shared_ptr)<([^>]+)>\s+|(?:auto)\s+)([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(?:std::)?make_(?:unique|shared)<([^>]+)>\s*\(([^)]*)\)\s*;/);
+    if (smartPtrMatch) {
+      heapCounter++;
+      const type = smartPtrMatch[3] || smartPtrMatch[1] || "Resource";
+      const varName = smartPtrMatch[2];
+      const addr = `0x${(0x2000 + heapCounter * 0x40).toString(16)}`;
+      const isShared = line.includes("shared_ptr") || line.includes("make_shared");
+      allocatedHeaps.push({ addr, label: `${type} (Heap #${heapCounter})` });
+
+      events.push({
+        op: "heap_alloc",
+        line: lineNum,
+        addr,
+        size: type === "int" || type === "float" ? 4 : type === "double" ? 8 : 16,
+        type,
+        label: `${type} 堆实例`,
+      });
+
+      events.push({
+        op: "ptr_set",
+        line: lineNum,
+        var: varName,
+        to: addr,
+        type: isShared ? `std::shared_ptr<${type}>` : `std::unique_ptr<${type}>`,
+        isSmart: true,
+      });
+
+      events.push({
+        op: "step",
+        line: lineNum,
+        label: `智能指针初始化: ${isShared ? "std::shared_ptr" : "std::unique_ptr"}<${type}> [${varName}] -> ${addr}`,
+      });
+      continue;
+    }
+
+    // B. 原生堆分配匹配：如 int* p = new int(100); 或 auto p = new Resource;
+    const newMatch = line.match(/(?:(?:const\s+)?([A-Za-z_][A-Za-z0-9_:<>*\s&]+?)\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*new\s+([A-Za-z_][A-Za-z0-9_:]*)(?:[^;]*);/);
+    if (newMatch) {
+      heapCounter++;
+      const type = newMatch[3] || "int";
+      const varName = newMatch[2];
+      const addr = `0x${(0x2000 + heapCounter * 0x40).toString(16)}`;
+      allocatedHeaps.push({ addr, label: `${type} (Heap #${heapCounter})` });
+
+      events.push({
+        op: "heap_alloc",
+        line: lineNum,
+        addr,
+        size: type === "int" || type === "float" ? 4 : type === "double" ? 8 : 16,
+        type,
+        label: `${type} 堆实例`,
+      });
+
+      events.push({
+        op: "ptr_set",
+        line: lineNum,
+        var: varName,
+        to: addr,
+        type: `${type}*`,
+      });
+
+      events.push({
+        op: "step",
+        line: lineNum,
+        label: `原生堆内存分配: new ${type} 得到地址 ${addr}，赋值给指针 ${varName}`,
+      });
+      continue;
+    }
+
+    // C. 堆释放匹配：如 delete p; 或 delete[] arr; 或 p.reset();
+    const deleteMatch = line.match(/(?:delete\s+(?:\[\]\s*)?([A-Za-z_][A-Za-z0-9_]*)|([A-Za-z_][A-Za-z0-9_]*)\.reset\(\))\s*;/);
+    if (deleteMatch) {
+      const varName = deleteMatch[1] || deleteMatch[2];
+      const heap = allocatedHeaps.pop();
+      if (heap) {
+        events.push({
+          op: "heap_free",
+          line: lineNum,
+          addr: heap.addr,
+        });
+      }
+      events.push({
+        op: "step",
+        line: lineNum,
+        label: `释放堆内存: 销毁变量 [${varName}] 指向的堆块 (地址: ${heap?.addr || "0x2000"})`,
+      });
+      continue;
+    }
+
+    // D. 指针指向局部变量地址：如 int* p = &a; 或 p = &b;
+    const refPtrMatch = line.match(/(?:(?:const\s+)?([A-Za-z_][A-Za-z0-9_:]*)\s*\*\s*)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*&([A-Za-z_][A-Za-z0-9_]*)\s*;/);
+    if (refPtrMatch) {
+      const type = refPtrMatch[1] || "void";
+      const ptrName = refPtrMatch[2];
+      const targetVar = refPtrMatch[3];
+      const targetAddr = stackVarAddresses.get(targetVar) || `0x7ffd${(0x1000 + lineNum * 0x10).toString(16)}`;
+
+      events.push({
+        op: "ptr_set",
+        line: lineNum,
+        var: ptrName,
+        to: targetAddr,
+        type: `${type}*`,
+      });
+
+      events.push({
+        op: "step",
+        line: lineNum,
+        label: `指针取地址: ${ptrName} = &${targetVar} (指向栈地址 ${targetAddr})`,
+      });
+      continue;
+    }
+
+    // E. 控制台输出匹配：std::cout << ...
+    if (line.includes("std::cout") || line.includes("printf(")) {
+      const textToEmit = stdoutLines[stdoutIdx] || "";
+      if (textToEmit) {
+        stdoutIdx++;
+        events.push({
+          op: "stdout",
+          line: lineNum,
+          text: textToEmit + "\n",
+        });
+      } else {
+        events.push({
+          op: "step",
+          line: lineNum,
+          label: `执行控制台输出语句 (std::cout)`,
+        });
+      }
+      continue;
+    }
+
+    // F. 函数调用匹配 (如果调用了代码中定义的其它函数): 如 helper(x);
+    let matchedFnCall = false;
+    for (const [fn, info] of definedFunctions.entries()) {
+      const callRegex = new RegExp(`\\b${fn}\\s*\\(`);
+      if (callRegex.test(line)) {
+        matchedFnCall = true;
+        events.push({
+          op: "scope_enter",
+          name: fn,
+          line: lineNum,
+        });
+        events.push({
+          op: "step",
+          line: lineNum,
+          label: `调用函数 ${fn}()，压入新调用栈帧`,
+        });
+
+        // 步入函数体各行
+        for (const bodyLine of info.bodyLines) {
+          const bodyText = (lines[bodyLine - 1] || "").trim();
+          if (bodyText && !bodyText.startsWith("//") && bodyText !== "{" && bodyText !== "}") {
+            events.push({
+              op: "step",
+              line: bodyLine,
+              label: `[${fn}] 执行: ${bodyText}`,
+            });
+            if ((bodyText.includes("std::cout") || bodyText.includes("printf")) && stdoutIdx < stdoutLines.length) {
+              events.push({
+                op: "stdout",
+                line: bodyLine,
+                text: stdoutLines[stdoutIdx++] + "\n",
+              });
+            }
+          }
+        }
+
+        events.push({
+          op: "scope_exit",
+          name: fn,
+          line: info.endLine,
+        });
+        events.push({
+          op: "step",
+          line: lineNum,
+          label: `函数 ${fn}() 执行完毕，弹出调用栈帧`,
+        });
+        break;
+      }
+    }
+    if (matchedFnCall) continue;
+
+    // G. 变量与对象声明匹配：如 int x = 10; Resource res{1}; ModemController modem;
+    const declMatch = line.match(/^(?:const\s+)?([A-Za-z_][A-Za-z0-9_:<>*]*)\s+([A-Za-z_][A-Za-z0-9_]*)\s*(\{[^}]*\}|\([^)]*\)|=[^;]+)?\s*;/);
+    if (declMatch && !line.startsWith("return") && !line.startsWith("throw")) {
+      const type = declMatch[1];
+      const name = declMatch[2];
+      const init = (declMatch[3] || "").trim();
+      const addr = `0x${(0x7ffd0000 + (lineNum % 256) * 0x10).toString(16)}`;
+      stackVarAddresses.set(name, addr);
+
+      const isCustomClass = customTypes.has(type) || /^[A-Z]/.test(type);
+
+      if (isCustomClass) {
+        constructedObjects.push({ id: name, type, line: lineNum });
+        events.push({
+          op: "obj_ctor",
+          id: name,
+          type,
+          line: lineNum,
+          addr,
+        });
+        events.push({
+          op: "step",
+          line: lineNum,
+          label: `构造局部对象: ${type} [${name}] (栈地址: ${addr})`,
+        });
+      } else {
+        let val = "0";
+        if (type === "bool") {
+          val = init.includes("true") ? "true" : init.includes("false") ? "false" : "true";
+        } else if (init) {
+          val = init.replace(/^[={(\s]+|[})]+$/g, "").trim();
+        }
+
+        events.push({
+          op: "var_decl",
+          name,
+          type,
+          value: val || "uninitialized",
+          line: lineNum,
+          addr,
+        });
+
+        events.push({
+          op: "step",
+          line: lineNum,
+          label: `定义局部变量: ${type} ${name} = ${val || "默认值"}`,
+        });
+      }
+
+      // 如果有对应的 stdout 产生（如构造函数内打印或紧随其后的调用）
+      if (init.includes("()") && stdoutIdx < stdoutLines.length) {
+        events.push({
+          op: "stdout",
+          line: lineNum,
+          text: stdoutLines[stdoutIdx++] + "\n",
+        });
+      }
+      continue;
+    }
+
+    // H. 方法调用：如 board_a.Recover(); 或 modem.SendTelemetry(...);
+    const callMatch = line.match(/([A-Za-z_][A-Za-z0-9_]*)\.([A-Za-z_][A-Za-z0-9_]*)\s*\(/);
+    if (callMatch) {
+      const obj = callMatch[1];
+      const method = callMatch[2];
+      events.push({
+        op: "step",
+        line: lineNum,
+        label: `调用成员方法: ${obj}.${method}()`,
+      });
+
+      if (stdoutIdx < stdoutLines.length) {
+        events.push({
+          op: "stdout",
+          line: lineNum,
+          text: stdoutLines[stdoutIdx++] + "\n",
+        });
+      }
+      continue;
+    }
+
+    // I. return 语句
+    if (line.startsWith("return")) {
+      events.push({
+        op: "step",
+        line: lineNum,
+        label: `执行函数返回: ${line}`,
+      });
+      continue;
+    }
+
+    // J. 普通赋值或可执行语句: 产生一个逐行单步事件
+    if (line.endsWith(";")) {
+      events.push({
+        op: "step",
+        line: lineNum,
+        label: `逐行步进: ${line}`,
+      });
+    }
+  }
+
+  // 3. 将剩余未匹配的 stdout 行附加进来
+  while (stdoutIdx < stdoutLines.length) {
+    events.push({
+      op: "stdout",
+      line: mainLine,
+      text: stdoutLines[stdoutIdx++] + "\n",
+    });
+  }
+
+  // 4. RAII 栈对象反向析构（LIFO 顺序销毁局部变量）
+  while (constructedObjects.length > 0) {
+    const obj = constructedObjects.pop()!;
+    events.push({
+      op: "obj_dtor",
+      id: obj.id,
+      line: obj.line,
+    });
+  }
+
+  // 5. 离开 main 作用域
+  events.push({
+    op: "scope_exit",
+    name: "main",
+    line: mainLine,
+  });
+
+  // 如果事件过少，至少生成基础执行快照
+  if (events.length === 0) {
+    events.push({
+      op: "scope_enter",
+      name: "main",
+      line: 1,
+    });
+    if (effectiveStdout) {
+      events.push({
+        op: "stdout",
+        line: 1,
+        text: effectiveStdout,
+      });
+    }
+    events.push({
+      op: "step",
+      line: 1,
+      label: `程序运行完成，退出代码: ${exitCode}`,
+    });
+    events.push({
+      op: "scope_exit",
+      name: "main",
+      line: 1,
+    });
+  }
+
+  return computeSnapshots(events, "");
+}
+

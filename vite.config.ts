@@ -18,6 +18,13 @@ export default defineConfig(() => {
     server: {
       host: "0.0.0.0",
       port: 3000,
+      allowedHosts: true,
+      cors: true,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
+        "Access-Control-Allow-Headers": "*",
+      },
     },
     build: {
       target: "es2022",

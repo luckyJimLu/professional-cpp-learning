@@ -128,10 +128,37 @@ function splitSections(body: string): LessonSection[] {
   });
 }
 
+const CHINESE_TITLES: Record<number, string> = {
+  33: "多态与虚函数接口",
+  45: "泛型数据结构与算法：模板应用",
+  46: "防御式设计：提供完备的校验与防护机制",
+  47: "为扩展性而设计：开闭原则与演进架构",
+  48: "设计易用接口：一致性与人体工学",
+  49: "面向受众与目标场景的接口设计",
+  50: "防呆接口设计：让正确使用变得自然，让错误使用无法编译",
+};
+
 function titleFromBody(body: string, day: number): string {
   const h1 = body.match(/^#\s+(.+)$/m)?.[1]?.trim();
   if (!h1) return `Day ${day}`;
-  return h1.replace(new RegExp(`^Day\\s+${day}\\s*[·:-]\\s*`, "i"), "");
+  return h1.replace(new RegExp(`^Day\\s+${day}\\s*[·:-]\\s*`, "i"), "").replace(/^Day\s+\d+\s*[·:-]\s*/i, "");
+}
+
+function cleanChineseTitle(body: string, day: number): string {
+  if (CHINESE_TITLES[day]) {
+    return CHINESE_TITLES[day];
+  }
+  const raw = titleFromBody(body, day);
+  return raw
+    .replace(/Chapter\s*\d+\s*[：:·-]\s*/gi, "")
+    .replace(/Chapter\s*\d+\s*收束[：:·-]\s*/gi, "")
+    .replace(/第\s*\d+\s*章\s*[：:·-]?\s*/g, "")
+    .replace(/章节/g, "")
+    .replace(/^Designing Professional C\+\+ Programs[：:·-]\s*/i, "")
+    .replace(/^Coding with Style[：:·-]\s*/i, "")
+    .replace(/^Professional C\+\+ Basics[：:·-]\s*/i, "")
+    .replace(/^A Crash Course in C\+\+ and the Standard Library[：:·-]\s*/i, "")
+    .trim();
 }
 
 function chapterFromBody(body: string): number | undefined {
@@ -191,7 +218,7 @@ function buildLesson(path: string, raw: string): Lesson | undefined {
     part: String(meta.part || chapterToPart(chapter) || "").replace(/^Part\s+/i, "") || undefined,
     chapter,
     chapterTitle: meta.chapter_title ? String(meta.chapter_title) : undefined,
-    title: meta.title ? String(meta.title) : titleFromBody(body, day),
+    title: cleanChineseTitle(body, day),
     duration: Number(meta.duration) || 60,
     status: meta.status ? String(meta.status) : "published",
     topics,

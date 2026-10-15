@@ -1,0 +1,220 @@
+{
+  "id": "dangling-pointer",
+  "title": "野指针（悬挂指针）与内存泄漏检测",
+  "category": "memory_safety",
+  "description": "内存安全核心案例：观察指针在堆对象已被 delete 之后依然保存旧地址的情况（野指针/悬挂指针 Dangling Pointer），以及丢失堆指针造成的内存泄漏。",
+  "sourceCode": "#include <iostream>\n\nstruct Buffer {\n    int data;\n    Buffer(int d) : data(d) { std::cout << \"Allocated\\n\"; }\n    ~Buffer() { std::cout << \"Deallocated\\n\"; }\n};\n\nint main() {\n    std::cout << \"--- Step 1: new 分配堆内存 ---\\n\";\n    Buffer* ptr = new Buffer(99);\n\n    std::cout << \"--- Step 2: delete 释放堆内存 ---\\n\";\n    delete ptr; // 堆内存已销毁，但 ptr 仍持有旧地址 0x5010！\n\n    std::cout << \"--- Step 3: 产生悬挂指针 (Dangling Pointer) ---\\n\";\n    // ptr->data = 100; // 未定义行为 (UB)\n\n    std::cout << \"--- Step 4: 最佳实践：置空 nullptr ---\\n\";\n    ptr = nullptr;\n\n    return 0;\n}",
+  "snapshots": [
+    {
+      "stepIndex": 0,
+      "line": 9,
+      "description": "进入 main() 函数",
+      "activeOp": "scope_enter",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": []
+        }
+      ],
+      "heap": [],
+      "pointers": [],
+      "stdout": "",
+      "warnings": []
+    },
+    {
+      "stepIndex": 1,
+      "line": 11,
+      "description": "Buffer* ptr = new Buffer(99)：在堆地址 0x5010 处成功分配 Buffer 实例，ptr 指向该地址",
+      "activeOp": "heap_alloc",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": [
+            {
+              "name": "ptr",
+              "type": "Buffer*",
+              "value": "0x5010",
+              "isPointer": true,
+              "rawAddress": "0x7ffd50",
+              "pointsToRaw": "0x5010",
+              "pointsToLabel": "Buffer (0x5010)",
+              "status": "created"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "rawAddr": "0x5010",
+          "label": "Buffer (0x5010)",
+          "size": 4,
+          "type": "Buffer",
+          "value": "{ data: 99 }",
+          "fields": {
+            "data": "99"
+          },
+          "status": "alive"
+        }
+      ],
+      "pointers": [
+        {
+          "id": "edge-ptr-to-0x5010",
+          "fromVar": "ptr",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x5010",
+          "toLabel": "Buffer (0x5010)",
+          "isSmart": false,
+          "isDangling": false
+        }
+      ],
+      "stdout": "--- Step 1: new 分配堆内存 ---\nAllocated",
+      "warnings": []
+    },
+    {
+      "stepIndex": 2,
+      "line": 14,
+      "description": "delete ptr：执行 Buffer 析构函数，堆内存 0x5010 归还给系统。但注意：栈变量 ptr 依然保存着 0x5010！",
+      "activeOp": "heap_free",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": [
+            {
+              "name": "ptr",
+              "type": "Buffer*",
+              "value": "0x5010 (dangling)",
+              "isPointer": true,
+              "rawAddress": "0x7ffd50",
+              "pointsToRaw": "0x5010",
+              "pointsToLabel": "Freed Buffer (0x5010)",
+              "status": "modified"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "rawAddr": "0x5010",
+          "label": "Buffer (0x5010)",
+          "size": 4,
+          "type": "Buffer",
+          "value": "(freed)",
+          "fields": {
+            "data": "99"
+          },
+          "status": "freed"
+        }
+      ],
+      "pointers": [
+        {
+          "id": "edge-ptr-to-0x5010",
+          "fromVar": "ptr",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x5010",
+          "toLabel": "Buffer (0x5010)",
+          "isSmart": false,
+          "isDangling": true
+        }
+      ],
+      "stdout": "--- Step 1: new 分配堆内存 ---\nAllocated\n--- Step 2: delete 释放堆内存 ---\nDeallocated",
+      "warnings": [
+        "⚠️ 悬挂指针 (Dangling Pointer) 警告: 栈变量 ptr 指向的堆内存 0x5010 已被释放，此时解引用将导致未定义行为 (Use-After-Free)！"
+      ]
+    },
+    {
+      "stepIndex": 3,
+      "line": 17,
+      "description": "悬挂指针检测状态：红虚线醒目标注野指针危险！若此时读取或写入 ptr->data，可能造成段错误或安全漏洞",
+      "activeOp": "step",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": [
+            {
+              "name": "ptr",
+              "type": "Buffer*",
+              "value": "0x5010 (dangling)",
+              "isPointer": true,
+              "rawAddress": "0x7ffd50",
+              "pointsToRaw": "0x5010",
+              "pointsToLabel": "Freed Buffer (0x5010)",
+              "status": "normal"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "rawAddr": "0x5010",
+          "label": "Buffer (0x5010)",
+          "size": 4,
+          "type": "Buffer",
+          "value": "(freed)",
+          "fields": {
+            "data": "99"
+          },
+          "status": "freed"
+        }
+      ],
+      "pointers": [
+        {
+          "id": "edge-ptr-to-0x5010",
+          "fromVar": "ptr",
+          "fromFrameId": "frame-main",
+          "toRawAddr": "0x5010",
+          "toLabel": "Buffer (0x5010)",
+          "isSmart": false,
+          "isDangling": true
+        }
+      ],
+      "stdout": "--- Step 1: new 分配堆内存 ---\nAllocated\n--- Step 2: delete 释放堆内存 ---\nDeallocated\n--- Step 3: 产生悬挂指针 (Dangling Pointer) ---",
+      "warnings": [
+        "⚠️ 悬挂指针 (Dangling Pointer) 警告: 栈变量 ptr 指向的堆内存 0x5010 已被释放！"
+      ]
+    },
+    {
+      "stepIndex": 4,
+      "line": 20,
+      "description": "ptr = nullptr：执行防御性置空，指针安全解除与失效堆地址的关联，告警消除！",
+      "activeOp": "ptr_set",
+      "callStack": [
+        {
+          "id": "frame-main",
+          "name": "main()",
+          "variables": [
+            {
+              "name": "ptr",
+              "type": "Buffer*",
+              "value": "nullptr (0x0)",
+              "isPointer": true,
+              "rawAddress": "0x7ffd50",
+              "pointsToRaw": null,
+              "pointsToLabel": null,
+              "status": "modified"
+            }
+          ]
+        }
+      ],
+      "heap": [
+        {
+          "rawAddr": "0x5010",
+          "label": "Buffer (0x5010)",
+          "size": 4,
+          "type": "Buffer",
+          "value": "(freed)",
+          "fields": {
+            "data": "99"
+          },
+          "status": "freed"
+        }
+      ],
+      "pointers": [],
+      "stdout": "--- Step 1: new 分配堆内存 ---\nAllocated\n--- Step 2: delete 释放堆内存 ---\nDeallocated\n--- Step 3: 产生悬挂指针 (Dangling Pointer) ---\n--- Step 4: 最佳实践：置空 nullptr ---",
+      "warnings": []
+    }
+  ]
+}

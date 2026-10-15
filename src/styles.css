@@ -105,7 +105,7 @@ summary:focus-visible {
   background: var(--surface);
 }
 
-.brand div {
+.sidebar .brand div {
   display: grid;
   gap: 2px;
 }
@@ -1453,57 +1453,7 @@ summary:focus-visible {
 }
 
 
-.lab-runtime-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  margin-bottom: 10px;
-  padding: 12px 16px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--surface);
-}
 
-.lab-runtime-bar > div:first-child {
-  display: grid;
-  gap: 4px;
-}
-
-.lab-runtime-bar strong {
-  font-size: 12px;
-}
-
-.runtime-state {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #475569;
-  font-size: 12px;
-}
-
-.runtime-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--line-strong);
-}
-
-.runtime-dot.loading,
-.runtime-dot.compiling {
-  background: var(--amber);
-  box-shadow: 0 0 0 4px rgba(179, 92, 0, 0.1);
-}
-
-.runtime-dot.success {
-  background: var(--green);
-  box-shadow: 0 0 0 4px rgba(24, 121, 78, 0.1);
-}
-
-.runtime-dot.failure {
-  background: #b42318;
-  box-shadow: 0 0 0 4px rgba(180, 35, 24, 0.1);
-}
 
 .lab-shell-runtime {
   grid-template-columns: minmax(300px, 0.7fr) minmax(520px, 1.3fr);
@@ -1635,15 +1585,11 @@ summary:focus-visible {
   font: 12px/1.5 var(--mono);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1150px) {
   .lab-shell-runtime {
     grid-template-columns: 1fr;
   }
 
-  .lab-runtime-bar {
-    align-items: start;
-    flex-direction: column;
-  }
 
   .code-workbench {
     grid-template-rows: minmax(380px, auto) minmax(150px, auto);

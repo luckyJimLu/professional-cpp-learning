@@ -36,7 +36,7 @@ export function LessonsView({
       <div className="search-input-row" style={{ maxWidth: 480, marginBottom: 20 }}>
         <input
           type="search"
-          placeholder="按标题、天数或章节快速筛选课程..."
+          placeholder="按标题或天数快速筛选课程..."
           value={filterText}
           onChange={(e) => setFilterText(e.target.value)}
         />
@@ -63,10 +63,7 @@ export function LessonsView({
             </span>
             <strong>{lesson.title}</strong>
             <span>
-              {lesson.chapter
-                ? `Chapter ${lesson.chapter}`
-                : `Week ${lesson.week}`}{" "}
-              · 约 {calculateReadingStats(lesson.raw).minutes} 分钟阅读
+              第 {lesson.week} 周 · 约 {calculateReadingStats(lesson.raw).minutes} 分钟阅读
             </span>
             <i>{isDayComplete(lesson.day) ? "●" : "○"}</i>
           </button>

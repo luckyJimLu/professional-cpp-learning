@@ -13,6 +13,7 @@ import { LabView } from "./components/views/LabView";
 import { ReviewView } from "./components/views/ReviewView";
 import { GuidelinesView } from "./components/views/GuidelinesView";
 import { ProgressView } from "./components/views/ProgressView";
+import { VisualizerView } from "./components/views/VisualizerView";
 
 const Topics = lazy(() =>
   import("./components/Topics").then((module) => ({ default: module.Topics })),
@@ -119,6 +120,9 @@ export default function App() {
         </DeferredContent>
       );
       break;
+    case "visualizer":
+      page = <VisualizerView />;
+      break;
     case "lab":
       page = selectedLesson ? (
         <LabView
@@ -160,6 +164,16 @@ export default function App() {
         />
       ) : null;
       break;
+  }
+
+  // 纯静态 iframe 嵌入模式：如果带有 ?embed=true，直接全屏沉浸式渲染工作区，无外层侧边栏
+  const isEmbed = params.get("embed") === "true";
+  if (isEmbed) {
+    return (
+      <div style={{ width: "100vw", height: "100vh", overflow: "hidden", background: "#090d13" }}>
+        {page ?? <VisualizerView />}
+      </div>
+    );
   }
 
   return (
