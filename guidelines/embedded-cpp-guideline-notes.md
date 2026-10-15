@@ -57,6 +57,13 @@
 - 错误模型应保留调用者做恢复决策所需的原因；不要把 timeout、busy、invalid input、transport failure 全部压缩成 `bool` 或 `-1`。
 - required borrow 优先引用；optional borrow 才使用具有明确 `nullptr` 语义的裸指针。
 
+### Easy-to-Use Interfaces
+
+- MUST 遵循熟悉的 C++ 生命周期习惯：资源优先 RAII；不要要求调用者手工配对 `Initialize()` / `Cleanup()`。若初始化可能失败且项目禁异常，使用显式 factory/result，而不是半初始化对象。
+- SHOULD 让 common case 具有短而安全的调用路径；高级、低频选项使用强类型 `Options` / `Config`，不要把大量 primitive/bool 参数堆进主入口。
+- SHOULD 对真实复杂子系统使用小 Facade 降低调用者认知负担，但 Facade 不得复制全部底层能力，也不得隐藏无界 blocking、retry、allocation 或 WCET。
+- MUST 把单位、buffer 边界、状态和 ownership 尽量放进类型；线程安全、callback 上下文、timeout 计算范围、复杂度和 lifetime 等类型无法完整表达的 contract 必须文档化。
+- 不为简单对象机械增加 Facade/Factory/Manager 层；Pattern 必须对应真实变化轴或复杂度边界。
 
 ### Audience 与 Purpose
 
