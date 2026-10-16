@@ -1,211 +1,241 @@
-# Windows Remote Script Runner
+# Remote Development Bridge
 
-用于 **Windows 本机 + VS Code Remote-SSH + Linux 开发环境** 的跨主机脚本工作流。
+用于 **Windows 本机 + VS Code Remote-SSH + Linux 开发环境** 的跨主机脚本与构建产物同步。
 
-## 场景
+核心原则：**Linux 负责开发/编译/生成，Windows 负责本地执行/调试，SCP 作为清晰的单向交付边界。**
 
-- VS Code Workspace 通过 Remote-SSH 打开远程 Linux 项目。
-- Codex / OpenCode / 编译与主要开发工作运行在 Linux。
-- Agent 在 Linux 仓库中生成 `.ps1` / `.bat` 等 Windows-only 脚本。
-- 脚本必须访问 Windows 本机能力，例如 USB、串口、ADB/Fastboot、驱动、本地 GUI 工具或 Windows API。
-- 不希望用 SSHFS 映射整个远程项目。
+## 适用场景
 
-## 架构
+- VS Code Remote-SSH 打开远程 Linux 工程。
+- Codex / OpenCode / CMake / Ninja / GCC/Clang 在 Linux 上运行。
+- Windows 本机需要执行 PowerShell、烧录工具、TRACE32、J-Link、OpenOCD、ADB/Fastboot、串口/USB/驱动工具。
+- 需要把 Linux 生成的脚本、符号表、固件和调试产物同步到 Windows。
+- 不希望用 SSHFS 映射整个远程工程。
 
-```text
-VS Code (same window)
-├── Remote Linux Terminal
-│   └── ~/project/scripts/windows/*.ps1
-│       └── Codex / OpenCode generates scripts
-│
-└── Local Windows Terminal
-    └── bootstrap.ps1
-        ├── scp latest script from Linux
-        ├── save to C:\Dev\host-scripts
-        └── execute locally with PowerShell
-```
+## 推荐结构
 
-核心原则：**Linux 是开发/生成环境，Windows 是执行环境，SCP 是明确的单向交付边界。**
-
-## 1. 远程项目目录约定
+### Remote Linux
 
 ```text
-project/
+~/project/
 ├── src/
+├── build/
+│   ├── app.elf
+│   ├── app.map
+│   ├── app.bin
+│   ├── app.hex
+│   └── build-manifest.json
 └── scripts/
     └── windows/
-        ├── test.ps1
         ├── flash.ps1
-        └── setup.ps1
+        ├── debug.ps1
+        └── test.ps1
 ```
 
-## 2. Windows 本地目录
-
-```powershell
-New-Item -ItemType Directory -Force C:\Dev\host-scripts
-```
-
-推荐结构：
+### Windows Local Runtime
 
 ```text
-C:\Dev\host-scripts\
-├── bootstrap.ps1       # 固定启动器
-├── test.ps1            # SCP 拉取
-├── flash.ps1           # SCP 拉取
-└── setup.ps1           # SCP 拉取
+D:\Dev\target-runtime\
+├── symbols/
+│   ├── app.elf
+│   └── app.map
+├── firmware/
+│   ├── app.bin
+│   └── app.hex
+├── scripts/
+│   ├── flash.ps1
+│   ├── debug.ps1
+│   └── test.ps1
+├── manifest/
+│   └── build-manifest.json
+└── logs/
 ```
 
-## 3. Bootstrap SCP Hook
+## SCP Hook
 
-将 `bootstrap.ps1` 放到 Windows 本机 `C:\Dev\host-scripts\bootstrap.ps1`：
+本模块提供：
+
+- `sync-build.ps1`：Windows 本地 Hook Runner。
+- `build-manifest.example.json`：构建产物版本绑定示例。
+
+复制 `sync-build.ps1` 到 Windows 本地后执行：
 
 ```powershell
-param(
-    [string]$Script = "test.ps1",
-    [string]$RemoteHost = "dev@server",
-    [string]$RemoteRoot = "~/project/scripts/windows",
-    [string]$LocalDir = "C:\Dev\host-scripts"
-)
-
-$ErrorActionPreference = "Stop"
-$localScript = Join-Path $LocalDir $Script
-$remoteScript = "${RemoteHost}:${RemoteRoot}/${Script}"
-
-Write-Host "[host-runner] Syncing $remoteScript -> $localScript"
-
-& scp $remoteScript $localScript
-if ($LASTEXITCODE -ne 0) {
-    throw "SCP failed with exit code $LASTEXITCODE"
-}
-
-Write-Host "[host-runner] Running $localScript"
-& $localScript
-
-if ($LASTEXITCODE -ne 0) {
-    Write-Warning "Windows script exited with code $LASTEXITCODE"
-}
+.\sync-build.ps1 -Mode all
+.\sync-build.ps1 -Mode symbols
+.\sync-build.ps1 -Mode firmware
+.\sync-build.ps1 -Mode scripts
 ```
 
-使用：
+也可以指定环境：
 
 ```powershell
-.\bootstrap.ps1 test.ps1
-.\bootstrap.ps1 flash.ps1
-.\bootstrap.ps1 setup.ps1
+.\sync-build.ps1 `
+  -Mode all `
+  -RemoteHost cpp-dev `
+  -RemoteBuild "~/project/build" `
+  -RemoteScripts "~/project/scripts/windows" `
+  -LocalRoot "D:\Dev\target-runtime"
 ```
 
-## 4. 同一个 VS Code Window 中使用
+## 同一个 VS Code Window
 
-Remote-SSH 窗口中保留两个 Terminal：
+Remote-SSH Window 中保留两个终端：
 
 ```text
-[Remote Linux]       [Local Windows]
-dev@server:~$        PS C:\>
+[Remote Linux]             [Local Windows]
+dev@cpp-dev:~/project$     PS D:\Dev\target-runtime>
 ```
 
-Remote Terminal 负责生成/修改脚本；Local Terminal 负责 SCP 和 Windows 执行。
+Remote Terminal：
 
-在 Command Palette 中创建本地 Terminal：
+- 编译 C/C++
+- 运行 Codex / OpenCode
+- 生成 Windows 调试/烧录脚本
+- 生成 ELF / MAP / BIN / HEX
+
+Local Terminal：
+
+- 运行 `sync-build.ps1`
+- SCP 拉取产物
+- 调用 Windows-only 工具
+- 查看本地调试/烧录输出
+
+在 Command Palette 中：
 
 ```text
 Terminal: Create New Integrated Terminal (Local)
 ```
 
-## 5. Terminal 启动 Hook
+## Terminal Hook
 
-可为 Windows 本地 VS Code 配置专用 Terminal Profile：
+建议挂一个专用 Windows Terminal Profile，而不是污染全局 PowerShell Profile：
 
 ```json
 {
   "terminal.integrated.profiles.windows": {
-    "Windows Host Runner": {
+    "Remote Dev Bridge": {
       "path": "powershell.exe",
       "args": [
         "-NoExit",
         "-ExecutionPolicy",
         "Bypass",
         "-File",
-        "C:\\Dev\\host-scripts\\bootstrap.ps1"
+        "D:\\Dev\\target-runtime\\sync-build.ps1",
+        "-Mode",
+        "all"
       ]
     }
   }
 }
 ```
 
-启动 `Windows Host Runner` 后：
+启动流程：
 
 ```text
-Terminal starts
-    ↓
-bootstrap.ps1
-    ↓
-scp latest Windows script
-    ↓
-C:\Dev\host-scripts\test.ps1
-    ↓
-execute on Windows host
+Local Terminal starts
+        ↓
+sync-build.ps1
+        ↓
+sync build-manifest.json
+        ↓
+sync symbols / firmware / scripts
+        ↓
+Windows local debug / flash / test
 ```
 
-> 不建议把 SCP hook 放入全局 PowerShell Profile，否则所有 PowerShell 会话都会产生不必要的远程同步。
+## Build Manifest
 
-## 6. SSH 配置建议
+符号表和固件必须成套同步，避免：
 
-Windows `%USERPROFILE%\.ssh\config` 可定义稳定 alias：
-
-```sshconfig
-Host cpp-dev
-    HostName 192.168.1.100
-    User dev
-    IdentityFile ~/.ssh/id_ed25519
+```text
+app.elf = Build A
+app.bin = Build B
 ```
 
-Bootstrap 中即可使用：
+导致调试符号与实际固件不一致。
 
-```powershell
-.\bootstrap.ps1 -Script test.ps1 -RemoteHost cpp-dev
+推荐远程构建时生成：
+
+```json
+{
+  "build_id": "2026-10-16T00:00:00Z",
+  "commit": "abc123",
+  "toolchain": "arm-none-eabi-gcc",
+  "artifacts": {
+    "elf": "app.elf",
+    "map": "app.map",
+    "bin": "app.bin",
+    "hex": "app.hex"
+  }
+}
 ```
 
-避免脚本中散落 IP、用户名和密钥路径。
+Windows Hook 先同步 manifest，再同步对应产物。
 
-## 7. 为什么不用 SSHFS
+推荐进一步扩展校验：
 
-此场景的目标不是让 Windows 构建整个 Linux Workspace，而是把少量 **Windows-only 执行产物** 从 Linux 交付给 Windows。
+- Git commit
+- build ID
+- SHA-256
+- toolchain version
+- board/target
+- build type
 
-SCP hook 的优势：
+## 为什么不用 SSHFS
 
-- 开发环境与执行环境边界清晰；
-- 不把 `node_modules`、CMake build tree 等大量文件跨网络文件系统访问；
-- Windows USB/COM/Driver/ADB 等本机资源保持本地执行；
-- Agent 可以继续完全运行在 Linux；
-- 失败点明确，容易记录日志和自动化。
+这里的目标不是把整个 Linux Workspace 映射给 Windows，而是交付少量 Windows 运行时需要的文件。
 
-## 8. 安全约束
+SCP Hook 更适合：
 
-自动执行远程生成的脚本意味着远程开发环境拥有影响 Windows Host 的能力，因此建议：
+- ELF / AXF / PDB / DWARF
+- MAP / SYM
+- BIN / HEX
+- PowerShell / BAT
+- OpenOCD / J-Link / TRACE32 配置
+- 测试数据和日志
 
-1. 只允许从固定仓库目录拉取脚本；
+优势：
+
+- 开发环境与运行环境边界清晰；
+- 避免网络文件系统拖慢 CMake / Ninja / Git / node_modules；
+- Windows 本机 USB/COM/Driver 能力保持本地；
+- Agent 可继续完全运行在 Linux；
+- 同步失败点明确；
+- 便于增加版本和完整性校验。
+
+## 安全约束
+
+自动执行远程生成脚本意味着远程开发环境能影响 Windows Host，因此：
+
+1. 只允许固定远程目录；
 2. SSH 使用 key authentication；
-3. 不以 Administrator 身份默认运行 Host Runner；
-4. 涉及驱动安装、系统配置等高权限动作时单独确认；
-5. `scp` 失败时禁止继续执行旧脚本；
-6. 对生产/敏感机器可增加 hash、签名或 Git commit 校验。
+3. 默认不要以 Administrator 运行；
+4. 高权限动作单独确认；
+5. SCP 失败时禁止执行旧脚本；
+6. 固件与符号文件使用同一 manifest；
+7. 敏感环境可增加 SHA-256 / Git commit / 签名验证。
 
-## 9. 推荐工作流
+## 推荐工作流
 
 ```text
 Remote Linux
     ↓
-Codex / OpenCode modifies scripts/windows/test.ps1
+Build C++ target
     ↓
-open/restart Windows Host Runner
+Generate app.elf / app.map / app.bin / app.hex
     ↓
-bootstrap.ps1
+Generate build-manifest.json
     ↓
-SCP latest script
+Agent generates Windows scripts
     ↓
-Windows local execution
+Windows Local Terminal Hook
     ↓
-inspect output in the same VS Code terminal panel
+sync-build.ps1
+    ↓
+SCP manifest + symbols + firmware + scripts
+    ↓
+TRACE32 / J-Link / OpenOCD / vendor tool / PowerShell
 ```
 
-该模式可以继续扩展成 VS Code Task，使 `SCP → Execute → Capture Output` 通过一个快捷键完成。
+这使整个流程从“Remote Script Runner”升级为一个可复用的 **Remote Development Bridge**。
