@@ -2,67 +2,50 @@
 
 基于 **Marc Gregoire · Professional C++, Sixth Edition（C++23）** 的每日工程化学习仓库。
 
-面向已有 **C / Embedded** 基础的学习者，重点不是从零学习语法，而是完成：
+面向已有 **C / Embedded** 基础的学习者：
 
 > C 思维 → Modern C++ → Professional C++ → Embedded / Systems Engineering
 
-## 在线学习平台 (GitHub Pages)
+## 在线学习平台
 
-- 🌐 **在线控制台 / Web Console**: [https://luckyJimLu.github.io/professional-cpp-learning/](https://luckyJimLu.github.io/professional-cpp-learning/)
-  - 支持每日课程阅读与 Compile Rail 学习流水线
-  - 内置基于 WebAssembly Clang 22 的在线 C++23 交互式编译实验工作台 (Lab)
-  - 全局代码与 Markdown 代码块即时搜索与行级高亮 (Code Search)
+- 🌐 [Learning Console](https://luckyJimLu.github.io/professional-cpp-learning/)
+- 支持课程阅读、Compile Rail、C++23 WebAssembly Lab、代码/Markdown 搜索与 Mermaid 图表。
 
 ## 当前进度
 
-- **已发布：Day 1–50**
-- **下一课：Day 51**
+- **已发布：Day 1–51**
+- **下一课：Day 52**
 - 当前主线：**Chapter 6 · Designing for Reuse**
 - 更新方式：**GitHub Markdown only**
 
 ## 快速入口
 
-- 🚀 **[在线学习控制台 (GitHub Pages)](https://luckyJimLu.github.io/professional-cpp-learning/)**
 - [16 周学习路线](docs/learning-plan.md)
 - [完整学习进度](progress.md)
 - [C++ Design Patterns · 工程化专题](patterns/)
-- [经典工业级框架解构 · Asio](frameworks/asio/)
-- [TRACE32 · RTOS 稳定性分析工程实战](frameworks/trace32/README.md)
+- [Ownership & Smart Pointers](patterns/ownership-and-smart-pointers.md)
+- [Asio 框架解构](frameworks/asio/)
+- [TRACE32 · RTOS 稳定性分析](frameworks/trace32/README.md)
 - [Embedded C++ 编码规范索引](guidelines/embedded-cpp-guideline-notes.md)
-- [每日课程目录](daily/)
-- [周复盘目录](weekly/)
-- [Mermaid 图表学习与编写](docs/mermaid.md)
+- [每日课程](daily/)
+- [周复盘](weekly/)
+- [Mermaid 图表指南](docs/mermaid.md)
 
-## C++ Design Patterns 专题
+## 学习原则
 
-设计模式专题不占用每日 Day 编号，用于提前建立 Chapter 33 的全局认知：
-
-- **[C++ Design Patterns · 工程化学习指南](patterns/README.md)**：以“稳定边界”为主线整理 Strategy、Factory、Adapter、Proxy、Iterator、Observer、Decorator、Chain of Responsibility、Singleton 等模式，并结合 Embedded / Modem / Driver 场景。
-- **[Design Patterns 下的 Ownership 与 Smart Pointers](patterns/ownership-and-smart-pointers.md)**：系统说明 `T&`、`T*`、`std::unique_ptr`、`std::shared_ptr`、`std::weak_ptr` 在各模式中的所有权与生命周期含义；包含三个判断问题、Mermaid 决策流程图、UML 类图与时序图，以及 [可运行生命周期实验](examples/pointer-choice.cpp)。
+设计模式专题不占用每日 Day 编号；每日课程仍严格按《Professional C++》章节顺序推进。设计模式只用于解释真实变化轴和稳定边界。
 
 核心原则：**先识别变化，再建立稳定边界；先设计 lifetime，再选择 pointer。**
 
-## 经典工业级框架解构（Framework Case Studies）
-
-除了跟随教材逐步推进，本仓库还设立工业级框架深度解构专题，将抽象语言机制与顶级生产级基础设施直接对照：
-
-- **[Asio 框架解构专栏](frameworks/asio/)**：总体分层架构、异步生命周期与 C++20 协程实战。
-
-## TRACE32 · RTOS 稳定性分析专题
-
-新增面向 C / Embedded 开发者的独立实战章节，覆盖现场保全、离线 Dump、HardFault、任务死锁、栈与堆、DMA / Cache、硬件 Trace、自动采集与 C++ 生命周期修复。不占用 Day 编号。
-
-- [章节与操作路线](frameworks/trace32/README.md)
-- [在线阅读：专题知识库 → 嵌入式系统 → TRACE32](https://luckyJimLu.github.io/professional-cpp-learning/?view=topics&topic=frameworks%2Ftrace32%2FREADME.md)
-- [自动采集模板与 Host C++ 解码实验](frameworks/trace32/04-automation-and-labs.md)
+优先 value semantics / composition / 小接口；需要 runtime replacement 时才引入 virtual interface。Embedded 场景持续审计 heap、锁、blocking、callback、registration、flash/RAM 与 WCET 上界。
 
 ## 最近课程
 
+- [Day 51 · Design General-Purpose Interfaces](daily/day-051-general-purpose-interfaces.md)
 - [Day 50 · Design Interfaces That Are Easy to Use](daily/day-050-easy-to-use-interfaces.md)
 - [Day 49 · Consider the Audience and Purpose](daily/day-049-consider-audience-purpose.md)
 - [Day 48 · Design Usable Interfaces](daily/day-048-design-usable-interfaces.md)
 - [Day 47 · Design for Extensibility](daily/day-047-design-for-extensibility.md)
-- [Day 46 · Provide Appropriate Checks and Safeguards](daily/day-046-checks-safeguards.md)
 
 ## 每日课程结构
 
@@ -79,7 +62,7 @@
 9. 3 个常见坑与 Pattern 滥用
 10. 2 道检查题 + 1 道设计题
 
-每 7 天安排一次工程化周复盘，并增加 Design Review：变化轴、稳定边界、Pattern 选择、ownership/lifetime 与 overengineering 检查。
+每 7 天安排工程化周复盘，并增加 Design Review：变化轴、稳定边界、Pattern 选择、ownership/lifetime 与 overengineering 检查。
 
 ## 仓库结构
 
@@ -88,98 +71,41 @@
 ├── README.md
 ├── progress.md
 ├── docs/
-│   └── learning-plan.md
 ├── patterns/
-│   ├── README.md
-│   └── ownership-and-smart-pointers.md
 ├── frameworks/
-│   └── asio/
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-050-*.md
+│   └── day-051-*.md
 ├── examples/
 │   └── day-XXX/
 ├── weekly/
-│   ├── week-01-review.md
-│   └── ...
 └── guidelines/
-    └── embedded-cpp-guideline-notes.md
 ```
 
 ## 编码规范基线
 
-- 类型：`PascalCase`；函数：`PascalCase`
-- 变量 / 参数：`snake_case`；成员：`snake_case_`；常量：`kPascalCase`
-- 强类型枚举：`enum class`
-- 所有权清晰，优先 RAII / value semantics
-- required borrow 优先引用，optional borrow 明确 `nullptr` 语义
-- 实时路径避免无界动态分配
-- 阻塞 API 必须显式 timeout
-- 避免 magic number
-- 开启 `-Wall -Wextra -Wconversion`
-- 持续引入 clang-format / clang-tidy / tests / CI
+- 类型/函数：`PascalCase`
+- 变量/参数：`snake_case`；成员：`snake_case_`；常量：`kPascalCase`
+- `enum class`、RAII、value semantics、小接口
+- required borrow 优先引用；optional borrow 明确 `nullptr`
+- 单一 owner 优先；`unique_ptr` 表达 ownership transfer；谨慎 `shared_ptr`
+- 实时路径避免无界动态分配；阻塞 API 显式 timeout
+- 硬件单位明确、避免 magic number、覆盖边界测试
+- `-Wall -Wextra -Wconversion -Wpedantic` + clang-format/clang-tidy/静态分析/单测/CI
 
 ## Learning Console
 
-仓库包含 **Professional C++ Learning Console**。课程 Markdown 是唯一内容源，Web UI 负责学习流、Lab、复盘与进度状态。
-
-- 🌐 **在线体验 (GitHub Pages)**: [https://luckyJimLu.github.io/professional-cpp-learning/](https://luckyJimLu.github.io/professional-cpp-learning/)
-
-### 本地运行
+课程 Markdown 是唯一内容源，Web UI 负责学习流、Lab、复盘与进度。
 
 ```bash
 npm install
 npm run dev
-```
-
-生产构建：
-
-```bash
-npm run build
-npm run preview
-```
-
-### 第一版页面
-
-- Today：根据 `progress.md` 和现有 Day 自动确定当前位置
-- Roadmap：按 Week / Part 生成纵向课程路径
-- Lessons：从 `daily/*.md` 自动建立课程索引
-- Lesson：Compile Rail + 课程学习流，支持 Mermaid 流程图、状态图、类图与时序图
-- 专题：设计模式、所有权、Asio 框架与图表指南
-- Lab：可编辑 C++ 代码 + 浏览器内 Clang/WASM Compile & Run
-- Review：每 7 天复盘入口
-- Guidelines：直接渲染 Embedded C++ Guideline Markdown
-- Progress：课程覆盖与学习证据
-
-设计与 Agent 约束：[DESIGN.md](DESIGN.md) · [UX-CONTRACT.md](UX-CONTRACT.md) · [Learning UX](docs/learning-ux.md)
-
-课程采用 Markdown 与 YAML 元数据；实验优先使用 examples 中的独立源码。
-
-### 浏览器 C++ 编译
-
-Lab 使用 `@live-codes/clang-wasm` 在 Web Worker 中懒加载 Clang 22 工具链，默认 `gnu++23`，编译参数为 `-Wall -Wextra -Wconversion -Wpedantic`。工具链仅在首次 Compile & Run 时加载，避免首屏预加载大型 runtime。
-
-### 内容验证
-
-```bash
 npm run check:course
 npm run build
 npm run test:e2e
 ```
 
-课程检查验证元数据、实验路径与前后课链接；浏览器测试验证图表渲染、加载失败后的源码回退，以及仓库 Mermaid 图表语法。CI 还会编译并执行独立 C++ 实验。
+Lab 使用浏览器内 Clang/WASM，默认 C++23。设计与 Agent 约束见 [DESIGN.md](DESIGN.md)、[UX-CONTRACT.md](UX-CONTRACT.md) 与 [Learning UX](docs/learning-ux.md)。
 
-## 知识库与代码搜索
-
-运行 `npm install`、`npm run dev` 打开学习工作区。导航中提供专题知识库和代码搜索，也可使用 Ctrl/Cmd+K。搜索覆盖独立 C/C++ 源码和 Markdown 代码块，支持文件名、代码文本、类型筛选、行号预览及原文跳转；查询和阅读位置可通过 URL 分享。
-
-从 `system-design-notes` 导入的资料位于 `references/system-design-notes/`，包含架构、Asio、并发编程及相关嵌入式实践。详见 [迁移说明](docs/content-migration.md)。原项目文件保留。
-
-```bash
-npm run check:migration      # 校验迁移文件
-npm run check:course         # 每日课程结构
-npm run build                # TypeScript + 生产构建
-npm run test:e2e             # 搜索、阅读、图表与浏览器编译
-npm run check:reference-cpp  # 迁移示例
-```
+从 `system-design-notes` 导入的资料位于 `references/system-design-notes/`，详见 [迁移说明](docs/content-migration.md)。
