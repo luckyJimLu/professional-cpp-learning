@@ -26,6 +26,8 @@
 - [Ownership & Smart Pointers](patterns/ownership-and-smart-pointers.md)
 - [Asio 框架解构](frameworks/asio/)
 - [TRACE32 · RTOS 稳定性分析](frameworks/trace32/README.md)
+- [Utils · 工程实用工具](utils/)
+- [Windows Remote Script Runner · Remote-SSH + SCP Hook](utils/windows-remote-script-runner/README.md)
 - [Embedded C++ 编码规范索引](guidelines/embedded-cpp-guideline-notes.md)
 - [每日课程](daily/)
 - [周复盘](weekly/)
@@ -73,6 +75,8 @@
 ├── docs/
 ├── patterns/
 ├── frameworks/
+├── utils/
+│   └── windows-remote-script-runner/
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
