@@ -1,17 +1,26 @@
 import { useEffect, useState } from "react";
 
 export const NAV = [
-  { id: "today", label: "学习指南", group: "学习路径" },
-  { id: "roadmap", label: "学习路线", group: "学习路径" },
-  { id: "lessons", label: "每日课程", group: "学习路径" },
-  { id: "topics", label: "专题", group: "知识与实践" },
-  { id: "visualizer", label: "内存可视化", group: "知识与实践" },
-  { id: "lab", label: "编译实验", group: "知识与实践" },
-  { id: "review", label: "每周复盘", group: "学习记录" },
-  { id: "guidelines", label: "编码规范", group: "学习记录" },
-  { id: "progress", label: "学习进度", group: "学习记录" },
+  { id: "today", label: "学习指南" },
+  { id: "lessons", label: "课程" },
+  { id: "topics", label: "专题" },
+  { id: "lab", label: "实验" },
+  { id: "guidelines", label: "编码规范" },
+  { id: "review", label: "复盘" },
 ] as const;
-export type View = (typeof NAV)[number]["id"] | "lesson" | "search";
+
+export const VIEW_ALIASES: Record<string, (typeof NAV)[number]["id"]> = {
+  roadmap: "lessons",
+  progress: "review",
+};
+
+export type View =
+  | (typeof NAV)[number]["id"]
+  | "lesson"
+  | "search"
+  | "visualizer"
+  | "roadmap"
+  | "progress";
 export function navigate(
   values: Record<string, string | undefined>,
   replace = false,

@@ -43,34 +43,30 @@ Do not replace Compile Rail with a generic percentage-only progress bar.
 
 Desktop primary navigation:
 
-1. Today
-2. Roadmap
-3. Lessons
-4. 专题
-5. Lab
-6. Review
-7. Guidelines
-8. Progress
+1. Today (学习指南)
+2. 课程 (Lessons - 进阶路线与完整目录合一)
+3. 专题 (Topics)
+4. 实验 (Lab)
+5. 编码规范 (Guidelines)
+6. 复盘 (Review - 进度闭环、薄弱点与周复盘检查点)
 
 Mobile primary navigation:
 
-- Today
-- Roadmap
+- 学习指南
+- 课程
 - 专题
-- Lab
-- Progress
+- 实验
+- 编码规范
+- 复盘
 
-All destinations, including code search, are reachable on mobile through the shared navigation disclosure.
+All destinations, including code search, are reachable on mobile through the shared navigation drawer.
 
 ## 5. Lesson layout
 
-Desktop:
+Desktop & Mobile:
 
-- left: shared grouped site navigation
-- center: lesson document
-- right: Day TOC / 8 stages followed by session metadata
-
-The right column MUST NOT contain recommendations, social content, ads, or unrelated cards.
+- left: shared site navigation
+- center: distraction-free lesson document with sticky CompileRail at the top, ensuring optimal reading line length and single canonical stage navigation.
 
 Mobile collapses to a single reading column.
 

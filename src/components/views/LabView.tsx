@@ -163,7 +163,7 @@ export function LabView({
                 onClick={resetToLessonSource}
                 type="button"
               >
-                恢复本课代码
+                恢复课例源码
               </button>
             </div>
           )}
@@ -176,24 +176,16 @@ export function LabView({
             >
               {hint ? "隐藏提示" : "显示提示"}
             </button>
-            <button
-              className="ghost-button"
-              onClick={resetToLessonSource}
-              disabled={compilerBusy || (traceSession.state.code === sourceCode && !customOrigin)}
-              type="button"
-            >
-              恢复课例源码
-            </button>
-            <button
-              className="ghost-button"
-              onClick={loadVisualizerDemo}
-              disabled={compilerBusy}
-              type="button"
-              style={{ color: "#38bdf8", borderColor: "rgba(56, 189, 248, 0.4)" }}
-              title="载入带有 visualizer.h 探针的 RAII 内存可视化示例代码"
-            >
-              ⚡ 体验生命周期可视化
-            </button>
+            {!customOrigin && (
+              <button
+                className="ghost-button"
+                onClick={resetToLessonSource}
+                disabled={compilerBusy || traceSession.state.code === sourceCode}
+                type="button"
+              >
+                重置代码
+              </button>
+            )}
           </div>
 
           {hint && (
@@ -206,7 +198,7 @@ export function LabView({
                   }
                 </Markdown>
               ) : (
-                "Re-read the lesson rules and use them as the review checklist for this lab."
+                "复习本课的规范要点，以此作为实验自测清单。"
               )}
             </div>
           )}
@@ -215,10 +207,9 @@ export function LabView({
         <section className="code-workbench" aria-labelledby="lab-workbench-title">
           <header className="lab-workbench-header">
             <div>
-              <span className="eyebrow">BROWSER C++ WORKSPACE</span>
-              <h2 id="lab-workbench-title">代码、内存与运行结果</h2>
+              <span className="eyebrow">工作区</span>
+              <h2 id="lab-workbench-title">代码、运行与内存分析</h2>
             </div>
-            <p>编辑器使用完整课例源码；长行会在可用宽度内换行，编译输出与内存轨迹保持在同一工作区。</p>
           </header>
           <VisualizerWorkbench
             session={traceSession.state}

@@ -18,13 +18,14 @@ export function TodayView({
   const latest = latestLesson();
   const planned = lessonByDay(currentDay);
   const target = planned ?? latest;
+
   return (
     <div className="docs-layout today-layout">
       <article className="guide-document">
         <header className="guide-title" id="introduction">
           <h1>从 C 出发，写出专业的 C++</h1>
           <p className="guide-lead">
-            面向 C / 嵌入式开发者的现代 C++ 工程化学习手册，配合可运行实验从语言机制走向系统架构。
+            面向具备 C 与基础嵌入式经验的开发者，每天一小时，配合可运行实验从语言机制走向系统架构。
           </p>
           <div className="guide-hero-cta">
             <button
@@ -36,74 +37,19 @@ export function TodayView({
                 ? `继续学习 · Day ${target?.day ?? 1} →`
                 : "开始 Day 1 →"}
             </button>
+            <a href="?view=lessons" className="ghost-button">
+              浏览全部课程 ({lessons.length} 节)
+            </a>
           </div>
         </header>
-        <details className="docs-note docs-note-collapsible">
-          <summary>
-            <strong>学习之前</strong>
-            <span className="docs-note-summary-text">
-              建议具备 C 与基础嵌入式开发经验
-            </span>
-            <span className="docs-note-chevron" aria-hidden="true">
-              ▾
-            </span>
-          </summary>
-          <p>
-            建议具备 C 语言和基础嵌入式开发经验。课程以 Modern C++ 为主线，结合
-            Modem、Driver 与资源受限系统的实际工程问题。
-          </p>
-        </details>
-        <section id="start-learning" className="guide-section">
-          <h2>开始学习</h2>
-          <p>第一次来，从 Day 1 开始；已经在学习，可以回到最近发布的课程。</p>
-          <div className="start-links">
-            <a href="?view=lesson&day=1">
-              <span className="link-icon">01</span>
-              <strong>从第一课开始</strong>
-              <span>C 思维 → Modern C++</span>
-              <b aria-hidden="true">↗</b>
-            </a>
-            <a href="?view=roadmap">
-              <span className="link-icon">→</span>
-              <strong>浏览学习路线</strong>
-              <span>16 周 · 从基础到系统工程</span>
-              <b aria-hidden="true">↗</b>
-            </a>
-          </div>
-          {target ? (
-            <div className="continue-reading">
-              <div>
-                <span className="eyebrow">
-                  {planned ? "继续学习" : "最近发布"} / DAY {target.day}
-                </span>
-                <h3>{target.title}</h3>
-                <p>
-                  已发布 {lessons.length} 节课程
-                  {!planned && ` · Day ${currentDay} 尚未发布`}
-                </p>
-              </div>
-              <button
-                className="primary-button"
-                onClick={() => openLesson(target.day)}
-              >
-                阅读课程 →
-              </button>
-            </div>
-          ) : (
-            <p>课程准备中，先浏览学习路线。</p>
-          )}
-        </section>
+
         <section id="learning-method" className="guide-section">
-          <h2>每天一小时</h2>
+          <h2>每天一小时 · 学习闭环</h2>
           <p>
-            用八个阶段完成一次学习闭环。阅读不等于完成，解释清楚、运行通过，再记录你的学习进度。
+            通过八个阶段完成一次扎实的学习：阅读、回忆、理解、重构、规范、实验、避坑与自测。解释清楚、运行通过，再标记完成。
           </p>
           {target && (
             <div className="guide-pipeline">
-              <div className="terminal-caption">
-                <span>learning.pipeline</span>
-                <span>约 60 min / 天</span>
-              </div>
               <CompileRail
                 lesson={target}
                 isStepComplete={isStepComplete}
@@ -111,19 +57,13 @@ export function TodayView({
                   window.location.href = `?view=lesson&day=${target.day}#section-${step}`;
                 }}
               />
-              <div className="pipeline-caption">
-                阅读 → 回忆 → 理解 → 重构 → 规范 → 实验 → 避坑 → 自测
-              </div>
             </div>
           )}
           <p className="guide-footnote">
-            完成状态保存在当前浏览器。课程与代码来自仓库，可随时查看原文。
+            学习进度保存在当前浏览器。课文与源码均来自仓库，随时可查阅原文。
           </p>
         </section>
-        <a className="next-doc" href="?view=roadmap">
-          <span>下一步</span>
-          <strong>学习路线 →</strong>
-        </a>
+
         <footer className="article-footer">
           <div className="article-footer-left">
             <a
@@ -148,10 +88,6 @@ export function TodayView({
               </svg>
               <span>在 GitHub 查看源码</span>
             </a>
-            <div className="footer-lang-picker">
-              <span className="lang-icon" aria-hidden="true">文A</span>
-              <span>简体中文 ▾</span>
-            </div>
           </div>
           <div className="article-footer-right">
             <span className="footer-meta">基于 Professional C++ (第6版) · C++23</span>

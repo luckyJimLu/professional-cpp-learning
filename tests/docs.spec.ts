@@ -49,10 +49,16 @@ test("mobile guide and lesson remain within viewport", async ({ page }) => {
   await page.locator(".mobile-menu summary").click();
   await page
     .getByRole("navigation", { name: "Mobile navigation" })
-    .getByRole("button", { name: "每日课程" })
+    .getByRole("button", { name: "课程" })
     .click();
   await expect(page).toHaveURL(/view=lessons/);
   await expect(page.locator(".mobile-menu")).not.toHaveAttribute("open");
+
+  // 验证别名兼容性
+  await page.goto("/?view=roadmap");
+  await expect(page.getByRole("heading", { name: "课程", level: 1 })).toBeVisible();
+  await page.goto("/?view=progress");
+  await expect(page.getByRole("heading", { name: "复盘", level: 1 })).toBeVisible();
   await page.goto("/?view=lesson&day=1");
   await expect(page.locator(".lesson-document h1")).toBeVisible();
   expect(

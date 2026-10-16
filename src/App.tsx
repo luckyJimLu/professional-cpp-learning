@@ -1,18 +1,22 @@
 import { lazy, useEffect, useMemo, type ReactNode } from "react";
 import { DeferredContent } from "./components/DeferredContent";
 import { Shell } from "./components/Shell";
-import { NAV, navigate, useLocationParams, type View } from "./lib/navigation";
+import {
+  NAV,
+  VIEW_ALIASES,
+  navigate,
+  useLocationParams,
+  type View,
+} from "./lib/navigation";
 import { latestLesson, lessonByDay, repoCompletedDay } from "./lib/course";
 import { useLearningProgress } from "./lib/progress";
 
 import { TodayView } from "./components/views/TodayView";
-import { RoadmapView } from "./components/views/RoadmapView";
 import { LessonsView } from "./components/views/LessonsView";
 import { LessonView } from "./components/views/LessonView";
 import { LabView } from "./components/views/LabView";
 import { ReviewView } from "./components/views/ReviewView";
 import { GuidelinesView } from "./components/views/GuidelinesView";
-import { ProgressView } from "./components/views/ProgressView";
 import { VisualizerView } from "./components/views/VisualizerView";
 
 const Topics = lazy(() =>
@@ -27,12 +31,18 @@ const CodeSearch = lazy(() =>
 
 export default function App() {
   const params = useLocationParams();
-  const requestedView = params.get("view");
+  const rawRequested = params.get("view");
+  const canonicalRequested =
+    rawRequested && VIEW_ALIASES[rawRequested]
+      ? VIEW_ALIASES[rawRequested]
+      : rawRequested;
+
   const view: View =
-    requestedView === "search" ||
-    requestedView === "lesson" ||
-    NAV.some((item) => item.id === requestedView)
-      ? (requestedView as View)
+    canonicalRequested === "search" ||
+    canonicalRequested === "lesson" ||
+    canonicalRequested === "visualizer" ||
+    NAV.some((item) => item.id === canonicalRequested)
+      ? (canonicalRequested as View)
       : "today";
   const setView = (value: View) => navigate({ view: value });
   const selectedDay =
@@ -89,20 +99,13 @@ export default function App() {
         />
       );
       break;
-    case "roadmap":
-      page = (
-        <RoadmapView
-          currentDay={currentLearningDay}
-          openLesson={openLesson}
-          isDayComplete={progress.isDayComplete}
-        />
-      );
-      break;
     case "lessons":
+    case "roadmap":
       page = (
         <LessonsView
           openLesson={openLesson}
           isDayComplete={progress.isDayComplete}
+          currentDay={currentLearningDay}
         />
       );
       break;
@@ -133,6 +136,7 @@ export default function App() {
       ) : null;
       break;
     case "review":
+    case "progress":
       page = (
         <ReviewView
           isDayComplete={progress.isDayComplete}
@@ -143,14 +147,6 @@ export default function App() {
       break;
     case "guidelines":
       page = <GuidelinesView />;
-      break;
-    case "progress":
-      page = (
-        <ProgressView
-          weakPoints={progress.state.weakPoints}
-          isDayComplete={progress.isDayComplete}
-        />
-      );
       break;
     case "lesson":
       page = selectedLesson ? (

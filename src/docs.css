@@ -956,6 +956,44 @@ body {
   grid-template-columns: minmax(0, 1fr) 220px;
   gap: clamp(24px, 2.5vw, 36px);
 }
+.lesson-layout.lesson-layout-single {
+  display: block;
+  max-width: 860px;
+  margin: 0 auto;
+  width: 100%;
+}
+.lesson-layout.lesson-layout-single .lesson-document {
+  max-width: 100%;
+  width: 100%;
+}
+.lesson-rail-sticky {
+  position: sticky;
+  top: calc(var(--header-height, 64px) + 8px);
+  z-index: 20;
+  background: var(--surface, #fff);
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--line, #e2e8f0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-top: 18px;
+  margin-bottom: 24px;
+}
+.lesson-rail-sticky .compile-rail.lesson-toc {
+  border-left: none;
+  padding-left: 0;
+  position: static;
+  max-height: none;
+  overflow: visible;
+  top: auto;
+}
+.rail-title {
+  display: block;
+  font-size: 11px;
+  color: inherit;
+  opacity: 0.85;
+  margin-bottom: 4px;
+  font-family: var(--font-sans, system-ui, sans-serif);
+}
 .lesson-document {
   grid-column: 1;
   grid-row: 1;

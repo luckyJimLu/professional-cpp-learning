@@ -1,246 +1,76 @@
 import {
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
 import {
   NAV,
-  useLocationParams,
   type View,
 } from "../lib/navigation";
-import { repoCompletedDay } from "../lib/course";
 import { OpenCodeLogo } from "./OpenCodeLogo";
 
-function BackToTop() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setVisible(window.scrollY > 400);
-    };
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+function NavIcon({ id }: { id: string }) {
+  const common = {
+    className: "nav-icon",
+    width: 18,
+    height: 18,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 2,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    "aria-hidden": "true" as const,
   };
 
-  return (
-    <button
-      type="button"
-      className={`back-to-top-fab ${visible ? "is-visible" : ""}`}
-      onClick={scrollToTop}
-      aria-label="返回顶部"
-      title="返回顶部"
-    >
-      <svg
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-      >
-        <path d="M18 15l-6-6-6 6" />
-      </svg>
-    </button>
-  );
-}
-
-function NavIcon({ id }: { id: string }) {
   switch (id) {
     case "today":
       return (
-        <svg
-          className="nav-icon"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
+        <svg {...common}>
           <circle cx="12" cy="12" r="10" />
           <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
         </svg>
       );
-    case "roadmap":
-      return (
-        <svg
-          className="nav-icon"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
-          <line x1="8" y1="2" x2="8" y2="18" />
-          <line x1="16" y1="6" x2="16" y2="22" />
-        </svg>
-      );
     case "lessons":
       return (
-        <svg
-          className="nav-icon"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
+        <svg {...common}>
           <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
           <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
         </svg>
       );
     case "topics":
       return (
-        <svg
-          className="nav-icon"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
+        <svg {...common}>
           <polygon points="12 2 2 7 12 12 22 7 12 2" />
           <polyline points="2 17 12 22 22 17" />
           <polyline points="2 12 12 17 22 12" />
         </svg>
       );
-    case "visualizer":
-      return (
-        <svg
-          className="nav-icon"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <rect x="4" y="4" width="16" height="16" rx="2" />
-          <rect x="9" y="9" width="6" height="6" />
-          <line x1="9" y1="1" x2="9" y2="4" />
-          <line x1="15" y1="1" x2="15" y2="4" />
-          <line x1="9" y1="20" x2="9" y2="23" />
-          <line x1="15" y1="20" x2="15" y2="23" />
-          <line x1="20" y1="9" x2="23" y2="9" />
-          <line x1="20" y1="14" x2="23" y2="14" />
-          <line x1="1" y1="9" x2="4" y2="9" />
-          <line x1="1" y1="14" x2="4" y2="14" />
-        </svg>
-      );
     case "lab":
       return (
-        <svg
-          className="nav-icon"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
+        <svg {...common}>
           <polyline points="4 17 10 11 4 5" />
           <line x1="12" y1="19" x2="20" y2="19" />
         </svg>
       );
-    case "review":
-      return (
-        <svg
-          className="nav-icon"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <polyline points="1 4 1 10 7 10" />
-          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
-        </svg>
-      );
     case "guidelines":
       return (
-        <svg
-          className="nav-icon"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
+        <svg {...common}>
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
           <path d="m9 12 2 2 4-4" />
         </svg>
       );
-    case "progress":
+    case "review":
       return (
-        <svg
-          className="nav-icon"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <line x1="18" y1="20" x2="18" y2="10" />
-          <line x1="12" y1="20" x2="12" y2="4" />
-          <line x1="6" y1="20" x2="6" y2="14" />
+        <svg {...common}>
+          <polyline points="1 4 1 10 7 10" />
+          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
         </svg>
       );
     case "search":
       return (
-        <svg
-          className="nav-icon"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
+        <svg {...common}>
           <circle cx="11" cy="11" r="8" />
           <line x1="21" y1="21" x2="16.65" y2="16.65" />
         </svg>
@@ -250,12 +80,9 @@ function NavIcon({ id }: { id: string }) {
   }
 }
 
-const GROUPS = ["学习路径", "知识与实践", "学习记录"] as const;
-
 export function Shell({
   view,
   setView,
-  currentDay,
   onPreloadSearch,
   children,
 }: {
@@ -265,6 +92,8 @@ export function Shell({
   onPreloadSearch?: () => void;
   children: ReactNode;
 }) {
+  const drawerRef = useRef<HTMLDetailsElement>(null);
+
   const triggerMainSearchFocus = () => {
     const mainInput = document.getElementById(
       "code-query",
@@ -329,29 +158,63 @@ export function Shell({
     });
   };
 
-  const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
+  // 移动端抽屉无障碍：Escape 关闭与 inert 控制
+  useEffect(() => {
+    const handleKeydown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && drawerRef.current?.open) {
+        drawerRef.current.open = false;
+        const main = document.getElementById("main-content");
+        if (main) main.removeAttribute("inert");
+      }
+    };
+    window.addEventListener("keydown", handleKeydown);
+    return () => window.removeEventListener("keydown", handleKeydown);
+  }, []);
 
-  const toggleGroup = (group: string) => {
-    setCollapsedGroups((prev) => ({
-      ...prev,
-      [group]: !prev[group],
-    }));
+  const handleDrawerToggle = () => {
+    const isOpen = drawerRef.current?.open ?? false;
+    const main = document.getElementById("main-content");
+    if (main) {
+      if (isOpen) {
+        main.setAttribute("inert", "");
+      } else {
+        main.removeAttribute("inert");
+      }
+    }
+  };
+
+  const closeDrawer = () => {
+    if (drawerRef.current) {
+      drawerRef.current.open = false;
+      const main = document.getElementById("main-content");
+      if (main) main.removeAttribute("inert");
+    }
   };
 
   const label =
     view === "search"
       ? "代码搜索"
-      : (NAV.find((item) => item.id === view)?.label ?? "课程阅读");
+      : (NAV.find((item) => item.id === view)?.label ?? "课程");
 
   return (
-    <div className={`app-shell ${isSidebarCollapsed ? "is-sidebar-collapsed" : ""}`}>
+    <div
+      className={`app-shell ${isSidebarCollapsed ? "is-sidebar-collapsed" : ""}`}
+    >
       <a className="skip-link" href="#main-content">
         跳到正文
       </a>
       <header className="docs-header">
         <div className="header-left">
-          <details className="mobile-menu mobile-drawer">
-            <summary className="mobile-menu-trigger" aria-label="打开导航菜单">
+          <details
+            ref={drawerRef}
+            className="mobile-menu mobile-drawer"
+            onToggle={handleDrawerToggle}
+          >
+            <summary
+              className="mobile-menu-trigger"
+              aria-label="打开导航菜单"
+              aria-expanded={drawerRef.current?.open ?? false}
+            >
               <span className="hamburger-icon" aria-hidden="true">
                 ☰
               </span>
@@ -359,9 +222,7 @@ export function Shell({
             <div
               className="drawer-overlay"
               aria-hidden="true"
-              onClick={(e) => {
-                e.currentTarget.closest("details")?.removeAttribute("open");
-              }}
+              onClick={closeDrawer}
             />
             <div className="drawer-content">
               <div className="drawer-header">
@@ -370,9 +231,7 @@ export function Shell({
                   type="button"
                   className="drawer-close-btn"
                   aria-label="关闭导航菜单"
-                  onClick={(e) => {
-                    e.currentTarget.closest("details")?.removeAttribute("open");
-                  }}
+                  onClick={closeDrawer}
                 >
                   ✕
                 </button>
@@ -388,11 +247,9 @@ export function Shell({
                         ? "page"
                         : undefined
                     }
-                    onClick={(event) => {
+                    onClick={() => {
                       setView(item.id);
-                      event.currentTarget
-                        .closest("details")
-                        ?.removeAttribute("open");
+                      closeDrawer();
                     }}
                   >
                     <NavIcon id={item.id} />
@@ -403,14 +260,12 @@ export function Shell({
                   key="search"
                   type="button"
                   aria-current={view === "search" ? "page" : undefined}
-                  onClick={(event) => {
+                  onClick={() => {
                     setView("search");
+                    closeDrawer();
                     requestAnimationFrame(() => {
                       triggerMainSearchFocus();
                     });
-                    event.currentTarget
-                      .closest("details")
-                      ?.removeAttribute("open");
                   }}
                 >
                   <NavIcon id="search" />
@@ -441,7 +296,9 @@ export function Shell({
             >
               <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
               <line x1="9" y1="3" x2="9" y2="21" />
-              <path d={isSidebarCollapsed ? "m13 10 3 2-3 2" : "m16 10-3 2 3 2"} />
+              <path
+                d={isSidebarCollapsed ? "m13 10 3 2-3 2" : "m16 10-3 2 3 2"}
+              />
             </svg>
           </button>
 
@@ -482,90 +339,30 @@ export function Shell({
           </button>
         </div>
       </header>
+
       <aside className={`sidebar ${isSidebarCollapsed ? "is-collapsed" : ""}`}>
         <nav className="side-nav" aria-label="Primary navigation">
-          <button
-            type="button"
-            className={`nav-item nav-item-root ${view === "today" ? "is-active" : ""}`}
-            aria-current={view === "today" ? "page" : undefined}
-            onClick={() => setView("today")}
-            title="学习指南"
-            aria-label="学习指南"
-          >
-            <NavIcon id="today" />
-            <span>学习指南</span>
-          </button>
-
-          {GROUPS.map((group) => {
-            const isCollapsed = !!collapsedGroups[group];
-            const groupItems = NAV.filter(
-              (item) => item.group === group && item.id !== "today",
-            );
+          {NAV.map((item) => {
+            const isActive =
+              view === item.id || (view === "lesson" && item.id === "lessons");
             return (
-              <div className="nav-accordion-group" key={group}>
-                <button
-                  type="button"
-                  className="nav-accordion-trigger"
-                  onClick={() => toggleGroup(group)}
-                  aria-expanded={!isCollapsed}
-                >
-                  <span className="nav-group-title">{group}</span>
-                  <svg
-                    className={`nav-chevron-icon ${isCollapsed ? "is-collapsed" : ""}`}
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#94a3b8"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                </button>
-                {(!isCollapsed || isSidebarCollapsed) && (
-                  <div className="nav-accordion-items">
-                    {groupItems.map((item) => (
-                      <button
-                        key={item.id}
-                        type="button"
-                        className={`nav-item ${view === item.id || (view === "lesson" && item.id === "lessons") ? "is-active" : ""}`}
-                        aria-current={
-                          view === item.id ||
-                          (view === "lesson" && item.id === "lessons")
-                            ? "page"
-                            : undefined
-                        }
-                        onClick={() => setView(item.id)}
-                        title={item.label}
-                        aria-label={item.label}
-                      >
-                        <NavIcon id={item.id} />
-                        <span>{item.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <button
+                key={item.id}
+                type="button"
+                className={`nav-item ${isActive ? "is-active" : ""}`}
+                aria-current={isActive ? "page" : undefined}
+                onClick={() => setView(item.id)}
+                title={item.label}
+                aria-label={item.label}
+              >
+                <NavIcon id={item.id} />
+                <span>{item.label}</span>
+              </button>
             );
           })}
         </nav>
-        <div
-          className="sidebar-status"
-          title={`仓库课程进度: Day ${repoCompletedDay} / 112`}
-        >
-          <span>仓库课程进度</span>
-          <strong>Day {repoCompletedDay} / 112</strong>
-          <div className="sidebar-status-compact">
-            <span className="sidebar-status-compact-day">D{repoCompletedDay}</span>
-          </div>
-          <div className="mini-progress">
-            <i style={{ width: `${(repoCompletedDay / 112) * 100}%` }} />
-          </div>
-        </div>
       </aside>
+
       <div className="main-shell">
         <main
           className={`content ${view === "visualizer" ? "is-visualizer-view" : ""}`}
@@ -575,8 +372,6 @@ export function Shell({
           {children}
         </main>
       </div>
-
-      <BackToTop />
     </div>
   );
 }

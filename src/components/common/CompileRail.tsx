@@ -16,9 +16,9 @@ export function CompileRail({
   isStepComplete: (day: number, step: StepKey) => boolean;
 }) {
   return (
-    <div
-      className="compile-rail"
-      aria-label={`Day ${lesson.day} learning pipeline`}
+    <nav
+      className="compile-rail lesson-toc"
+      aria-label={`Day ${lesson.day} 学习阶段`}
     >
       {STEP_DEFS.map((step, index) => {
         const complete = isStepComplete(lesson.day, step.key);
@@ -30,11 +30,14 @@ export function CompileRail({
               complete && "is-complete",
               current && "is-current",
             )}
+            aria-current={current ? "location" : undefined}
             key={step.key}
             onClick={() => onSelect?.(step.key)}
             type="button"
+            title={`${step.label} · ${step.title}`}
           >
             <span className="rail-label">{step.label}</span>
+            <span className="rail-title">{step.title}</span>
             <span className="rail-track" aria-hidden="true">
               <span className="rail-dot">
                 {complete ? "●" : current ? "◐" : "○"}
@@ -44,6 +47,6 @@ export function CompileRail({
           </button>
         );
       })}
-    </div>
+    </nav>
   );
 }

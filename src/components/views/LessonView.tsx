@@ -17,7 +17,7 @@ export function LessonView({
   lesson,
   markStep,
   isStepComplete,
-  isDayComplete,
+  isDayComplete: _isDayComplete,
   addWeakPoint,
 }: {
   lesson: Lesson;
@@ -32,26 +32,33 @@ export function LessonView({
   const [active, setActive] = useState<StepKey>(firstIncomplete);
 
   useEffect(() => {
-    const update = () => {
-      const passed = STEP_DEFS.filter(
-        (step) =>
-          (document
-            .getElementById(`section-${step.key}`)
-            ?.getBoundingClientRect().top ?? Infinity) <= 170,
-      );
-      setActive(passed.at(-1)?.key ?? "read");
-    };
-    const frame = requestAnimationFrame(() => {
-      const id = window.location.hash.slice(1);
-      if (id.startsWith("section-"))
-        document.getElementById(id)?.scrollIntoView();
-      update();
+    const hash = window.location.hash.slice(1);
+    if (hash.startsWith("section-")) {
+      document.getElementById(hash)?.scrollIntoView();
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible.length > 0) {
+          const stepKey = visible[0].target.id.replace(
+            "section-",
+            "",
+          ) as StepKey;
+          setActive(stepKey);
+        }
+      },
+      { rootMargin: "-120px 0px -50% 0px", threshold: 0.1 },
+    );
+
+    STEP_DEFS.forEach((step) => {
+      const el = document.getElementById(`section-${step.key}`);
+      if (el) observer.observe(el);
     });
-    window.addEventListener("scroll", update, { passive: true });
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", update);
-    };
+
+    return () => observer.disconnect();
   }, [lesson.day]);
 
   const navigate = (step: StepKey) => {
@@ -77,87 +84,35 @@ export function LessonView({
   );
 
   return (
-    <div className="lesson-layout">
-      <aside className="lesson-toc">
-        <span className="eyebrow">本页内容 · DAY {lesson.day}</span>
-        <h2>{lesson.title}</h2>
-        <div className="toc-list">
-          {STEP_DEFS.map((step, index) => (
-            <button
-              className={cx(active === step.key && "is-active")}
-              aria-current={active === step.key ? "location" : undefined}
-              key={step.key}
-              onClick={() => navigate(step.key)}
-              type="button"
-            >
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <strong>{step.title}</strong>
-              <i>{isStepComplete(lesson.day, step.key) ? "●" : "○"}</i>
-            </button>
-          ))}
-        </div>
-        <aside className="session-panel">
-          <span className="eyebrow">SESSION</span>
-          <strong>{lesson.duration} min</strong>
-          <dl>
-            <div>
-              <dt>Reading</dt>
-              <dd>
-                约 {readingStats.minutes} 分钟 (
-                {readingStats.wordCount.toLocaleString()} 字)
-              </dd>
-            </div>
-            <div>
-              <dt>Chapter</dt>
-              <dd>
-                {lesson.chapter
-                  ? `${lesson.chapter} ${lesson.chapterTitle ?? ""}`
-                  : "—"}
-              </dd>
-            </div>
-            <div>
-              <dt>Part</dt>
-              <dd>{lesson.part ? `Part ${lesson.part}` : "—"}</dd>
-            </div>
-            <div>
-              <dt>Source</dt>
-              <dd className="mono">{lesson.path}</dd>
-            </div>
-            <div>
-              <dt>Lab</dt>
-              <dd className="mono">
-                {lesson.labPath ?? "embedded in Markdown"}
-              </dd>
-            </div>
-          </dl>
-        </aside>
-      </aside>
-
+    <div className="lesson-layout lesson-layout-single">
       <article className="lesson-document">
-        <div className="lesson-title-block">
+        <header className="lesson-title-block">
           <div className="lesson-meta">
             <span>DAY {lesson.day}</span>
-            <span>WEEK {lesson.week}</span>
-            {lesson.chapter && <span>CHAPTER {lesson.chapter}</span>}
+            <span>第 {lesson.week} 周</span>
+            {lesson.chapter && <span>第 {lesson.chapter} 章</span>}
             <span>
               约 {readingStats.minutes} 分钟阅读 ·{" "}
               {readingStats.wordCount.toLocaleString()} 字
             </span>
           </div>
           <h1>{lesson.title}</h1>
-          <CompileRail
-            lesson={lesson}
-            active={active}
-            onSelect={navigate}
-            isStepComplete={isStepComplete}
-          />
-        </div>
+          <div className="lesson-rail-sticky">
+            <CompileRail
+              lesson={lesson}
+              active={active}
+              onSelect={navigate}
+              isStepComplete={isStepComplete}
+            />
+          </div>
+        </header>
 
         {lesson.sections.map((section) => {
           if (!section.step) return null;
           const definition = STEP_DEFS.find(
             (step) => step.key === section.step,
           )!;
+          const complete = isStepComplete(lesson.day, section.step);
           return (
             <section
               className="lesson-section"
@@ -166,7 +121,7 @@ export function LessonView({
             >
               <div className="section-heading">
                 <div>
-                  <span className="eyebrow">{definition.label}</span>
+                  <span className="eyebrow">{definition.label} · {definition.title}</span>
                   <h2>{section.title}</h2>
                 </div>
                 <div className="section-actions">
@@ -178,20 +133,16 @@ export function LessonView({
                       )
                     }
                     type="button"
+                    title="加入复盘薄弱点清单"
                   >
-                    Review later
+                    稍后复习
                   </button>
                   <button
-                    className={cx(
-                      "section-check",
-                      isStepComplete(lesson.day, section.step) && "is-complete",
-                    )}
+                    className={cx("section-check", complete && "is-complete")}
                     onClick={() => completeStep(section.step!)}
                     type="button"
                   >
-                    {isStepComplete(lesson.day, section.step)
-                      ? "✓ Complete"
-                      : "Mark complete"}
+                    {complete ? "✓ 已完成" : "完成本节"}
                   </button>
                 </div>
               </div>
@@ -200,19 +151,31 @@ export function LessonView({
           );
         })}
 
+        <footer className="lesson-footer">
+          <div className="lesson-source-bar">
+            <a
+              href={`https://github.com/luckyJimLu/professional-cpp-learning/blob/main/${lesson.path}`}
+              target="_blank"
+              rel="noreferrer"
+              className="ghost-button"
+            >
+              在 GitHub 查看本课 Markdown 源码
+            </a>
+          </div>
 
-        <nav className="lesson-pagination" aria-label="相邻课程">
-          {lessonByDay(lesson.day - 1) && (
-            <a href={`?view=lesson&day=${lesson.day - 1}`}>
-              ← 上一课 · Day {lesson.day - 1}
-            </a>
-          )}
-          {lessonByDay(lesson.day + 1) && (
-            <a href={`?view=lesson&day=${lesson.day + 1}`}>
-              下一课 · Day {lesson.day + 1} →
-            </a>
-          )}
-        </nav>
+          <nav className="lesson-pagination" aria-label="相邻课程">
+            {lessonByDay(lesson.day - 1) && (
+              <a href={`?view=lesson&day=${lesson.day - 1}`}>
+                ← 上一课 · Day {lesson.day - 1}
+              </a>
+            )}
+            {lessonByDay(lesson.day + 1) && (
+              <a href={`?view=lesson&day=${lesson.day + 1}`}>
+                下一课 · Day {lesson.day + 1} →
+              </a>
+            )}
+          </nav>
+        </footer>
       </article>
     </div>
   );
