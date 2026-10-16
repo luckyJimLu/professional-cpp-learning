@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 50**。下一课从 **Day 51** 继续。
+当前仓库课程已发布到 **Day 51**。下一课从 **Day 52** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -45,25 +45,26 @@
 | 39 | Multiple Inheritance | 已发布 | [day-039](daily/day-039-multiple-inheritance-contracts.md) |
 | 40 | Mixin Classes | 已发布 | [day-040](daily/day-040-mixin-classes.md) |
 | 41 | Designing for Reuse：复用从稳定 Contract 开始 | 已发布 | [day-041](daily/day-041-reuse-contracts-components.md) |
-| 42 | Use Abstraction：用接口/实现分离建立可复用边界 | 已发布 | [day-042](daily/day-042-use-abstraction-for-reuse.md) |
-| 43 | Structure Your Code for Optimal Reuse：按职责与依赖方向组织代码 | 已发布 | [day-043](daily/day-043-structure-code-for-optimal-reuse.md) |
-| 44 | Avoid Combining Unrelated or Logically Separate Concepts | 已发布 | [day-044](daily/day-044-separate-unrelated-concepts.md) |
-| 45 | Use Templates for Generic Data Structures and Algorithms | 已发布 | [day-045](daily/day-045-templates-generic-data-structures-algorithms.md) |
-| 46 | Provide Appropriate Checks and Safeguards | 已发布 | [day-046](daily/day-046-checks-safeguards.md) |
+| 42 | Use Abstraction | 已发布 | [day-042](daily/day-042-use-abstraction-for-reuse.md) |
+| 43 | Structure Your Code for Optimal Reuse | 已发布 | [day-043](daily/day-043-structure-code-for-optimal-reuse.md) |
+| 44 | Avoid Combining Unrelated Concepts | 已发布 | [day-044](daily/day-044-separate-unrelated-concepts.md) |
+| 45 | Templates for Generic Data Structures and Algorithms | 已发布 | [day-045](daily/day-045-templates-generic-data-structures-algorithms.md) |
+| 46 | Checks and Safeguards | 已发布 | [day-046](daily/day-046-checks-safeguards.md) |
 | 47 | Design for Extensibility | 已发布 | [day-047](daily/day-047-design-for-extensibility.md) |
 | 48 | Design Usable Interfaces | 已发布 | [day-048](daily/day-048-design-usable-interfaces.md) |
 | 49 | Consider the Audience and Purpose | 已发布 | [day-049](daily/day-049-consider-audience-purpose.md) |
 | 50 | Design Interfaces That Are Easy to Use | 已发布 | [day-050](daily/day-050-easy-to-use-interfaces.md) |
+| 51 | Design General-Purpose Interfaces | 已发布 | [day-051](daily/day-051-general-purpose-interfaces.md) |
 
 ## 最新发布详情
 
-- **日期**：2026-10-15
+- **日期**：2026-10-16
 - **章节**：Chapter 6 · Designing for Reuse
-- **主题**：Design Interfaces That Are Easy to Use
-- **关键知识点**：familiar C++ idioms、RAII、common-case API、Options、uncluttered interfaces、documentation contract
-- **设计模式 / 稳定边界**：Facade 隔离复杂子系统并保持常用路径简单；Adapter 只隔离平台差异；显式 DI 表达 required borrow；避免 Facade/Factory/Observer 的无必要叠加
-- **Lab**：[examples/day-050/main.cpp](examples/day-050/main.cpp)
-- **上一课**：[Day 49 · Consider the Audience and Purpose](daily/day-049-consider-audience-purpose.md)
+- **主题**：Design General-Purpose Interfaces
+- **关键知识点**：bounded generality、mechanism vs policy、customization points、value/options vs behavioral variation、compile-time vs runtime extensibility
+- **设计模式 / 稳定边界**：Strategy/policy 只隔离真实行为变化；transport 继续作为 Adapter/runtime platform boundary；优先 value/template policy，避免默认 virtual + shared_ptr
+- **Lab**：[examples/day-051/main.cpp](examples/day-051/main.cpp)
+- **上一课**：[Day 50 · Design Interfaces That Are Easy to Use](daily/day-050-easy-to-use-interfaces.md)
 
 ## 规则
 
