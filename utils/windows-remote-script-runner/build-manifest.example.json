@@ -1,0 +1,11 @@
+{
+  "build_id": "2026-10-16T00:00:00Z-example",
+  "commit": "REPLACE_WITH_GIT_COMMIT",
+  "toolchain": "arm-none-eabi-gcc",
+  "artifacts": {
+    "elf": "app.elf",
+    "map": "app.map",
+    "bin": "app.bin",
+    "hex": "app.hex"
+  }
+}
