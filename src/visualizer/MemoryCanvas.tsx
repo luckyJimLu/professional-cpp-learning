@@ -52,8 +52,16 @@ function targetEndpoint(edge: PointerEdge, frames: StackFrame[], heap: HeapBlock
   return stackTarget ? stackEndpoint(stackTarget.frame.id, stackTarget.variable.variableId ?? stackTarget.variable.name) : "warning";
 }
 
-export function MemoryCanvas({ snapshot, className = "", approximate = false }: {
+export type MemoryLayoutMode = "vertical" | "horizontal";
+
+export function MemoryCanvas({
+  snapshot,
+  layoutMode = "horizontal",
+  className = "",
+  approximate = false,
+}: {
   snapshot: MemorySnapshot | null;
+  layoutMode?: MemoryLayoutMode;
   className?: string;
   approximate?: boolean;
 }) {
@@ -62,16 +70,6 @@ export function MemoryCanvas({ snapshot, className = "", approximate = false }: 
   const frameRequest = useRef<number | null>(null);
   const [renderedEdges, setRenderedEdges] = useState<RenderedEdge[]>([]);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
-
-  type MemoryLayoutMode = "vertical" | "horizontal";
-  const MEMORY_LAYOUT_KEY = "cpp-vis-memory-layout";
-  const [layoutMode, setLayoutMode] = useState<MemoryLayoutMode>(() => {
-    try {
-      const saved = localStorage.getItem(MEMORY_LAYOUT_KEY);
-      if (saved === "horizontal" || saved === "vertical") return saved;
-    } catch {}
-    return "vertical"; // 默认纵向排列（上下堆叠），调用栈和堆内存各自全宽展开不截断
-  });
 
   const registerEndpoint = useCallback((key: string) => (element: HTMLElement | null) => {
     if (element) endpoints.current.set(key, element);
@@ -97,16 +95,34 @@ export function MemoryCanvas({ snapshot, className = "", approximate = false }: 
       const source = endpoints.current.get(sourceKey);
       const target = endpoints.current.get(targetKey);
       if (!source || !target) continue;
-      const sourceRect = source.getBoundingClientRect();
-      const targetRect = target.getBoundingClientRect();
+
       const stackTarget = targetKey.startsWith("stack:");
+      const heapTarget = targetKey.startsWith("heap:");
+      const sourceRect = source.getBoundingClientRect();
+
+      // 在纵向模式下，将堆块的接入点切换到右上角专属端口，绝不横向穿透卡片文字
+      const rawTargetPin = (isVertical && heapTarget)
+        ? endpoints.current.get(`heap-pin:${targetKey.replace("heap:", "")}`) ?? target
+        : target;
+      const targetRect = rawTargetPin.getBoundingClientRect();
+
       const x1 = sourceRect.right - containerRect.left + container.scrollLeft;
       const y1 = sourceRect.top + sourceRect.height / 2 - containerRect.top + container.scrollTop;
       const index = indexes.get(targetKey) ?? 0;
       indexes.set(targetKey, index + 1);
       const spread = (index - ((totals.get(targetKey) ?? 1) - 1) / 2) * 5;
-      const x2 = (stackTarget ? targetRect.right : targetRect.left) - containerRect.left + container.scrollLeft;
-      const y2 = targetRect.top + targetRect.height / 2 - containerRect.top + container.scrollTop + spread;
+
+      let x2: number;
+      let y2: number;
+      if (isVertical && heapTarget) {
+        // 纵向总线流：堆卡片右上角端口接入
+        x2 = targetRect.left + targetRect.width / 2 - containerRect.left + container.scrollLeft;
+        y2 = targetRect.top + targetRect.height / 2 - containerRect.top + container.scrollTop + spread;
+      } else {
+        x2 = (stackTarget ? targetRect.right : targetRect.left) - containerRect.left + container.scrollLeft;
+        y2 = targetRect.top + targetRect.height / 2 - containerRect.top + container.scrollTop + spread;
+      }
+
       const path = sourceKey.startsWith("stack:") && stackTarget
         ? (() => {
             const detour = Math.min(80, Math.max(36, Math.abs(y2 - y1) * 0.35));
@@ -114,9 +130,10 @@ export function MemoryCanvas({ snapshot, className = "", approximate = false }: 
             return `M ${x1} ${y1} C ${bendX} ${y1}, ${bendX} ${y2}, ${x2} ${y2}`;
           })()
         : (() => {
-            if (isVertical && y2 > y1 + 15) {
-              const bowX = Math.max(x1, x2) + Math.min(60, Math.max(28, Math.abs(y2 - y1) * 0.15));
-              return `M ${x1} ${y1} C ${bowX} ${y1 + (y2 - y1) * 0.25}, ${bowX} ${y2 - (y2 - y1) * 0.25}, ${x2} ${y2}`;
+            if (isVertical && heapTarget && y2 > y1 + 10) {
+              // 纵向总线平滑流：右侧专属走线通道，垂直自然下落并水平拐入堆卡片右上角，绝不横贯卡片内部
+              const busX = Math.max(x1, x2) + 24 + index * 5;
+              return `M ${x1} ${y1} C ${busX} ${y1}, ${busX} ${y2}, ${x2} ${y2}`;
             }
             const span = Math.max(48, Math.abs(x2 - x1) * 0.48);
             return `M ${x1} ${y1} C ${x1 + span} ${y1}, ${x2 - span} ${y2}, ${x2} ${y2}`;
@@ -138,14 +155,6 @@ export function MemoryCanvas({ snapshot, className = "", approximate = false }: 
     });
   }, [calculateEdges]);
 
-  const toggleLayoutMode = useCallback((mode: MemoryLayoutMode) => {
-    setLayoutMode(mode);
-    try {
-      localStorage.setItem(MEMORY_LAYOUT_KEY, mode);
-    } catch {}
-    scheduleCalculation();
-  }, [scheduleCalculation]);
-
   useLayoutEffect(scheduleCalculation, [scheduleCalculation]);
   useEffect(() => {
     const container = scrollRef.current;
@@ -165,37 +174,23 @@ export function MemoryCanvas({ snapshot, className = "", approximate = false }: 
     return <div className={`memory-canvas-empty ${className}`}>运行代码或选择预置轨迹后，将在这里显示栈与堆。</div>;
   }
 
+  const hasWarningEdge = snapshot.pointers.some(
+    (e) => e.isDangling || e.target?.kind === "unknown" || e.target === null,
+  );
+
   return (
     <div className={`memory-canvas-shell ${className}`}>
-      <div className="memory-canvas-subbar">
-        {approximate ? (
-          <div className="memory-mode-notice" role="status">
-            Regex 近似教学视图：对象关系由源码结构推演，不代表完整运行时语义。
-          </div>
-        ) : (
-          <span className="memory-canvas-caption">
-            拓扑视图 · 栈 {snapshot.callStack.length} 帧 / 堆 {snapshot.heap.length} 块
-          </span>
-        )}
-        <div className="memory-layout-toggle" role="group" aria-label="内存布局排列方式">
-          <button
-            type="button"
-            className={`memory-layout-btn ${layoutMode === "vertical" ? "is-active" : ""}`}
-            title="纵向排列：调用栈在上，动态内存在下（卡片全宽展开，内容完整不被截断）"
-            onClick={() => toggleLayoutMode("vertical")}
-          >
-            <span aria-hidden="true">⫸</span> 纵向上下
-          </button>
-          <button
-            type="button"
-            className={`memory-layout-btn ${layoutMode === "horizontal" ? "is-active" : ""}`}
-            title="横向排列：调用栈与动态内存左右并列（适合超宽屏幕）"
-            onClick={() => toggleLayoutMode("horizontal")}
-          >
-            <span aria-hidden="true">⫿</span> 横向并排
-          </button>
+      {/* 极简单行步骤说明胶囊：取代原先厚重的独立横幅，不占用宝贵垂直空间 */}
+      {snapshot.description && (
+        <div className="memory-step-caption" role="status">
+          <span className="step-caption-tag">● Ln {snapshot.line}</span>
+          <span className="step-caption-text">{snapshot.description}</span>
+          {approximate && (
+            <span className="step-caption-badge" title="结构推演模式">Regex 推演</span>
+          )}
         </div>
-      </div>
+      )}
+
       <div ref={scrollRef} className={`memory-canvas-root layout-${layoutMode}`}>
         <svg className="memory-edges-layer" width={canvasSize.width} height={canvasSize.height} aria-hidden="true">
           <defs>
@@ -241,10 +236,21 @@ export function MemoryCanvas({ snapshot, className = "", approximate = false }: 
             {snapshot.heap.length === 0 ? <div className="empty-zone-tip">未发生动态内存分配</div> : snapshot.heap.map((block) => (
               <article key={block.allocationId ?? block.rawAddr} className={`heap-block-card heap-status-${block.status}`}
                 ref={registerEndpoint(heapEndpoint(block))} data-endpoint={heapEndpoint(block)}>
-                <header className="heap-card-header"><span className="heap-tag">{block.label}</span><span className="heap-header-meta">
-                  {block.useCount !== undefined && <span className="ref-count-badge">rc: {block.useCount}</span>}
-                  {block.weakCount !== undefined && <span className="ref-count-badge">weak: {block.weakCount}</span>}
-                  <span className="heap-size">{block.size}B</span></span></header>
+                <header className="heap-card-header">
+                  <span className="heap-tag">{block.label}</span>
+                  <span className="heap-header-meta">
+                    {block.useCount !== undefined && <span className="ref-count-badge">rc: {block.useCount}</span>}
+                    {block.weakCount !== undefined && <span className="ref-count-badge">weak: {block.weakCount}</span>}
+                    <span className="heap-size">{block.size}B</span>
+                    {/* 专属右上端点 Pin：供纵向总线连线优雅接入，绝不斜跨卡片内容 */}
+                    <span
+                      className="heap-anchor-pin"
+                      ref={registerEndpoint(`heap-pin:${block.allocationId ?? block.rawAddr}`)}
+                      data-endpoint={`heap-pin:${block.allocationId ?? block.rawAddr}`}
+                      aria-hidden="true"
+                    />
+                  </span>
+                </header>
                 <div className="heap-card-body"><div>类型: <strong>{block.type}</strong></div><div className="heap-addr">{block.rawAddr}</div>
                   {Object.entries(block.fields ?? {}).map(([field, value]) => (
                     <div key={field} className="heap-field" ref={registerEndpoint(`heap-field:${block.allocationId ?? block.rawAddr}:${field}`)} data-endpoint={`heap-field:${block.allocationId ?? block.rawAddr}:${field}`}><span>.{field}</span><code>{value}</code></div>
@@ -254,7 +260,15 @@ export function MemoryCanvas({ snapshot, className = "", approximate = false }: 
             ))}
           </div>
         </section>
-        <div ref={registerEndpoint("warning")} data-endpoint="warning" className="memory-warning-anchor" aria-hidden="true">!</div>
+
+        {/* 仅在真正存在悬挂引用时才显示警告锚点，平时完全隐藏避免产生报错误解 */}
+        {hasWarningEdge ? (
+          <div ref={registerEndpoint("warning")} data-endpoint="warning" className="memory-warning-anchor is-active" role="alert" title="检测到野指针或悬挂引用 (Dangling Pointer)">
+            ! 悬挂指针
+          </div>
+        ) : (
+          <div ref={registerEndpoint("warning")} data-endpoint="warning" style={{ display: "none" }} aria-hidden="true" />
+        )}
       </div>
     </div>
   );

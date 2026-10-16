@@ -98,11 +98,21 @@ export function useTraceSession(initialCode: string) {
       return true;
     } catch (error) {
       if (sequence !== runSequence.current) return false;
+      const errMsg = error instanceof Error ? error.message : String(error);
+      const fallbackEvents = inferTraceEventsFromCodeAndOutput(state.code, "", 0);
+      const computed = computeSnapshotsWithDiagnostics(fallbackEvents);
       dispatch({
-        type: "RUN_ERROR",
-        message: `Clang WASM 工具链不可用：${error instanceof Error ? error.message : String(error)}`,
+        type: "RUN_READY",
+        mode: "regex",
+        snapshots: computed.snapshots,
+        output: `$ clang++ main.cpp -std=gnu++23\n[提示] Clang WASM 编译沙箱不可用: ${errMsg}\n[提示] 已自动降级为 Regex 近似推演模式，为您生成单步调试与内存拓扑。`,
+        diagnostics: [
+          `Clang WASM 工具链提示: ${errMsg}`,
+          "已为您自动无缝切换到 Regex 近似推演模式，您可正常进行单步调试；也可以随时再次点击运行重试真实编译。",
+          ...computed.diagnostics,
+        ],
       });
-      return false;
+      return true;
     }
   }, [state.code]);
 

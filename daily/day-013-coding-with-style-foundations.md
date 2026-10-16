@@ -17,6 +17,8 @@ guidelines:
   - small-interface
   - naming-intent
 
+lab:
+  path: examples/day-013/main.cpp
 previous: 12
 next: 14
 ---
@@ -135,6 +137,7 @@ timeout_ms = 5000;
 ```
 
 ## ⑥ 可编译小实验（20 分钟）
+完整源码：[main.cpp](../examples/day-013/main.cpp)。
 
 ```cpp
 #include <cassert>
@@ -182,21 +185,12 @@ int main() {
 }
 ```
 
-### 规范修复练习
+在仓库根目录运行：
 
-把下面接口重构成可读、可测试的设计：
-
-```cpp
-int cfg(int a, int b, bool c, bool d);
+```bash
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-013/main.cpp -o /tmp/day-013
+/tmp/day-013
 ```
-
-要求至少使用：
-
-- 明确函数名；
-- `enum class`；
-- `Options`；
-- 明确时间单位；
-- 统一错误类型。
 
 ## ⑦ 3 个常见坑（5 分钟）
 

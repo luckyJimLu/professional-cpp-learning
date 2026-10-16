@@ -11,6 +11,8 @@ topics:
   - references-parameter-passing
 guidelines:
   - explicit-contract
+lab:
+  path: examples/day-004/main.cpp
 previous: 3
 next: 5
 ---
@@ -127,61 +129,43 @@ void PrintConfig(const ModemConfig& config);
 MUST：接口表达意图。 裸指针不要暗示所有权转移。嵌入式中的 ISR、DMA 或共享对象还必须另外定义生命周期和同步策略。
 
 ## ⑥ Coding 实验（20分钟）
+完整源码：[main.cpp](../examples/day-004/main.cpp)。
 
 ```cpp
+#include <cassert>
 #include <cstdint>
 #include <iostream>
-```
 
-namespace modem
-```cpp
-{
-```
-struct Config
-```cpp
-{
-std::uint32_t baud_rate_bps {115200};
-std::uint32_t timeout_ms {5000};
-std::uint8_t retry_count {3};
+namespace modem {
+struct Config {
+  std::uint32_t baud_rate_bps {115200};
+  std::uint32_t timeout_ms {5000};
+  std::uint8_t retry_count {3};
 };
 
-void SetTimeout(Config& config, std::uint32_t timeout_ms)
-{
-config.timeout_ms = timeout_ms;
+void SetTimeout(Config& config, std::uint32_t timeout_ms) {
+  config.timeout_ms = timeout_ms;
 }
 
-void PrintConfig(const Config& config)
-{
-std::cout << "timeout = " << config.timeout_ms << " ms\n";
+void PrintConfig(const Config& config) {
+  std::cout << "timeout = " << config.timeout_ms << " ms\n";
 }
-}
+}  // namespace modem
 
-int main()
-{
-modem::Config config {};
-modem::SetTimeout(config, 3000);
-modem::PrintConfig(config);
+int main() {
+  modem::Config config {};
+  modem::SetTimeout(config, 3000);
+  assert(config.timeout_ms == 3000);
+  modem::PrintConfig(config);
+  return 0;
 }
 ```
 
-编译：
+在仓库根目录运行：
 
-g++ -std=c++20 -Wall -Wextra -Wconversion -Wpedantic day04.cpp -o day04
-./day04
-
-规范修复题
-
-下面接口至少存在命名、类型、单位、可空性和 bool 参数语义问题：
-
-```cpp
-void update(ModemConfig* cfg, int timeout, bool reset);
-```
-
-建议拆为：
-
-```cpp
-void SetTimeout(ModemConfig& config, std::uint32_t timeout_ms);
-void ResetConfig(ModemConfig& config);
+```bash
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-004/main.cpp -o /tmp/day-004
+/tmp/day-004
 ```
 
 ## ⑦ 三个常见坑（5分钟）

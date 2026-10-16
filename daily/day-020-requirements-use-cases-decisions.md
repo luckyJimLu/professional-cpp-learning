@@ -11,6 +11,8 @@ topics:
   - requirements-use-cases-decisions
 guidelines:
   - explicit-contract
+lab:
+  path: examples/day-020/main.cpp
 previous: 19
 next: 21
 ---
@@ -78,72 +80,86 @@ CommandOptions options);
 ```
 
 ## ⑥ 可编译小实验（20 分钟）
-
 Bounded Modem Command API：不使用异常，调用路径不动态分配；调用者提供固定输出缓冲区，timeout 显式传入。
 
+完整源码：[main.cpp](../examples/day-020/main.cpp)。
+
 ```cpp
+#include <array>
+#include <cassert>
 #include <chrono>
+#include <iostream>
 #include <span>
 #include <string_view>
-```
 
-```cpp
 using namespace std::chrono_literals;
-```
 
-```cpp
 enum class Status { kOk, kTimeout, kIoError, kInvalidArgument };
-```
 
-```cpp
 struct CommandOptions {
-std::chrono::milliseconds timeout{1000ms};
+  std::chrono::milliseconds timeout{1000ms};
 };
 
 class Transport {
-```
-public:
-```cpp
-virtual ~Transport() = default;
-```
-virtual Status Exchange(std::string_view request,
-std::span<char> response,
-```cpp
-std::chrono::milliseconds timeout) = 0;
+ public:
+  virtual ~Transport() = default;
+  virtual Status Exchange(std::string_view request,
+                          std::span<char> response,
+                          std::chrono::milliseconds timeout) = 0;
+};
+
+class FakeTransport final : public Transport {
+ public:
+  Status Exchange(std::string_view request,
+                  std::span<char> response,
+                  std::chrono::milliseconds timeout) override {
+    (void)request;
+    if (timeout <= 0ms) return Status::kTimeout;
+    constexpr std::string_view kReply = "OK";
+    if (response.size() < kReply.size()) return Status::kInvalidArgument;
+    for (std::size_t i = 0; i < kReply.size(); ++i) response[i] = kReply[i];
+    return Status::kOk;
+  }
 };
 
 class ModemSession {
-```
-public:
-```cpp
-explicit ModemSession(Transport& transport) : transport_(transport) {}
-```
+ public:
+  explicit ModemSession(Transport& transport) : transport_(transport) {}
 
-Status SendCommand(std::string_view command,
-std::span<char> response,
-```cpp
-CommandOptions options) {
-if (command.empty() || response.empty() || options.timeout.count() <= 0) {
-return Status::kInvalidArgument;
-}
-return transport_.Exchange(command, response, options.timeout);
-}
-```
+  Status SendCommand(std::string_view command,
+                     std::span<char> response,
+                     CommandOptions options) {
+    if (command.empty() || response.empty() || options.timeout.count() <= 0) {
+      return Status::kInvalidArgument;
+    }
+    return transport_.Exchange(command, response, options.timeout);
+  }
 
-private:
-```cpp
-Transport& transport_;
+ private:
+  Transport& transport_;
 };
+
+int main() {
+  FakeTransport transport;
+  ModemSession session{transport};
+  std::array<char, 16> buf{};
+
+  Status s = session.SendCommand("AT", buf, CommandOptions{500ms});
+  assert(s == Status::kOk);
+
+  Status bad = session.SendCommand("", buf, CommandOptions{500ms});
+  assert(bad == Status::kInvalidArgument);
+
+  std::cout << "Command exchanged successfully with result=" << buf.data() << '\n';
+  return 0;
+}
 ```
 
-练习 A：实现 FakeTransport，分别测试成功、超时、I/O 错误。
-
-练习 B — Code Review 修复：重构 int modem_cmd(int port, const char* cmd, char* out, int size, int wait, bool retry);。要求 timeout 有单位；retry 不再是含义不清的 bool；错误不能用 -1；输出缓冲区有边界；实时路径不增加动态分配。
-
-练习 C：写 5 条可测试需求，例如“timeout 到期后必须在有限时间内返回 Status::kTimeout”。
+在仓库根目录运行：
 
 ```bash
-g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic main.cpp -o modem_day20
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-020/main.cpp -o /tmp/day-020
+/tmp/day-020
 ```
 
 ## ⑦ 3 个常见坑（5 分钟）

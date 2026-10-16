@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { CodeMirrorEditor } from "./CodeMirrorEditor";
-import { MemoryCanvas } from "./MemoryCanvas";
+import { MemoryCanvas, type MemoryLayoutMode } from "./MemoryCanvas";
 import { PRESET_TRACES_META, loadPresetTrace } from "./presetTraces";
 import { TraceSelectorModal } from "./TraceSelectorModal";
-import { VCRControls } from "./VCRControls";
 import type { TraceSessionState, VisualizerTrace, VisualizerTraceV2 } from "./types";
 import "./visualizer.css";
 
@@ -36,6 +35,43 @@ export function VisualizerWorkbench({
   const hasTrace = totalSteps > 0;
   const busy = session.status === "loading" || session.status === "running";
   const closeTraceLibrary = useCallback(() => setIsModalOpen(false), []);
+
+  // 内存拓扑布局模式（宽屏默认左右并排，小屏纵向）
+  const MEMORY_LAYOUT_KEY = "cpp-vis-memory-layout";
+  const [layoutMode, setLayoutMode] = useState<MemoryLayoutMode>(() => {
+    try {
+      const saved = localStorage.getItem(MEMORY_LAYOUT_KEY);
+      if (saved === "horizontal" || saved === "vertical") return saved;
+    } catch {}
+    if (typeof window !== "undefined" && window.innerWidth >= 1024) return "horizontal";
+    return "vertical";
+  });
+
+  // 统一自动播放控制器
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [playSpeed, setPlaySpeed] = useState<number>(1000);
+
+  useEffect(() => {
+    if (!isPlaying) return;
+    if (session.currentStep >= totalSteps - 1) {
+      setIsPlaying(false);
+      return;
+    }
+    const timer = setTimeout(() => {
+      onStepChange(session.currentStep + 1);
+    }, playSpeed);
+    return () => clearTimeout(timer);
+  }, [isPlaying, session.currentStep, totalSteps, playSpeed, onStepChange]);
+
+  const handleTogglePlay = useCallback(() => {
+    setActiveTab("memory");
+    if (session.currentStep >= totalSteps - 1) {
+      onStepChange(0);
+      setIsPlaying(true);
+    } else {
+      setIsPlaying((prev) => !prev);
+    }
+  }, [session.currentStep, totalSteps, onStepChange]);
 
   const SPLIT_STORAGE_KEY = "cpp-vis-split-percent";
   const [splitPercent, setSplitPercent] = useState<number>(() => {
@@ -251,10 +287,6 @@ export function VisualizerWorkbench({
         <button type="button" className={`switcher-tab ${mobilePane === "output" ? "is-active" : ""}`} onClick={() => setMobilePane("output")}>输出</button>
       </div>
 
-      {session.snapshots.length > 0 && activeTab === "memory" && (
-        <VCRControls key={`${session.traceId ?? session.executedCode}-${session.mode}`} snapshots={session.snapshots} currentStep={session.currentStep} onStepChange={onStepChange} />
-      )}
-
       <div
         ref={splitContainerRef}
         className={`visualizer-main-split mobile-show-${mobilePane} ${isResizing ? "is-resizing" : ""}`}
@@ -264,7 +296,7 @@ export function VisualizerWorkbench({
         } as React.CSSProperties}
       >
         <div className="code-split-pane">
-          {/* VS Code 风格固定顶部代码工具栏：滚动代码时固定在顶部不移动 */}
+          {/* 统一的一级固定代码与调试工具栏（单一事实来源，无多余冗余） */}
           <div className="vscode-code-toolbar" role="toolbar" aria-label="代码编译与单步调试工具栏">
             <div className="vscode-file-tab">
               <span className="vscode-cpp-badge" aria-hidden="true">C++</span>
@@ -278,13 +310,13 @@ export function VisualizerWorkbench({
 
             <div className="vscode-debug-actions">
               {hasTrace && (
-                <div className="vscode-step-cluster" role="group" aria-label="单步控制">
+                <div className="vscode-step-cluster" role="group" aria-label="单步与播放控制">
                   <button
                     type="button"
                     className="vscode-icon-btn"
                     title="重置到第一步 (Reset)"
                     disabled={busy || session.currentStep === 0}
-                    onClick={handleStepReset}
+                    onClick={() => { setIsPlaying(false); handleStepReset(); }}
                   >
                     ⏮
                   </button>
@@ -293,9 +325,18 @@ export function VisualizerWorkbench({
                     className="vscode-icon-btn"
                     title="上一步 (Step Back)"
                     disabled={busy || session.currentStep === 0}
-                    onClick={handleStepPrev}
+                    onClick={() => { setIsPlaying(false); handleStepPrev(); }}
                   >
                     ◀
+                  </button>
+                  <button
+                    type="button"
+                    className={`vscode-icon-btn ${isPlaying ? "is-playing" : ""}`}
+                    title={isPlaying ? "暂停自动播放" : "自动连续播放"}
+                    disabled={busy}
+                    onClick={handleTogglePlay}
+                  >
+                    {isPlaying ? "⏸" : "▶"}
                   </button>
                 </div>
               )}
@@ -305,7 +346,7 @@ export function VisualizerWorkbench({
                 className="vscode-step-button"
                 title="按步运行 / 单步调试 (快捷键 F10)"
                 disabled={busy || !session.code.trim()}
-                onClick={handleStepRun}
+                onClick={() => { setIsPlaying(false); handleStepRun(); }}
               >
                 <span aria-hidden="true">↷</span>
                 <span>
@@ -322,6 +363,7 @@ export function VisualizerWorkbench({
                 className="compile-button"
                 disabled={busy || !session.code.trim()}
                 onClick={() => {
+                  setIsPlaying(false);
                   void onRun();
                   setMobilePane("output");
                 }}
@@ -367,14 +409,48 @@ export function VisualizerWorkbench({
               <button type="button" role="tab" aria-selected={activeTab === "memory"} className={`segmented-tab ${activeTab === "memory" ? "is-active" : ""}`} onClick={() => setActiveTab("memory")}>内存视图</button>
               <button type="button" role="tab" aria-selected={activeTab === "terminal"} className={`segmented-tab ${activeTab === "terminal" ? "is-active" : ""}`} onClick={() => setActiveTab("terminal")}>终端</button>
             </div>
-            {currentSnapshot && (
-              <span className="output-step-status">
-                Step {session.currentStep + 1}/{totalSteps} · Line {currentSnapshot.line}
-              </span>
+
+            {activeTab === "memory" && (
+              <div className="output-header-right">
+                <div className="memory-layout-toggle" role="group" aria-label="内存布局">
+                  <button
+                    type="button"
+                    className={`memory-layout-btn ${layoutMode === "horizontal" ? "is-active" : ""}`}
+                    title="横向排列：调用栈与堆左右并排（流动感最佳）"
+                    onClick={() => {
+                      setLayoutMode("horizontal");
+                      try { localStorage.setItem(MEMORY_LAYOUT_KEY, "horizontal"); } catch {}
+                      window.dispatchEvent(new Event("resize"));
+                    }}
+                  >
+                    <span aria-hidden="true">⫿</span> 并排
+                  </button>
+                  <button
+                    type="button"
+                    className={`memory-layout-btn ${layoutMode === "vertical" ? "is-active" : ""}`}
+                    title="纵向排列：调用栈在上，堆在下（适合小屏或窄分栏）"
+                    onClick={() => {
+                      setLayoutMode("vertical");
+                      try { localStorage.setItem(MEMORY_LAYOUT_KEY, "vertical"); } catch {}
+                      window.dispatchEvent(new Event("resize"));
+                    }}
+                  >
+                    <span aria-hidden="true">⫸</span> 上下
+                  </button>
+                </div>
+              </div>
             )}
           </div>
           <div className="output-tab-panel" role="tabpanel">
-            {activeTab === "memory" ? <MemoryCanvas snapshot={currentSnapshot} approximate={session.accuracy === "approximate"} /> : <pre className="terminal-output">{session.terminalOutput || "$ clang++ main.cpp -std=gnu++23\n$ ./main\n(等待运行输出...)"}</pre>}
+            {activeTab === "memory" ? (
+              <MemoryCanvas
+                snapshot={currentSnapshot}
+                layoutMode={layoutMode}
+                approximate={session.accuracy === "approximate"}
+              />
+            ) : (
+              <pre className="terminal-output">{session.terminalOutput || "$ clang++ main.cpp -std=gnu++23\n$ ./main\n(等待运行输出...)"}</pre>
+            )}
           </div>
         </div>
       </div>

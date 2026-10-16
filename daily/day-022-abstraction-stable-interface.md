@@ -11,6 +11,8 @@ topics:
   - abstraction-stable-interface
 guidelines:
   - explicit-contract
+lab:
+  path: examples/day-022/main.cpp
 previous: 21
 next: 23
 ---
@@ -104,100 +106,82 @@ Transport& transport_; // borrowed, non-owning
 ```
 嵌入式注意：抽象层不能成为“性能免责层”。硬实时路径仍需审计 virtual dispatch、动态分配、锁、日志和最坏执行时间。不要为了架构漂亮而增加无法证明价值的层次。
 ## ⑥ 可编译的小实验 / 代码练习（20分钟）
-
 目标：实现一个不依赖真实 UART 的 ModemSession，并证明 transport 实现可替换。
 
+完整源码：[main.cpp](../examples/day-022/main.cpp)。
+
 ```cpp
+#include <cassert>
 #include <chrono>
 #include <cstddef>
 #include <iostream>
 #include <span>
 #include <string_view>
-```
 
-```cpp
 using namespace std::chrono_literals;
-```
 
-```cpp
 enum class Status { kOk, kTimeout, kIoError, kInvalidArgument };
-```
-struct SendOptions { std::chrono::milliseconds timeout{1000}; };
+struct SendOptions { std::chrono::milliseconds timeout{1000ms}; };
 
-```cpp
 class Transport {
-```
-public:
-```cpp
-virtual ~Transport() = default;
-```
-virtual Status Send(std::span<const std::byte> data,
-```cpp
-const SendOptions& options) = 0;
+ public:
+  virtual ~Transport() = default;
+  virtual Status Send(std::span<const std::byte> data,
+                      const SendOptions& options) = 0;
 };
 
 class FakeTransport final : public Transport {
-```
-public:
-Status Send(std::span<const std::byte> data,
-```cpp
-const SendOptions& options) override {
-if (data.empty()) return Status::kInvalidArgument;
-if (options.timeout <= 0ms) return Status::kTimeout;
-++send_count_;
-last_size_ = data.size();
-return Status::kOk;
-}
-```
-[[nodiscard]] std::size_t SendCount() const { return send_count_; }
-[[nodiscard]] std::size_t LastSize() const { return last_size_; }
-private:
-```cpp
-std::size_t send_count_{0};
-std::size_t last_size_{0};
+ public:
+  Status Send(std::span<const std::byte> data,
+              const SendOptions& options) override {
+    if (data.empty()) return Status::kInvalidArgument;
+    if (options.timeout <= 0ms) return Status::kTimeout;
+    ++send_count_;
+    last_size_ = data.size();
+    return Status::kOk;
+  }
+
+  [[nodiscard]] std::size_t SendCount() const { return send_count_; }
+  [[nodiscard]] std::size_t LastSize() const { return last_size_; }
+
+ private:
+  std::size_t send_count_{0};
+  std::size_t last_size_{0};
 };
 
 class ModemSession {
-```
-public:
-```cpp
-explicit ModemSession(Transport& transport) : transport_(transport) {}
-```
-Status Execute(std::string_view command,
-```cpp
-std::chrono::milliseconds timeout) {
-if (command.empty()) return Status::kInvalidArgument;
-const auto* begin = reinterpret_cast<const std::byte*>(command.data());
-const std::span<const std::byte> bytes{begin, command.size()};
-return transport_.Send(bytes, SendOptions{.timeout = timeout});
-}
-```
-private:
-```cpp
-Transport& transport_;
+ public:
+  explicit ModemSession(Transport& transport) : transport_(transport) {}
+
+  Status Execute(std::string_view command,
+                 std::chrono::milliseconds timeout) {
+    if (command.empty()) return Status::kInvalidArgument;
+    const auto* begin = reinterpret_cast<const std::byte*>(command.data());
+    const std::span<const std::byte> bytes{begin, command.size()};
+    return transport_.Send(bytes, SendOptions{.timeout = timeout});
+  }
+
+ private:
+  Transport& transport_;
 };
 
 int main() {
-FakeTransport transport;
-ModemSession modem{transport};
-const Status status = modem.Execute("AT+CSQ\r\n", 500ms);
-if (status != Status::kOk) return 1;
-```
-std::cout << "send_count=" << transport.SendCount()
-<< ", bytes=" << transport.LastSize() << '\n';
-```cpp
-return 0;
+  FakeTransport transport;
+  ModemSession modem{transport};
+  const Status status = modem.Execute("AT+CSQ\r\n", 500ms);
+  assert(status == Status::kOk);
+  std::cout << "send_count=" << transport.SendCount()
+            << ", bytes=" << transport.LastSize() << '\n';
+  return 0;
 }
 ```
 
-```bash
-g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic day22.cpp -o day22
-./day22
-```
+在仓库根目录运行：
 
-练习 A：FakeTransport 改为始终返回 kTimeout，验证 ModemSession 无需修改。
-练习 B：为 Execute() 增加空命令边界测试。
-练习 C — 修复违反规范：把公开 fd/buffer、magic timeout 的 Modem 类重构为显式依赖、强类型 timeout、明确借用/所有权和统一 Status。验收：调用者不能直接操作 UART fd；实时路径不新增动态分配。
+```bash
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-022/main.cpp -o /tmp/day-022
+/tmp/day-022
+```
 
 ## ⑦ 3 个常见坑（5分钟）
 

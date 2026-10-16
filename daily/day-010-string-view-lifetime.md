@@ -11,6 +11,8 @@ topics:
   - string-view-lifetime
 guidelines:
   - explicit-contract
+lab:
+  path: examples/day-010/main.cpp
 previous: 9
 next: 11
 ---
@@ -83,54 +85,67 @@ return std::string{"AT+CSQ"};
 ```
 
 ## ⑥ 20分钟实验：Modem +CREG 零拷贝解析器
-
 目标：解析 +CREG: 2,1，拒绝非法格式；输入借用，结果使用值语义。
 
+完整源码：[main.cpp](../examples/day-010/main.cpp)。
+
 ```cpp
+#include <cassert>
 #include <charconv>
+#include <iostream>
 #include <optional>
 #include <string_view>
-```
 
-```cpp
 struct CregStatus {
-int mode {};
-int status {};
+  int mode {};
+  int status {};
 };
 
-std::optional<int> ParseInt(std::string_view text)
-{
-int value {};
-const char* const begin = text.data();
-const char* const end = begin + text.size();
-const auto [ptr, ec] = std::from_chars(begin, end, value);
-if (ec != std::errc{} || ptr != end) {
-return std::nullopt;
-}
-return value;
+std::optional<int> ParseInt(std::string_view text) {
+  int value {};
+  const char* const begin = text.data();
+  const char* const end = begin + text.size();
+  const auto [ptr, ec] = std::from_chars(begin, end, value);
+  if (ec != std::errc{} || ptr != end) {
+    return std::nullopt;
+  }
+  return value;
 }
 
-std::optional<CregStatus> ParseCreg(std::string_view response)
-{
-constexpr std::string_view kPrefix {"+CREG:"};
-if (!response.starts_with(kPrefix)) return std::nullopt;
-response.remove_prefix(kPrefix.size());
-while (!response.empty() && response.front() == ' ') response.remove_prefix(1);
-const auto comma = response.find(',');
-if (comma == std::string_view::npos) return std::nullopt;
-const auto mode = ParseInt(response.substr(0, comma));
-const auto status = ParseInt(response.substr(comma + 1));
-if (!mode || !status) return std::nullopt;
-return CregStatus{.mode = *mode, .status = *status};
+std::optional<CregStatus> ParseCreg(std::string_view response) {
+  constexpr std::string_view kPrefix {"+CREG:"};
+  if (!response.starts_with(kPrefix)) return std::nullopt;
+  response.remove_prefix(kPrefix.size());
+  while (!response.empty() && response.front() == ' ') response.remove_prefix(1);
+  const auto comma = response.find(',');
+  if (comma == std::string_view::npos) return std::nullopt;
+  const auto mode = ParseInt(response.substr(0, comma));
+  const auto status = ParseInt(response.substr(comma + 1));
+  if (!mode || !status) return std::nullopt;
+  return CregStatus{.mode = *mode, .status = *status};
+}
+
+int main() {
+  const auto creg = ParseCreg("+CREG: 2,1");
+  assert(creg.has_value());
+  assert(creg->mode == 2);
+  assert(creg->status == 1);
+
+  assert(!ParseCreg("+CREG:").has_value());
+  assert(!ParseCreg("+CREG: x,1").has_value());
+  assert(!ParseCreg("ERROR").has_value());
+
+  std::cout << "Parsed +CREG: mode=" << creg->mode << ", status=" << creg->status << '\n';
+  return 0;
 }
 ```
+
+在仓库根目录运行：
 
 ```bash
-g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic day10.cpp -o day10
-./day10
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-010/main.cpp -o /tmp/day-010
+/tmp/day-010
 ```
-
-边界测试： +CREG: 2,1、+CREG: 0,5、+CREG:、+CREG: x,1、+CREG: 2,1junk、ERROR、空字符串。
 
 ## ⑦ 3 个常见坑 · 5分钟
 

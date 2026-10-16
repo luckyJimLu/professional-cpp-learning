@@ -11,6 +11,8 @@ topics:
   - string-operations
 guidelines:
   - explicit-contract
+lab:
+  path: examples/day-009/main.cpp
 previous: 8
 next: 10
 ---
@@ -60,12 +62,14 @@ Modern C++：拥有结果用 string；只读借用用 string_view；数值字段
 推荐：借用接口 string_view；拥有接口 string；C API 适配集中在边界。
 
 ## ⑥ 可编译实验 · 20分钟
-
 Modem AT 命令构建 + CREG 解析
 
 C++23
 
+完整源码：[main.cpp](../examples/day-009/main.cpp)。
+
 ```cpp
+#include <cassert>
 #include <charconv>
 #include <iostream>
 #include <optional>
@@ -74,49 +78,67 @@ C++23
 
 namespace modem {
 enum class RegistrationState {
-```
-kNotRegistered = 0, kRegisteredHome = 1, kSearching = 2,
-kDenied = 3, kUnknown = 4, kRegisteredRoaming = 5
-```cpp
+  kNotRegistered = 0,
+  kRegisteredHome = 1,
+  kSearching = 2,
+  kDenied = 3,
+  kUnknown = 4,
+  kRegisteredRoaming = 5
 };
 
 std::string BuildAtCommand(std::string_view command, std::string_view argument) {
-std::string result{"AT"};
-result += command;
-```
-if (!argument.empty()) { result += '='; result += argument; }
-```cpp
-result += "\r\n";
-return result;
+  std::string result{"AT"};
+  result += command;
+  if (!argument.empty()) {
+    result += '=';
+    result += argument;
+  }
+  result += "\r\n";
+  return result;
 }
 
 std::optional<RegistrationState> ParseRegistrationState(std::string_view response) {
-constexpr std::string_view kPrefix{"+CREG: "};
-const auto prefix_pos = response.find(kPrefix);
-if (prefix_pos == std::string_view::npos) return std::nullopt;
-const auto text = response.substr(prefix_pos + kPrefix.size());
-int value{};
-const auto [ptr, error] = std::from_chars(text.data(), text.data()+text.size(), value);
-if (error != std::errc{} || ptr == text.data()) return std::nullopt;
-switch (value) {
-case 0: return RegistrationState::kNotRegistered;
-case 1: return RegistrationState::kRegisteredHome;
-case 2: return RegistrationState::kSearching;
-case 3: return RegistrationState::kDenied;
-case 4: return RegistrationState::kUnknown;
-case 5: return RegistrationState::kRegisteredRoaming;
-default: return std::nullopt;
+  constexpr std::string_view kPrefix{"+CREG: "};
+  const auto prefix_pos = response.find(kPrefix);
+  if (prefix_pos == std::string_view::npos) return std::nullopt;
+  const auto text = response.substr(prefix_pos + kPrefix.size());
+  int value{};
+  const auto [ptr, error] = std::from_chars(text.data(), text.data() + text.size(), value);
+  if (error != std::errc{} || ptr == text.data()) return std::nullopt;
+  switch (value) {
+    case 0: return RegistrationState::kNotRegistered;
+    case 1: return RegistrationState::kRegisteredHome;
+    case 2: return RegistrationState::kSearching;
+    case 3: return RegistrationState::kDenied;
+    case 4: return RegistrationState::kUnknown;
+    case 5: return RegistrationState::kRegisteredRoaming;
+    default: return std::nullopt;
+  }
 }
+}  // namespace modem
+
+int main() {
+  const auto cmd = modem::BuildAtCommand("+CSQ", "");
+  assert(cmd == "AT+CSQ\r\n");
+
+  const auto cmd_with_arg = modem::BuildAtCommand("+CFUN", "1");
+  assert(cmd_with_arg == "AT+CFUN=1\r\n");
+
+  const auto reg = modem::ParseRegistrationState("+CREG: 1");
+  assert(reg == modem::RegistrationState::kRegisteredHome);
+
+  std::cout << "Built: " << cmd_with_arg;
+  std::cout << "Registration parsed: home network\n";
+  return 0;
 }
 ```
-} // namespace modem
+
+在仓库根目录运行：
 
 ```bash
-g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic -Wswitch-enum day09.cpp -o day09
-./day09
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-009/main.cpp -o /tmp/day-009
+/tmp/day-009
 ```
-
-练习：① 支持无参数 AT+CSQ；② 测试 CREG 0/1/5/99/abc；③ 把使用 char[64] + strcat + atoi 的旧代码重构，并标出“拥有/借用”。
 
 ## ⑦ 3 个常见坑 · 5分钟
 

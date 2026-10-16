@@ -19,6 +19,8 @@ topics:
 guidelines:
   - review
 
+lab:
+  path: examples/day-007/main.cpp
 previous: 6
 next: 8
 ---
@@ -119,6 +121,7 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic main.cpp
 ```
 
 ## ⑥ 周工程：类型安全的 Modem 控制模块（20 分钟）
+完整源码：[main.cpp](../examples/day-007/main.cpp)。
 
 ```cpp
 #include <array>
@@ -188,16 +191,12 @@ int main() {
 }
 ```
 
-## Code Review 检查
+在仓库根目录运行：
 
-- [ ] 头文件依赖是否最小且显式？
-- [ ] 类型、函数、变量、成员命名是否符合约定？
-- [ ] 所有权/借用关系是否能从接口读出来？
-- [ ] 实时路径是否发生动态分配？
-- [ ] 错误模型是否统一？
-- [ ] 是否误把 `volatile` 当成同步手段？
-- [ ] 是否存在 magic number？
-- [ ] 空输入、超时、最大长度等边界是否测试？
+```bash
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-007/main.cpp -o /tmp/day-007
+/tmp/day-007
+```
 
 ## ⑦ 3 个常见坑（5 分钟）
 

@@ -183,6 +183,10 @@
   background: #21262d;
   color: #fff;
 }
+.vscode-icon-btn.is-playing {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.2);
+}
 .vscode-icon-btn:disabled {
   opacity: 0.35;
   cursor: not-allowed;
@@ -241,52 +245,41 @@
 .vcr-warning-pill { color: #fca5a5; font-size: 11px; }
 
 .memory-canvas-shell { display: flex; flex: 1; min-width: 0; min-height: 0; flex-direction: column; background: #090d13; }
-.memory-canvas-subbar {
+/* 极简单行步骤语义说明胶囊（取代原厚重控制条，不占垂直高度） */
+.memory-step-caption {
   flex: none;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  min-height: 32px;
-  padding: 4px 10px;
-  background: #0d1117;
+  gap: 8px;
+  min-height: 28px;
+  padding: 5px 12px;
+  background: rgba(15, 23, 42, 0.85);
   border-bottom: 1px solid #1c2430;
   font-size: 11px;
 }
-.memory-canvas-caption {
-  color: #94a3b8;
-  font: 500 11px/1.3 var(--mono);
-}
-.memory-layout-toggle {
-  display: inline-flex;
-  gap: 2px;
-  padding: 2px;
-  border: 1px solid #293241;
-  border-radius: 6px;
-  background: #161b22;
-}
-.memory-layout-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  min-height: 24px;
-  padding: 2px 8px;
-  border: 0;
-  border-radius: 4px;
-  background: transparent;
-  color: #8b949e;
-  font: 500 10.5px/1.2 var(--mono);
-  cursor: pointer;
-}
-.memory-layout-btn:hover {
-  color: #e2e8f0;
-  background: #21262d;
-}
-.memory-layout-btn.is-active {
+.step-caption-tag {
   color: #38bdf8;
-  background: #0d131d;
-  font-weight: 600;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  font: 700 10.5px/1 var(--mono);
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: rgba(56, 189, 248, 0.12);
+  white-space: nowrap;
+}
+.step-caption-text {
+  color: #e2e8f0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.step-caption-badge {
+  margin-left: auto;
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font: 600 9.5px/1 var(--mono);
+  white-space: nowrap;
 }
 
 .memory-mode-notice { flex: 1; color: #fcd34d; padding: 2px 6px; font-size: 11px; }
@@ -311,7 +304,9 @@
   padding: 14px 18px 48px;
 }
 .memory-canvas-root.layout-vertical .memory-zone {
+  max-width: 760px;
   width: 100%;
+  margin-inline: auto;
 }
 
 /* 横向排列：宽屏时左右并列，优化间距防止横向截断 */
@@ -321,6 +316,16 @@
   align-content: start;
   gap: clamp(14px, 2vw, 30px);
   padding: 14px 18px 48px;
+}
+.heap-anchor-pin {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-left: 5px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25);
+  vertical-align: middle;
 }
 .memory-edges-layer { position: absolute; inset: 0 auto auto 0; z-index: 4; pointer-events: none; overflow: visible; }
 .memory-edge-path { transition: stroke 150ms ease, stroke-width 150ms ease; }
@@ -368,7 +373,19 @@
 .alive-badge { color: #6ee7b7; background: #064e3b; }
 .freed-badge { color: #cbd5e1; background: #374151; }
 .leaked-badge { color: #fecaca; background: #7f1d1d; }
-.memory-warning-anchor { position: absolute; z-index: 3; right: 18px; bottom: 18px; display: grid; width: 24px; height: 24px; place-items: center; border: 1px solid #ef4444; border-radius: 50%; color: #fecaca; background: #450a0a; font: 800 12px/1 var(--mono); }
+.memory-warning-anchor { position: absolute; z-index: 5; right: 18px; bottom: 18px; display: none; }
+.memory-warning-anchor.is-active {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border: 1px solid #ef4444;
+  border-radius: 999px;
+  color: #fecaca;
+  background: rgba(127, 29, 29, 0.9);
+  font: 700 11px/1 var(--mono);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+}
 .standalone-workbench .visualizer-main-split { height: clamp(580px, 72vh, 760px); min-height: 580px; max-height: 76vh; }
 .lab-workbench .visualizer-main-split { grid-template-columns: minmax(560px, 1.15fr) minmax(420px, 0.85fr); height: clamp(600px, 76vh, 800px); min-height: 600px; max-height: 78vh; }
 

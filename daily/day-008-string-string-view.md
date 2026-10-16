@@ -11,6 +11,8 @@ topics:
   - string-string-view
 guidelines:
   - explicit-contract
+lab:
+  path: examples/day-008/main.cpp
 previous: 7
 next: 9
 ---
@@ -107,54 +109,68 @@ Status ParseResponse(std::string_view response, StorageMode storage_mode);
 若函数只解析、不保存，进一步简化为 Status ParseResponse(std::string_view response);
 
 ## ⑥ 20 分钟实验：Modem AT Response Parser
-
 目标：解析 +CSQ: <rssi>,<ber>，不为输入创建动态副本。
 
+完整源码：[main.cpp](../examples/day-008/main.cpp)。
+
 ```cpp
+#include <cassert>
 #include <charconv>
 #include <iostream>
 #include <optional>
 #include <string_view>
 
 namespace modem {
-```
-struct SignalQuality { int rssi{}; int ber{}; };
+struct SignalQuality {
+  int rssi{};
+  int ber{};
+};
 
-```cpp
-std::optional<int> ParseInt(std::string_view text)
-{
-int value{};
-const char* begin = text.data();
-const char* end = text.data() + text.size();
-const auto [ptr, error] = std::from_chars(begin, end, value);
-if (error != std::errc{} || ptr != end) return std::nullopt;
-return value;
+std::optional<int> ParseInt(std::string_view text) {
+  int value{};
+  const char* begin = text.data();
+  const char* end = text.data() + text.size();
+  const auto [ptr, error] = std::from_chars(begin, end, value);
+  if (error != std::errc{} || ptr != end) return std::nullopt;
+  return value;
 }
 
-std::optional<SignalQuality> ParseCsq(std::string_view response)
-{
-constexpr std::string_view kPrefix{"+CSQ:"};
-if (!response.starts_with(kPrefix)) return std::nullopt;
-response.remove_prefix(kPrefix.size());
-const std::size_t comma = response.find(',');
-if (comma == std::string_view::npos) return std::nullopt;
-auto rssi_text = response.substr(0, comma);
-auto ber_text = response.substr(comma + 1);
-while (!rssi_text.empty() && rssi_text.front() == ' ') rssi_text.remove_prefix(1);
-const auto rssi = ParseInt(rssi_text);
-const auto ber = ParseInt(ber_text);
-if (!rssi || !ber) return std::nullopt;
-return SignalQuality{.rssi = *rssi, .ber = *ber};
+std::optional<SignalQuality> ParseCsq(std::string_view response) {
+  constexpr std::string_view kPrefix{"+CSQ:"};
+  if (!response.starts_with(kPrefix)) return std::nullopt;
+  response.remove_prefix(kPrefix.size());
+  const std::size_t comma = response.find(',');
+  if (comma == std::string_view::npos) return std::nullopt;
+  auto rssi_text = response.substr(0, comma);
+  auto ber_text = response.substr(comma + 1);
+  while (!rssi_text.empty() && rssi_text.front() == ' ') rssi_text.remove_prefix(1);
+  const auto rssi = ParseInt(rssi_text);
+  const auto ber = ParseInt(ber_text);
+  if (!rssi || !ber) return std::nullopt;
+  return SignalQuality{.rssi = *rssi, .ber = *ber};
+}
+}  // namespace modem
+
+int main() {
+  const auto quality = modem::ParseCsq("+CSQ: 18,99");
+  assert(quality.has_value());
+  assert(quality->rssi == 18);
+  assert(quality->ber == 99);
+
+  assert(!modem::ParseCsq("+ERROR").has_value());
+  assert(!modem::ParseCsq("+CSQ: invalid").has_value());
+
+  std::cout << "Parsed CSQ: rssi=" << quality->rssi << ", ber=" << quality->ber << '\n';
+  return 0;
 }
 ```
-} // namespace modem
 
-编译：
+在仓库根目录运行：
 
-g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic day08.cpp -o day08
-./day08
-
-练习：测试边界输入；把 int parse_line(const char* data, int len, bool keep) 重构为明确的借用/保存接口；修复返回局部 string 的 string_view 的生命周期错误。
+```bash
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-008/main.cpp -o /tmp/day-008
+/tmp/day-008
+```
 
 ## ⑦ 三个常见坑 · 5 分钟
 

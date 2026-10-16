@@ -11,6 +11,8 @@ topics:
   - const-constexpr
 guidelines:
   - explicit-contract
+lab:
+  path: examples/day-003/main.cpp
 previous: 2
 next: 4
 ---
@@ -112,6 +114,7 @@ constexpr std::uint32_t kResponseTimeoutMs {5000U};
 if (elapsed_ms > kResponseTimeoutMs) { ResetModem(); }
 
 ## ⑥ Coding 实验 · 20 分钟
+完整源码：[main.cpp](../examples/day-003/main.cpp)。
 
 ```cpp
 #include <array>
@@ -152,23 +155,11 @@ std::cout << rx_buffer.size() << '\n';
 }
 ```
 
-编译：
+在仓库根目录运行：
 
 ```bash
-g++ -std=c++20 -Wall -Wextra -Wconversion -Wpedantic day03.cpp -o day03
-./day03
-```
-
-实验 A：把 buffer 改为 500，并用 static_assert 检查其必须为 2 的幂。
-实验 B：创建运行期读取的 const 超时值，尝试把它作为模板参数，理解为何失败。
-
-规范修复题：把下面代码改为无不必要宏、函数 PascalCase、变量 snake_case、常量 kPascalCase、单位明确、无 magic number、可编译期计算。
-
-```cpp
-#define TIMEOUT 5000
-#define SIZE 512
-int calc(int n) { return TIMEOUT * n; }
-void wait_modem(int t) { if (t > 5000) { } }
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-003/main.cpp -o /tmp/day-003
+/tmp/day-003
 ```
 
 ## ⑦ 3 个常见坑 · 5 分钟

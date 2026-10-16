@@ -18,6 +18,8 @@ guidelines:
   - prefer-composition
   - stable-interface
 
+lab:
+  path: examples/day-032/main.cpp
 previous: 31
 next: 33
 ---
@@ -115,6 +117,7 @@ class ModemSession {
 多态接口并不自动解决对象生命周期。
 
 ## ⑥ 可编译实验（20 分钟）
+完整源码：[main.cpp](../examples/day-032/main.cpp)。
 
 ```cpp
 #include <array>
@@ -182,25 +185,12 @@ int main() {
 }
 ```
 
-### 规范修复练习
+在仓库根目录运行：
 
-重构：
-
-```cpp
-class Modem : public UartDriver {
- public:
-  bool Send(std::uint8_t* data, int size, bool wait, bool retry);
-};
+```bash
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-032/main.cpp -o /tmp/day-032
+/tmp/day-032
 ```
-
-要求：
-
-- 去掉错误继承；
-- 使用窄接口；
-- 使用 `std::span`；
-- timeout 强类型化；
-- 避免多个 bool；
-- 统一 `Status`。
 
 ## ⑦ 3 个常见坑（5 分钟）
 

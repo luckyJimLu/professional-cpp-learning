@@ -11,6 +11,8 @@ topics:
   - tradeoffs-change-stable-boundaries
 guidelines:
   - explicit-contract
+lab:
+  path: examples/day-026/main.cpp
 previous: 25
 next: 27
 ---
@@ -125,96 +127,86 @@ ITransport& transport_;
 嵌入式注意：抽象不能掩盖无界等待或 heap allocation。硬实时路径必须能审计最坏执行时间和内存行为。
 
 ## ⑥ 可编译的小实验 / 代码练习（20分钟）
-
 实现可在 UART 与 Fake transport 之间替换的发送层，发送路径不动态分配。
+
+完整源码：[main.cpp](../examples/day-026/main.cpp)。
 
 ```cpp
 #include <array>
+#include <cassert>
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
+#include <iostream>
 #include <span>
+
 using namespace std::chrono_literals;
-```
 
-```cpp
 enum class Status { kOk, kTimeout, kIoError, kInvalidArgument };
-```
 
-```cpp
 class ITransport {
-```
-public:
-```cpp
-virtual ~ITransport() = default;
-```
-virtual Status Send(std::span<const std::byte> data,
-```cpp
-std::chrono::milliseconds timeout) = 0;
+ public:
+  virtual ~ITransport() = default;
+  virtual Status Send(std::span<const std::byte> data,
+                      std::chrono::milliseconds timeout) = 0;
 };
 
 class FakeTransport final : public ITransport {
-```
-public:
-Status Send(std::span<const std::byte> data,
-```cpp
-std::chrono::milliseconds timeout) override {
-if (timeout <= 0ms || data.size() > last_frame_.size())
-return Status::kInvalidArgument;
-```
-for (std::size_t i = 0; i < data.size(); ++i) last_frame_[i] = data[i];
-```cpp
-last_size_ = data.size();
-return Status::kOk;
-}
-```
-[[nodiscard]] std::size_t LastSize() const { return last_size_; }
-private:
-```cpp
-std::array<std::byte, 64> last_frame_{};
-std::size_t last_size_{0};
+ public:
+  Status Send(std::span<const std::byte> data,
+              std::chrono::milliseconds timeout) override {
+    if (timeout <= 0ms || data.size() > last_frame_.size()) {
+      return Status::kInvalidArgument;
+    }
+    for (std::size_t i = 0; i < data.size(); ++i) {
+      last_frame_[i] = data[i];
+    }
+    last_size_ = data.size();
+    return Status::kOk;
+  }
+
+  [[nodiscard]] std::size_t LastSize() const { return last_size_; }
+
+ private:
+  std::array<std::byte, 64> last_frame_{};
+  std::size_t last_size_{0};
 };
-```
 
-struct SendOptions { std::chrono::milliseconds timeout{1000}; };
+struct SendOptions {
+  std::chrono::milliseconds timeout{1000ms};
+};
 
-```cpp
 class ModemSession {
-```
-public:
-```cpp
-explicit ModemSession(ITransport& transport) : transport_{transport} {}
-Status Send(std::span<const std::byte> command, const SendOptions& options) {
-if (command.empty()) return Status::kInvalidArgument;
-return transport_.Send(command, options.timeout);
-}
-```
-private:
-```cpp
-ITransport& transport_;
+ public:
+  explicit ModemSession(ITransport& transport) : transport_{transport} {}
+
+  Status Send(std::span<const std::byte> command, const SendOptions& options) {
+    if (command.empty()) return Status::kInvalidArgument;
+    return transport_.Send(command, options.timeout);
+  }
+
+ private:
+  ITransport& transport_;
 };
 
 int main() {
-FakeTransport transport;
-ModemSession modem{transport};
-constexpr std::array command{std::byte{'A'}, std::byte{'T'}, std::byte{'\r'}};
-const Status status = modem.Send(command, SendOptions{500ms});
-```
-return status == Status::kOk && transport.LastSize() == command.size() ? 0 : 1;
-```cpp
+  FakeTransport transport;
+  ModemSession modem{transport};
+  constexpr std::array command{std::byte{'A'}, std::byte{'T'}, std::byte{'\r'}};
+  const Status status = modem.Send(command, SendOptions{500ms});
+  assert(status == Status::kOk);
+  assert(transport.LastSize() == command.size());
+  std::cout << "Sent " << transport.LastSize() << " bytes successfully\n";
+  return 0;
 }
 ```
 
+在仓库根目录运行：
+
 ```bash
-g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic day26.cpp -o day26
-./day26
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-026/main.cpp -o /tmp/day-026
+/tmp/day-026
 ```
-
-练习 A：增加 UartTransport，但不修改 ModemSession。
-
-练习 B（规范修复）：重构 int Send(int type, char* p, int len, int timeout, bool retry);：去掉 magic type、裸长度组合和弱类型参数；明确 timeout 单位与只读数据；使用强类型错误；不得新增 heap allocation。
-
-练习 C：比较虚接口与模板静态注入对 Flash、测试替换、编译依赖、间接调用的影响。没有测量数据时，不声称哪一个性能更高。
 
 ## ⑦ 3 个常见坑（5分钟）
 

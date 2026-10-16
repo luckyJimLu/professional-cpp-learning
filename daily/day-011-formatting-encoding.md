@@ -11,6 +11,8 @@ topics:
   - formatting-encoding
 guidelines:
   - explicit-contract
+lab:
+  path: examples/day-011/main.cpp
 previous: 10
 next: 12
 ---
@@ -79,58 +81,49 @@ SHOULD：单位进入类型或变量名，如 rssi_dbm、timeout_ms。
 SHOULD：平台差异集中隔离。若 MCU 标准库不支持 std::format，把替代策略集中在 adapter，而不是让 #ifdef 铺满业务层。
 
 ## ⑥ 可编译实验 · 20分钟：Modem Diagnostic Formatter
+完整源码：[main.cpp](../examples/day-011/main.cpp)。
 
 ```cpp
 #include <array>
+#include <cassert>
 #include <cstdint>
 #include <cstdio>
 #include <iostream>
-```
 
-```cpp
 struct RadioStatus {
-int rssi_dbm {};
-std::uint32_t timeout_ms {};
-std::uint8_t retry_count {};
+  int rssi_dbm {};
+  std::uint32_t timeout_ms {};
+  std::uint8_t retry_count {};
 };
-```
 
-bool FormatRadioStatusToBuffer(
-```cpp
-const RadioStatus& status, std::array<char, 96>& output) {
-```
-const int written = std::snprintf(
-output.data(), output.size(),
-"RSSI=%d dBm, timeout=%u ms, retry=%u",
-status.rssi_dbm,
-static_cast<unsigned int>(status.timeout_ms),
-```cpp
-static_cast<unsigned int>(status.retry_count));
-```
-if (written < 0) { return false; }
-```cpp
-return static_cast<std::size_t>(written) < output.size();
+bool FormatRadioStatusToBuffer(const RadioStatus& status, std::array<char, 96>& output) {
+  const int written = std::snprintf(
+      output.data(), output.size(),
+      "RSSI=%d dBm, timeout=%u ms, retry=%u",
+      status.rssi_dbm,
+      static_cast<unsigned int>(status.timeout_ms),
+      static_cast<unsigned int>(status.retry_count));
+  if (written < 0) {
+    return false;
+  }
+  return static_cast<std::size_t>(written) < output.size();
 }
 
 int main() {
-const RadioStatus status {-73, 5000U, 3U};
-std::array<char, 96> output {};
-```
-if (!FormatRadioStatusToBuffer(status, output)) { return 1; }
-```cpp
-std::cout << output.data() << '\n';
+  const RadioStatus status {-73, 5000U, 3U};
+  std::array<char, 96> output {};
+  const bool ok = FormatRadioStatusToBuffer(status, output);
+  assert(ok);
+  std::cout << output.data() << '\n';
+  return 0;
 }
 ```
 
-任务 B：把缓冲区缩小到 16 字节，观察截断检测；解释为什么检查 snprintf 返回值属于接口契约。
-
-任务 C · Code Review：重构 print_status(int a, int b) + sprintf + printf(buf) 风格代码，至少修复命名/单位、越界、格式串风险、职责与错误状态。
-
-编译
+在仓库根目录运行：
 
 ```bash
-g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic day11.cpp -o day11
-./day11
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-011/main.cpp -o /tmp/day-011
+/tmp/day-011
 ```
 
 ## ⑦ 3 个常见坑 · 5分钟

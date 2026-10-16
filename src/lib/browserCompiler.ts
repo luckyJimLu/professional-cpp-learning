@@ -1,6 +1,7 @@
 import { preprocessCppCode } from "../visualizer/embeddedHeader";
 
-export const COMPILE_RUN_TIMEOUT_MS = 15000;
+export const INITIAL_LOAD_TIMEOUT_MS = 60000;
+export const COMPILE_RUN_TIMEOUT_MS = 35000;
 
 export interface CompileRunResult {
   mode: "clang-wasm";
@@ -18,6 +19,7 @@ interface PendingRequest {
   reject: (error: Error) => void;
   onProgress?: (value: number) => void;
   timer: ReturnType<typeof setTimeout>;
+  resetTimer: (ms?: number) => void;
 }
 
 let worker: Worker | null = null;
@@ -63,6 +65,8 @@ function getWorker() {
 
       if (message.type === "progress") {
         request.onProgress?.(message.value);
+        // 收到下载/初始化进度心跳，重置超时定时器
+        request.resetTimer(COMPILE_RUN_TIMEOUT_MS);
         return;
       }
 
@@ -93,21 +97,36 @@ function getWorker() {
 export function compileAndRun(
   code: string,
   onProgress?: (value: number) => void,
-  timeoutMs = COMPILE_RUN_TIMEOUT_MS,
+  timeoutMs = INITIAL_LOAD_TIMEOUT_MS,
 ): Promise<CompileRunResult> {
   const id = ++sequence;
 
   return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => {
-      const req = pending.get(id);
-      if (!req) return;
-      pending.delete(id);
-      worker?.terminate();
-      worker = null;
-      req.reject(new Error(`编译或执行超时 (${Math.round(timeoutMs / 1000)}s)，可能存在死循环，已重置沙箱`));
-    }, timeoutMs);
+    let timer: ReturnType<typeof setTimeout>;
 
-    pending.set(id, { resolve, reject, onProgress, timer });
+    const createTimeout = (ms: number) => {
+      return setTimeout(() => {
+        const req = pending.get(id);
+        if (!req) return;
+        pending.delete(id);
+        worker?.terminate();
+        worker = null;
+        req.reject(new Error(`编译或执行超时 (${Math.round(ms / 1000)}s)，可能资源加载慢或存在复杂模板展开，已重置沙箱`));
+      }, ms);
+    };
+
+    const resetTimer = (ms = COMPILE_RUN_TIMEOUT_MS) => {
+      clearTimeout(timer);
+      timer = createTimeout(ms);
+      const req = pending.get(id);
+      if (req) {
+        req.timer = timer;
+      }
+    };
+
+    timer = createTimeout(timeoutMs);
+
+    pending.set(id, { resolve, reject, onProgress, timer, resetTimer });
 
     try {
       const w = getWorker();

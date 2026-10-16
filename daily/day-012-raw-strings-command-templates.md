@@ -11,6 +11,8 @@ topics:
   - raw-strings-command-templates
 guidelines:
   - explicit-contract
+lab:
+  path: examples/day-012/main.cpp
 previous: 11
 next: 13
 ---
@@ -67,56 +69,48 @@ inline constexpr std::string_view kRegistrationPrefix{"+CREG:"};
 嵌入式：硬实时发送路径不要仅为了拼接常量创建临时 std::string；优先直接发送 view/span 或预分配缓冲区。
 
 ## ⑥ 可编译实验 · 20分钟
+完整源码：[main.cpp](../examples/day-012/main.cpp)。
 
 ```cpp
+#include <cassert>
 #include <iostream>
 #include <string_view>
-```
 
-```cpp
 namespace modem {
 inline constexpr std::string_view kQuerySignal{"AT+CSQ\r\n"};
-```
-inline constexpr std::string_view kExpectedTranscript{R"(AT+CSQ
-+CSQ: 18,99
-OK
-```cpp
-)"};
-```
+inline constexpr std::string_view kExpectedTranscript{
+    "AT+CSQ\r\n"
+    "+CSQ: 18,99\r\n"
+    "OK\r\n"};
 
-```cpp
 bool IsAtCommand(std::string_view text) {
-return text.starts_with("AT");
+  return text.starts_with("AT");
 }
 
 void PrintBytes(std::string_view text) {
-for (const unsigned char ch : text) {
-std::cout << static_cast<unsigned int>(ch) << ' ';
+  for (const unsigned char ch : text) {
+    std::cout << static_cast<unsigned int>(ch) << ' ';
+  }
+  std::cout << '\n';
 }
-std::cout << '\n';
-}
-```
-} // namespace modem
+}  // namespace modem
 
-```cpp
 int main() {
-std::cout << modem::kQuerySignal;
-std::cout << modem::kExpectedTranscript;
-std::cout << std::boolalpha << modem::IsAtCommand(modem::kQuerySignal) << '\n';
-modem::PrintBytes(modem::kQuerySignal);
+  std::cout << modem::kQuerySignal;
+  std::cout << modem::kExpectedTranscript;
+  assert(modem::IsAtCommand(modem::kQuerySignal));
+  std::cout << std::boolalpha << modem::IsAtCommand(modem::kQuerySignal) << '\n';
+  modem::PrintBytes(modem::kQuerySignal);
+  return 0;
 }
 ```
+
+在仓库根目录运行：
 
 ```bash
-g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic day12.cpp -o day12
-./day12
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-012/main.cpp -o /tmp/day-012
+/tmp/day-012
 ```
-
-实验 A：观察 kQuerySignal 最后的字节，确认 CR=13、LF=10。
-
-实验 B：把多行 transcript 改为普通 literal，对比测试 fixture 的可读性。
-
-实验 C · Code Review 修复：把 #define PREFIX "+CREG:" 和 bool parse(char* p) 重构为 constexpr string_view + string_view::find；要求只读输入、有长度边界、函数 PascalCase、参数 snake_case、无需 NUL 终止。
 
 ## ⑦ 3 个常见坑 · 5分钟
 

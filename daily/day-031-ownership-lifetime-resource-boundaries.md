@@ -18,6 +18,8 @@ guidelines:
   - explicit-lifetime
   - raii-ownership
 
+lab:
+  path: examples/day-031/main.cpp
 previous: 30
 next: 32
 ---
@@ -140,6 +142,7 @@ class ModemSession {
 > 典型如 Asio 的经典单行 `std::make_shared<session>(std::move(socket))->start();`，将会话生命周期安全移交给内核事件队列，杜绝 use-after-free。详见专栏深度解析：[Asio 经典单行拆解与异步生命周期实践](../frameworks/asio/SESSION_LIFECYCLE.md#21-深度拆解经典单行stdmake_sharedsessionstdmovesocket-start)。
 
 ## ⑥ 可编译实验（20 分钟）
+完整源码：[main.cpp](../examples/day-031/main.cpp)。
 
 ```cpp
 #include <array>
@@ -208,18 +211,12 @@ int main() {
 }
 ```
 
-### 修复练习
+在仓库根目录运行：
 
-找出问题：
-
-```cpp
-ITransport& MakeTransport() {
-  FakeTransport transport;
-  return transport;
-}
+```bash
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-031/main.cpp -o /tmp/day-031
+/tmp/day-031
 ```
-
-说明为什么返回的是 dangling reference，并重构生命周期。
 
 ## ⑦ 3 个常见坑（5 分钟）
 

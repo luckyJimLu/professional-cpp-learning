@@ -11,6 +11,8 @@ topics:
   - enum-class-state-machine
 guidelines:
   - explicit-contract
+lab:
+  path: examples/day-006/main.cpp
 previous: 5
 next: 7
 ---
@@ -97,47 +99,55 @@ SHOULD：单位写进类型或名称，例如 rssi_dbm、timeout_ms。
 SHOULD：switch 覆盖有效状态，并打开编译告警；不要用无条件 default 悄悄吞掉新增状态遗漏。
 
 ## ⑥ 20分钟实验：Modem 状态机
+完整源码：[main.cpp](../examples/day-006/main.cpp)。
 
 ```cpp
+#include <cassert>
 #include <iostream>
 #include <string_view>
 
 namespace modem {
 enum class State { kOff, kBooting, kRegistering, kReady, kError };
-```
-struct SignalInfo { int rssi_dbm {}; int quality_percent {}; };
+
+struct SignalInfo {
+  int rssi_dbm {};
+  int quality_percent {};
+};
 
 [[nodiscard]] constexpr std::string_view ToString(State state) {
-```cpp
-switch (state) {
-case State::kOff: return "off";
-case State::kBooting: return "booting";
-case State::kRegistering: return "registering";
-case State::kReady: return "ready";
-case State::kError: return "error";
+  switch (state) {
+    case State::kOff: return "off";
+    case State::kBooting: return "booting";
+    case State::kRegistering: return "registering";
+    case State::kReady: return "ready";
+    case State::kError: return "error";
+  }
+  return "invalid";
 }
-return "invalid";
-}
-```
-[[nodiscard]] SignalInfo ReadSignal() { return {-75, 65}; }
-} // namespace modem
 
-```cpp
+[[nodiscard]] SignalInfo ReadSignal() {
+  return {-75, 65};
+}
+}  // namespace modem
+
 int main() {
-const modem::State state {modem::State::kReady};
-const auto [rssi_dbm, quality_percent] = modem::ReadSignal();
-std::cout << modem::ToString(state) << '\n';
+  const modem::State state {modem::State::kReady};
+  const auto [rssi_dbm, quality_percent] = modem::ReadSignal();
+  assert(modem::ToString(state) == "ready");
+  assert(rssi_dbm == -75);
+  std::cout << "State: " << modem::ToString(state)
+            << ", RSSI: " << rssi_dbm << " dBm"
+            << ", Quality: " << quality_percent << "%\n";
+  return 0;
 }
 ```
+
+在仓库根目录运行：
 
 ```bash
-g++ -std=c++20 -Wall -Wextra -Wconversion -Wpedantic -Wswitch-enum day06.cpp -o day06
-./day06
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-006/main.cpp -o /tmp/day-006
+/tmp/day-006
 ```
-
-实验 A：新增 State::kShuttingDown，暂不修改 ToString()，观察告警。
-
-实验 B · 规范修复：重构 int get_status(int* state, int* rssi, int* quality, bool verbose);：状态改为 enum class；相关结果组成结构体；消除输出指针；不要用含义模糊的 bool 控制行为。
 
 ## ⑦ 3 个常见坑 · 5分钟
 

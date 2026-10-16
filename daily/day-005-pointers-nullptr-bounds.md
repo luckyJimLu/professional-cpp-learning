@@ -11,6 +11,8 @@ topics:
   - pointers-nullptr-bounds
 guidelines:
   - explicit-contract
+lab:
+  path: examples/day-005/main.cpp
 previous: 4
 next: 6
 ---
@@ -69,34 +71,53 @@ return frame.front();
 - MUST：边界输入必须验证，禁止 magic number。
 
 ## ⑥ 20分钟实验：Modem TLV Reader
+完整源码：[main.cpp](../examples/day-005/main.cpp)。
 
 ```cpp
+#include <array>
+#include <cassert>
+#include <cstddef>
+#include <cstdint>
+#include <iostream>
+#include <optional>
+#include <span>
+
 constexpr std::size_t kHeaderSize {2};
-```
 
-```cpp
 struct TlvHeader {
-std::uint8_t type {};
-std::uint8_t length {};
+  std::uint8_t type {};
+  std::uint8_t length {};
 };
+
+std::optional<TlvHeader> ParseTlvHeader(std::span<const std::uint8_t> frame) {
+  if (frame.size() < kHeaderSize) {
+    return std::nullopt;
+  }
+  return TlvHeader{frame[0], frame[1]};
+}
+
+int main() {
+  const std::array<std::uint8_t, 4> valid_frame{0x01, 0x02, 0xAA, 0xBB};
+  const auto header = ParseTlvHeader(valid_frame);
+  assert(header.has_value());
+  assert(header->type == 0x01);
+  assert(header->length == 0x02);
+
+  const std::array<std::uint8_t, 1> short_frame{0x01};
+  assert(!ParseTlvHeader(short_frame).has_value());
+
+  std::cout << "TLV Header parsed: type=" << static_cast<int>(header->type)
+            << ", len=" << static_cast<int>(header->length) << '\n';
+  return 0;
+}
 ```
 
-std::optional<TlvHeader> ParseTlvHeader(
-std::span<const std::uint8_t> frame)
-```cpp
-{
-if (frame.size() < kHeaderSize) {
-return std::nullopt;
-}
-return TlvHeader{frame[0], frame[1]};
-}
+在仓库根目录运行：
+
+```bash
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-005/main.cpp -o /tmp/day-005
+/tmp/day-005
 ```
-
-编译：
-
-g++ -std=c++20 -Wall -Wextra -Wconversion -Wpedantic day05.cpp -o day05
-
-规范修复题：重构 int Read(const unsigned char* p, int len, bool strict);：长度不可为负，范围与长度绑定，不使用含义模糊的 bool 参数，并明确失败语义。
 
 ## ⑦ 3 个常见坑
 
