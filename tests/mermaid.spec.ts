@@ -23,7 +23,9 @@ test("Mermaid renders in lessons while C++ remains code", async ({ page }) => {
   await expect(page.locator(".mermaid-diagram pre")).toContainText("flowchart LR");
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(page.locator(".mermaid-viewport")).toBeVisible();
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await expect.poll(
+    () => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+  ).toBe(true);
 });
 
 test("failed Mermaid load preserves source and allows retry", async ({ page }) => {
