@@ -1,5 +1,7 @@
 import { preprocessCppCode } from "../visualizer/embeddedHeader";
 
+export const COMPILE_RUN_TIMEOUT_MS = 15000;
+
 export interface CompileRunResult {
   mode: "clang-wasm";
   stdout: string;
@@ -15,6 +17,7 @@ interface PendingRequest {
   resolve: (result: CompileRunResult) => void;
   reject: (error: Error) => void;
   onProgress?: (value: number) => void;
+  timer: ReturnType<typeof setTimeout>;
 }
 
 let worker: Worker | null = null;
@@ -28,6 +31,14 @@ export function compilerBaseUrl() {
     return new URL(path, window.location.origin).href;
   } catch {
     return path;
+  }
+}
+
+function failAllPending(message: string) {
+  for (const [id, request] of pending.entries()) {
+    clearTimeout(request.timer);
+    request.reject(new Error(message));
+    pending.delete(id);
   }
 }
 
@@ -55,6 +66,7 @@ function getWorker() {
         return;
       }
 
+      clearTimeout(request.timer);
       pending.delete(message.id);
 
       if (message.type === "result") {
@@ -67,10 +79,7 @@ function getWorker() {
 
     worker.onerror = (event) => {
       console.warn("Clang worker encountered error, activating simulation fallback:", event);
-      for (const [id, request] of pending.entries()) {
-        request.reject(new Error("Clang WASM Worker 运行失败"));
-        pending.delete(id);
-      }
+      failAllPending("Clang WASM Worker 运行失败");
       worker?.terminate();
       worker = null;
     };
@@ -84,17 +93,28 @@ function getWorker() {
 export function compileAndRun(
   code: string,
   onProgress?: (value: number) => void,
+  timeoutMs = COMPILE_RUN_TIMEOUT_MS,
 ): Promise<CompileRunResult> {
   const id = ++sequence;
 
   return new Promise((resolve, reject) => {
-    pending.set(id, { resolve, reject, onProgress });
+    const timer = setTimeout(() => {
+      const req = pending.get(id);
+      if (!req) return;
+      pending.delete(id);
+      worker?.terminate();
+      worker = null;
+      req.reject(new Error(`编译或执行超时 (${Math.round(timeoutMs / 1000)}s)，可能存在死循环，已重置沙箱`));
+    }, timeoutMs);
+
+    pending.set(id, { resolve, reject, onProgress, timer });
 
     try {
       const w = getWorker();
       if (!w) {
-        reject(new Error("无法初始化 Clang WASM Worker"));
+        clearTimeout(timer);
         pending.delete(id);
+        reject(new Error("无法初始化 Clang WASM Worker"));
         return;
       }
 
@@ -106,8 +126,9 @@ export function compileAndRun(
         baseUrl: compilerBaseUrl(),
       });
     } catch (error) {
-      reject(error instanceof Error ? error : new Error(String(error)));
+      clearTimeout(timer);
       pending.delete(id);
+      reject(error instanceof Error ? error : new Error(String(error)));
     }
   });
 }
@@ -121,3 +142,4 @@ export function resetCompiler() {
     worker = null;
   }
 }
+

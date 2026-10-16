@@ -1,7 +1,13 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { parseTraceOutput, computeSnapshots, computeSnapshotsWithDiagnostics, generateSnapshotsFromCodeAndOutput, inferTraceEventsFromCodeAndOutput, MAX_EVENTS, MAX_SNAPSHOTS } from "../src/visualizer/reducer.ts";
-import { preprocessCppCode } from "../src/visualizer/embeddedHeader.ts";
+import { preprocessCppCode, VISUALIZER_HEADER_SOURCE } from "../src/visualizer/embeddedHeader.ts";
+
+test("include/visualizer.h and VISUALIZER_HEADER_SOURCE remain strictly synchronized", () => {
+  const diskHeader = readFileSync(new URL("../include/visualizer.h", import.meta.url), "utf8").trim();
+  assert.equal(VISUALIZER_HEADER_SOURCE.trim(), diskHeader);
+});
 
 test("parseTraceOutput separates [VIS] events from standard stdout", () => {
   const raw = `
@@ -185,6 +191,49 @@ test("computeSnapshots tracks std::move ownership transfer", () => {
   assert.equal(moveSnap.pointers[0].fromVar, "p2");
 });
 
+test("computeSnapshots builds heap-to-heap edges via heap_field_set", () => {
+  const snapshots = computeSnapshots([
+    { op: "scope_enter", line: 1, name: "main" },
+    { op: "heap_alloc", line: 2, addr: "0x3010", size: 16, type: "Node", label: "Node #1" },
+    { op: "heap_alloc", line: 3, addr: "0x3020", size: 16, type: "Node", label: "Node #2" },
+    { op: "heap_field_set", line: 4, addr: "0x3010", field: "next", value: "0x3020" },
+  ]);
+  const last = snapshots.at(-1)!;
+  assert.equal(last.heap[0].fields?.next, "0x3020");
+  assert.equal(last.pointers.length, 1);
+  assert.equal(last.pointers[0].fromVar, "Node #1->next");
+  assert.equal(last.pointers[0].toRawAddr, "0x3020");
+});
+
+test("inferTraceEventsFromCodeAndOutput handles multi-line comments, inner block scopes, and std::move", () => {
+  const code = `
+#include <memory>
+struct Widget { int id; };
+/*
+  int* ignored_in_comment = new int(999);
+*/
+int main() {
+  auto p1 = std::make_unique<Widget>(1);
+  {
+    Widget scoped_w{2};
+  }
+  auto p2 = std::move(p1);
+  return 0;
+}
+  `.trim();
+
+  const events = inferTraceEventsFromCodeAndOutput(code, "", 0);
+  const ops = events.map((e) => e.op);
+  assert.ok(ops.includes("enter_scope"), "inner block should emit enter_scope");
+  assert.ok(ops.includes("exit_scope"), "inner block should emit exit_scope");
+  assert.ok(ops.includes("ptr_move"), "std::move should emit ptr_move");
+
+  // Verify scoped_w is destroyed before ptr_move
+  const dtorIdx = events.findIndex((e) => e.op === "obj_dtor" && e.id === "scoped_w");
+  const moveIdx = events.findIndex((e) => e.op === "ptr_move");
+  assert.ok(dtorIdx > 0 && dtorIdx < moveIdx, "scoped_w must be destroyed upon inner block exit before std::move");
+});
+
 test("generateSnapshotsFromCodeAndOutput generates stack frames and RAII destruction for standard C++ code", () => {
   const code = `
 #include <iostream>
@@ -228,3 +277,4 @@ int main() {
   assert.ok(dtorSnaps[0].description.includes("board_a"));
   assert.ok(dtorSnaps[1].description.includes("gpio_reset"));
 });
+

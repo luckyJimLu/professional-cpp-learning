@@ -14,6 +14,7 @@ export type TraceOp =
   | "obj_dtor"
   | "heap_alloc"
   | "heap_free"
+  | "heap_field_set"
   | "ptr_set"
   | "ptr_move"
   | "step"
@@ -82,12 +83,21 @@ export interface HeapAllocEvent {
   size: number;
   type?: string;
   label?: string;
+  fields?: Record<string, string>;
 }
 
 export interface HeapFreeEvent {
   op: "heap_free";
   line: number;
   addr: number | string;
+}
+
+export interface HeapFieldSetEvent {
+  op: "heap_field_set";
+  line: number;
+  addr: number | string;
+  field: string;
+  value: string;
 }
 
 export interface PtrSetEvent {
@@ -130,6 +140,7 @@ export type TraceEvent =
   | ObjDtorEvent
   | HeapAllocEvent
   | HeapFreeEvent
+  | HeapFieldSetEvent
   | PtrSetEvent
   | PtrMoveEvent
   | StepEvent

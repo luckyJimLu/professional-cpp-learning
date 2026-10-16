@@ -86,6 +86,7 @@ const TRACE_OPS = new Set<TraceEvent["op"]>([
   "obj_dtor",
   "heap_alloc",
   "heap_free",
+  "heap_field_set",
   "ptr_set",
   "ptr_move",
   "step",
@@ -116,6 +117,7 @@ export function isTraceEvent(value: unknown): value is TraceEvent {
     case "obj_dtor": return finiteLine && string("id");
     case "heap_alloc": return finiteLine && address("addr") && typeof candidate.size === "number" && Number.isFinite(candidate.size) && candidate.size >= 0;
     case "heap_free": return finiteLine && address("addr");
+    case "heap_field_set": return finiteLine && address("addr") && string("field") && typeof candidate.value === "string";
     case "ptr_set": return finiteLine && string("var") && (candidate.to === null || address("to"));
     case "ptr_move": return finiteLine && string("from") && string("toVar") && address("addr");
     default: return false;
@@ -142,10 +144,17 @@ export function computeSnapshotsWithDiagnostics(
   let currentFrames: StackFrame[] = [];
   const currentHeap: Map<string, HeapBlock> = new Map();
   const activeAllocationByAddress = new Map<string, string>();
+  const lastAllocationByAddress = new Map<string, string>();
   const destroyedStackAddresses = new Set<string>();
+  let sawScopeEnter = false;
   let heapCounter = 0;
   let variableCounter = 0;
   let stdoutAccumulator = initialStdout;
+
+  const findHeapByAddress = (rawAddr: string, preferredAllocationId?: string | null): HeapBlock | undefined => {
+    const id = preferredAllocationId ?? activeAllocationByAddress.get(rawAddr) ?? lastAllocationByAddress.get(rawAddr);
+    return id ? currentHeap.get(id) : undefined;
+  };
 
   // 辅助函数：根据当前内存状态构建不可变深拷贝快照
   const pushSnapshot = (
@@ -178,15 +187,14 @@ export function computeSnapshotsWithDiagnostics(
     for (const frame of clonedFrames) {
       for (const v of frame.variables) {
         if (v.isPointer && v.pointsToRaw && v.pointsToRaw !== "0x0") {
-          const allocationId = v.pointsToAllocationId ?? activeAllocationByAddress.get(v.pointsToRaw);
-          const targetHeap = allocationId ? currentHeap.get(allocationId) : undefined;
+          const targetHeap = findHeapByAddress(v.pointsToRaw, v.pointsToAllocationId);
           const stackTarget = clonedFrames.flatMap((candidateFrame) =>
             candidateFrame.variables.map((candidate) => ({ candidateFrame, candidate })),
           ).find(({ candidate }) => candidate.rawAddress === v.pointsToRaw);
           const target = targetHeap
             ? {
                 kind: "heap" as const,
-                allocationId: targetHeap.allocationId ?? allocationId ?? targetHeap.rawAddr,
+                allocationId: targetHeap.allocationId ?? targetHeap.rawAddr,
                 rawAddr: targetHeap.rawAddr,
               }
             : stackTarget
@@ -218,9 +226,44 @@ export function computeSnapshotsWithDiagnostics(
 
           if (isDangling) {
             warnings.push(
-              `⚠️ 悬挂指针警告: 变量 [${v.name}] 指向已被释放的堆内存 (${v.pointsToLabel ?? v.pointsToRaw})`,
+              `⚠️ 悬挂指针警告: 变量 [${v.name}] 指向已被释放的内存 (${v.pointsToLabel ?? v.pointsToRaw})`,
             );
           }
+        }
+      }
+    }
+
+    // 构建堆块内部字段指向其它堆块/栈变量的拓扑边（如链表 node->next）
+    const defaultFrameId = clonedFrames[0]?.id ?? "heap";
+    for (const block of clonedHeap) {
+      if (block.status !== "alive" || !block.fields) continue;
+      for (const [field, rawVal] of Object.entries(block.fields)) {
+        const trimmed = rawVal.trim();
+        if (!/^0x[0-9a-f]+$/i.test(trimmed)) continue;
+        const normAddr = normalizeAddr(trimmed);
+        if (normAddr === "0x0") continue;
+        const targetHeap = findHeapByAddress(normAddr);
+        if (!targetHeap) continue;
+        const isDangling = targetHeap.status === "freed";
+        pointers.push({
+          id: `edge-heap-${block.allocationId ?? block.rawAddr}-${field}-to-${normAddr}`,
+          fromVar: `${block.label}->${field}`,
+          fromFrameId: defaultFrameId,
+          toRawAddr: normAddr,
+          toLabel: targetHeap.label,
+          isSmart: false,
+          isDangling,
+          relationKind: isDangling ? "dangling_ptr" : "raw_ptr",
+          target: {
+            kind: "heap",
+            allocationId: targetHeap.allocationId ?? targetHeap.rawAddr,
+            rawAddr: targetHeap.rawAddr,
+          },
+        });
+        if (isDangling) {
+          warnings.push(
+            `⚠️ 悬挂指针警告: 堆块字段 [${block.label}->${field}] 指向已被释放的堆内存 (${targetHeap.label})`,
+          );
         }
       }
     }
@@ -236,6 +279,15 @@ export function computeSnapshotsWithDiagnostics(
       stdout: stdoutAccumulator,
       warnings,
     });
+
+    // 快照生成后，将瞬态 modified 状态复位为 normal，避免后续步骤一直重复闪烁修改高亮
+    for (const frame of currentFrames) {
+      for (const v of frame.variables) {
+        if (v.status === "modified") {
+          v.status = "normal";
+        }
+      }
+    }
   };
 
   const validEvents = (events as unknown[]).filter((event, index): event is TraceEvent => {
@@ -255,6 +307,7 @@ export function computeSnapshotsWithDiagnostics(
     }
     switch (event.op) {
       case "scope_enter": {
+        sawScopeEnter = true;
         const frameId = `frame_${currentFrames.length}_${event.name}`;
         currentFrames.push({
           id: frameId,
@@ -312,35 +365,37 @@ export function computeSnapshotsWithDiagnostics(
       }
 
       case "var_decl": {
-        const currentFrame = currentFrames[currentFrames.length - 1];
-        if (currentFrame) {
-          const isReference = event.type.includes("&");
-          const isPtr = event.type.includes("*") || isReference;
-          const pointsToRaw = isPtr && event.value ? normalizeAddr(event.value) : null;
-          const allocationId = pointsToRaw ? activeAllocationByAddress.get(pointsToRaw) : undefined;
-          const targetBlock = allocationId ? currentHeap.get(allocationId) : undefined;
-
-          const variable: StackVariable = {
-            variableId: `variable_${++variableCounter}`,
-            name: event.name,
-            type: event.type,
-            value: event.value ?? "uninitialized",
-            isPointer: isPtr,
-            relationKind: isReference ? "reference" : isPtr ? "raw_ptr" : undefined,
-            scopeDepth: currentFrame.scopeDepth ?? 0,
-            rawAddress: normalizeAddr(event.addr),
-            pointsToRaw,
-            pointsToAllocationId: allocationId ?? null,
-            pointsToLabel: targetBlock ? targetBlock.label : null,
-            status: "created",
-          };
-          currentFrame.variables.push(variable);
-          pushSnapshot(
-            event.line,
-            event.op,
-            `声明变量: ${event.type} ${event.name}`,
-          );
+        let currentFrame = currentFrames[currentFrames.length - 1];
+        if (!currentFrame) {
+          currentFrame = { id: "frame_0_main", name: "main", variables: [], scopeDepth: 0 };
+          currentFrames.push(currentFrame);
         }
+        const isReference = event.type.includes("&");
+        const isPtr = event.type.includes("*") || isReference;
+        const pointsToRaw = isPtr && event.value ? normalizeAddr(event.value) : null;
+        const allocationId = pointsToRaw ? activeAllocationByAddress.get(pointsToRaw) : undefined;
+        const targetBlock = allocationId ? currentHeap.get(allocationId) : undefined;
+
+        const variable: StackVariable = {
+          variableId: `variable_${++variableCounter}`,
+          name: event.name,
+          type: event.type,
+          value: event.value ?? "uninitialized",
+          isPointer: isPtr,
+          relationKind: isReference ? "reference" : isPtr ? "raw_ptr" : undefined,
+          scopeDepth: currentFrame.scopeDepth ?? 0,
+          rawAddress: normalizeAddr(event.addr),
+          pointsToRaw,
+          pointsToAllocationId: allocationId ?? null,
+          pointsToLabel: targetBlock ? targetBlock.label : null,
+          status: "created",
+        };
+        currentFrame.variables.push(variable);
+        pushSnapshot(
+          event.line,
+          event.op,
+          `声明变量: ${event.type} ${event.name}`,
+        );
         break;
       }
 
@@ -362,32 +417,34 @@ export function computeSnapshotsWithDiagnostics(
       }
 
       case "obj_ctor": {
-        const currentFrame = currentFrames[currentFrames.length - 1];
-        if (currentFrame) {
-          const variable: StackVariable = {
-            variableId: `variable_${++variableCounter}`,
-            name: event.id,
-            type: event.type,
-            value: `{${event.type}}`,
-            rawAddress: normalizeAddr(event.addr),
-            fields: event.fields,
-            status: "created",
-            scopeDepth: currentFrame.scopeDepth ?? 0,
-          };
-          currentFrame.variables.push(variable);
-          pushSnapshot(
-            event.line,
-            event.op,
-            `构造对象: ${event.type} ${event.id}`,
-          );
+        let currentFrame = currentFrames[currentFrames.length - 1];
+        if (!currentFrame) {
+          currentFrame = { id: "frame_0_main", name: "main", variables: [], scopeDepth: 0 };
+          currentFrames.push(currentFrame);
         }
+        const variable: StackVariable = {
+          variableId: `variable_${++variableCounter}`,
+          name: event.id,
+          type: event.type,
+          value: `{${event.type}}`,
+          rawAddress: normalizeAddr(event.addr),
+          fields: event.fields,
+          status: "created",
+          scopeDepth: currentFrame.scopeDepth ?? 0,
+        };
+        currentFrame.variables.push(variable);
+        pushSnapshot(
+          event.line,
+          event.op,
+          `构造对象: ${event.type} ${event.id}`,
+        );
         break;
       }
 
       case "obj_dtor": {
         const currentFrame = currentFrames[currentFrames.length - 1];
         if (currentFrame) {
-          const v = [...currentFrame.variables].reverse().find((x) => x.name === event.id);
+          const v = [...currentFrame.variables].reverse().find((x) => x.name === event.id && x.status !== "destroyed");
           if (v) {
             v.status = "destroyed";
             pushSnapshot(
@@ -411,9 +468,11 @@ export function computeSnapshotsWithDiagnostics(
           label,
           size: event.size,
           type: event.type ?? "raw",
+          fields: event.fields ? { ...event.fields } : undefined,
           status: "alive",
         });
         activeAllocationByAddress.set(rawAddr, allocationId);
+        lastAllocationByAddress.set(rawAddr, allocationId);
         pushSnapshot(
           event.line,
           event.op,
@@ -438,98 +497,120 @@ export function computeSnapshotsWithDiagnostics(
         break;
       }
 
-      case "ptr_set": {
-        const currentFrame = currentFrames[currentFrames.length - 1];
-        if (currentFrame) {
-          let v = [...currentFrame.variables].reverse().find((x) => x.name === event.var);
-          const rawTo = event.to !== null ? normalizeAddr(event.to) : null;
-          const allocationId = rawTo ? activeAllocationByAddress.get(rawTo) : undefined;
-          const targetBlock = allocationId ? currentHeap.get(allocationId) : undefined;
-
-          if (!v) {
-            // 如果此前未声明，自动隐式声明指针变量
-            v = {
-              variableId: `variable_${++variableCounter}`,
-              name: event.var,
-              type: event.type ?? "pointer",
-              value: rawTo ?? "nullptr",
-              isPointer: true,
-              isSmartPointer: event.isSmart,
-              relationKind: event.isSmart ? "smart_ptr" : "raw_ptr",
-              scopeDepth: currentFrame.scopeDepth ?? 0,
-              pointsToRaw: rawTo,
-              pointsToAllocationId: allocationId ?? null,
-              pointsToLabel: targetBlock?.label ?? null,
-              status: "created",
-            };
-            currentFrame.variables.push(v);
-          } else {
-            v.isPointer = true;
-            v.isSmartPointer = event.isSmart ?? v.isSmartPointer;
-            v.value = rawTo ?? "nullptr";
-            v.pointsToRaw = rawTo;
-            v.pointsToAllocationId = allocationId ?? null;
-            v.pointsToLabel = targetBlock?.label ?? null;
-            v.status = "modified";
+      case "heap_field_set": {
+        const rawAddr = normalizeAddr(event.addr);
+        const block = findHeapByAddress(rawAddr);
+        if (block) {
+          block.fields = { ...(block.fields ?? {}), [event.field]: event.value };
+          if (event.field === "use_count") {
+            const parsed = Number(event.value);
+            if (Number.isFinite(parsed)) block.useCount = parsed;
           }
-
-          const desc =
-            rawTo === null
-              ? `指针重置: ${event.var} = nullptr`
-              : `指针指向: ${event.var} -> ${targetBlock?.label ?? rawTo}`;
-
-          pushSnapshot(event.line, event.op, desc);
+          pushSnapshot(
+            event.line,
+            event.op,
+            `更新堆字段: ${block.label}.${event.field} = ${event.value}`,
+          );
         }
         break;
       }
 
-      case "ptr_move": {
-        const currentFrame = currentFrames[currentFrames.length - 1];
-        if (currentFrame) {
-          const fromV = [...currentFrame.variables].reverse().find((x) => x.name === event.from);
-          let toV = [...currentFrame.variables].reverse().find((x) => x.name === event.toVar);
-          const rawAddr = normalizeAddr(event.addr);
-          const allocationId = activeAllocationByAddress.get(rawAddr);
-          const targetBlock = allocationId ? currentHeap.get(allocationId) : undefined;
-
-          if (fromV) {
-            fromV.value = "moved (nullptr)";
-            fromV.pointsToRaw = null;
-            fromV.pointsToAllocationId = null;
-            fromV.pointsToLabel = null;
-            fromV.status = "moved_from";
-          }
-
-          if (!toV) {
-            toV = {
-              variableId: `variable_${++variableCounter}`,
-              name: event.toVar,
-              type: fromV?.type ?? "unique_ptr",
-              value: rawAddr,
-              isPointer: true,
-              isSmartPointer: true,
-              relationKind: "smart_ptr",
-              scopeDepth: currentFrame.scopeDepth ?? 0,
-              pointsToRaw: rawAddr,
-              pointsToAllocationId: allocationId ?? null,
-              pointsToLabel: targetBlock?.label ?? null,
-              status: "created",
-            };
-            currentFrame.variables.push(toV);
-          } else {
-            toV.value = rawAddr;
-            toV.pointsToRaw = rawAddr;
-            toV.pointsToAllocationId = allocationId ?? null;
-            toV.pointsToLabel = targetBlock?.label ?? null;
-            toV.status = "modified";
-          }
-
-          pushSnapshot(
-            event.line,
-            event.op,
-            `所有权转移 (std::move): ${event.from} -> ${event.toVar}`,
-          );
+      case "ptr_set": {
+        let currentFrame = currentFrames[currentFrames.length - 1];
+        if (!currentFrame) {
+          currentFrame = { id: "frame_0_main", name: "main", variables: [], scopeDepth: 0 };
+          currentFrames.push(currentFrame);
         }
+        let v = [...currentFrame.variables].reverse().find((x) => x.name === event.var);
+        const rawTo = event.to !== null ? normalizeAddr(event.to) : null;
+        const allocationId = rawTo ? activeAllocationByAddress.get(rawTo) : undefined;
+        const targetBlock = allocationId ? currentHeap.get(allocationId) : undefined;
+
+        if (!v) {
+          // 如果此前未声明，自动隐式声明指针变量
+          v = {
+            variableId: `variable_${++variableCounter}`,
+            name: event.var,
+            type: event.type ?? "pointer",
+            value: rawTo ?? "nullptr",
+            isPointer: true,
+            isSmartPointer: event.isSmart,
+            relationKind: event.isSmart ? "smart_ptr" : "raw_ptr",
+            scopeDepth: currentFrame.scopeDepth ?? 0,
+            pointsToRaw: rawTo,
+            pointsToAllocationId: allocationId ?? null,
+            pointsToLabel: targetBlock?.label ?? null,
+            status: "created",
+          };
+          currentFrame.variables.push(v);
+        } else {
+          v.isPointer = true;
+          v.isSmartPointer = event.isSmart ?? v.isSmartPointer;
+          v.value = rawTo ?? "nullptr";
+          v.pointsToRaw = rawTo;
+          v.pointsToAllocationId = allocationId ?? null;
+          v.pointsToLabel = targetBlock?.label ?? null;
+          v.status = "modified";
+        }
+
+        const desc =
+          rawTo === null
+            ? `指针重置: ${event.var} = nullptr`
+            : `指针指向: ${event.var} -> ${targetBlock?.label ?? rawTo}`;
+
+        pushSnapshot(event.line, event.op, desc);
+        break;
+      }
+
+      case "ptr_move": {
+        let currentFrame = currentFrames[currentFrames.length - 1];
+        if (!currentFrame) {
+          currentFrame = { id: "frame_0_main", name: "main", variables: [], scopeDepth: 0 };
+          currentFrames.push(currentFrame);
+        }
+        const fromV = [...currentFrame.variables].reverse().find((x) => x.name === event.from);
+        let toV = [...currentFrame.variables].reverse().find((x) => x.name === event.toVar);
+        const rawAddr = normalizeAddr(event.addr);
+        const allocationId = activeAllocationByAddress.get(rawAddr);
+        const targetBlock = allocationId ? currentHeap.get(allocationId) : undefined;
+
+        if (fromV) {
+          fromV.value = "moved (nullptr)";
+          fromV.pointsToRaw = null;
+          fromV.pointsToAllocationId = null;
+          fromV.pointsToLabel = null;
+          fromV.status = "moved_from";
+        }
+
+        if (!toV) {
+          toV = {
+            variableId: `variable_${++variableCounter}`,
+            name: event.toVar,
+            type: fromV?.type ?? "unique_ptr",
+            value: rawAddr,
+            isPointer: true,
+            isSmartPointer: true,
+            relationKind: "smart_ptr",
+            scopeDepth: currentFrame.scopeDepth ?? 0,
+            pointsToRaw: rawAddr,
+            pointsToAllocationId: allocationId ?? null,
+            pointsToLabel: targetBlock?.label ?? null,
+            status: "created",
+          };
+          currentFrame.variables.push(toV);
+        } else {
+          toV.value = rawAddr;
+          toV.pointsToRaw = rawAddr;
+          toV.pointsToAllocationId = allocationId ?? null;
+          toV.pointsToLabel = targetBlock?.label ?? null;
+          toV.status = "modified";
+        }
+
+        pushSnapshot(
+          event.line,
+          event.op,
+          `所有权转移 (std::move): ${event.from} -> ${event.toVar}`,
+        );
         break;
       }
 
@@ -550,8 +631,8 @@ export function computeSnapshotsWithDiagnostics(
     }
   }
 
-  // 终态检测：检查是否有未释放的堆块（内存泄漏）
-  if (currentFrames.length === 0 && currentHeap.size > 0) {
+  // 终态检测：当主作用域结束或无显式 VIS_SCOPE 的程序走完时，检查未释放的堆块（内存泄漏）
+  if ((currentFrames.length === 0 || !sawScopeEnter) && currentHeap.size > 0) {
     const leakedBlocks = Array.from(currentHeap.values()).filter(
       (b) => b.status === "alive",
     );
@@ -574,16 +655,33 @@ export function computeSnapshotsWithDiagnostics(
 }
 
 /**
+ * 剥离 C++ 多行注释并保留原始换行符，确保行号 100% 对齐
+ */
+function stripCommentsPreservingLines(code: string): string {
+  return code
+    .replace(/\/\*[\s\S]*?\*\//g, (match) => match.replace(/[^\r\n]/g, " "))
+    .replace(/\/\/.*$/gm, "");
+}
+
+/**
+ * 剥离字符串与字符字面量内容，防止引号内的花括号或关键字干扰语法分析
+ */
+function maskStringLiterals(line: string): string {
+  return line.replace(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'/g, '""');
+}
+
+/**
  * 模拟标准 C++ 代码执行并生成预期控制台输出
  * 用于快速仿真模式或工具链离线/网络受限时的降级执行
  */
 export function simulateCppStdout(code: string): string {
-  const lines = code.split(/\r?\n/);
+  const cleanCode = stripCommentsPreservingLines(code);
+  const lines = cleanCode.split(/\r?\n/);
   const output: string[] = [];
   const varValues: Record<string, string> = {};
 
   for (const rawLine of lines) {
-    const line = rawLine.replace(/\/\/.*$/, "").trim();
+    const line = rawLine.trim();
     if (!line) continue;
 
     // 追踪基础原始变量值
@@ -602,7 +700,7 @@ export function simulateCppStdout(code: string): string {
         if (part === "std::endl" || part === "'\\n'" || part === '"\\n"') {
           lineText += "\n";
         } else if (part.startsWith('"') && part.endsWith('"')) {
-          lineText += part.slice(1, -1);
+          lineText += part.slice(1, -1).replace(/\\n/g, "\n");
         } else if (varValues[part] !== undefined) {
           lineText += varValues[part];
         } else if (/^[0-9]+(?:\.[0-9]+)?$/.test(part)) {
@@ -630,12 +728,12 @@ export function simulateCppStdout(code: string): string {
 /**
  * 自动分析标准 C++ 源码与运行输出，自动生成高保真结构化生命周期与调用栈快照
  * 支持：
- * - 逐行调试模拟（每个可执行语句都有高亮行与步进状态）
+ * - 多行注释与字符串字面量安全过滤（行号严格对齐）
+ * - 块级作用域 (enter_scope / exit_scope) 与局部 RAII 对象逆序析构
  * - 栈帧推进与函数调用 (scope_enter / scope_exit)
- * - 原始指针与悬挂指针检测 (int* p = &a; p = new int; delete p;)
- * - 现代 C++ 智能指针 (std::unique_ptr, std::make_unique, std::shared_ptr)
- * - RAII 局部变量 LIFO 逆序析构
- * - 控制台 std::cout 逐步打印
+ * - 原始指针、空指针重置与悬挂指针检测 (int* p = &a; p = new int; delete p; p = nullptr;)
+ * - 现代 C++ 智能指针与所有权移动 (std::unique_ptr, std::shared_ptr, std::move)
+ * - 堆结构体字段指针变更 (curr->next = prev;)
  */
 export function inferTraceEventsFromCodeAndOutput(
   code: string,
@@ -643,7 +741,7 @@ export function inferTraceEventsFromCodeAndOutput(
   exitCode = 0,
 ): TraceEvent[] {
   const events: TraceEvent[] = [];
-  const lines = code.split(/\r?\n/);
+  const cleanLines = stripCommentsPreservingLines(code).split(/\r?\n/);
   const effectiveStdout = stdout || simulateCppStdout(code);
   const stdoutLines = effectiveStdout
     ? effectiveStdout.trim().split(/\r?\n/).filter(Boolean)
@@ -659,19 +757,19 @@ export function inferTraceEventsFromCodeAndOutput(
   let funcBraces = 0;
   let funcBody: number[] = [];
 
-  for (let i = 0; i < lines.length; i++) {
-    const rawLine = lines[i];
-    const line = rawLine.replace(/\/\/.*$/, "").trim();
+  for (let i = 0; i < cleanLines.length; i++) {
+    const line = cleanLines[i].trim();
+    const maskedLine = maskStringLiterals(line);
 
-    const classMatch = line.match(/(?:class|struct)\s+([A-Za-z_][A-Za-z0-9_]*)/);
+    const classMatch = maskedLine.match(/(?:class|struct)\s+([A-Za-z_][A-Za-z0-9_]*)/);
     if (classMatch) {
       customTypes.add(classMatch[1]);
     }
 
     // 发现函数定义（除 main 外）
-    if (!funcName && !/^\s*(?:if|while|for|switch|catch)\b/.test(line)) {
-      const fnMatch = line.match(/^(?:(?:inline|static|virtual|constexpr)\s+)*(?:void|int|bool|double|float|auto|[A-Za-z_][A-Za-z0-9_:]*)\s+([A-Za-z_][A-Za-z0-9_]*)\s*\([^)]*\)\s*\{?/);
-      if (fnMatch && fnMatch[1] !== "main") {
+    if (!funcName && !/^\s*(?:if|else|while|for|switch|catch)\b/.test(maskedLine)) {
+      const fnMatch = maskedLine.match(/^(?:(?:inline|static|virtual|constexpr)\s+)*(?:void|int|bool|double|float|auto|[A-Za-z_][A-Za-z0-9_:]*)\s+([A-Za-z_][A-Za-z0-9_]*)\s*\([^;]*\)\s*\{?/);
+      if (fnMatch && fnMatch[1] !== "main" && !maskedLine.endsWith(";")) {
         funcName = fnMatch[1];
         funcStart = i + 1;
         funcBraces = 0;
@@ -680,12 +778,12 @@ export function inferTraceEventsFromCodeAndOutput(
     }
 
     if (funcName) {
-      for (const ch of line) {
+      for (const ch of maskedLine) {
         if (ch === "{") funcBraces++;
         if (ch === "}") funcBraces--;
       }
       funcBody.push(i + 1);
-      if (funcBraces <= 0 && line.includes("}")) {
+      if (funcBraces <= 0 && maskedLine.includes("}")) {
         definedFunctions.set(funcName, {
           startLine: funcStart,
           endLine: i + 1,
@@ -698,20 +796,45 @@ export function inferTraceEventsFromCodeAndOutput(
 
   // 2. 定位 main 函数所在行与作用域
   let mainLine = 1;
+  let mainEndLine = cleanLines.length;
   let inMain = false;
   let mainBraceCount = 0;
-  const constructedObjects: Array<{ id: string; type: string; line: number }> = [];
-  const allocatedHeaps = new Map<string, { addr: string; label: string; smart: boolean }>();
+  const constructedObjects: Array<{ id: string; type: string; line: number; depth: number }> = [];
+  const allocatedHeaps = new Map<string, { addr: string; label: string; smart: boolean; isShared?: boolean; depth: number }>();
   const stackVarAddresses = new Map<string, string>();
   let heapCounter = 0;
 
-  for (let i = 0; i < lines.length; i++) {
+  const cleanupScopeAtDepth = (depth: number, exitLine: number) => {
+    for (let idx = constructedObjects.length - 1; idx >= 0; idx--) {
+      if (constructedObjects[idx].depth >= depth) {
+        const [obj] = constructedObjects.splice(idx, 1);
+        events.push({
+          op: "obj_dtor",
+          id: obj.id,
+          line: exitLine,
+        });
+      }
+    }
+    for (const [varName, heap] of Array.from(allocatedHeaps.entries()).reverse()) {
+      if (heap.smart && heap.depth >= depth) {
+        events.push({ op: "heap_free", line: exitLine, addr: heap.addr });
+        events.push({
+          op: "step",
+          line: exitLine,
+          label: `智能指针 [${varName}] 离开作用域，自动释放 ${heap.label}`,
+        });
+        allocatedHeaps.delete(varName);
+      }
+    }
+  };
+
+  for (let i = 0; i < cleanLines.length; i++) {
     const lineNum = i + 1;
-    const rawLine = lines[i];
-    const line = rawLine.replace(/\/\/.*$/, "").trim(); // 去除单行注释
+    const line = cleanLines[i].trim();
+    const maskedLine = maskStringLiterals(line);
 
     if (!inMain) {
-      if (/\bint\s+main\s*\(/.test(line) || /\bvoid\s+main\s*\(/.test(line)) {
+      if (/\bint\s+main\s*\(/.test(maskedLine) || /\bvoid\s+main\s*\(/.test(maskedLine)) {
         inMain = true;
         mainLine = lineNum;
         events.push({
@@ -719,26 +842,42 @@ export function inferTraceEventsFromCodeAndOutput(
           name: "main",
           line: mainLine,
         });
-        if (line.includes("{")) mainBraceCount++;
+        for (const ch of maskedLine) {
+          if (ch === "{") mainBraceCount++;
+          if (ch === "}") mainBraceCount--;
+        }
       }
       continue;
     }
 
-    // 统计括号深度
-    for (const char of line) {
+    const prevBraceCount = mainBraceCount;
+    for (const char of maskedLine) {
       if (char === "{") mainBraceCount++;
       if (char === "}") mainBraceCount--;
     }
 
     if (mainBraceCount <= 0 && inMain) {
-      // main 函数结束
+      mainEndLine = lineNum;
       break;
     }
 
+    // 检测内部块级作用域进入/退出 (例如 { ... } 局部块)
+    if (maskedLine === "{") {
+      events.push({ op: "enter_scope", line: lineNum, name: "block" });
+      continue;
+    }
+    if (maskedLine === "}") {
+      if (prevBraceCount > 1 && mainBraceCount < prevBraceCount) {
+        cleanupScopeAtDepth(prevBraceCount - 1, lineNum);
+        events.push({ op: "exit_scope", line: lineNum, name: "block" });
+      }
+      continue;
+    }
+
     if (!line) continue;
+    const currentDepth = Math.max(0, mainBraceCount - 1);
 
     // A. 现代 C++ 智能指针分配:
-    // auto p = std::make_unique<Resource>(1); 或 std::unique_ptr<int> p = std::make_unique<int>(100);
     const smartPtrMatch = line.match(/(?:(?:std::)?(?:unique_ptr|shared_ptr)<([^>]+)>\s+|(?:auto)\s+)([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(?:std::)?make_(?:unique|shared)<([^>]+)>\s*\(([^)]*)\)\s*;/);
     if (smartPtrMatch) {
       heapCounter++;
@@ -750,6 +889,8 @@ export function inferTraceEventsFromCodeAndOutput(
         addr,
         label: `${type} (Heap #${heapCounter})`,
         smart: true,
+        isShared,
+        depth: currentDepth,
       });
 
       events.push({
@@ -759,6 +900,7 @@ export function inferTraceEventsFromCodeAndOutput(
         size: type === "int" || type === "float" ? 4 : type === "double" ? 8 : 16,
         type,
         label: `${type} 堆实例`,
+        fields: isShared ? { use_count: "1" } : undefined,
       });
 
       events.push({
@@ -778,6 +920,27 @@ export function inferTraceEventsFromCodeAndOutput(
       continue;
     }
 
+    // A2. std::move 所有权转移: 如 auto p2 = std::move(p1); 或 p2 = std::move(p1);
+    const moveMatch = line.match(/(?:(?:std::)?(?:unique_ptr|shared_ptr)<[^>]+>\s+|auto\s+|vis::unique_ptr<[^>]+>\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*std::move\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)\s*;/);
+    if (moveMatch) {
+      const toVar = moveMatch[1];
+      const fromVar = moveMatch[2];
+      const heap = allocatedHeaps.get(fromVar);
+      const addr = heap?.addr ?? "0x2040";
+      if (heap) {
+        allocatedHeaps.delete(fromVar);
+        allocatedHeaps.set(toVar, { ...heap, depth: currentDepth });
+      }
+      events.push({
+        op: "ptr_move",
+        line: lineNum,
+        from: fromVar,
+        toVar,
+        addr,
+      });
+      continue;
+    }
+
     // B. 原生堆分配匹配：如 int* p = new int(100); 或 auto p = new Resource;
     const newMatch = line.match(/(?:(?:const\s+)?([A-Za-z_][A-Za-z0-9_:<>*\s&]+?)\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*new\s+([A-Za-z_][A-Za-z0-9_:]*)(?:[^;]*);/);
     if (newMatch) {
@@ -789,6 +952,7 @@ export function inferTraceEventsFromCodeAndOutput(
         addr,
         label: `${type} (Heap #${heapCounter})`,
         smart: false,
+        depth: currentDepth,
       });
 
       events.push({
@@ -820,6 +984,7 @@ export function inferTraceEventsFromCodeAndOutput(
     const deleteMatch = line.match(/(?:delete\s+(?:\[\]\s*)?([A-Za-z_][A-Za-z0-9_]*)|([A-Za-z_][A-Za-z0-9_]*)\.reset\(\))\s*;/);
     if (deleteMatch) {
       const varName = deleteMatch[1] || deleteMatch[2];
+      const isReset = Boolean(deleteMatch[2]);
       const heap = allocatedHeaps.get(varName);
       if (heap) {
         events.push({
@@ -829,12 +994,55 @@ export function inferTraceEventsFromCodeAndOutput(
         });
         allocatedHeaps.delete(varName);
       }
+      if (isReset) {
+        events.push({
+          op: "ptr_set",
+          line: lineNum,
+          var: varName,
+          to: null,
+          isSmart: true,
+        });
+      }
       events.push({
         op: "step",
         line: lineNum,
         label: `释放堆内存: 销毁变量 [${varName}] 指向的堆块 (地址: ${heap?.addr || "0x2000"})`,
       });
       continue;
+    }
+
+    // C2. 指针置空：如 p = nullptr; 或 p = NULL;
+    const nullPtrMatch = line.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(?:nullptr|NULL|0)\s*;/);
+    if (nullPtrMatch) {
+      const ptrName = nullPtrMatch[1];
+      events.push({
+        op: "ptr_set",
+        line: lineNum,
+        var: ptrName,
+        to: null,
+      });
+      continue;
+    }
+
+    // C3. 堆成员指针更新：如 curr->next = prev;
+    const arrowFieldMatch = line.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*->\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*([^;]+);/);
+    if (arrowFieldMatch) {
+      const ownerVar = arrowFieldMatch[1];
+      const fieldName = arrowFieldMatch[2];
+      const rhs = arrowFieldMatch[3].trim();
+      const ownerHeap = allocatedHeaps.get(ownerVar);
+      if (ownerHeap) {
+        const rhsHeap = allocatedHeaps.get(rhs);
+        const resolvedVal = rhs === "nullptr" || rhs === "NULL" ? "0x0" : rhsHeap ? rhsHeap.addr : rhs;
+        events.push({
+          op: "heap_field_set",
+          line: lineNum,
+          addr: ownerHeap.addr,
+          field: fieldName,
+          value: resolvedVal,
+        });
+        continue;
+      }
     }
 
     // D. 指针指向局部变量地址：如 int* p = &a; 或 p = &b;
@@ -885,7 +1093,7 @@ export function inferTraceEventsFromCodeAndOutput(
     let matchedFnCall = false;
     for (const [fn, info] of definedFunctions.entries()) {
       const callRegex = new RegExp(`\\b${fn}\\s*\\(`);
-      if (callRegex.test(line)) {
+      if (callRegex.test(maskedLine)) {
         matchedFnCall = true;
         events.push({
           op: "scope_enter",
@@ -900,8 +1108,8 @@ export function inferTraceEventsFromCodeAndOutput(
 
         // 步入函数体各行
         for (const bodyLine of info.bodyLines) {
-          const bodyText = (lines[bodyLine - 1] || "").trim();
-          if (bodyText && !bodyText.startsWith("//") && bodyText !== "{" && bodyText !== "}") {
+          const bodyText = (cleanLines[bodyLine - 1] || "").trim();
+          if (bodyText && bodyText !== "{" && bodyText !== "}") {
             events.push({
               op: "step",
               line: bodyLine,
@@ -933,18 +1141,34 @@ export function inferTraceEventsFromCodeAndOutput(
     if (matchedFnCall) continue;
 
     // G. 变量与对象声明匹配：如 int x = 10; Resource res{1}; ModemController modem;
-    const declMatch = line.match(/^(?:const\s+)?([A-Za-z_][A-Za-z0-9_:<>*]*)\s+([A-Za-z_][A-Za-z0-9_]*)\s*(\{[^}]*\}|\([^)]*\)|=[^;]+)?\s*;/);
-    if (declMatch && !line.startsWith("return") && !line.startsWith("throw")) {
+    const declMatch = line.match(/^(?:const\s+|constexpr\s+)?([A-Za-z_][A-Za-z0-9_:<>*&]*)\s+([A-Za-z_][A-Za-z0-9_]*)\s*(\{[^}]*\}|\([^)]*\)|=[^;]+)?\s*;/);
+    if (declMatch && !line.startsWith("return") && !line.startsWith("throw") && !line.startsWith("delete")) {
       const type = declMatch[1];
       const name = declMatch[2];
       const init = (declMatch[3] || "").trim();
       const addr = `0x${(0x7ffd0000 + (lineNum % 256) * 0x10).toString(16)}`;
       stackVarAddresses.set(name, addr);
 
-      const isCustomClass = customTypes.has(type) || /^[A-Z]/.test(type);
+      // 检查是否是指针别名拷贝 (如 Node* curr = head; 或 std::shared_ptr<Data> s2 = s1;)
+      const rhsVar = init.startsWith("=") ? init.slice(1).trim() : "";
+      if (rhsVar && allocatedHeaps.has(rhsVar)) {
+        const targetHeap = allocatedHeaps.get(rhsVar)!;
+        const isSmart = type.includes("shared_ptr") || type.includes("unique_ptr") || targetHeap.smart;
+        events.push({
+          op: "ptr_set",
+          line: lineNum,
+          var: name,
+          to: targetHeap.addr,
+          type,
+          isSmart,
+        });
+        continue;
+      }
+
+      const isCustomClass = customTypes.has(type) || (/^[A-Z]/.test(type) && !type.includes("*"));
 
       if (isCustomClass) {
-        constructedObjects.push({ id: name, type, line: lineNum });
+        constructedObjects.push({ id: name, type, line: lineNum, depth: currentDepth });
         events.push({
           op: "obj_ctor",
           id: name,
@@ -1023,7 +1247,21 @@ export function inferTraceEventsFromCodeAndOutput(
       continue;
     }
 
-    // J. 普通赋值或可执行语句: 产生一个逐行单步事件
+    // J. 变量赋值语句：如 x = 42;
+    const assignMatch = line.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*=\s*([^;]+);/);
+    if (assignMatch && stackVarAddresses.has(assignMatch[1])) {
+      const varName = assignMatch[1];
+      const rhs = assignMatch[2].trim();
+      events.push({
+        op: "var_set",
+        line: lineNum,
+        name: varName,
+        value: rhs,
+      });
+      continue;
+    }
+
+    // K. 普通可执行语句: 产生一个逐行单步事件
     if (line.endsWith(";")) {
       events.push({
         op: "step",
@@ -1037,37 +1275,19 @@ export function inferTraceEventsFromCodeAndOutput(
   while (stdoutIdx < stdoutLines.length) {
     events.push({
       op: "stdout",
-      line: mainLine,
+      line: mainEndLine,
       text: stdoutLines[stdoutIdx++] + "\n",
     });
   }
 
-  // 4. RAII 栈对象反向析构（LIFO 顺序销毁局部变量）
-  while (constructedObjects.length > 0) {
-    const obj = constructedObjects.pop()!;
-    events.push({
-      op: "obj_dtor",
-      id: obj.id,
-      line: obj.line,
-    });
-  }
-
-  // 5. 智能指针在离开 main 作用域时自动释放所有权资源
-  for (const [varName, heap] of allocatedHeaps.entries()) {
-    if (!heap.smart) continue;
-    events.push({ op: "heap_free", line: mainLine, addr: heap.addr });
-    events.push({
-      op: "step",
-      line: mainLine,
-      label: `智能指针 [${varName}] 离开作用域，自动释放 ${heap.label}`,
-    });
-  }
+  // 4 & 5. 离开 main 作用域时，逆序析构剩余局部 RAII 对象与智能指针
+  cleanupScopeAtDepth(0, mainEndLine);
 
   // 6. 离开 main 作用域
   events.push({
     op: "scope_exit",
     name: "main",
-    line: mainLine,
+    line: mainEndLine,
   });
 
   // 如果事件过少，至少生成基础执行快照
@@ -1106,3 +1326,4 @@ export function generateSnapshotsFromCodeAndOutput(
 ): MemorySnapshot[] {
   return computeSnapshots(inferTraceEventsFromCodeAndOutput(code, stdout, exitCode));
 }
+

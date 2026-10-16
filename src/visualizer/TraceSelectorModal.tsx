@@ -85,50 +85,17 @@ export function TraceSelectorModal({
   };
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: "var(--z-dialog)",
-        background: "rgba(3, 7, 18, 0.75)",
-        backdropFilter: "blur(6px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "16px",
-      }}
-      onClick={onClose}
-    >
+    <div className="trace-modal-backdrop" onClick={onClose}>
       <div
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="trace-dialog-title"
-        style={{
-          background: "#0d131d",
-          border: "1px solid #1e293b",
-          borderRadius: "12px",
-          width: "100%",
-          maxWidth: "600px",
-          maxHeight: "85vh",
-          display: "flex",
-          flexDirection: "column",
-          boxShadow: "0 24px 48px rgba(0, 0, 0, 0.6)",
-          overflow: "hidden",
-        }}
+        className="trace-modal-dialog"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal 头部 */}
-        <div
-          style={{
-            padding: "14px 18px",
-            borderBottom: "1px solid #1e293b",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            background: "#162032",
-          }}
-        >
+        <div className="trace-modal-header">
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <span style={{ fontSize: "16px" }}>📂</span>
             <span id="trace-dialog-title" style={{ fontSize: "14px", fontWeight: 600, color: "#f8fafc" }}>
@@ -140,82 +107,39 @@ export function TraceSelectorModal({
             aria-label="关闭轨迹剧本库"
             type="button"
             onClick={onClose}
-            style={{
-              background: "transparent",
-              border: "none",
-              color: "#94a3b8",
-              fontSize: "18px",
-              cursor: "pointer",
-              padding: "4px 8px",
-              borderRadius: "4px",
-            }}
+            className="trace-modal-close"
           >
             ✕
           </button>
         </div>
 
         {/* Tab 切换 */}
-        <div
-          style={{
-            display: "flex",
-            background: "#090d13",
-            padding: "6px 16px",
-            borderBottom: "1px solid #1e293b",
-            gap: "8px",
-          }}
-        >
+        <div className="trace-modal-tabs">
           <button
             type="button"
             onClick={() => setActiveTab("presets")}
-            style={{
-              background: activeTab === "presets" ? "#1e293b" : "transparent",
-              color: activeTab === "presets" ? "#38bdf8" : "#94a3b8",
-              border: "none",
-              borderRadius: "6px",
-              padding: "6px 12px",
-              fontSize: "12px",
-              fontWeight: 500,
-              cursor: "pointer",
-            }}
+            className={`trace-modal-tab ${activeTab === "presets" ? "is-active" : ""}`}
           >
             📚 内置经典案例 (5)
           </button>
           <button
             type="button"
             onClick={() => setActiveTab("upload")}
-            style={{
-              background: activeTab === "upload" ? "#1e293b" : "transparent",
-              color: activeTab === "upload" ? "#38bdf8" : "#94a3b8",
-              border: "none",
-              borderRadius: "6px",
-              padding: "6px 12px",
-              fontSize: "12px",
-              fontWeight: 500,
-              cursor: "pointer",
-            }}
+            className={`trace-modal-tab ${activeTab === "upload" ? "is-active" : ""}`}
           >
             ⬆️ 本地上传 JSON
           </button>
           <button
             type="button"
             onClick={() => setActiveTab("paste")}
-            style={{
-              background: activeTab === "paste" ? "#1e293b" : "transparent",
-              color: activeTab === "paste" ? "#38bdf8" : "#94a3b8",
-              border: "none",
-              borderRadius: "6px",
-              padding: "6px 12px",
-              fontSize: "12px",
-              fontWeight: 500,
-              cursor: "pointer",
-            }}
+            className={`trace-modal-tab ${activeTab === "paste" ? "is-active" : ""}`}
           >
             📋 粘贴 JSON 文本
           </button>
         </div>
 
         {/* 内容区 */}
-        <div style={{ padding: "16px", overflowY: "auto", flex: 1, minHeight: 0 }}>
+        <div className="trace-modal-body">
           {activeTab === "presets" && (
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               <div style={{ fontSize: "12px", color: "#64748b", marginBottom: "4px" }}>
@@ -388,18 +312,7 @@ export function TraceSelectorModal({
         </div>
 
         {/* 底部提示 */}
-        <div
-          style={{
-            padding: "10px 18px",
-            background: "#090d13",
-            borderTop: "1px solid #1e293b",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            fontSize: "11px",
-            color: "#64748b",
-          }}
-        >
+        <div className="trace-modal-footer">
           <span>💡 支持 URL 参数：<code>?trace=smart-ptr-unique</code> 自动直达</span>
           <button
             type="button"

@@ -9,12 +9,19 @@ import { initialTraceSession, traceSessionReducer } from "./traceSessionState";
 import { materializeTrace } from "./traceProtocol";
 import type { TraceSessionState, VisualizerTrace } from "./types";
 
+function stripVisLines(text: string): string {
+  return text
+    .split(/\r?\n/)
+    .filter((line) => !line.trim().startsWith("[VIS]"))
+    .join("\n");
+}
+
 function formatTerminal(result: CompileRunResult, cleanStdout: string): string {
   const lines = ["$ clang++ main.cpp -std=gnu++23 -Wall -Wextra -Wconversion -Wpedantic"];
   if (result.errors.length) lines.push(result.errors.join("\n"));
   if (result.stderr.trim()) lines.push(result.stderr.trimEnd());
   lines.push(`[Compilation finished in ${result.compileMs}ms]`, "", "$ ./main");
-  const output = cleanStdout || result.output || result.stdout;
+  const output = cleanStdout || stripVisLines(result.output || result.stdout);
   if (output.trim()) lines.push(output.trimEnd());
   else if (result.exitCode === 0) lines.push("Program exited successfully with no output.");
   lines.push("", `Process finished with exit ${result.exitCode ?? "unknown"} (execution: ${result.runMs ?? 0}ms)`);

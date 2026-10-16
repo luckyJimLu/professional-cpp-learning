@@ -43,3 +43,25 @@ test("trace import rejects malformed JSON and atomically loads a valid legacy tr
   await expect(page.locator(".cm-content")).toContainText("imported = 7");
   await expect(page.locator(".var-name")).toHaveText("imported");
 });
+
+test("VS Code toolbar above code view supports step execution and stays stationary while code scrolls", async ({ page }) => {
+  await page.goto("/?view=visualizer");
+  const toolbar = page.locator(".vscode-code-toolbar");
+  await expect(toolbar).toBeVisible();
+  await expect(toolbar.locator(".vscode-file-tab")).toContainText("main.cpp");
+
+  const initialBox = await toolbar.boundingBox();
+  expect(initialBox).not.toBeNull();
+
+  const stepBtn = toolbar.getByRole("button", { name: /单步/ });
+  await expect(stepBtn).toBeVisible();
+  await stepBtn.click();
+
+  await expect(page.locator(".cm-active-debug-line")).toBeVisible();
+  await expect(page.locator(".cm-debug-arrow")).toBeVisible();
+
+  const afterStepBox = await toolbar.boundingBox();
+  expect(afterStepBox).not.toBeNull();
+  expect(Math.abs((afterStepBox?.y ?? 0) - (initialBox?.y ?? 0))).toBeLessThan(1);
+});
+

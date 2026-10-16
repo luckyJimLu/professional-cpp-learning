@@ -1,4 +1,9 @@
 import type { VisualizerTrace } from "./types";
+import smartPtrUnique from "../../public/traces/smart-ptr-unique.json";
+import smartPtrShared from "../../public/traces/smart-ptr-shared.json";
+import linkedListReverse from "../../public/traces/linked-list-reverse.json";
+import vectorGrow from "../../public/traces/vector-grow.json";
+import danglingPointer from "../../public/traces/dangling-pointer.json";
 
 export interface PresetTraceMeta {
   id: string;
@@ -53,14 +58,20 @@ export const PRESET_TRACES_META: PresetTraceMeta[] = [
 ];
 
 // 静态内置快照数据缓存，确保无网络/GitHub Pages 相对路径异常时也能 100% 离线秒开
-export const BUNDLED_PRESET_TRACES: Record<string, VisualizerTrace> = {};
+export const BUNDLED_PRESET_TRACES: Record<string, VisualizerTrace> = {
+  "smart-ptr-unique": smartPtrUnique as unknown as VisualizerTrace,
+  "smart-ptr-shared": smartPtrShared as unknown as VisualizerTrace,
+  "linked-list-reverse": linkedListReverse as unknown as VisualizerTrace,
+  "vector-grow": vectorGrow as unknown as VisualizerTrace,
+  "dangling-pointer": danglingPointer as unknown as VisualizerTrace,
+};
 
 /**
  * 异步获取指定 preset 的 Trace 数据，优先走 fetch，失败则降级到内置缓存
  */
 export async function loadPresetTrace(id: string): Promise<VisualizerTrace | null> {
   const meta = PRESET_TRACES_META.find((p) => p.id === id);
-  if (!meta) return null;
+  if (!meta) return BUNDLED_PRESET_TRACES[id] || null;
 
   try {
     // 兼容 Vite base 路径与 GitHub Pages 子路径
@@ -81,3 +92,4 @@ export async function loadPresetTrace(id: string): Promise<VisualizerTrace | nul
 
   return BUNDLED_PRESET_TRACES[id] || null;
 }
+

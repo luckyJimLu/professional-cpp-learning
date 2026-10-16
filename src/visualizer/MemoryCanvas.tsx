@@ -18,19 +18,34 @@ function sourceEndpoint(edge: PointerEdge, frames: StackFrame[], heap: HeapBlock
       .find((variable) => variable.variableId === edge.fromVariableId || variable.name === edge.fromVar.replace(".data()", ""));
     return source ? stackEndpoint(edge.fromFrameId, source.variableId ?? source.name) : "warning";
   }
-  const [owner, field] = edge.fromVar.split("->");
-  const block = heap.find(
-    (candidate) => candidate.label === owner || candidate.label.startsWith(owner) || candidate.rawAddr === owner,
-  );
-  return block ? `heap-field:${block.allocationId ?? block.rawAddr}:${field}` : "warning";
+  const [rawOwner, field] = edge.fromVar.split("->");
+  const owner = rawOwner.trim();
+  const compactOwner = owner.replace(/\s+/g, "");
+  const block = heap.find((candidate) => {
+    const compactLabel = candidate.label.replace(/\s+/g, "");
+    return (
+      candidate.label === owner ||
+      compactLabel === compactOwner ||
+      candidate.label.startsWith(owner) ||
+      compactLabel.startsWith(compactOwner) ||
+      candidate.rawAddr === owner
+    );
+  });
+  return block ? `heap-field:${block.allocationId ?? block.rawAddr}:${field.trim()}` : "warning";
 }
 
 function targetEndpoint(edge: PointerEdge, frames: StackFrame[], heap: HeapBlock[]) {
-  if (edge.isDangling || edge.target?.kind === "unknown") return "warning";
-  if (edge.target?.kind === "stack") return stackEndpoint(edge.target.frameId, edge.target.variableId);
-  if (edge.target?.kind === "heap") return `heap:${edge.target.allocationId}`;
+  if (edge.target?.kind === "heap") {
+    const targetAllocId = edge.target.allocationId;
+    const matchedHeap = heap.find(
+      (candidate) => (candidate.allocationId ?? candidate.rawAddr) === targetAllocId || candidate.rawAddr === edge.toRawAddr,
+    );
+    if (matchedHeap) return heapEndpoint(matchedHeap);
+  }
   const block = heap.find((candidate) => candidate.rawAddr === edge.toRawAddr);
   if (block) return heapEndpoint(block);
+  if (edge.isDangling || edge.target?.kind === "unknown") return "warning";
+  if (edge.target?.kind === "stack") return stackEndpoint(edge.target.frameId, edge.target.variableId);
   const stackTarget = frames.flatMap((frame) =>
     frame.variables.map((variable) => ({ frame, variable })),
   ).find(({ variable }) => variable.rawAddress === edge.toRawAddr);

@@ -32,6 +32,8 @@ export function VisualizerWorkbench({
   const [mobilePane, setMobilePane] = useState<"code" | "output">("output");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const currentSnapshot = session.snapshots[session.currentStep] ?? null;
+  const totalSteps = session.snapshots.length;
+  const hasTrace = totalSteps > 0;
   const busy = session.status === "loading" || session.status === "running";
   const closeTraceLibrary = useCallback(() => setIsModalOpen(false), []);
 
@@ -66,6 +68,32 @@ export function VisualizerWorkbench({
     URL.revokeObjectURL(url);
   }, [session]);
 
+  // VS Code 风格单步运行：若尚未生成轨迹或代码已修改，立即启动单步轨迹；否则推进到下一步
+  const handleStepRun = useCallback(() => {
+    setActiveTab("memory");
+    if (!hasTrace || session.isStale) {
+      onRunApproximate();
+      return;
+    }
+    if (session.currentStep >= totalSteps - 1) {
+      onStepChange(0);
+    } else {
+      onStepChange(session.currentStep + 1);
+    }
+  }, [hasTrace, session.isStale, session.currentStep, totalSteps, onRunApproximate, onStepChange]);
+
+  const handleStepPrev = useCallback(() => {
+    if (!hasTrace) return;
+    setActiveTab("memory");
+    onStepChange(Math.max(0, session.currentStep - 1));
+  }, [hasTrace, session.currentStep, onStepChange]);
+
+  const handleStepReset = useCallback(() => {
+    if (!hasTrace) return;
+    setActiveTab("memory");
+    onStepChange(0);
+  }, [hasTrace, onStepChange]);
+
   const handleKeyboard = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.nativeEvent.isComposing) return;
     const target = event.target as HTMLElement;
@@ -76,6 +104,9 @@ export function VisualizerWorkbench({
     } else if (!editing && event.key === "ArrowLeft") {
       event.preventDefault();
       onStepChange(session.currentStep - 1);
+    } else if (event.key === "F10" && !busy) {
+      event.preventDefault();
+      handleStepRun();
     } else if ((event.ctrlKey || event.metaKey) && event.key === "Enter" && !busy) {
       event.preventDefault();
       void onRun();
@@ -136,16 +167,98 @@ export function VisualizerWorkbench({
       )}
 
       <div className={`visualizer-main-split mobile-show-${mobilePane}`}>
-        <div className="code-split-pane"><CodeMirrorEditor value={session.code} onChange={onChangeCode} activeLine={currentSnapshot?.line ?? 0} readOnly={busy} wrapLines={variant === "lab"} /></div>
+        <div className="code-split-pane">
+          {/* VS Code 风格固定顶部代码工具栏：滚动代码时固定在顶部不移动 */}
+          <div className="vscode-code-toolbar" role="toolbar" aria-label="代码编译与单步调试工具栏">
+            <div className="vscode-file-tab">
+              <span className="vscode-cpp-badge" aria-hidden="true">C++</span>
+              <span className="vscode-file-name">main.cpp</span>
+              {currentSnapshot && currentSnapshot.line > 0 && (
+                <span className="vscode-line-indicator" title="当前调试执行行">
+                  ● Ln {currentSnapshot.line}
+                </span>
+              )}
+            </div>
+
+            <div className="vscode-debug-actions">
+              {hasTrace && (
+                <div className="vscode-step-cluster" role="group" aria-label="单步控制">
+                  <button
+                    type="button"
+                    className="vscode-icon-btn"
+                    title="重置到第一步 (Reset)"
+                    disabled={busy || session.currentStep === 0}
+                    onClick={handleStepReset}
+                  >
+                    ⏮
+                  </button>
+                  <button
+                    type="button"
+                    className="vscode-icon-btn"
+                    title="上一步 (Step Back)"
+                    disabled={busy || session.currentStep === 0}
+                    onClick={handleStepPrev}
+                  >
+                    ◀
+                  </button>
+                </div>
+              )}
+
+              <button
+                type="button"
+                className="vscode-step-button"
+                title="按步运行 / 单步调试 (快捷键 F10)"
+                disabled={busy || !session.code.trim()}
+                onClick={handleStepRun}
+              >
+                <span aria-hidden="true">↷</span>
+                <span>
+                  {!hasTrace || session.isStale
+                    ? "单步运行"
+                    : session.currentStep >= totalSteps - 1
+                      ? "重新单步"
+                      : `单步 (${session.currentStep + 1}/${totalSteps})`}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                className="compile-button"
+                disabled={busy || !session.code.trim()}
+                onClick={() => {
+                  void onRun();
+                  setMobilePane("output");
+                }}
+              >
+                {session.status === "loading"
+                  ? `加载 ${Math.round(session.progress * 100)}%`
+                  : session.status === "running"
+                    ? "编译中…"
+                    : "运行代码"}
+              </button>
+            </div>
+          </div>
+
+          <CodeMirrorEditor
+            value={session.code}
+            onChange={onChangeCode}
+            activeLine={currentSnapshot?.line ?? 0}
+            readOnly={busy}
+            wrapLines={variant === "lab"}
+          />
+        </div>
+
         <div className="output-split-pane">
           <div className="output-tabs-header">
             <div className="output-segmented-toggle" role="tablist" aria-label="输出类型">
               <button type="button" role="tab" aria-selected={activeTab === "memory"} className={`segmented-tab ${activeTab === "memory" ? "is-active" : ""}`} onClick={() => setActiveTab("memory")}>内存视图</button>
               <button type="button" role="tab" aria-selected={activeTab === "terminal"} className={`segmented-tab ${activeTab === "terminal" ? "is-active" : ""}`} onClick={() => setActiveTab("terminal")}>终端</button>
             </div>
-            <button type="button" className="compile-button" disabled={busy || !session.code.trim()} onClick={() => { void onRun(); setMobilePane("output"); }}>
-              {session.status === "loading" ? `加载 ${Math.round(session.progress * 100)}%` : session.status === "running" ? "编译中…" : "运行代码"}
-            </button>
+            {currentSnapshot && (
+              <span className="output-step-status">
+                Step {session.currentStep + 1}/{totalSteps} · Line {currentSnapshot.line}
+              </span>
+            )}
           </div>
           <div className="output-tab-panel" role="tabpanel">
             {activeTab === "memory" ? <MemoryCanvas snapshot={currentSnapshot} approximate={session.accuracy === "approximate"} /> : <pre className="terminal-output">{session.terminalOutput || "$ clang++ main.cpp -std=gnu++23\n$ ./main\n(等待运行输出...)"}</pre>}
@@ -155,3 +268,4 @@ export function VisualizerWorkbench({
     </div>
   );
 }
+
