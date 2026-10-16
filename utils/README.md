@@ -4,10 +4,30 @@
 
 ## Modules
 
-### Windows Remote Script Runner
+### Remote Development Bridge
 
-[Windows Remote Script Runner](windows-remote-script-runner/README.md)
+[Remote Development Bridge](windows-remote-script-runner/README.md)
 
-用于 Windows 本机通过 VS Code Remote-SSH 在 Linux 开发，同时把 Linux/Agent 生成的 Windows-only PowerShell 脚本通过 SCP hook 拉回本机执行。
+用于 Windows 本机通过 VS Code Remote-SSH 在 Linux 开发，并通过 SCP Hook 把远程产物拉回 Windows 本地执行或调试。
 
-典型用途：USB、串口、ADB/Fastboot、驱动、烧录工具、Windows API 与本机 GUI 工具自动化。
+支持同步：
+
+- Windows-only PowerShell / BAT 脚本
+- ELF / AXF / PDB / DWARF 符号文件
+- MAP / SYM
+- BIN / HEX 固件
+- build manifest
+- OpenOCD / J-Link / TRACE32 / ADB/Fastboot 等本地调试与烧录工作流
+
+模块提供：
+
+- [sync-build.ps1](windows-remote-script-runner/sync-build.ps1)
+- [build-manifest.example.json](windows-remote-script-runner/build-manifest.example.json)
+
+推荐模式：
+
+```text
+Linux = build / agent / generate
+Windows = execute / debug / flash
+SCP = delivery boundary
+```
