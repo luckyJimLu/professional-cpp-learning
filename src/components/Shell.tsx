@@ -567,7 +567,11 @@ export function Shell({
         </div>
       </aside>
       <div className="main-shell">
-        <main className="content" id="main-content" tabIndex={-1}>
+        <main
+          className={`content ${view === "visualizer" ? "is-visualizer-view" : ""}`}
+          id="main-content"
+          tabIndex={-1}
+        >
           {children}
         </main>
       </div>

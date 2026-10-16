@@ -35,7 +35,72 @@
 .switcher-tab { flex: 1; min-height: 36px; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; background: #0d1117; cursor: pointer; }
 .switcher-tab.is-active { color: #fff; border-color: #1a73e8; background: #00599c; }
 
-.visualizer-main-split { display: grid; grid-template-columns: minmax(340px, 0.9fr) minmax(440px, 1.3fr); height: clamp(540px, 72vh, 720px); min-height: 520px; max-height: 740px; border-top: 1px solid #1c2430; overflow: hidden; }
+/* 放宽 Visualizer 页面容器，使得横向空间最大化利用 */
+.content.is-visualizer-view {
+  width: 100%;
+  max-width: 100%;
+  padding: 16px clamp(12px, 2vw, 24px) 48px;
+}
+
+.visualizer-main-split {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(320px, 0.9fr) 8px minmax(360px, 1.3fr);
+  height: clamp(560px, 75vh, 840px);
+  min-height: 540px;
+  max-height: 85vh;
+  border-top: 1px solid #1c2430;
+  overflow: hidden;
+}
+
+.visualizer-main-split.is-resizing {
+  user-select: none !important;
+  cursor: col-resize;
+}
+.visualizer-main-split.is-resizing * {
+  user-select: none !important;
+  pointer-events: none !important;
+}
+.visualizer-main-split.is-resizing .visualizer-split-gutter {
+  pointer-events: auto !important;
+}
+
+.visualizer-split-gutter {
+  position: relative;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0d1117;
+  border-left: 1px solid #1c2430;
+  border-right: 1px solid #1c2430;
+  z-index: 5;
+  outline: none;
+  touch-action: none;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+.visualizer-split-gutter:hover,
+.visualizer-split-gutter:focus-visible,
+.visualizer-main-split.is-resizing .visualizer-split-gutter {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+}
+.split-gutter-line {
+  width: 2px;
+  height: 32px;
+  border-radius: 2px;
+  background: #334155;
+  transition: background 150ms ease, height 150ms ease;
+}
+.visualizer-split-gutter:hover .split-gutter-line,
+.visualizer-split-gutter:focus-visible .split-gutter-line,
+.visualizer-main-split.is-resizing .split-gutter-line {
+  background: #38bdf8;
+  height: 52px;
+}
+
 .code-split-pane, .output-split-pane { min-width: 0; min-height: 0; height: 100%; overflow: hidden; }
 .code-split-pane { display: flex; flex-direction: column; border-right: 1px solid #1c2430; background: #10151c; }
 .output-split-pane { display: flex; flex-direction: column; background: #090d13; }
@@ -176,9 +241,87 @@
 .vcr-warning-pill { color: #fca5a5; font-size: 11px; }
 
 .memory-canvas-shell { display: flex; flex: 1; min-width: 0; min-height: 0; flex-direction: column; background: #090d13; }
-.memory-mode-notice { color: #fcd34d; border-bottom: 1px solid rgba(245, 158, 11, 0.25); background: rgba(146, 64, 14, 0.14); }
+.memory-canvas-subbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 32px;
+  padding: 4px 10px;
+  background: #0d1117;
+  border-bottom: 1px solid #1c2430;
+  font-size: 11px;
+}
+.memory-canvas-caption {
+  color: #94a3b8;
+  font: 500 11px/1.3 var(--mono);
+}
+.memory-layout-toggle {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid #293241;
+  border-radius: 6px;
+  background: #161b22;
+}
+.memory-layout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 24px;
+  padding: 2px 8px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: #8b949e;
+  font: 500 10.5px/1.2 var(--mono);
+  cursor: pointer;
+}
+.memory-layout-btn:hover {
+  color: #e2e8f0;
+  background: #21262d;
+}
+.memory-layout-btn.is-active {
+  color: #38bdf8;
+  background: #0d131d;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.memory-mode-notice { flex: 1; color: #fcd34d; padding: 2px 6px; font-size: 11px; }
 .memory-canvas-empty { display: grid; flex: 1; min-height: 430px; place-items: center; padding: 28px; color: #718096; background: #090d13; font: 12px/1.6 var(--mono); text-align: center; }
-.memory-canvas-root { position: relative; display: grid; flex: 1; grid-template-columns: minmax(300px, 0.9fr) minmax(320px, 1.1fr); align-content: start; gap: 80px; min-height: 0; padding: 18px 32px 50px; overflow: auto; background-color: #090d13; background-image: radial-gradient(#1f2937 0.7px, transparent 0.7px); background-size: 16px 16px; scrollbar-gutter: stable; }
+
+.memory-canvas-root {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background-color: #090d13;
+  background-image: radial-gradient(#1f2937 0.7px, transparent 0.7px);
+  background-size: 16px 16px;
+  scrollbar-gutter: stable;
+}
+
+/* 纵向排列（默认推荐）：调用栈在上，动态内存在下，彻底解决狭窄分栏横向截断 */
+.memory-canvas-root.layout-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 14px 18px 48px;
+}
+.memory-canvas-root.layout-vertical .memory-zone {
+  width: 100%;
+}
+
+/* 横向排列：宽屏时左右并列，优化间距防止横向截断 */
+.memory-canvas-root.layout-horizontal {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) minmax(260px, 1.15fr);
+  align-content: start;
+  gap: clamp(14px, 2vw, 30px);
+  padding: 14px 18px 48px;
+}
 .memory-edges-layer { position: absolute; inset: 0 auto auto 0; z-index: 4; pointer-events: none; overflow: visible; }
 .memory-edge-path { transition: stroke 150ms ease, stroke-width 150ms ease; }
 .dangling-edge { animation: memory-dash 1s linear infinite; }
@@ -253,11 +396,12 @@
   .trace-toolbar { align-items: flex-start; flex-direction: column; }
   .trace-toolbar-presets { width: 100%; overflow-x: auto; }
   .workbench-mobile-switcher { display: flex; }
+  .visualizer-split-gutter { display: none; }
   .visualizer-main-split { display: block; height: auto; min-height: auto; max-height: none; }
   .mobile-show-code .output-split-pane, .mobile-show-output .code-split-pane { display: none; }
   .mobile-show-code .code-split-pane { display: flex; height: 480px; max-height: 72vh; }
   .mobile-show-output .output-split-pane { display: flex; height: 520px; max-height: 75vh; }
-  .memory-canvas-root { grid-template-columns: minmax(260px, 1fr) minmax(280px, 1fr); gap: 56px; padding-inline: 16px; }
+  .memory-canvas-root { padding-inline: 14px; }
 }
 
 @media (max-width: 560px) {

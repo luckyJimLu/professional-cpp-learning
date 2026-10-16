@@ -42,7 +42,7 @@ export function VisualizerView() {
   }, [traceSession.loadTrace]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "16px", minHeight: isEmbed ? "100vh" : "85vh" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%", minHeight: isEmbed ? "100vh" : "85vh" }}>
       {!isEmbed && (
         <>
           <PageHeader

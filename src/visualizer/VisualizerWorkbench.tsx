@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type KeyboardEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { CodeMirrorEditor } from "./CodeMirrorEditor";
 import { MemoryCanvas } from "./MemoryCanvas";
 import { PRESET_TRACES_META, loadPresetTrace } from "./presetTraces";
@@ -36,6 +36,95 @@ export function VisualizerWorkbench({
   const hasTrace = totalSteps > 0;
   const busy = session.status === "loading" || session.status === "running";
   const closeTraceLibrary = useCallback(() => setIsModalOpen(false), []);
+
+  const SPLIT_STORAGE_KEY = "cpp-vis-split-percent";
+  const [splitPercent, setSplitPercent] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem(SPLIT_STORAGE_KEY);
+      if (saved) {
+        const val = parseFloat(saved);
+        if (!isNaN(val) && val >= 20 && val <= 80) return val;
+      }
+    } catch {}
+    return 42;
+  });
+  const [isResizing, setIsResizing] = useState(false);
+  const splitContainerRef = useRef<HTMLDivElement>(null);
+
+  const handlePointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.button !== 0) return;
+    const container = splitContainerRef.current;
+    if (!container) return;
+
+    e.preventDefault();
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    setIsResizing(true);
+
+    const onPointerMove = (moveEvent: PointerEvent) => {
+      const rect = container.getBoundingClientRect();
+      if (rect.width <= 0) return;
+      const offsetX = moveEvent.clientX - rect.left;
+      const newPercent = Math.min(80, Math.max(20, (offsetX / rect.width) * 100));
+      setSplitPercent(Math.round(newPercent * 10) / 10);
+    };
+
+    const onPointerUp = (upEvent: PointerEvent) => {
+      try {
+        (upEvent.target as HTMLElement)?.releasePointerCapture?.(upEvent.pointerId);
+      } catch {}
+      setIsResizing(false);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerUp);
+
+      const rect = container.getBoundingClientRect();
+      if (rect.width > 0) {
+        const offsetX = upEvent.clientX - rect.left;
+        const finalPercent = Math.min(80, Math.max(20, (offsetX / rect.width) * 100));
+        const rounded = Math.round(finalPercent * 10) / 10;
+        setSplitPercent(rounded);
+        try {
+          localStorage.setItem(SPLIT_STORAGE_KEY, String(rounded));
+        } catch {}
+      }
+      window.dispatchEvent(new Event("resize"));
+    };
+
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointercancel", onPointerUp);
+  }, []);
+
+  const handleResetSplit = useCallback(() => {
+    setSplitPercent(42);
+    try {
+      localStorage.setItem(SPLIT_STORAGE_KEY, "42");
+    } catch {}
+    window.dispatchEvent(new Event("resize"));
+  }, []);
+
+  const handleSplitKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      setSplitPercent((prev) => {
+        const next = Math.max(20, Math.round((prev - 2) * 10) / 10);
+        try { localStorage.setItem(SPLIT_STORAGE_KEY, String(next)); } catch {}
+        return next;
+      });
+      window.dispatchEvent(new Event("resize"));
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      setSplitPercent((prev) => {
+        const next = Math.min(80, Math.round((prev + 2) * 10) / 10);
+        try { localStorage.setItem(SPLIT_STORAGE_KEY, String(next)); } catch {}
+        return next;
+      });
+      window.dispatchEvent(new Event("resize"));
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      handleResetSplit();
+    }
+  }, [handleResetSplit]);
 
   useEffect(() => {
     if (session.traceId && session.snapshots.length > 0) {
@@ -166,7 +255,14 @@ export function VisualizerWorkbench({
         <VCRControls key={`${session.traceId ?? session.executedCode}-${session.mode}`} snapshots={session.snapshots} currentStep={session.currentStep} onStepChange={onStepChange} />
       )}
 
-      <div className={`visualizer-main-split mobile-show-${mobilePane}`}>
+      <div
+        ref={splitContainerRef}
+        className={`visualizer-main-split mobile-show-${mobilePane} ${isResizing ? "is-resizing" : ""}`}
+        style={{
+          "--split-left-ratio": `${splitPercent}%`,
+          gridTemplateColumns: `var(--split-left-ratio, 42%) 8px minmax(0, 1fr)`,
+        } as React.CSSProperties}
+      >
         <div className="code-split-pane">
           {/* VS Code 风格固定顶部代码工具栏：滚动代码时固定在顶部不移动 */}
           <div className="vscode-code-toolbar" role="toolbar" aria-label="代码编译与单步调试工具栏">
@@ -246,6 +342,23 @@ export function VisualizerWorkbench({
             readOnly={busy}
             wrapLines={variant === "lab"}
           />
+        </div>
+
+        <div
+          className="visualizer-split-gutter"
+          role="separator"
+          tabIndex={0}
+          aria-orientation="vertical"
+          aria-label="拖拽调整代码与输出视图宽度，双击复位"
+          aria-valuenow={Math.round(splitPercent)}
+          aria-valuemin={20}
+          aria-valuemax={80}
+          title="按住拖拽调整分栏宽度，双击恢复默认"
+          onPointerDown={handlePointerDown}
+          onDoubleClick={handleResetSplit}
+          onKeyDown={handleSplitKeyDown}
+        >
+          <div className="split-gutter-line" aria-hidden="true" />
         </div>
 
         <div className="output-split-pane">

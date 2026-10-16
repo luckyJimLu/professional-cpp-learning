@@ -63,6 +63,16 @@ export function MemoryCanvas({ snapshot, className = "", approximate = false }: 
   const [renderedEdges, setRenderedEdges] = useState<RenderedEdge[]>([]);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
+  type MemoryLayoutMode = "vertical" | "horizontal";
+  const MEMORY_LAYOUT_KEY = "cpp-vis-memory-layout";
+  const [layoutMode, setLayoutMode] = useState<MemoryLayoutMode>(() => {
+    try {
+      const saved = localStorage.getItem(MEMORY_LAYOUT_KEY);
+      if (saved === "horizontal" || saved === "vertical") return saved;
+    } catch {}
+    return "vertical"; // 默认纵向排列（上下堆叠），调用栈和堆内存各自全宽展开不截断
+  });
+
   const registerEndpoint = useCallback((key: string) => (element: HTMLElement | null) => {
     if (element) endpoints.current.set(key, element);
     else endpoints.current.delete(key);
@@ -79,6 +89,8 @@ export function MemoryCanvas({ snapshot, className = "", approximate = false }: 
     });
     const indexes = new Map<string, number>();
     const paths: RenderedEdge[] = [];
+    const isVertical = layoutMode === "vertical";
+
     for (const edge of snapshot.pointers) {
       const sourceKey = sourceEndpoint(edge, snapshot.callStack, snapshot.heap);
       const targetKey = targetEndpoint(edge, snapshot.callStack, snapshot.heap);
@@ -102,6 +114,10 @@ export function MemoryCanvas({ snapshot, className = "", approximate = false }: 
             return `M ${x1} ${y1} C ${bendX} ${y1}, ${bendX} ${y2}, ${x2} ${y2}`;
           })()
         : (() => {
+            if (isVertical && y2 > y1 + 15) {
+              const bowX = Math.max(x1, x2) + Math.min(60, Math.max(28, Math.abs(y2 - y1) * 0.15));
+              return `M ${x1} ${y1} C ${bowX} ${y1 + (y2 - y1) * 0.25}, ${bowX} ${y2 - (y2 - y1) * 0.25}, ${x2} ${y2}`;
+            }
             const span = Math.max(48, Math.abs(x2 - x1) * 0.48);
             return `M ${x1} ${y1} C ${x1 + span} ${y1}, ${x2 - span} ${y2}, ${x2} ${y2}`;
           })();
@@ -112,7 +128,7 @@ export function MemoryCanvas({ snapshot, className = "", approximate = false }: 
     }
     setCanvasSize({ width: container.scrollWidth, height: container.scrollHeight });
     setRenderedEdges(paths);
-  }, [snapshot]);
+  }, [snapshot, layoutMode]);
 
   const scheduleCalculation = useCallback(() => {
     if (frameRequest.current !== null) cancelAnimationFrame(frameRequest.current);
@@ -121,6 +137,14 @@ export function MemoryCanvas({ snapshot, className = "", approximate = false }: 
       calculateEdges();
     });
   }, [calculateEdges]);
+
+  const toggleLayoutMode = useCallback((mode: MemoryLayoutMode) => {
+    setLayoutMode(mode);
+    try {
+      localStorage.setItem(MEMORY_LAYOUT_KEY, mode);
+    } catch {}
+    scheduleCalculation();
+  }, [scheduleCalculation]);
 
   useLayoutEffect(scheduleCalculation, [scheduleCalculation]);
   useEffect(() => {
@@ -143,8 +167,36 @@ export function MemoryCanvas({ snapshot, className = "", approximate = false }: 
 
   return (
     <div className={`memory-canvas-shell ${className}`}>
-      {approximate && <div className="memory-mode-notice" role="status">Regex 近似教学视图：对象关系由源码结构推演，不代表完整运行时语义。</div>}
-      <div ref={scrollRef} className="memory-canvas-root">
+      <div className="memory-canvas-subbar">
+        {approximate ? (
+          <div className="memory-mode-notice" role="status">
+            Regex 近似教学视图：对象关系由源码结构推演，不代表完整运行时语义。
+          </div>
+        ) : (
+          <span className="memory-canvas-caption">
+            拓扑视图 · 栈 {snapshot.callStack.length} 帧 / 堆 {snapshot.heap.length} 块
+          </span>
+        )}
+        <div className="memory-layout-toggle" role="group" aria-label="内存布局排列方式">
+          <button
+            type="button"
+            className={`memory-layout-btn ${layoutMode === "vertical" ? "is-active" : ""}`}
+            title="纵向排列：调用栈在上，动态内存在下（卡片全宽展开，内容完整不被截断）"
+            onClick={() => toggleLayoutMode("vertical")}
+          >
+            <span aria-hidden="true">⫸</span> 纵向上下
+          </button>
+          <button
+            type="button"
+            className={`memory-layout-btn ${layoutMode === "horizontal" ? "is-active" : ""}`}
+            title="横向排列：调用栈与动态内存左右并列（适合超宽屏幕）"
+            onClick={() => toggleLayoutMode("horizontal")}
+          >
+            <span aria-hidden="true">⫿</span> 横向并排
+          </button>
+        </div>
+      </div>
+      <div ref={scrollRef} className={`memory-canvas-root layout-${layoutMode}`}>
         <svg className="memory-edges-layer" width={canvasSize.width} height={canvasSize.height} aria-hidden="true">
           <defs>
             {[["green", "#10b981"], ["blue", "#38bdf8"], ["gray", "#94a3b8"], ["red", "#ef4444"]].map(([name, color]) => (
