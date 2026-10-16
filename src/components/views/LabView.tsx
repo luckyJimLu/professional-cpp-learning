@@ -27,6 +27,14 @@ int main() {
 }
 `;
 
+function labInstructions(body: string): string {
+  return body
+    .replace(/(`{3,}|~{3,})[\s\S]*?\1/g, "")
+    .replace(/^\s*(?:编译|Compile)\s*[：:]\s*$/gim, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
 export function LabView({
   lesson,
   markStep,
@@ -131,7 +139,7 @@ export function LabView({
             </h2>
           </div>
           {lab ? (
-            <Markdown>{lab.body.replace(/```[\s\S]*?```/g, "")}</Markdown>
+            <Markdown>{labInstructions(lab.body)}</Markdown>
           ) : (
             <p>No lab section found.</p>
           )}
@@ -166,7 +174,7 @@ export function LabView({
               onClick={() => setHint((value) => !value)}
               type="button"
             >
-              {hint ? "Hide hint" : "Reveal hint"}
+              {hint ? "隐藏提示" : "显示提示"}
             </button>
             <button
               className="ghost-button"
@@ -174,7 +182,7 @@ export function LabView({
               disabled={compilerBusy || (traceSession.state.code === sourceCode && !customOrigin)}
               type="button"
             >
-              Reset source
+              恢复课例源码
             </button>
             <button
               className="ghost-button"
@@ -204,7 +212,14 @@ export function LabView({
           )}
         </section>
 
-        <section className="code-workbench" style={{ display: "block" }}>
+        <section className="code-workbench" aria-labelledby="lab-workbench-title">
+          <header className="lab-workbench-header">
+            <div>
+              <span className="eyebrow">BROWSER C++ WORKSPACE</span>
+              <h2 id="lab-workbench-title">代码、内存与运行结果</h2>
+            </div>
+            <p>编辑器使用完整课例源码；长行会在可用宽度内换行，编译输出与内存轨迹保持在同一工作区。</p>
+          </header>
           <VisualizerWorkbench
             session={traceSession.state}
             onChangeCode={traceSession.setCode}
@@ -212,6 +227,8 @@ export function LabView({
             onRun={runCompiler}
             onRunApproximate={runStepDebugger}
             onLoadTrace={traceSession.loadTrace}
+            variant="lab"
+            className="lab-workbench"
           />
         </section>
       </div>

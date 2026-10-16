@@ -123,9 +123,7 @@ namespace modem {
 constexpr std::uint32_t kDefaultTimeoutMs {5000U};
 constexpr std::uint32_t kMaxRetryCount {3U};
 constexpr std::size_t kRxBufferSize {512U};
-```
 
-```cpp
 constexpr std::uint32_t CalculateTotalTimeoutMs(std::uint32_t retry_count)
 {
 return kDefaultTimeoutMs * retry_count;
@@ -143,10 +141,8 @@ void PrintConfig(const Config& config)
 {
 std::cout << "timeout_ms = " << config.timeout_ms << '\n';
 }
-```
 } // namespace modem
 
-```cpp
 int main()
 {
 std::array<std::uint8_t, modem::kRxBufferSize> rx_buffer {};
@@ -158,18 +154,20 @@ std::cout << rx_buffer.size() << '\n';
 
 编译：
 
+```bash
 g++ -std=c++20 -Wall -Wextra -Wconversion -Wpedantic day03.cpp -o day03
 ./day03
+```
 
 实验 A：把 buffer 改为 500，并用 static_assert 检查其必须为 2 的幂。
 实验 B：创建运行期读取的 const 超时值，尝试把它作为模板参数，理解为何失败。
 
 规范修复题：把下面代码改为无不必要宏、函数 PascalCase、变量 snake_case、常量 kPascalCase、单位明确、无 magic number、可编译期计算。
 
+```cpp
 #define TIMEOUT 5000
 #define SIZE 512
 int calc(int n) { return TIMEOUT * n; }
-```cpp
 void wait_modem(int t) { if (t > 5000) { } }
 ```
 

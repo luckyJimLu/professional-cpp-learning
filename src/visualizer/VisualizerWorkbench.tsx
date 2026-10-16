@@ -14,6 +14,7 @@ export function VisualizerWorkbench({
   onRun,
   onRunApproximate,
   onLoadTrace,
+  variant = "visualizer",
   className = "",
 }: {
   session: TraceSessionState;
@@ -22,6 +23,7 @@ export function VisualizerWorkbench({
   onRun: () => void | Promise<unknown>;
   onRunApproximate: () => void;
   onLoadTrace: (trace: VisualizerTrace) => void;
+  variant?: "visualizer" | "lab";
   className?: string;
 }) {
   const [activeTab, setActiveTab] = useState<"memory" | "terminal">(
@@ -92,7 +94,7 @@ export function VisualizerWorkbench({
 
   return (
     <div className={`visualizer-workbench ${className}`} tabIndex={0} onKeyDown={handleKeyboard}>
-      <TraceSelectorModal
+      {variant === "visualizer" && <><TraceSelectorModal
         isOpen={isModalOpen}
         onClose={closeTraceLibrary}
         onSelectPreset={loadTrace}
@@ -115,7 +117,9 @@ export function VisualizerWorkbench({
           <span className={`trace-mode-badge mode-${session.mode}`}>{modeLabel}</span>
           {session.snapshots.length > 0 && <button type="button" className="trace-export-button" onClick={exportTrace}>导出 JSON</button>}
         </div>
-      </div>
+      </div></>}
+
+      {variant === "lab" && <div className="lab-session-strip"><span>浏览器编译会话</span><span className={`trace-mode-badge mode-${session.mode}`}>{modeLabel}</span></div>}
 
       {session.isStale && <div className="trace-stale-banner" role="status">代码已修改，点击“运行”更新内存轨迹</div>}
       {session.diagnostics.length > 0 && <div className={session.status === "error" ? "trace-diagnostics is-error" : "trace-diagnostics"} role={session.status === "error" ? "alert" : "status"}>{session.diagnostics.join(" ")}
@@ -132,7 +136,7 @@ export function VisualizerWorkbench({
       )}
 
       <div className={`visualizer-main-split mobile-show-${mobilePane}`}>
-        <div className="code-split-pane"><CodeMirrorEditor value={session.code} onChange={onChangeCode} activeLine={currentSnapshot?.line ?? 0} readOnly={busy} /></div>
+        <div className="code-split-pane"><CodeMirrorEditor value={session.code} onChange={onChangeCode} activeLine={currentSnapshot?.line ?? 0} readOnly={busy} wrapLines={variant === "lab"} /></div>
         <div className="output-split-pane">
           <div className="output-tabs-header">
             <div className="output-segmented-toggle" role="tablist" aria-label="输出类型">

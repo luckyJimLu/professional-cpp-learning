@@ -84,12 +84,14 @@ export function CodeMirrorEditor({
   onChange,
   activeLine = 0,
   readOnly = false,
+  wrapLines = false,
   className = "",
 }: {
   value: string;
   onChange?: (val: string) => void;
   activeLine?: number;
   readOnly?: boolean;
+  wrapLines?: boolean;
   className?: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -117,6 +119,7 @@ export function CodeMirrorEditor({
         activeLineField,
         updateListener,
         EditorState.readOnly.of(readOnly),
+        ...(wrapLines ? [EditorView.lineWrapping] : []),
       ],
     });
 

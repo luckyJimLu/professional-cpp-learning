@@ -144,3 +144,13 @@ semantic pointer treatments: raw green, smart blue, reference gray and
 dangling red. Approximate regex traces are always labeled and never presented
 as exact runtime evidence. Graph-layout libraries and force-directed motion are
 not part of this product surface.
+
+## Compiler Lab workspace
+
+The Lab route is a dedicated coding surface, not a two-column reading card.
+Experiment instructions sit above a full-width dark workbench so source code
+remains the primary artifact. The Lab editor receives the larger side of the
+code/output split and wraps long source lines; narrower layouts switch between
+source and output instead of compressing both into unreadable columns. Runtime
+tokens remain owned by `styles.css`, with workbench behavior in
+`visualizer.css`.

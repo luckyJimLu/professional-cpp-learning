@@ -94,6 +94,12 @@ The canonical renderer is the deterministic DOM/SVG stack-and-heap view. Stack, 
 
 The Lab source shown in the editor starts from the repository source. Browser edits are ephemeral unless a future explicit save workflow is introduced.
 
+The Lab route places instructions before a full-width compiler workbench.
+Source and output may share the width only while each remains readable;
+otherwise the existing source/output switcher becomes the sole visible pane.
+Long C++ lines wrap inside the Lab editor, and fenced source code must never be
+rendered as experiment prose.
+
 ## 7. Daily frontmatter
 
 New lessons SHOULD use:
