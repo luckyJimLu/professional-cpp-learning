@@ -26,6 +26,7 @@
 - [C++ Design Patterns · 工程化专题](patterns/)
 - [Ownership & Smart Pointers](patterns/ownership-and-smart-pointers.md)
 - [Asio 框架解构](frameworks/asio/)
+- [OpenHarmony · Mini／轻量系统文档模块](frameworks/openharmony/README.md)
 - [TRACE32 · RTOS 稳定性分析](frameworks/trace32/README.md)
 - [Utils · 工程实用工具](utils/)
 - [Windows Remote Script Runner · Remote-SSH + SCP Hook](utils/windows-remote-script-runner/README.md)
@@ -79,6 +80,7 @@
 │   └── runnable-exercise-audit.md
 ├── patterns/
 ├── frameworks/
+│   └── openharmony/  # Mini／轻量系统文档与后续实验
 ├── utils/
 │   └── windows-remote-script-runner/
 ├── daily/

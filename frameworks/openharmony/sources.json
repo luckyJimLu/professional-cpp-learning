@@ -1,0 +1,728 @@
+{
+  "schema_version": 1,
+  "collected_on": "2026-10-17",
+  "release_tag": "OpenHarmony-v5.0.0-Release",
+  "verification": "official-documents-and-static-source-review; no-board-or-emulator-tests",
+  "sources": [
+    {
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "commit": "c409c66164c31992111b7b5ac5397d28b19fab62",
+      "path": "README_zh.md",
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/README_zh.md",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/commonlibrary_utils_lite/c409c66164c31992111b7b5ac5397d28b19fab62/README_zh.md",
+      "sha256": "5be5e09141451d571bcaab0aac186d768caf39cee9ff47070a16bd28fd16d5d7",
+      "bytes": 6704
+    },
+    {
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "commit": "c409c66164c31992111b7b5ac5397d28b19fab62",
+      "path": "include/kv_store.h",
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/kv_store.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/commonlibrary_utils_lite/c409c66164c31992111b7b5ac5397d28b19fab62/include/kv_store.h",
+      "sha256": "58a124165d7d5c1c48165f26aa7554fa71ca842ea063a8ea2a6791ec7ad68e92",
+      "bytes": 4047
+    },
+    {
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "commit": "c409c66164c31992111b7b5ac5397d28b19fab62",
+      "path": "include/ohos_init.h",
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/ohos_init.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/commonlibrary_utils_lite/c409c66164c31992111b7b5ac5397d28b19fab62/include/ohos_init.h",
+      "sha256": "98abe3e9792f67a8020db1088985f2d05d4815beee4001d57308617dd3bbb47e",
+      "bytes": 12004
+    },
+    {
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "commit": "c409c66164c31992111b7b5ac5397d28b19fab62",
+      "path": "include/utils_file.h",
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/utils_file.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/commonlibrary_utils_lite/c409c66164c31992111b7b5ac5397d28b19fab62/include/utils_file.h",
+      "sha256": "91d966b80b2d404fc7f1dfc1913489d499c7626b40b02396c764747fc0e04428",
+      "bytes": 9039
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/get-code/sourcecode-acquire.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/get-code/sourcecode-acquire.md",
+      "sha256": "41957c56d3426b815cb29bafccc35c5cc53dc41ae27af8bda0fbda8016a3281b",
+      "bytes": 12791,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/get-code/sourcecode-acquire.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-appx-code.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-appx-code.md",
+      "sha256": "a7e7e8a2d2d41c99cae593b0deb410b6994bdd70fbc8a007746a390ba537f206",
+      "bytes": 10460,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-appx-code.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-appx-lib.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-appx-lib.md",
+      "sha256": "cc110e620765fd438d974d93f1f9575f95f860a411e21a5c6122efc2339c74d6",
+      "bytes": 36712,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-appx-lib.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-basic-interrupt.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-basic-interrupt.md",
+      "sha256": "d36e4faaaf6da70d44d1f46510a727f5bfff5134e59e1f77aab4775f1fbc5b0d",
+      "bytes": 6119,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-basic-interrupt.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-basic-ipc-event.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-basic-ipc-event.md",
+      "sha256": "4ccd9a351a1d965609bf834cb80069f5fab8a8729eabcb278d4db080d5c045fb",
+      "bytes": 7680,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-basic-ipc-event.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-basic-ipc-mutex.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-basic-ipc-mutex.md",
+      "sha256": "a52a372061f1ebee4ef255c59a6854d62511fd583429823b5227a5cb5eb3a342",
+      "bytes": 7949,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-basic-ipc-mutex.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-basic-ipc-queue.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-basic-ipc-queue.md",
+      "sha256": "f86e7422563e05a2a058a985f64a7efeb03c7f743262a0bfb1a22db4f6797c59",
+      "bytes": 10984,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-basic-ipc-queue.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-basic-ipc-sem.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-basic-ipc-sem.md",
+      "sha256": "356ed6d84b8ccb4c54111235262965cd69c0e3be06e63631255b13b23a9a7d66",
+      "bytes": 8007,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-basic-ipc-sem.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-basic-list.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-basic-list.md",
+      "sha256": "b920601c22f8b3fdc97e6f4d88ca3c5441607351f2a48069ef0bad63c661b195",
+      "bytes": 4502,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-basic-list.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-basic-memory.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-basic-memory.md",
+      "sha256": "c7dd11dff0b59c7ce452040d3c7215ae61e041e29ca73fdfb5bb4a5ac777c94a",
+      "bytes": 17346,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-basic-memory.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-basic-soft.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-basic-soft.md",
+      "sha256": "038078035c319e9bd1de009d3c0f1b205920639c5ec4854b3848679f763d1348",
+      "bytes": 9646,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-basic-soft.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-basic-task.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-basic-task.md",
+      "sha256": "95de94fb00a219000a9c547a41ff59896364ff5936ef5f3fe64045712abec963",
+      "bytes": 13842,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-basic-task.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-basic-time.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-basic-time.md",
+      "sha256": "ecffdcf1bda14c43eb0a439eccd5924e9fd70798fe443ab3cdb1eb075c8d6e18",
+      "bytes": 4656,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-basic-time.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-debug-shell.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-debug-shell.md",
+      "sha256": "264da9926227e065f160aeca43a47baba8a94d2ee1c4190b542d10356dcabb34",
+      "bytes": 5871,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-debug-shell.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-extend-cpup.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-extend-cpup.md",
+      "sha256": "9a553604fc71a370d40cdd95101d5b0af5ff8fed70ff3864aba34a8d76bea708",
+      "bytes": 6424,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-extend-cpup.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-extend-dynamic-loading.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-extend-dynamic-loading.md",
+      "sha256": "c7671da857d79b44e202eec0eadb583cd6741c53ac1bb74d908035edb8997505",
+      "bytes": 4556,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-extend-dynamic-loading.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-extend-file.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-extend-file.md",
+      "sha256": "85c4a82d952c1fcc2a2165915d8a5f51757d6fd41a6ca7cfc4c82722469d5941",
+      "bytes": 19519,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-extend-file.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-extend-support.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-extend-support.md",
+      "sha256": "8823dedf48cdefa3aabee79af138a6c01bdf9ab2804e3e5df7327d6e1ec9b142",
+      "bytes": 1485,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-extend-support.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-memory-debug.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-memory-debug.md",
+      "sha256": "e45909c2292fe4c450ca6b009d3d8ebcdc8391abaf0137ec7d21a13f8e7dfe28",
+      "bytes": 14609,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-memory-debug.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-memory-exception.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-memory-exception.md",
+      "sha256": "3561cb4a559ddb6198986e5e30290f3dd762f43cfbb9caefc1c53c18fa7cec0d",
+      "bytes": 11554,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-memory-exception.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-memory-lms.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-memory-lms.md",
+      "sha256": "005f1951fe2dd9ad6931b646b37e2a018a38ac526d29d8ba05b16302bfef1451",
+      "bytes": 14347,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-memory-lms.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-memory-trace.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-memory-trace.md",
+      "sha256": "cacd0ede56425b8a41125a02e75bfd3dd64c1fea99e509113df560ee2271473c",
+      "bytes": 12498,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-memory-trace.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-mini-overview.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-overview.md",
+      "sha256": "670645e9f4451002148c8452a84f6d86f9d38cf0604948d68e479e5f5761f75d",
+      "bytes": 7744,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-mini-overview.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/kernel/kernel-overview.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-overview.md",
+      "sha256": "0dd82e548e9e955bdb26620ed2ce18a157635297d44b67fe90f3f1d172ff2780",
+      "bytes": 10366,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/kernel/kernel-overview.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/porting/porting-minichip-subsys-driver.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/porting/porting-minichip-subsys-driver.md",
+      "sha256": "cdd7c973d3ed88b10d03af60dda27a593dd21f5507639450c43b05e213f7edb8",
+      "bytes": 3060,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/porting/porting-minichip-subsys-driver.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/porting/porting-minichip-subsys-startup.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/porting/porting-minichip-subsys-startup.md",
+      "sha256": "8ccd053ef6f23779496dd5db35e40c342f2651f67f85bd76e272a5efcd845d75",
+      "bytes": 5834,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/porting/porting-minichip-subsys-startup.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/reference/kernel/cmsis/_c_m_s_i_s-_r_t_o_s.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/reference/kernel/cmsis/_c_m_s_i_s-_r_t_o_s.md",
+      "sha256": "6b63b7b308c4cdea16832f03e98d137fdab61f3f2542ecfdecb589a79a3f5ebc",
+      "bytes": 62952,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/reference/kernel/cmsis/_c_m_s_i_s-_r_t_o_s.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/subsystems/subsys-boot-bootstrap.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/subsystems/subsys-boot-bootstrap.md",
+      "sha256": "2ca5c2436293becd565a2eaca69b41f8402793b0134d751f7cfce0ed0ac5a697",
+      "bytes": 1948,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/subsystems/subsys-boot-bootstrap.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/subsystems/subsys-dfx-hilog-lite.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/subsystems/subsys-dfx-hilog-lite.md",
+      "sha256": "20a37f4c220415cf2bdd9b9c75d50d624d70241bb8c8a59619e4aa990ce19fac",
+      "bytes": 2203,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/subsystems/subsys-dfx-hilog-lite.md"
+    },
+    {
+      "repository": "openharmony/docs",
+      "commit": "ea349c8d56c574ce99e089eccfd6198d4d24f8c2",
+      "path": "zh-cn/device-dev/subsystems/subsys-utils-guide.md",
+      "url": "https://github.com/openharmony/docs/blob/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/subsystems/subsys-utils-guide.md",
+      "sha256": "51dcc636bf311a898c1f499a7453975fb782996786a13948d3b6337308da1316",
+      "bytes": 1520,
+      "raw_url": "https://raw.githubusercontent.com/openharmony/docs/ea349c8d56c574ce99e089eccfd6198d4d24f8c2/zh-cn/device-dev/subsystems/subsys-utils-guide.md"
+    },
+    {
+      "repository": "openharmony/hiviewdfx_hilog_lite",
+      "commit": "ac0f764d9348f8f521df2f9b241cb0df0b6a9cf5",
+      "path": "README_zh.md",
+      "url": "https://github.com/openharmony/hiviewdfx_hilog_lite/blob/ac0f764d9348f8f521df2f9b241cb0df0b6a9cf5/README_zh.md",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/hiviewdfx_hilog_lite/ac0f764d9348f8f521df2f9b241cb0df0b6a9cf5/README_zh.md",
+      "sha256": "e81c194cfcfcb363785f7675a2f3d30debb67219fc6a7de064a38967ff65345b",
+      "bytes": 17284
+    },
+    {
+      "repository": "openharmony/hiviewdfx_hilog_lite",
+      "commit": "ac0f764d9348f8f521df2f9b241cb0df0b6a9cf5",
+      "path": "interfaces/native/kits/hilog_lite/hiview_log.h",
+      "url": "https://github.com/openharmony/hiviewdfx_hilog_lite/blob/ac0f764d9348f8f521df2f9b241cb0df0b6a9cf5/interfaces/native/kits/hilog_lite/hiview_log.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/hiviewdfx_hilog_lite/ac0f764d9348f8f521df2f9b241cb0df0b6a9cf5/interfaces/native/kits/hilog_lite/hiview_log.h",
+      "sha256": "53911823eb518d2f70f95db9460c73632ebcc969042ae58f142a7ff2ccdfcf68",
+      "bytes": 16908
+    },
+    {
+      "repository": "openharmony/hiviewdfx_hilog_lite",
+      "commit": "ac0f764d9348f8f521df2f9b241cb0df0b6a9cf5",
+      "path": "interfaces/native/kits/hilog_lite/log.h",
+      "url": "https://github.com/openharmony/hiviewdfx_hilog_lite/blob/ac0f764d9348f8f521df2f9b241cb0df0b6a9cf5/interfaces/native/kits/hilog_lite/log.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/hiviewdfx_hilog_lite/ac0f764d9348f8f521df2f9b241cb0df0b6a9cf5/interfaces/native/kits/hilog_lite/log.h",
+      "sha256": "5651aab95a016b4a90a90cbd81b8570927d249dbdc1c9cde59b9c62708e09517",
+      "bytes": 742
+    },
+    {
+      "repository": "openharmony/iothardware_peripheral",
+      "commit": "8377f3d107e1d247b48be5e494253a6a5d0ed26d",
+      "path": "README_zh.md",
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/README_zh.md",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/iothardware_peripheral/8377f3d107e1d247b48be5e494253a6a5d0ed26d/README_zh.md",
+      "sha256": "12b9b30c5aa63bc3bca567c0dc77d1a2db85857aa7bdd676cb6782812c89ffb1",
+      "bytes": 755
+    },
+    {
+      "repository": "openharmony/iothardware_peripheral",
+      "commit": "8377f3d107e1d247b48be5e494253a6a5d0ed26d",
+      "path": "interfaces/inner_api/iot_errno.h",
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_errno.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/iothardware_peripheral/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_errno.h",
+      "sha256": "cba47f9fd626b0de6ab5ed259185e69626c7717db93adeba92b494cc3db17f94",
+      "bytes": 1294
+    },
+    {
+      "repository": "openharmony/iothardware_peripheral",
+      "commit": "8377f3d107e1d247b48be5e494253a6a5d0ed26d",
+      "path": "interfaces/inner_api/iot_flash.h",
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_flash.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/iothardware_peripheral/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_flash.h",
+      "sha256": "886b807e21adbf3a3ea90af0972f8c27d3e085e3cfc43e64f73b6c69a0a2ea87",
+      "bytes": 3797
+    },
+    {
+      "repository": "openharmony/iothardware_peripheral",
+      "commit": "8377f3d107e1d247b48be5e494253a6a5d0ed26d",
+      "path": "interfaces/inner_api/iot_gpio.h",
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_gpio.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/iothardware_peripheral/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_gpio.h",
+      "sha256": "45630916e01ff65b7cae9a5479dc7cfd9d1cf863f68b543c275bfc0faedc235a",
+      "bytes": 7636
+    },
+    {
+      "repository": "openharmony/iothardware_peripheral",
+      "commit": "8377f3d107e1d247b48be5e494253a6a5d0ed26d",
+      "path": "interfaces/inner_api/iot_i2c.h",
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_i2c.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/iothardware_peripheral/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_i2c.h",
+      "sha256": "3a2aa440e1a1df0b8c9d30b9f3ceac0671e0955cfccfc7b7e204b2639c1bd67e",
+      "bytes": 3770
+    },
+    {
+      "repository": "openharmony/iothardware_peripheral",
+      "commit": "8377f3d107e1d247b48be5e494253a6a5d0ed26d",
+      "path": "interfaces/inner_api/iot_pwm.h",
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_pwm.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/iothardware_peripheral/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_pwm.h",
+      "sha256": "34fe0798e7a84190c08d9f66c996443d96199123685007ff3dd35bd3d3f17555",
+      "bytes": 2947
+    },
+    {
+      "repository": "openharmony/iothardware_peripheral",
+      "commit": "8377f3d107e1d247b48be5e494253a6a5d0ed26d",
+      "path": "interfaces/inner_api/iot_uart.h",
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_uart.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/iothardware_peripheral/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_uart.h",
+      "sha256": "64e1cd1d3ed6534a5c589e600a6ddff50d755419836d9a8df4fd317b55b4e075",
+      "bytes": 5803
+    },
+    {
+      "repository": "openharmony/iothardware_peripheral",
+      "commit": "8377f3d107e1d247b48be5e494253a6a5d0ed26d",
+      "path": "interfaces/inner_api/iot_watchdog.h",
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_watchdog.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/iothardware_peripheral/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_watchdog.h",
+      "sha256": "956ac230f51ca227e7578cbbe75a0c9406ca8b6f802659675c4e8e567e28b3ee",
+      "bytes": 1453
+    },
+    {
+      "repository": "openharmony/iothardware_peripheral",
+      "commit": "8377f3d107e1d247b48be5e494253a6a5d0ed26d",
+      "path": "interfaces/inner_api/lowpower.h",
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/lowpower.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/iothardware_peripheral/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/lowpower.h",
+      "sha256": "c92f506d3ebe743c745955c738531d9d5cb6285b9061ac51ac354f1a7b90c20c",
+      "bytes": 2001
+    },
+    {
+      "repository": "openharmony/iothardware_peripheral",
+      "commit": "8377f3d107e1d247b48be5e494253a6a5d0ed26d",
+      "path": "interfaces/inner_api/reset.h",
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/reset.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/iothardware_peripheral/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/reset.h",
+      "sha256": "17099780b5d3ab96a768514516b648146f9ef431c6cac8ebc4e1c7a280af3dfd",
+      "bytes": 1228
+    },
+    {
+      "repository": "openharmony/kernel_liteos_m",
+      "commit": "6c29f5cee9c28554440640897009097d5066b1b5",
+      "path": "Kconfig",
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/Kconfig",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/kernel_liteos_m/6c29f5cee9c28554440640897009097d5066b1b5/Kconfig",
+      "sha256": "6b087cccae5a155db5473fd43ab3d6c86cce4c9aa45ebe459d9602d8a490726e",
+      "bytes": 15004
+    },
+    {
+      "repository": "openharmony/kernel_liteos_m",
+      "commit": "6c29f5cee9c28554440640897009097d5066b1b5",
+      "path": "README_zh.md",
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/README_zh.md",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/kernel_liteos_m/6c29f5cee9c28554440640897009097d5066b1b5/README_zh.md",
+      "sha256": "38489203e068f285e9a94b86f3f870884ba3b44e84ddbc09d50cd73962ceda28",
+      "bytes": 6575
+    },
+    {
+      "repository": "openharmony/kernel_liteos_m",
+      "commit": "6c29f5cee9c28554440640897009097d5066b1b5",
+      "path": "arch/include/los_interrupt.h",
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/arch/include/los_interrupt.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/kernel_liteos_m/6c29f5cee9c28554440640897009097d5066b1b5/arch/include/los_interrupt.h",
+      "sha256": "a79dde56a85a955f88257603c0cec88fe98226a6cbce0f9d3415f66820fa59f8",
+      "bytes": 8037
+    },
+    {
+      "repository": "openharmony/kernel_liteos_m",
+      "commit": "6c29f5cee9c28554440640897009097d5066b1b5",
+      "path": "kal/cmsis/cmsis_liteos2.c",
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kal/cmsis/cmsis_liteos2.c",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/kernel_liteos_m/6c29f5cee9c28554440640897009097d5066b1b5/kal/cmsis/cmsis_liteos2.c",
+      "sha256": "5c34a7f36084306557a05672dd7754fb53e59f8074033bb712efdabc99be7f57",
+      "bytes": 44913
+    },
+    {
+      "repository": "openharmony/kernel_liteos_m",
+      "commit": "6c29f5cee9c28554440640897009097d5066b1b5",
+      "path": "kal/cmsis/cmsis_os2.h",
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kal/cmsis/cmsis_os2.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/kernel_liteos_m/6c29f5cee9c28554440640897009097d5066b1b5/kal/cmsis/cmsis_os2.h",
+      "sha256": "ad847e2384d14465805860c6a01f67300b11a6205f696bb97f0f4144cffe5bf2",
+      "bytes": 1748
+    },
+    {
+      "repository": "openharmony/kernel_liteos_m",
+      "commit": "6c29f5cee9c28554440640897009097d5066b1b5",
+      "path": "kernel/include/los_config.h",
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_config.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/kernel_liteos_m/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_config.h",
+      "sha256": "46c56e84b82083a74a0775205fc8bac123f40ffca6c75fe06ba6889ab3d8c316",
+      "bytes": 21248
+    },
+    {
+      "repository": "openharmony/kernel_liteos_m",
+      "commit": "6c29f5cee9c28554440640897009097d5066b1b5",
+      "path": "kernel/include/los_event.h",
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_event.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/kernel_liteos_m/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_event.h",
+      "sha256": "e6c6eb23f2a810af94863f34fb2a15670965bed62ca7c6487fe2c82e2b0612be",
+      "bytes": 12999
+    },
+    {
+      "repository": "openharmony/kernel_liteos_m",
+      "commit": "6c29f5cee9c28554440640897009097d5066b1b5",
+      "path": "kernel/include/los_membox.h",
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_membox.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/kernel_liteos_m/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_membox.h",
+      "sha256": "3900e06c0aec8ac60a176c5014091e4faf6b7279cc8bad64d1d784e52e5fe3d3",
+      "bytes": 8098
+    },
+    {
+      "repository": "openharmony/kernel_liteos_m",
+      "commit": "6c29f5cee9c28554440640897009097d5066b1b5",
+      "path": "kernel/include/los_memory.h",
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_memory.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/kernel_liteos_m/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_memory.h",
+      "sha256": "5f4f1d27afedd234ae6885e54e99a1b2668cdf8c5589184af344ae23025549b6",
+      "bytes": 20554
+    },
+    {
+      "repository": "openharmony/kernel_liteos_m",
+      "commit": "6c29f5cee9c28554440640897009097d5066b1b5",
+      "path": "kernel/include/los_mux.h",
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_mux.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/kernel_liteos_m/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_mux.h",
+      "sha256": "10de5d2090820413ee8ab8ee326f8b4798a81eff1147b44ba45077162aa8e715",
+      "bytes": 12490
+    },
+    {
+      "repository": "openharmony/kernel_liteos_m",
+      "commit": "6c29f5cee9c28554440640897009097d5066b1b5",
+      "path": "kernel/include/los_queue.h",
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_queue.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/kernel_liteos_m/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_queue.h",
+      "sha256": "55183abfb2bdf01079ec766e4b646aa2e8c2bf8d1d68c4a6e09fef7fae5533a0",
+      "bytes": 56046
+    },
+    {
+      "repository": "openharmony/kernel_liteos_m",
+      "commit": "6c29f5cee9c28554440640897009097d5066b1b5",
+      "path": "kernel/include/los_sched.h",
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_sched.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/kernel_liteos_m/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_sched.h",
+      "sha256": "9f024c5eaaa7f456f86ebb7c2a10a46bcf52dae3d28b827911a08eafef335cb2",
+      "bytes": 4568
+    },
+    {
+      "repository": "openharmony/kernel_liteos_m",
+      "commit": "6c29f5cee9c28554440640897009097d5066b1b5",
+      "path": "kernel/include/los_sem.h",
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_sem.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/kernel_liteos_m/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_sem.h",
+      "sha256": "59487fb9a1353e1c2baaa989f75bc32f13c5c763c0a67349d2e70e798e84dfcf",
+      "bytes": 13216
+    },
+    {
+      "repository": "openharmony/kernel_liteos_m",
+      "commit": "6c29f5cee9c28554440640897009097d5066b1b5",
+      "path": "kernel/include/los_sortlink.h",
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_sortlink.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/kernel_liteos_m/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_sortlink.h",
+      "sha256": "7f77a6aeebbf5acf8f0be138903312cc972f2004e4b0e55cb52f955056f6a203",
+      "bytes": 4522
+    },
+    {
+      "repository": "openharmony/kernel_liteos_m",
+      "commit": "6c29f5cee9c28554440640897009097d5066b1b5",
+      "path": "kernel/include/los_swtmr.h",
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_swtmr.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/kernel_liteos_m/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_swtmr.h",
+      "sha256": "ce0ac16060adecd532f4d218ee6c8f3e91223fe37bdf39031754f1a801f703e4",
+      "bytes": 18547
+    },
+    {
+      "repository": "openharmony/kernel_liteos_m",
+      "commit": "6c29f5cee9c28554440640897009097d5066b1b5",
+      "path": "kernel/include/los_task.h",
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/kernel_liteos_m/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h",
+      "sha256": "5d60ef6facc008d2ddc5839449d9c0c80246a78efd5ee14b2dfb966c23b81c1f",
+      "bytes": 56830
+    },
+    {
+      "repository": "openharmony/kernel_liteos_m",
+      "commit": "6c29f5cee9c28554440640897009097d5066b1b5",
+      "path": "kernel/include/los_tick.h",
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_tick.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/kernel_liteos_m/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_tick.h",
+      "sha256": "8566537fd8a19c3584a0217a9dae779a6acff1940d87d7fa0a7b8cae6d4dbf99",
+      "bytes": 17732
+    },
+    {
+      "repository": "openharmony/kernel_liteos_m",
+      "commit": "6c29f5cee9c28554440640897009097d5066b1b5",
+      "path": "kernel/src/los_event.c",
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/src/los_event.c",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/kernel_liteos_m/6c29f5cee9c28554440640897009097d5066b1b5/kernel/src/los_event.c",
+      "sha256": "592a0add4d54a0c96b4efe9c3f93298250581932b47fe86ee0c9146f02d38dc1",
+      "bytes": 7673
+    },
+    {
+      "repository": "openharmony/kernel_liteos_m",
+      "commit": "6c29f5cee9c28554440640897009097d5066b1b5",
+      "path": "kernel/src/los_mux.c",
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/src/los_mux.c",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/kernel_liteos_m/6c29f5cee9c28554440640897009097d5066b1b5/kernel/src/los_mux.c",
+      "sha256": "90886ae61779317a34927f1347c7bd531eed0b9f98aa8cda0e98a2d2daf7990c",
+      "bytes": 10773
+    },
+    {
+      "repository": "openharmony/kernel_liteos_m",
+      "commit": "6c29f5cee9c28554440640897009097d5066b1b5",
+      "path": "kernel/src/los_task.c",
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/src/los_task.c",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/kernel_liteos_m/6c29f5cee9c28554440640897009097d5066b1b5/kernel/src/los_task.c",
+      "sha256": "abea71bad00659d5a47d605932af373415c765ec4546e6a338a93834e7b01f27",
+      "bytes": 50447
+    },
+    {
+      "repository": "openharmony/manifest",
+      "commit": "a01bf6c105189fed7c13724d6c55bb4b863a0a3a",
+      "path": "default.xml",
+      "url": "https://github.com/openharmony/manifest/blob/a01bf6c105189fed7c13724d6c55bb4b863a0a3a/default.xml",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/manifest/a01bf6c105189fed7c13724d6c55bb4b863a0a3a/default.xml",
+      "sha256": "ae206fc35f5445db292fb3d292ff28c37ed685313eccd62a66cabbd3be20dc17",
+      "bytes": 313
+    },
+    {
+      "repository": "openharmony/manifest",
+      "commit": "a01bf6c105189fed7c13724d6c55bb4b863a0a3a",
+      "path": "ohos/ohos.xml",
+      "url": "https://github.com/openharmony/manifest/blob/a01bf6c105189fed7c13724d6c55bb4b863a0a3a/ohos/ohos.xml",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/manifest/a01bf6c105189fed7c13724d6c55bb4b863a0a3a/ohos/ohos.xml",
+      "sha256": "4af85cffdea24a546c73da2ca8029e8b66645156d44407fbc9523110cce80231",
+      "bytes": 57547
+    },
+    {
+      "repository": "openharmony/startup_bootstrap_lite",
+      "commit": "6df6756cbce94ad0ddf4be684fd49ae217120f2f",
+      "path": "README_zh.md",
+      "url": "https://github.com/openharmony/startup_bootstrap_lite/blob/6df6756cbce94ad0ddf4be684fd49ae217120f2f/README_zh.md",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/startup_bootstrap_lite/6df6756cbce94ad0ddf4be684fd49ae217120f2f/README_zh.md",
+      "sha256": "ddda96cbdcc44a8631011d232f5a1076f05f8856fbf7da5f244c261ced0e3ca6",
+      "bytes": 1130
+    },
+    {
+      "repository": "openharmony/startup_bootstrap_lite",
+      "commit": "6df6756cbce94ad0ddf4be684fd49ae217120f2f",
+      "path": "services/source/bootstrap_service.c",
+      "url": "https://github.com/openharmony/startup_bootstrap_lite/blob/6df6756cbce94ad0ddf4be684fd49ae217120f2f/services/source/bootstrap_service.c",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/startup_bootstrap_lite/6df6756cbce94ad0ddf4be684fd49ae217120f2f/services/source/bootstrap_service.c",
+      "sha256": "4e3adc5cb8b32eeae1d66524e7a15ae2f7dc7a9a967c13bc78a47b231a7783fa",
+      "bytes": 2865
+    },
+    {
+      "repository": "openharmony/startup_bootstrap_lite",
+      "commit": "6df6756cbce94ad0ddf4be684fd49ae217120f2f",
+      "path": "services/source/system_init.c",
+      "url": "https://github.com/openharmony/startup_bootstrap_lite/blob/6df6756cbce94ad0ddf4be684fd49ae217120f2f/services/source/system_init.c",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/startup_bootstrap_lite/6df6756cbce94ad0ddf4be684fd49ae217120f2f/services/source/system_init.c",
+      "sha256": "836fd9e293d876cbdf38f16e4025c7b3ca6be89c2fcf775e5ee3583869dec45a",
+      "bytes": 924
+    },
+    {
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "commit": "e78ae061f8c47ffd6f709f80eb7933596d15d0cf",
+      "path": "README_zh.md",
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/README_zh.md",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/systemabilitymgr_samgr_lite/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/README_zh.md",
+      "sha256": "72b7bf077f68ac52812687b0b191f21b11c5039e7da35457ab60f1b7937cb0c2",
+      "bytes": 23611
+    },
+    {
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "commit": "e78ae061f8c47ffd6f709f80eb7933596d15d0cf",
+      "path": "interfaces/kits/samgr/common.h",
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/common.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/systemabilitymgr_samgr_lite/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/common.h",
+      "sha256": "f152116d8b6e730791732873462e6f2a6123e3823d597a66730eb4ab70496bb0",
+      "bytes": 8481
+    },
+    {
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "commit": "e78ae061f8c47ffd6f709f80eb7933596d15d0cf",
+      "path": "interfaces/kits/samgr/feature.h",
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/feature.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/systemabilitymgr_samgr_lite/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/feature.h",
+      "sha256": "64c206c3c6595784f0d68e991f60165282efb95bd2cbb66342bdb742c0e24041",
+      "bytes": 4498
+    },
+    {
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "commit": "e78ae061f8c47ffd6f709f80eb7933596d15d0cf",
+      "path": "interfaces/kits/samgr/iunknown.h",
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/iunknown.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/systemabilitymgr_samgr_lite/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/iunknown.h",
+      "sha256": "9a156253d5b9270cfc7ed76c21c7d482d478b35bc8d4d37e5d2b0dfd873c6afe",
+      "bytes": 8705
+    },
+    {
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "commit": "e78ae061f8c47ffd6f709f80eb7933596d15d0cf",
+      "path": "interfaces/kits/samgr/message.h",
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/message.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/systemabilitymgr_samgr_lite/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/message.h",
+      "sha256": "86ee5937c6e16fc78223de197186da8fb10655a0332dca77dbe4ab3f2c218918",
+      "bytes": 9908
+    },
+    {
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "commit": "e78ae061f8c47ffd6f709f80eb7933596d15d0cf",
+      "path": "interfaces/kits/samgr/samgr_lite.h",
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/samgr_lite.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/systemabilitymgr_samgr_lite/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/samgr_lite.h",
+      "sha256": "2ce7fbcc6dbf0514366333957848f2cb0b953a8b62f54995740249a0e6dfeb5e",
+      "bytes": 11974
+    },
+    {
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "commit": "e78ae061f8c47ffd6f709f80eb7933596d15d0cf",
+      "path": "interfaces/kits/samgr/service.h",
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/service.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/systemabilitymgr_samgr_lite/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/service.h",
+      "sha256": "05a82d88a593ff365236a0cd020a9e16e2b71da9b5f5ff833caf10b603c62a3e",
+      "bytes": 6765
+    },
+    {
+      "repository": "openharmony/third_party_cmsis",
+      "commit": "fd250efb9a2826a20926161343ee46091b8c52db",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h",
+      "raw_url": "https://raw.githubusercontent.com/openharmony/third_party_cmsis/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h",
+      "sha256": "0de5e6ff219ee13bcd1b1ca2b6446d68cb56b6a11e16494e9577bb2ffdd52a70",
+      "bytes": 42623
+    }
+  ]
+}

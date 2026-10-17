@@ -1,0 +1,2494 @@
+{
+  "schema_version": 1,
+  "scope": "selected-headers; declarations-do-not-guarantee-product-support",
+  "interfaces": [
+    {
+      "symbol": "LOS_IntLock",
+      "kind": "宏",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "arch/include/los_interrupt.h",
+      "line": 160,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/arch/include/los_interrupt.h#L160"
+    },
+    {
+      "symbol": "LOS_IntRestore",
+      "kind": "宏",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "arch/include/los_interrupt.h",
+      "line": 161,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/arch/include/los_interrupt.h#L161"
+    },
+    {
+      "symbol": "LOS_IntUnLock",
+      "kind": "宏",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "arch/include/los_interrupt.h",
+      "line": 162,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/arch/include/los_interrupt.h#L162"
+    },
+    {
+      "symbol": "LOS_HwiDelete",
+      "kind": "宏",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "arch/include/los_interrupt.h",
+      "line": 163,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/arch/include/los_interrupt.h#L163"
+    },
+    {
+      "symbol": "LOS_HwiCreate",
+      "kind": "宏",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "arch/include/los_interrupt.h",
+      "line": 164,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/arch/include/los_interrupt.h#L164"
+    },
+    {
+      "symbol": "LOS_HwiTrigger",
+      "kind": "宏",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "arch/include/los_interrupt.h",
+      "line": 165,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/arch/include/los_interrupt.h#L165"
+    },
+    {
+      "symbol": "LOS_HwiEnable",
+      "kind": "宏",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "arch/include/los_interrupt.h",
+      "line": 166,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/arch/include/los_interrupt.h#L166"
+    },
+    {
+      "symbol": "LOS_HwiDisable",
+      "kind": "宏",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "arch/include/los_interrupt.h",
+      "line": 167,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/arch/include/los_interrupt.h#L167"
+    },
+    {
+      "symbol": "LOS_HwiClear",
+      "kind": "宏",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "arch/include/los_interrupt.h",
+      "line": 168,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/arch/include/los_interrupt.h#L168"
+    },
+    {
+      "symbol": "LOS_HwiSetPriority",
+      "kind": "宏",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "arch/include/los_interrupt.h",
+      "line": 169,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/arch/include/los_interrupt.h#L169"
+    },
+    {
+      "symbol": "LOS_HwiCurIrqNum",
+      "kind": "宏",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "arch/include/los_interrupt.h",
+      "line": 170,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/arch/include/los_interrupt.h#L170"
+    },
+    {
+      "symbol": "LOS_HwiOpsGet",
+      "kind": "宏",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "arch/include/los_interrupt.h",
+      "line": 171,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/arch/include/los_interrupt.h#L171"
+    },
+    {
+      "symbol": "LOS_WAITMODE_AND",
+      "kind": "宏",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_event.h",
+      "line": 52,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_event.h#L52"
+    },
+    {
+      "symbol": "LOS_WAITMODE_OR",
+      "kind": "宏",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_event.h",
+      "line": 58,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_event.h#L58"
+    },
+    {
+      "symbol": "LOS_WAITMODE_CLR",
+      "kind": "宏",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_event.h",
+      "line": 64,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_event.h#L64"
+    },
+    {
+      "symbol": "LOS_EventInit",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_event.h",
+      "line": 195,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_event.h#L195"
+    },
+    {
+      "symbol": "LOS_EventPoll",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_event.h",
+      "line": 222,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_event.h#L222"
+    },
+    {
+      "symbol": "LOS_EventRead",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_event.h",
+      "line": 259,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_event.h#L259"
+    },
+    {
+      "symbol": "LOS_EventWrite",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_event.h",
+      "line": 286,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_event.h#L286"
+    },
+    {
+      "symbol": "LOS_EventClear",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_event.h",
+      "line": 311,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_event.h#L311"
+    },
+    {
+      "symbol": "LOS_EventDestroy",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_event.h",
+      "line": 334,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_event.h#L334"
+    },
+    {
+      "symbol": "LOS_MEMBOX_ALIGNED",
+      "kind": "宏",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_membox.h",
+      "line": 85,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_membox.h#L85"
+    },
+    {
+      "symbol": "LOS_MEMBOX_SIZE",
+      "kind": "宏",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_membox.h",
+      "line": 91,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_membox.h#L91"
+    },
+    {
+      "symbol": "LOS_MemboxInit",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_membox.h",
+      "line": 121,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_membox.h#L121"
+    },
+    {
+      "symbol": "LOS_MemboxAlloc",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_membox.h",
+      "line": 146,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_membox.h#L146"
+    },
+    {
+      "symbol": "LOS_MemboxFree",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_membox.h",
+      "line": 173,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_membox.h#L173"
+    },
+    {
+      "symbol": "LOS_MemboxClr",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_membox.h",
+      "line": 199,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_membox.h#L199"
+    },
+    {
+      "symbol": "LOS_ShowBox",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_membox.h",
+      "line": 223,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_membox.h#L223"
+    },
+    {
+      "symbol": "LOS_MemboxStatisticsGet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_membox.h",
+      "line": 250,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_membox.h#L250"
+    },
+    {
+      "symbol": "LOS_MemUsedNodeShow",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_memory.h",
+      "line": 79,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_memory.h#L79"
+    },
+    {
+      "symbol": "LOS_MemDeInit",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_memory.h",
+      "line": 102,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_memory.h#L102"
+    },
+    {
+      "symbol": "LOS_MemPoolList",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_memory.h",
+      "line": 120,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_memory.h#L120"
+    },
+    {
+      "symbol": "LOS_MemFreeByTaskID",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_memory.h",
+      "line": 144,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_memory.h#L144"
+    },
+    {
+      "symbol": "LOS_MemRegionsAdd",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_memory.h",
+      "line": 185,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_memory.h#L185"
+    },
+    {
+      "symbol": "LOS_MemInit",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_memory.h",
+      "line": 232,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_memory.h#L232"
+    },
+    {
+      "symbol": "LOS_MemAlloc",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_memory.h",
+      "line": 260,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_memory.h#L260"
+    },
+    {
+      "symbol": "LOS_MemFree",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_memory.h",
+      "line": 284,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_memory.h#L284"
+    },
+    {
+      "symbol": "LOS_MemRealloc",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_memory.h",
+      "line": 318,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_memory.h#L318"
+    },
+    {
+      "symbol": "LOS_MemAllocAlign",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_memory.h",
+      "line": 347,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_memory.h#L347"
+    },
+    {
+      "symbol": "LOS_MemPoolSizeGet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_memory.h",
+      "line": 370,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_memory.h#L370"
+    },
+    {
+      "symbol": "LOS_MemTotalUsedGet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_memory.h",
+      "line": 393,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_memory.h#L393"
+    },
+    {
+      "symbol": "LOS_MemInfoGet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_memory.h",
+      "line": 417,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_memory.h#L417"
+    },
+    {
+      "symbol": "LOS_MemFreeNodeShow",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_memory.h",
+      "line": 440,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_memory.h#L440"
+    },
+    {
+      "symbol": "LOS_MemIntegrityCheck",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_memory.h",
+      "line": 466,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_memory.h#L466"
+    },
+    {
+      "symbol": "LOS_MemUnlockEnable",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_memory.h",
+      "line": 559,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_memory.h#L559"
+    },
+    {
+      "symbol": "LOS_MuxCreate",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_mux.h",
+      "line": 206,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_mux.h#L206"
+    },
+    {
+      "symbol": "LOS_MuxDelete",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_mux.h",
+      "line": 231,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_mux.h#L231"
+    },
+    {
+      "symbol": "LOS_MuxPend",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_mux.h",
+      "line": 266,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_mux.h#L266"
+    },
+    {
+      "symbol": "LOS_MuxPost",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_mux.h",
+      "line": 292,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_mux.h#L292"
+    },
+    {
+      "symbol": "LOS_QueueCreate",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_queue.h",
+      "line": 402,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_queue.h#L402"
+    },
+    {
+      "symbol": "LOS_QueueCreateStatic",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_queue.h",
+      "line": 436,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_queue.h#L436"
+    },
+    {
+      "symbol": "LOS_QueueReadCopy",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_queue.h",
+      "line": 486,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_queue.h#L486"
+    },
+    {
+      "symbol": "LOS_QueueReadCopyIsr",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_queue.h",
+      "line": 528,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_queue.h#L528"
+    },
+    {
+      "symbol": "LOS_QueueWriteCopy",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_queue.h",
+      "line": 576,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_queue.h#L576"
+    },
+    {
+      "symbol": "LOS_QueueWriteCopyIsr",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_queue.h",
+      "line": 615,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_queue.h#L615"
+    },
+    {
+      "symbol": "LOS_QueueRead",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_queue.h",
+      "line": 666,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_queue.h#L666"
+    },
+    {
+      "symbol": "LOS_QueueReadIsr",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_queue.h",
+      "line": 708,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_queue.h#L708"
+    },
+    {
+      "symbol": "LOS_QueueWrite",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_queue.h",
+      "line": 757,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_queue.h#L757"
+    },
+    {
+      "symbol": "LOS_QueueWriteIsr",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_queue.h",
+      "line": 798,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_queue.h#L798"
+    },
+    {
+      "symbol": "LOS_QueueWriteHead",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_queue.h",
+      "line": 847,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_queue.h#L847"
+    },
+    {
+      "symbol": "LOS_QueueWriteHeadIsr",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_queue.h",
+      "line": 887,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_queue.h#L887"
+    },
+    {
+      "symbol": "LOS_QueueWriteHeadCopy",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_queue.h",
+      "line": 936,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_queue.h#L936"
+    },
+    {
+      "symbol": "LOS_QueueWriteHeadCopyIsr",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_queue.h",
+      "line": 976,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_queue.h#L976"
+    },
+    {
+      "symbol": "LOS_QueueDelete",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_queue.h",
+      "line": 1009,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_queue.h#L1009"
+    },
+    {
+      "symbol": "LOS_QueueInfoGet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_queue.h",
+      "line": 1035,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_queue.h#L1035"
+    },
+    {
+      "symbol": "LOS_SysCycleGet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_sched.h",
+      "line": 96,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_sched.h#L96"
+    },
+    {
+      "symbol": "LOS_SchedTickTimeoutNsGet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_sched.h",
+      "line": 120,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_sched.h#L120"
+    },
+    {
+      "symbol": "LOS_SchedTickHandler",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_sched.h",
+      "line": 138,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_sched.h#L138"
+    },
+    {
+      "symbol": "LOS_Schedule",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_sched.h",
+      "line": 156,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_sched.h#L156"
+    },
+    {
+      "symbol": "LOS_SemCreate",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_sem.h",
+      "line": 192,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_sem.h#L192"
+    },
+    {
+      "symbol": "LOS_BinarySemCreate",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_sem.h",
+      "line": 218,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_sem.h#L218"
+    },
+    {
+      "symbol": "LOS_SemDelete",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_sem.h",
+      "line": 242,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_sem.h#L242"
+    },
+    {
+      "symbol": "LOS_SemPend",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_sem.h",
+      "line": 272,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_sem.h#L272"
+    },
+    {
+      "symbol": "LOS_SemPost",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_sem.h",
+      "line": 295,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_sem.h#L295"
+    },
+    {
+      "symbol": "LOS_SemGetValue",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_sem.h",
+      "line": 297,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_sem.h#L297"
+    },
+    {
+      "symbol": "LOS_ListDelete",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_sortlink.h",
+      "line": 80,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_sortlink.h#L80"
+    },
+    {
+      "symbol": "LOS_ListEmpty",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_sortlink.h",
+      "line": 89,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_sortlink.h#L89"
+    },
+    {
+      "symbol": "LOS_DL_LIST_ENTRY",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_sortlink.h",
+      "line": 93,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_sortlink.h#L93"
+    },
+    {
+      "symbol": "LOS_SwtmrStart",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_swtmr.h",
+      "line": 310,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_swtmr.h#L310"
+    },
+    {
+      "symbol": "LOS_SwtmrStop",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_swtmr.h",
+      "line": 334,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_swtmr.h#L334"
+    },
+    {
+      "symbol": "LOS_SwtmrTimeGet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_swtmr.h",
+      "line": 360,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_swtmr.h#L360"
+    },
+    {
+      "symbol": "LOS_SwtmrCreate",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_swtmr.h",
+      "line": 396,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_swtmr.h#L396"
+    },
+    {
+      "symbol": "LOS_SwtmrDelete",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_swtmr.h",
+      "line": 432,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_swtmr.h#L432"
+    },
+    {
+      "symbol": "LOS_Msleep",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 540,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L540"
+    },
+    {
+      "symbol": "LOS_Start",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 562,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L562"
+    },
+    {
+      "symbol": "LOS_Reboot",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 563,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L563"
+    },
+    {
+      "symbol": "LOS_Panic",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 564,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L564"
+    },
+    {
+      "symbol": "LOS_KernelInit",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 586,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L586"
+    },
+    {
+      "symbol": "LOS_TaskCreateOnly",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 633,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L633"
+    },
+    {
+      "symbol": "LOS_TaskCreate",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 680,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L680"
+    },
+    {
+      "symbol": "LOS_TaskResume",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 706,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L706"
+    },
+    {
+      "symbol": "LOS_TaskSuspend",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 735,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L735"
+    },
+    {
+      "symbol": "LOS_TaskDelete",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 763,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L763"
+    },
+    {
+      "symbol": "LOS_TaskDelay",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 794,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L794"
+    },
+    {
+      "symbol": "LOS_TaskLock",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 817,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L817"
+    },
+    {
+      "symbol": "LOS_TaskUnlock",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 840,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L840"
+    },
+    {
+      "symbol": "LOS_TaskPriSet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 870,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L870"
+    },
+    {
+      "symbol": "LOS_CurTaskPriSet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 898,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L898"
+    },
+    {
+      "symbol": "LOS_TaskYield",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 924,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L924"
+    },
+    {
+      "symbol": "LOS_TaskPriGet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 943,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L943"
+    },
+    {
+      "symbol": "LOS_CurTaskIDGet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 963,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L963"
+    },
+    {
+      "symbol": "LOS_NextTaskIDGet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 981,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L981"
+    },
+    {
+      "symbol": "LOS_CurTaskNameGet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 999,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L999"
+    },
+    {
+      "symbol": "LOS_TaskInfoGet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 1025,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L1025"
+    },
+    {
+      "symbol": "LOS_TaskStatusGet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 1047,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L1047"
+    },
+    {
+      "symbol": "LOS_TaskInfoMonitor",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 1068,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L1068"
+    },
+    {
+      "symbol": "LOS_TaskSwitchInfoGet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 1089,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L1089"
+    },
+    {
+      "symbol": "LOS_TaskIsRunning",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 1108,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L1108"
+    },
+    {
+      "symbol": "LOS_NewTaskIDGet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 1126,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L1126"
+    },
+    {
+      "symbol": "LOS_TaskNameGet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 1144,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L1144"
+    },
+    {
+      "symbol": "LOS_TaskJoin",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 1164,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L1164"
+    },
+    {
+      "symbol": "LOS_TaskDetach",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 1183,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L1183"
+    },
+    {
+      "symbol": "LOS_CHECK_SCHEDULE",
+      "kind": "宏",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 1568,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L1568"
+    },
+    {
+      "symbol": "LOS_TaskResRecycle",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_task.h",
+      "line": 1791,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_task.h#L1791"
+    },
+    {
+      "symbol": "LOS_SysCycleGet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_tick.h",
+      "line": 100,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_tick.h#L100"
+    },
+    {
+      "symbol": "LOS_SysTickClockFreqAdjust",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_tick.h",
+      "line": 318,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_tick.h#L318"
+    },
+    {
+      "symbol": "LOS_TickCountGet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_tick.h",
+      "line": 338,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_tick.h#L338"
+    },
+    {
+      "symbol": "LOS_CyclePerTickGet",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_tick.h",
+      "line": 358,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_tick.h#L358"
+    },
+    {
+      "symbol": "LOS_Tick2MS",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_tick.h",
+      "line": 379,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_tick.h#L379"
+    },
+    {
+      "symbol": "LOS_MS2Tick",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_tick.h",
+      "line": 400,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_tick.h#L400"
+    },
+    {
+      "symbol": "LOS_TickTimerRegister",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_tick.h",
+      "line": 418,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_tick.h#L418"
+    },
+    {
+      "symbol": "LOS_UDelay",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_tick.h",
+      "line": 437,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_tick.h#L437"
+    },
+    {
+      "symbol": "LOS_MDelay",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_tick.h",
+      "line": 456,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_tick.h#L456"
+    },
+    {
+      "symbol": "LOS_CurrNanosec",
+      "kind": "声明",
+      "repository": "openharmony/kernel_liteos_m",
+      "path": "kernel/include/los_tick.h",
+      "line": 475,
+      "url": "https://github.com/openharmony/kernel_liteos_m/blob/6c29f5cee9c28554440640897009097d5066b1b5/kernel/include/los_tick.h#L475"
+    },
+    {
+      "symbol": "osThreadZone_Msk",
+      "kind": "宏",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 216,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L216"
+    },
+    {
+      "symbol": "osThreadZone_Valid",
+      "kind": "宏",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 217,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L217"
+    },
+    {
+      "symbol": "osThreadZone",
+      "kind": "宏",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 218,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L218"
+    },
+    {
+      "symbol": "osThreadProcessor",
+      "kind": "宏",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 222,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L222"
+    },
+    {
+      "symbol": "osSafetyClass_Msk",
+      "kind": "宏",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 231,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L231"
+    },
+    {
+      "symbol": "osSafetyClass_Valid",
+      "kind": "宏",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 232,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L232"
+    },
+    {
+      "symbol": "osSafetyClass",
+      "kind": "宏",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 233,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L233"
+    },
+    {
+      "symbol": "osKernelInitialize",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 356,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L356"
+    },
+    {
+      "symbol": "osKernelGetInfo",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 363,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L363"
+    },
+    {
+      "symbol": "osKernelGetState",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 367,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L367"
+    },
+    {
+      "symbol": "osKernelStart",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 371,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L371"
+    },
+    {
+      "symbol": "osKernelLock",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 375,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L375"
+    },
+    {
+      "symbol": "osKernelUnlock",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 379,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L379"
+    },
+    {
+      "symbol": "osKernelRestoreLock",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 384,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L384"
+    },
+    {
+      "symbol": "osKernelSuspend",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 388,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L388"
+    },
+    {
+      "symbol": "osKernelResume",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 392,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L392"
+    },
+    {
+      "symbol": "osKernelProtect",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 397,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L397"
+    },
+    {
+      "symbol": "osKernelDestroyClass",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 403,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L403"
+    },
+    {
+      "symbol": "osKernelGetTickCount",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 407,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L407"
+    },
+    {
+      "symbol": "osKernelGetTickFreq",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 411,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L411"
+    },
+    {
+      "symbol": "osKernelGetSysTimerCount",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 415,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L415"
+    },
+    {
+      "symbol": "osKernelGetSysTimerFreq",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 419,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L419"
+    },
+    {
+      "symbol": "osThreadNew",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 429,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L429"
+    },
+    {
+      "symbol": "osThreadGetName",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 434,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L434"
+    },
+    {
+      "symbol": "osThreadGetClass",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 439,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L439"
+    },
+    {
+      "symbol": "osThreadGetZone",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 444,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L444"
+    },
+    {
+      "symbol": "osThreadGetId",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 448,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L448"
+    },
+    {
+      "symbol": "osThreadGetState",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 453,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L453"
+    },
+    {
+      "symbol": "osThreadGetStackSize",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 458,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L458"
+    },
+    {
+      "symbol": "osThreadGetStackSpace",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 463,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L463"
+    },
+    {
+      "symbol": "osThreadSetPriority",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 469,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L469"
+    },
+    {
+      "symbol": "osThreadGetPriority",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 474,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L474"
+    },
+    {
+      "symbol": "osThreadYield",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 478,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L478"
+    },
+    {
+      "symbol": "osThreadSuspend",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 483,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L483"
+    },
+    {
+      "symbol": "osThreadResume",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 488,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L488"
+    },
+    {
+      "symbol": "osThreadDetach",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 493,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L493"
+    },
+    {
+      "symbol": "osThreadJoin",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 498,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L498"
+    },
+    {
+      "symbol": "osThreadExit",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 501,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L501"
+    },
+    {
+      "symbol": "osThreadTerminate",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 506,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L506"
+    },
+    {
+      "symbol": "osThreadFeedWatchdog",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 511,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L511"
+    },
+    {
+      "symbol": "osThreadProtectPrivileged",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 515,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L515"
+    },
+    {
+      "symbol": "osThreadSuspendClass",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 521,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L521"
+    },
+    {
+      "symbol": "osThreadResumeClass",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 527,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L527"
+    },
+    {
+      "symbol": "osThreadTerminateZone",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 532,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L532"
+    },
+    {
+      "symbol": "osThreadSetAffinityMask",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 538,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L538"
+    },
+    {
+      "symbol": "osThreadGetAffinityMask",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 543,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L543"
+    },
+    {
+      "symbol": "osThreadGetCount",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 547,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L547"
+    },
+    {
+      "symbol": "osThreadEnumerate",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 553,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L553"
+    },
+    {
+      "symbol": "osThreadFlagsSet",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 562,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L562"
+    },
+    {
+      "symbol": "osThreadFlagsClear",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 567,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L567"
+    },
+    {
+      "symbol": "osThreadFlagsGet",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 571,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L571"
+    },
+    {
+      "symbol": "osThreadFlagsWait",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 578,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L578"
+    },
+    {
+      "symbol": "osDelay",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 586,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L586"
+    },
+    {
+      "symbol": "osDelayUntil",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 591,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L591"
+    },
+    {
+      "symbol": "osTimerNew",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 602,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L602"
+    },
+    {
+      "symbol": "osTimerGetName",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 607,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L607"
+    },
+    {
+      "symbol": "osTimerStart",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 613,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L613"
+    },
+    {
+      "symbol": "osTimerStop",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 618,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L618"
+    },
+    {
+      "symbol": "osTimerIsRunning",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 623,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L623"
+    },
+    {
+      "symbol": "osTimerDelete",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 628,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L628"
+    },
+    {
+      "symbol": "osEventFlagsNew",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 636,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L636"
+    },
+    {
+      "symbol": "osEventFlagsGetName",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 641,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L641"
+    },
+    {
+      "symbol": "osEventFlagsSet",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 647,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L647"
+    },
+    {
+      "symbol": "osEventFlagsClear",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 653,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L653"
+    },
+    {
+      "symbol": "osEventFlagsGet",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 658,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L658"
+    },
+    {
+      "symbol": "osEventFlagsWait",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 666,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L666"
+    },
+    {
+      "symbol": "osEventFlagsDelete",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 671,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L671"
+    },
+    {
+      "symbol": "osMutexNew",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 679,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L679"
+    },
+    {
+      "symbol": "osMutexGetName",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 684,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L684"
+    },
+    {
+      "symbol": "osMutexAcquire",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 690,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L690"
+    },
+    {
+      "symbol": "osMutexRelease",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 695,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L695"
+    },
+    {
+      "symbol": "osMutexGetOwner",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 700,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L700"
+    },
+    {
+      "symbol": "osMutexDelete",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 705,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L705"
+    },
+    {
+      "symbol": "osSemaphoreNew",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 715,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L715"
+    },
+    {
+      "symbol": "osSemaphoreGetName",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 720,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L720"
+    },
+    {
+      "symbol": "osSemaphoreAcquire",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 726,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L726"
+    },
+    {
+      "symbol": "osSemaphoreRelease",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 731,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L731"
+    },
+    {
+      "symbol": "osSemaphoreGetCount",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 736,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L736"
+    },
+    {
+      "symbol": "osSemaphoreDelete",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 741,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L741"
+    },
+    {
+      "symbol": "osMemoryPoolNew",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 751,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L751"
+    },
+    {
+      "symbol": "osMemoryPoolGetName",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 756,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L756"
+    },
+    {
+      "symbol": "osMemoryPoolAlloc",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 762,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L762"
+    },
+    {
+      "symbol": "osMemoryPoolFree",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 768,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L768"
+    },
+    {
+      "symbol": "osMemoryPoolGetCapacity",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 773,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L773"
+    },
+    {
+      "symbol": "osMemoryPoolGetBlockSize",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 778,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L778"
+    },
+    {
+      "symbol": "osMemoryPoolGetCount",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 783,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L783"
+    },
+    {
+      "symbol": "osMemoryPoolGetSpace",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 788,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L788"
+    },
+    {
+      "symbol": "osMemoryPoolDelete",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 793,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L793"
+    },
+    {
+      "symbol": "osMessageQueueNew",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 803,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L803"
+    },
+    {
+      "symbol": "osMessageQueueGetName",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 808,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L808"
+    },
+    {
+      "symbol": "osMessageQueuePut",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 816,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L816"
+    },
+    {
+      "symbol": "osMessageQueueGet",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 824,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L824"
+    },
+    {
+      "symbol": "osMessageQueueGetCapacity",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 829,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L829"
+    },
+    {
+      "symbol": "osMessageQueueGetMsgSize",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 834,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L834"
+    },
+    {
+      "symbol": "osMessageQueueGetCount",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 839,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L839"
+    },
+    {
+      "symbol": "osMessageQueueGetSpace",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 844,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L844"
+    },
+    {
+      "symbol": "osMessageQueueReset",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 849,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L849"
+    },
+    {
+      "symbol": "osMessageQueueDelete",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 854,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L854"
+    },
+    {
+      "symbol": "osWatchdogAlarm_Handler",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 862,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L862"
+    },
+    {
+      "symbol": "osZoneSetup_Callback",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 869,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L869"
+    },
+    {
+      "symbol": "osFaultResume",
+      "kind": "声明",
+      "repository": "openharmony/third_party_cmsis",
+      "path": "CMSIS/RTOS2/Include/cmsis_os2.h",
+      "line": 875,
+      "url": "https://github.com/openharmony/third_party_cmsis/blob/fd250efb9a2826a20926161343ee46091b8c52db/CMSIS/RTOS2/Include/cmsis_os2.h#L875"
+    },
+    {
+      "symbol": "UtilsGetValue",
+      "kind": "声明",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/kv_store.h",
+      "line": 65,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/kv_store.h#L65"
+    },
+    {
+      "symbol": "UtilsSetValue",
+      "kind": "声明",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/kv_store.h",
+      "line": 80,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/kv_store.h#L80"
+    },
+    {
+      "symbol": "UtilsDeleteValue",
+      "kind": "声明",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/kv_store.h",
+      "line": 93,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/kv_store.h#L93"
+    },
+    {
+      "symbol": "ClearKVCache",
+      "kind": "声明",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/kv_store.h",
+      "line": 105,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/kv_store.h#L105"
+    },
+    {
+      "symbol": "SYS_SERVICE_INIT",
+      "kind": "宏",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/ohos_init.h",
+      "line": 116,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/ohos_init.h#L116"
+    },
+    {
+      "symbol": "SYS_SERVICE_INIT_PRI",
+      "kind": "宏",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/ohos_init.h",
+      "line": 129,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/ohos_init.h#L129"
+    },
+    {
+      "symbol": "SYS_FEATURE_INIT",
+      "kind": "宏",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/ohos_init.h",
+      "line": 141,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/ohos_init.h#L141"
+    },
+    {
+      "symbol": "SYS_FEATURE_INIT_PRI",
+      "kind": "宏",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/ohos_init.h",
+      "line": 154,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/ohos_init.h#L154"
+    },
+    {
+      "symbol": "SYS_RUN",
+      "kind": "宏",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/ohos_init.h",
+      "line": 166,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/ohos_init.h#L166"
+    },
+    {
+      "symbol": "SYS_RUN_PRI",
+      "kind": "宏",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/ohos_init.h",
+      "line": 179,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/ohos_init.h#L179"
+    },
+    {
+      "symbol": "APP_SERVICE_INIT",
+      "kind": "宏",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/ohos_init.h",
+      "line": 239,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/ohos_init.h#L239"
+    },
+    {
+      "symbol": "APP_SERVICE_INIT_PRI",
+      "kind": "宏",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/ohos_init.h",
+      "line": 252,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/ohos_init.h#L252"
+    },
+    {
+      "symbol": "APP_FEATURE_INIT",
+      "kind": "宏",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/ohos_init.h",
+      "line": 264,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/ohos_init.h#L264"
+    },
+    {
+      "symbol": "APP_FEATURE_INIT_PRI",
+      "kind": "宏",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/ohos_init.h",
+      "line": 277,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/ohos_init.h#L277"
+    },
+    {
+      "symbol": "UtilsFileOpen",
+      "kind": "声明",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/utils_file.h",
+      "line": 162,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/utils_file.h#L162"
+    },
+    {
+      "symbol": "UtilsFileClose",
+      "kind": "声明",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/utils_file.h",
+      "line": 172,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/utils_file.h#L172"
+    },
+    {
+      "symbol": "UtilsFileRead",
+      "kind": "声明",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/utils_file.h",
+      "line": 185,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/utils_file.h#L185"
+    },
+    {
+      "symbol": "UtilsFileWrite",
+      "kind": "声明",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/utils_file.h",
+      "line": 197,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/utils_file.h#L197"
+    },
+    {
+      "symbol": "UtilsFileDelete",
+      "kind": "声明",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/utils_file.h",
+      "line": 209,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/utils_file.h#L209"
+    },
+    {
+      "symbol": "UtilsFileStat",
+      "kind": "声明",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/utils_file.h",
+      "line": 220,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/utils_file.h#L220"
+    },
+    {
+      "symbol": "UtilsFileSeek",
+      "kind": "声明",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/utils_file.h",
+      "line": 241,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/utils_file.h#L241"
+    },
+    {
+      "symbol": "UtilsFileCopy",
+      "kind": "声明",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/utils_file.h",
+      "line": 254,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/utils_file.h#L254"
+    },
+    {
+      "symbol": "UtilsFileMove",
+      "kind": "声明",
+      "repository": "openharmony/commonlibrary_utils_lite",
+      "path": "include/utils_file.h",
+      "line": 267,
+      "url": "https://github.com/openharmony/commonlibrary_utils_lite/blob/c409c66164c31992111b7b5ac5397d28b19fab62/include/utils_file.h#L267"
+    },
+    {
+      "symbol": "GetName",
+      "kind": "函数表成员",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/feature.h",
+      "line": 79,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/feature.h#L79"
+    },
+    {
+      "symbol": "SAMGR_SendRequest",
+      "kind": "声明",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/message.h",
+      "line": 139,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/message.h#L139"
+    },
+    {
+      "symbol": "SAMGR_SendSharedRequest",
+      "kind": "声明",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/message.h",
+      "line": 162,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/message.h#L162"
+    },
+    {
+      "symbol": "SAMGR_SendSharedDirectRequest",
+      "kind": "声明",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/message.h",
+      "line": 193,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/message.h#L193"
+    },
+    {
+      "symbol": "SAMGR_SendResponse",
+      "kind": "声明",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/message.h",
+      "line": 216,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/message.h#L216"
+    },
+    {
+      "symbol": "SAMGR_SendResponseByIdentity",
+      "kind": "声明",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/message.h",
+      "line": 242,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/message.h#L242"
+    },
+    {
+      "symbol": "RegisterService",
+      "kind": "函数表成员",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/samgr_lite.h",
+      "line": 111,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/samgr_lite.h#L111"
+    },
+    {
+      "symbol": "UnregisterService",
+      "kind": "函数表成员",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/samgr_lite.h",
+      "line": 125,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/samgr_lite.h#L125"
+    },
+    {
+      "symbol": "RegisterFeature",
+      "kind": "函数表成员",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/samgr_lite.h",
+      "line": 139,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/samgr_lite.h#L139"
+    },
+    {
+      "symbol": "UnregisterFeature",
+      "kind": "函数表成员",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/samgr_lite.h",
+      "line": 155,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/samgr_lite.h#L155"
+    },
+    {
+      "symbol": "RegisterDefaultFeatureApi",
+      "kind": "函数表成员",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/samgr_lite.h",
+      "line": 172,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/samgr_lite.h#L172"
+    },
+    {
+      "symbol": "UnregisterDefaultFeatureApi",
+      "kind": "函数表成员",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/samgr_lite.h",
+      "line": 187,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/samgr_lite.h#L187"
+    },
+    {
+      "symbol": "RegisterFeatureApi",
+      "kind": "函数表成员",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/samgr_lite.h",
+      "line": 204,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/samgr_lite.h#L204"
+    },
+    {
+      "symbol": "UnregisterFeatureApi",
+      "kind": "函数表成员",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/samgr_lite.h",
+      "line": 218,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/samgr_lite.h#L218"
+    },
+    {
+      "symbol": "GetDefaultFeatureApi",
+      "kind": "函数表成员",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/samgr_lite.h",
+      "line": 232,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/samgr_lite.h#L232"
+    },
+    {
+      "symbol": "GetRemoteDefaultFeatureApi",
+      "kind": "函数表成员",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/samgr_lite.h",
+      "line": 234,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/samgr_lite.h#L234"
+    },
+    {
+      "symbol": "GetFeatureApi",
+      "kind": "函数表成员",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/samgr_lite.h",
+      "line": 249,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/samgr_lite.h#L249"
+    },
+    {
+      "symbol": "GetSystemAvailableCapabilities",
+      "kind": "函数表成员",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/samgr_lite.h",
+      "line": 287,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/samgr_lite.h#L287"
+    },
+    {
+      "symbol": "SAMGR_GetInstance",
+      "kind": "声明",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/samgr_lite.h",
+      "line": 299,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/samgr_lite.h#L299"
+    },
+    {
+      "symbol": "SAMGR_Bootstrap",
+      "kind": "声明",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/samgr_lite.h",
+      "line": 315,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/samgr_lite.h#L315"
+    },
+    {
+      "symbol": "GetName",
+      "kind": "函数表成员",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/service.h",
+      "line": 161,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/service.h#L161"
+    },
+    {
+      "symbol": "GetTaskConfig",
+      "kind": "函数表成员",
+      "repository": "openharmony/systemabilitymgr_samgr_lite",
+      "path": "interfaces/kits/samgr/service.h",
+      "line": 204,
+      "url": "https://github.com/openharmony/systemabilitymgr_samgr_lite/blob/e78ae061f8c47ffd6f709f80eb7933596d15d0cf/interfaces/kits/samgr/service.h#L204"
+    },
+    {
+      "symbol": "IoTFlashRead",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_flash.h",
+      "line": 57,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_flash.h#L57"
+    },
+    {
+      "symbol": "IoTFlashWrite",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_flash.h",
+      "line": 73,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_flash.h#L73"
+    },
+    {
+      "symbol": "IoTFlashErase",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_flash.h",
+      "line": 86,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_flash.h#L86"
+    },
+    {
+      "symbol": "IoTFlashInit",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_flash.h",
+      "line": 96,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_flash.h#L96"
+    },
+    {
+      "symbol": "IoTFlashDeinit",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_flash.h",
+      "line": 106,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_flash.h#L106"
+    },
+    {
+      "symbol": "IoTGpioInit",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_gpio.h",
+      "line": 97,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_gpio.h#L97"
+    },
+    {
+      "symbol": "IoTGpioDeinit",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_gpio.h",
+      "line": 108,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_gpio.h#L108"
+    },
+    {
+      "symbol": "IoTGpioSetDir",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_gpio.h",
+      "line": 120,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_gpio.h#L120"
+    },
+    {
+      "symbol": "IoTGpioGetDir",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_gpio.h",
+      "line": 132,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_gpio.h#L132"
+    },
+    {
+      "symbol": "IoTGpioSetOutputVal",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_gpio.h",
+      "line": 144,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_gpio.h#L144"
+    },
+    {
+      "symbol": "IoTGpioGetOutputVal",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_gpio.h",
+      "line": 156,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_gpio.h#L156"
+    },
+    {
+      "symbol": "IoTGpioGetInputVal",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_gpio.h",
+      "line": 168,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_gpio.h#L168"
+    },
+    {
+      "symbol": "IoTGpioRegisterIsrFunc",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_gpio.h",
+      "line": 185,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_gpio.h#L185"
+    },
+    {
+      "symbol": "IoTGpioUnregisterIsrFunc",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_gpio.h",
+      "line": 197,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_gpio.h#L197"
+    },
+    {
+      "symbol": "IoTGpioSetIsrMask",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_gpio.h",
+      "line": 210,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_gpio.h#L210"
+    },
+    {
+      "symbol": "IoTGpioSetIsrMode",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_gpio.h",
+      "line": 225,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_gpio.h#L225"
+    },
+    {
+      "symbol": "IoTI2cInit",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_i2c.h",
+      "line": 56,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_i2c.h#L56"
+    },
+    {
+      "symbol": "IoTI2cDeinit",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_i2c.h",
+      "line": 67,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_i2c.h#L67"
+    },
+    {
+      "symbol": "IoTI2cWrite",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_i2c.h",
+      "line": 83,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_i2c.h#L83"
+    },
+    {
+      "symbol": "IoTI2cRead",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_i2c.h",
+      "line": 99,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_i2c.h#L99"
+    },
+    {
+      "symbol": "IoTI2cSetBaudrate",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_i2c.h",
+      "line": 111,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_i2c.h#L111"
+    },
+    {
+      "symbol": "IoTPwmInit",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_pwm.h",
+      "line": 53,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_pwm.h#L53"
+    },
+    {
+      "symbol": "IoTPwmDeinit",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_pwm.h",
+      "line": 64,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_pwm.h#L64"
+    },
+    {
+      "symbol": "IoTPwmStart",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_pwm.h",
+      "line": 79,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_pwm.h#L79"
+    },
+    {
+      "symbol": "IoTPwmStop",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_pwm.h",
+      "line": 90,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_pwm.h#L90"
+    },
+    {
+      "symbol": "IoTUartInit",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_uart.h",
+      "line": 155,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_uart.h#L155"
+    },
+    {
+      "symbol": "IoTUartRead",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_uart.h",
+      "line": 169,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_uart.h#L169"
+    },
+    {
+      "symbol": "IoTUartWrite",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_uart.h",
+      "line": 183,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_uart.h#L183"
+    },
+    {
+      "symbol": "IoTUartDeinit",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_uart.h",
+      "line": 194,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_uart.h#L194"
+    },
+    {
+      "symbol": "IoTUartSetFlowCtrl",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_uart.h",
+      "line": 208,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_uart.h#L208"
+    },
+    {
+      "symbol": "IoTWatchDogEnable",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_watchdog.h",
+      "line": 49,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_watchdog.h#L49"
+    },
+    {
+      "symbol": "IoTWatchDogKick",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_watchdog.h",
+      "line": 57,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_watchdog.h#L57"
+    },
+    {
+      "symbol": "IoTWatchDogDisable",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/iot_watchdog.h",
+      "line": 65,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/iot_watchdog.h#L65"
+    },
+    {
+      "symbol": "LpcInit",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/lowpower.h",
+      "line": 61,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/lowpower.h#L61"
+    },
+    {
+      "symbol": "LpcSetType",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/lowpower.h",
+      "line": 72,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/lowpower.h#L72"
+    },
+    {
+      "symbol": "RebootDevice",
+      "kind": "声明",
+      "repository": "openharmony/iothardware_peripheral",
+      "path": "interfaces/inner_api/reset.h",
+      "line": 51,
+      "url": "https://github.com/openharmony/iothardware_peripheral/blob/8377f3d107e1d247b48be5e494253a6a5d0ed26d/interfaces/inner_api/reset.h#L51"
+    },
+    {
+      "symbol": "HILOG_DEBUG",
+      "kind": "宏",
+      "repository": "openharmony/hiviewdfx_hilog_lite",
+      "path": "interfaces/native/kits/hilog_lite/hiview_log.h",
+      "line": 314,
+      "url": "https://github.com/openharmony/hiviewdfx_hilog_lite/blob/ac0f764d9348f8f521df2f9b241cb0df0b6a9cf5/interfaces/native/kits/hilog_lite/hiview_log.h#L314"
+    },
+    {
+      "symbol": "HILOG_INFO",
+      "kind": "宏",
+      "repository": "openharmony/hiviewdfx_hilog_lite",
+      "path": "interfaces/native/kits/hilog_lite/hiview_log.h",
+      "line": 336,
+      "url": "https://github.com/openharmony/hiviewdfx_hilog_lite/blob/ac0f764d9348f8f521df2f9b241cb0df0b6a9cf5/interfaces/native/kits/hilog_lite/hiview_log.h#L336"
+    },
+    {
+      "symbol": "HILOG_WARN",
+      "kind": "宏",
+      "repository": "openharmony/hiviewdfx_hilog_lite",
+      "path": "interfaces/native/kits/hilog_lite/hiview_log.h",
+      "line": 358,
+      "url": "https://github.com/openharmony/hiviewdfx_hilog_lite/blob/ac0f764d9348f8f521df2f9b241cb0df0b6a9cf5/interfaces/native/kits/hilog_lite/hiview_log.h#L358"
+    },
+    {
+      "symbol": "HILOG_ERROR",
+      "kind": "宏",
+      "repository": "openharmony/hiviewdfx_hilog_lite",
+      "path": "interfaces/native/kits/hilog_lite/hiview_log.h",
+      "line": 380,
+      "url": "https://github.com/openharmony/hiviewdfx_hilog_lite/blob/ac0f764d9348f8f521df2f9b241cb0df0b6a9cf5/interfaces/native/kits/hilog_lite/hiview_log.h#L380"
+    },
+    {
+      "symbol": "HILOG_FATAL",
+      "kind": "宏",
+      "repository": "openharmony/hiviewdfx_hilog_lite",
+      "path": "interfaces/native/kits/hilog_lite/hiview_log.h",
+      "line": 402,
+      "url": "https://github.com/openharmony/hiviewdfx_hilog_lite/blob/ac0f764d9348f8f521df2f9b241cb0df0b6a9cf5/interfaces/native/kits/hilog_lite/hiview_log.h#L402"
+    }
+  ]
+}
