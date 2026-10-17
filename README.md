@@ -13,8 +13,8 @@
 
 ## 当前进度
 
-- **已发布：Day 1–51**
-- **下一课：Day 52**
+- **已发布：Day 1–52**
+- **下一课：Day 53**
 - 当前主线：**Chapter 6 · Designing for Reuse**
 - 更新方式：**GitHub Markdown only**
 
@@ -43,11 +43,11 @@
 
 ## 最近课程
 
+- [Day 52 · Reconciling Generality and Ease of Use](daily/day-052-reconciling-generality-ease-of-use.md)
 - [Day 51 · Design General-Purpose Interfaces](daily/day-051-general-purpose-interfaces.md)
 - [Day 50 · Design Interfaces That Are Easy to Use](daily/day-050-easy-to-use-interfaces.md)
 - [Day 49 · Consider the Audience and Purpose](daily/day-049-consider-audience-purpose.md)
 - [Day 48 · Design Usable Interfaces](daily/day-048-design-usable-interfaces.md)
-- [Day 47 · Design for Extensibility](daily/day-047-design-for-extensibility.md)
 
 ## 每日课程结构
 
@@ -80,7 +80,7 @@
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-051-*.md
+│   └── day-052-*.md
 ├── examples/
 │   └── day-XXX/
 ├── weekly/
