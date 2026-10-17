@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 51**。下一课从 **Day 52** 继续。
+当前仓库课程已发布到 **Day 52**。下一课从 **Day 53** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -55,16 +55,17 @@
 | 49 | Consider the Audience and Purpose | 已发布 | [day-049](daily/day-049-consider-audience-purpose.md) |
 | 50 | Design Interfaces That Are Easy to Use | 已发布 | [day-050](daily/day-050-easy-to-use-interfaces.md) |
 | 51 | Design General-Purpose Interfaces | 已发布 | [day-051](daily/day-051-general-purpose-interfaces.md) |
+| 52 | Reconciling Generality and Ease of Use | 已发布 | [day-052](daily/day-052-reconciling-generality-ease-of-use.md) |
 
 ## 最新发布详情
 
-- **日期**：2026-10-16
+- **日期**：2026-10-17
 - **章节**：Chapter 6 · Designing for Reuse
-- **主题**：Design General-Purpose Interfaces
-- **关键知识点**：bounded generality、mechanism vs policy、customization points、value/options vs behavioral variation、compile-time vs runtime extensibility
-- **设计模式 / 稳定边界**：Strategy/policy 只隔离真实行为变化；transport 继续作为 Adapter/runtime platform boundary；优先 value/template policy，避免默认 virtual + shared_ptr
-- **Lab**：[examples/day-051/main.cpp](examples/day-051/main.cpp)
-- **上一课**：[Day 50 · Design Interfaces That Are Easy to Use](daily/day-050-easy-to-use-interfaces.md)
+- **主题**：Reconciling Generality and Ease of Use
+- **关键知识点**：layered API、common case、advanced options、安全默认值、单一 mechanism、bounded customization
+- **设计模式 / 稳定边界**：Facade 只隐藏真实子系统复杂度；Adapter 隔离平台变化；required transport 通过引用注入；不为简单数值变化强行引入 Strategy
+- **Lab**：[examples/day-052/main.cpp](examples/day-052/main.cpp)
+- **上一课**：[Day 51 · Design General-Purpose Interfaces](daily/day-051-general-purpose-interfaces.md)
 
 ## 规则
 
