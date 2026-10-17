@@ -4,7 +4,14 @@
 Scans daily/*.md and reports:
   - stub days (placeholder text or too short),
   - frontmatter problems (missing keys, bad lab path, broken prev/next chain),
-  - example labs with no course referencing them.
+  - example labs with no course referencing them,
+  - runnable-example contract problems.
+
+Runnable-example contract:
+  - every published day must have examples/day-XXX/main.cpp,
+  - every standalone C++ source under examples/day-XXX must define int main(),
+  - exercise-XX.cpp and exercise-XX-solution.cpp are treated as standalone
+    runnable programs when they exist.
 
 Usage: python3 tools/check-course.py
 Exit code is 0 when everything is healthy, 1 otherwise.
@@ -24,6 +31,7 @@ REQUIRED_KEYS = [
 ]
 STUB_MARKERS = ["历史课程迁移", "完整课程见 HTML", "完整内容见 HTML"]
 STUB_MAX_LINES = 50
+MAIN_RE = re.compile(r"\bint\s+main\s*\(")
 # A file is "gold" when it has frontmatter, real sections, and no stub marker.
 # "legacy" = readable content without complete metadata.
 # "stub"   = placeholder only, needs a full rewrite.
@@ -85,24 +93,23 @@ def main() -> int:
         markers = re.findall(r"^## ([①②③④⑤⑥⑦⑧])", text, re.M)
         has_sections = set(markers) == set("①②③④⑤⑥⑦⑧") and len(markers) == 8
         if not has_sections:
-            problems.append(f"{name}: requires all eight unique learning stages")
+            problems.append(f"{name}: requires all eight core learning stages")
         if any(marker in text for marker in STUB_MARKERS):
             problems.append(f"{name}: contains delivery placeholder text")
         if is_stub:
             stubs.append(f"{name} ({len(lines)} lines)")
-            continue  # Don't pile frontmatter errors onto stubs.
+            continue
         if fm and has_sections:
             gold += 1
         else:
             legacy.append(f"{name} ({len(lines)} lines)")
 
         if not fm:
-            # Legacy content without any metadata: one line, not 13.
             problems.append(f"{name}: no frontmatter (legacy format)")
         else:
             for key in REQUIRED_KEYS:
                 if key == "lab":
-                    continue  # lab is optional; validated below when present
+                    continue
                 if key not in fm:
                     problems.append(f"{name}: frontmatter missing '{key}'")
 
@@ -131,7 +138,6 @@ def main() -> int:
                 problems.append(f"{path.name}: {key} is not an integer")
                 continue
             if target != -1 and target not in days_seen:
-                # Next day may simply not exist yet; only flag 'previous'.
                 if rel == "previous":
                     problems.append(
                         f"{path.name}: previous={target} has no file"
@@ -148,10 +154,36 @@ def main() -> int:
         if rel not in referenced:
             problems.append(f"{rel}: no daily course references this lab")
 
+    # Runnable exercise contract.
+    runnable_sources = 0
+    exercise_sources = 0
+    for day in sorted(days_seen):
+        day_dir = EXAMPLES / f"day-{day:03d}"
+        main_cpp = day_dir / "main.cpp"
+        if not main_cpp.exists():
+            problems.append(
+                f"day-{day:03d}: missing standalone lab {main_cpp.relative_to(ROOT)}"
+            )
+            continue
+
+        for source in sorted(day_dir.glob("*.cpp")):
+            runnable_sources += 1
+            if source.name.startswith("exercise-"):
+                exercise_sources += 1
+            source_text = source.read_text(encoding="utf-8")
+            if not MAIN_RE.search(source_text):
+                problems.append(
+                    f"{source.relative_to(ROOT)}: standalone source must define int main()"
+                )
+
     # Report.
     total = len(files)
     print(f"Days: {total} total | {gold} gold | "
           f"{len(legacy)} legacy | {len(stubs)} stubs")
+    print(
+        "Runnable C++ sources: "
+        f"{runnable_sources} total | {exercise_sources} explicit exercises"
+    )
     if stubs:
         print("\nStubs (need a full rewrite):")
         for s in stubs:
