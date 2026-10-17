@@ -65,6 +65,30 @@
 9. 3 个常见坑与 Pattern 滥用
 10. 2 道检查题 + 1 道设计题
 
+### 第 8 节 Runnable Exercise Contract
+
+主 Lab 必须落到 `examples/day-XXX/main.cpp`，完整、可独立编译并运行。
+
+如果当天包含“修复代码 / 重构 / 实现 / 调试”类练习，则不能只给 Markdown 片段；必须同时提供独立 runnable source：
+
+```text
+examples/day-XXX/
+├── main.cpp
+├── exercise-01.cpp
+└── exercise-01-solution.cpp   # 有必要时提供
+```
+
+其中：
+
+- starter 优先保持可编译、可运行，但设计/语义存在待修复问题；
+- 每个 standalone `.cpp` 必须有 `int main()`；
+- 学习路径是：运行 → 观察 → 修改 → 严格 warnings 编译 → 再运行 → 对照解法；
+- 默认编译门禁：`-std=c++23 -Wall -Wextra -Wconversion -Wpedantic`；
+- 纯知识问答和纯架构设计题不强制生成额外 source；
+- Embedded 练习必须显式说明 ownership/lifetime、timeout、capacity、thread/ISR context 等边界。
+
+完整规范见 [Runnable Exercise Audit & Contract](runnable-exercise-audit.md)。
+
 ## 每 7 天复盘
 
 复盘至少检查：
@@ -90,11 +114,11 @@
 
 ```text
 daily/       每日完整课程
-examples/    当日可编译代码
+examples/    当日可编译 Lab 与 runnable exercises
 patterns/    C++ Design Patterns 与 ownership 专题
 frameworks/  经典工业框架源码解构（Asio 专题）
 weekly/      周复盘
 guidelines/  编码规范学习索引
-docs/        学习路线与说明
+docs/        学习路线、练习 Contract 与说明
 progress.md  连续学习进度
 ```
