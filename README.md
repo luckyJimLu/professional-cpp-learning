@@ -21,6 +21,7 @@
 ## 快速入口
 
 - [16 周学习路线](docs/learning-plan.md)
+- [Runnable Exercise Audit & Contract](docs/runnable-exercise-audit.md)
 - [完整学习进度](progress.md)
 - [C++ Design Patterns · 工程化专题](patterns/)
 - [Ownership & Smart Pointers](patterns/ownership-and-smart-pointers.md)
@@ -60,9 +61,11 @@
 5. 设计模式映射：变化轴、稳定边界、Pattern 是否值得使用
 6. Embedded / System Design 场景
 7. 今日编码规范
-8. 可编译 Lab / 修复违规代码
+8. 可编译 Lab / Runnable Exercise
 9. 3 个常见坑与 Pattern 滥用
 10. 2 道检查题 + 1 道设计题
+
+代码型“修复 / 重构 / 实现 / 调试”练习必须落成独立 `exercise-XX.cpp`，可以直接编译运行；纯知识问答和纯设计题不强制生成 source。CI 会编译并运行 `examples/day-*/*.cpp` 下的全部 standalone C++ 文件。
 
 每 7 天安排工程化周复盘，并增加 Design Review：变化轴、稳定边界、Pattern 选择、ownership/lifetime 与 overengineering 检查。
 
@@ -73,6 +76,7 @@
 ├── README.md
 ├── progress.md
 ├── docs/
+│   └── runnable-exercise-audit.md
 ├── patterns/
 ├── frameworks/
 ├── utils/
@@ -83,6 +87,9 @@
 │   └── day-052-*.md
 ├── examples/
 │   └── day-XXX/
+│       ├── main.cpp
+│       ├── exercise-01.cpp
+│       └── exercise-01-solution.cpp
 ├── weekly/
 └── guidelines/
 ```
