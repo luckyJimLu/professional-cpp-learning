@@ -29,6 +29,12 @@ export default defineConfig(() => {
     build: {
       target: "es2022",
       sourcemap: !isGitHubPages,
+      rollupOptions: {
+        input: {
+          main: "index.html",
+          rtos: "rtos.html",
+        },
+      },
     },
   };
 });

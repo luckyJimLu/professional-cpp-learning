@@ -271,6 +271,10 @@ export function Shell({
                   <NavIcon id="search" />
                   <span>代码搜索</span>
                 </button>
+                <a href={`${import.meta.env.BASE_URL}rtos.html`}>
+                  <span aria-hidden="true">⌁</span>
+                  <span>RTOS 模拟器 ↗</span>
+                </a>
               </nav>
             </div>
           </details>
@@ -360,6 +364,10 @@ export function Shell({
               </button>
             );
           })}
+          <a className="nav-item" href={`${import.meta.env.BASE_URL}rtos.html`} title="RTOS 模拟器">
+            <span className="nav-icon" aria-hidden="true">⌁</span>
+            <span>RTOS 模拟器 ↗</span>
+          </a>
         </nav>
       </aside>
 

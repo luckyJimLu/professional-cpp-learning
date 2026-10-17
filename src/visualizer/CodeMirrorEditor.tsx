@@ -16,6 +16,7 @@ import { keymap } from "@codemirror/view";
 
 // 状态效果：设置当前正在执行的高亮代码行（1-based，0 表示不高亮）
 const setActiveLineEffect = StateEffect.define<number>();
+const setTaskLinesEffect = StateEffect.define<Record<string, { line: number; color: string }>>();
 
 // VS Code 风格调试行号槽指示器（红点 + 黄色步进箭头）
 class DebugExecutionMarker extends GutterMarker {
@@ -54,6 +55,27 @@ const activeLineField = StateField.define<DecorationSet>({
     return decorations;
   },
   provide: (f) => EditorView.decorations.from(f),
+});
+
+const taskLinesField = StateField.define<DecorationSet>({
+  create: () => Decoration.none,
+  update(decorations, tr) {
+    decorations = decorations.map(tr.changes);
+    for (const effect of tr.effects) {
+      if (!effect.is(setTaskLinesEffect)) continue;
+      const ranges = Object.entries(effect.value)
+        .filter(([, item]) => item.line > 0 && item.line <= tr.state.doc.lines)
+        .map(([task, item]) => Decoration.line({
+          attributes: {
+            style: `background: color-mix(in srgb, ${item.color} 18%, transparent); box-shadow: inset 3px 0 ${item.color}`,
+            "data-task": task,
+          },
+        }).range(tr.state.doc.line(item.line).from));
+      return Decoration.set(ranges, true);
+    }
+    return decorations;
+  },
+  provide: field => EditorView.decorations.from(field),
 });
 
 // 调试状态行号槽（Gutter）
@@ -141,6 +163,7 @@ export function CodeMirrorEditor({
   value,
   onChange,
   activeLine = 0,
+  activeLines,
   readOnly = false,
   wrapLines = false,
   className = "",
@@ -148,6 +171,7 @@ export function CodeMirrorEditor({
   value: string;
   onChange?: (val: string) => void;
   activeLine?: number;
+  activeLines?: Record<string, { line: number; color: string }>;
   readOnly?: boolean;
   wrapLines?: boolean;
   className?: string;
@@ -183,6 +207,7 @@ export function CodeMirrorEditor({
         cpp(),
         visualizerTheme,
         activeLineField,
+        taskLinesField,
         updateListener,
         readOnlyCompartment.current.of(EditorState.readOnly.of(readOnly)),
         wrapCompartment.current.of(wrapLines ? EditorView.lineWrapping : []),
@@ -258,6 +283,10 @@ export function CodeMirrorEditor({
       });
     }
   }, [activeLine]);
+
+  useEffect(() => {
+    viewRef.current?.dispatch({ effects: setTaskLinesEffect.of(activeLines ?? {}) });
+  }, [activeLines]);
 
   return <div ref={containerRef} className={`cm-editor-host ${className}`} />;
 }

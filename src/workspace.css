@@ -734,7 +734,8 @@ mark {
     gap: 4px;
     background: transparent;
   }
-  .mobile-menu nav button {
+  .mobile-menu nav button,
+  .mobile-menu nav a {
     display: flex;
     align-items: center;
     width: 100%;
@@ -746,11 +747,13 @@ mark {
     font-size: 14px;
     color: var(--ink);
     text-align: left;
+    text-decoration: none;
     cursor: pointer;
     transition: background 0.15s ease, color 0.15s ease;
   }
   .mobile-menu nav button:hover,
-  .mobile-menu nav button[aria-current] {
+  .mobile-menu nav button[aria-current],
+  .mobile-menu nav a:hover {
     color: var(--blue);
     background: var(--blue-soft);
     font-weight: 600;
