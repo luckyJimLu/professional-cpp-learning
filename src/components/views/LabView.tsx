@@ -208,19 +208,38 @@ export function LabView({
           <header className="lab-workbench-header">
             <div>
               <span className="eyebrow">工作区</span>
-              <h2 id="lab-workbench-title">代码、运行与内存分析</h2>
+              <h2 id="lab-workbench-title">
+                {lesson.labMode === "rtos-sim" ? "RTOS 并发模拟实验" : "代码、运行与内存分析"}
+              </h2>
             </div>
+            {lesson.labMode === "rtos-sim" && (
+              <a
+                className="primary-button"
+                href={`${import.meta.env.BASE_URL}rtos.html?scenario=${encodeURIComponent(lesson.rtosScenario ?? "round-robin")}&day=${lesson.day}`}
+                onClick={() => markStep(lesson.day, "lab")}
+              >
+                在模拟器中打开 ↗
+              </a>
+            )}
           </header>
-          <VisualizerWorkbench
-            session={traceSession.state}
-            onChangeCode={traceSession.setCode}
-            onStepChange={traceSession.setStep}
-            onRun={runCompiler}
-            onRunApproximate={runStepDebugger}
-            onLoadTrace={traceSession.loadTrace}
-            variant="lab"
-            className="lab-workbench"
-          />
+          {lesson.labMode === "rtos-sim" ? (
+            <div className="custom-code-banner" style={{ margin: "16px" }}>
+              <span>
+                本章只支持模拟执行（受限 C++ 子集，确定性 tick 调度，不调用 Clang/WASM）。请点击右上角「在模拟器中打开 ↗」进入全屏并发工作台。
+              </span>
+            </div>
+          ) : (
+            <VisualizerWorkbench
+              session={traceSession.state}
+              onChangeCode={traceSession.setCode}
+              onStepChange={traceSession.setStep}
+              onRun={runCompiler}
+              onRunApproximate={runStepDebugger}
+              onLoadTrace={traceSession.loadTrace}
+              variant="lab"
+              className="lab-workbench"
+            />
+          )}
         </section>
       </div>
     </div>

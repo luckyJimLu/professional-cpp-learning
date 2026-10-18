@@ -1,0 +1,97 @@
+/**
+ * RtosConfigPopover · 内核时钟/时间片/虚假唤醒配置与 V3 轨迹导出
+ */
+
+import { useState } from "react";
+import { DEFAULT_RTOS_CONFIG, type RtosConfig, type VisualizerTraceV3 } from "../types.ts";
+
+export function RtosConfigPopover({
+  config,
+  onChangeConfig,
+  trace,
+}: {
+  config: Partial<RtosConfig>;
+  onChangeConfig: (next: Partial<RtosConfig>) => void;
+  trace: VisualizerTraceV3 | null;
+}) {
+  const [open, setOpen] = useState(false);
+  const merged: RtosConfig = { ...DEFAULT_RTOS_CONFIG, ...config };
+
+  const exportTraceJson = () => {
+    if (!trace) return;
+    const blob = new Blob([JSON.stringify(trace, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `rtos-trace-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="config-popover-wrap">
+      <button
+        type="button"
+        className="config-trigger-btn"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+        title="内核参数与导出"
+      >
+        ⚙ 内核配置
+      </button>
+
+      {open && (
+        <div className="config-popover" role="dialog" aria-label="RTOS 内核配置">
+          <div className="config-row">
+            <label htmlFor="cfg-slice">时间片 (ticks)</label>
+            <input
+              id="cfg-slice"
+              type="number"
+              min={1}
+              max={50}
+              value={merged.time_slice_ticks}
+              onChange={(e) =>
+                onChangeConfig({ ...config, time_slice_ticks: Math.max(1, Number(e.target.value) || 1) })
+              }
+            />
+          </div>
+          <div className="config-row">
+            <label htmlFor="cfg-spurious">虚假唤醒间隔 (0=关)</label>
+            <input
+              id="cfg-spurious"
+              type="number"
+              min={0}
+              max={100}
+              value={merged.spurious_wakeup_every}
+              onChange={(e) =>
+                onChangeConfig({ ...config, spurious_wakeup_every: Math.max(0, Number(e.target.value) || 0) })
+              }
+            />
+          </div>
+          <div className="config-row">
+            <label htmlFor="cfg-max-ticks">最大 Ticks</label>
+            <input
+              id="cfg-max-ticks"
+              type="number"
+              min={10}
+              max={5000}
+              step={50}
+              value={merged.max_ticks}
+              onChange={(e) =>
+                onChangeConfig({ ...config, max_ticks: Math.max(10, Number(e.target.value) || 200) })
+              }
+            />
+          </div>
+          <div className="config-actions">
+            <button type="button" onClick={exportTraceJson} disabled={!trace}>
+              导出 V3 JSON
+            </button>
+            <button type="button" onClick={() => setOpen(false)}>
+              完成
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

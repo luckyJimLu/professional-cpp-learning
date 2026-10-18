@@ -117,6 +117,9 @@ def main() -> int:
         if lab_path and not (ROOT / lab_path).exists():
             problems.append(f"{name}: lab path does not exist: {lab_path}")
 
+        if fm.get("lab") == "rtos-sim" and "rtos_scenario" not in fm:
+            problems.append(f"{name}: lab: rtos-sim requires rtos_scenario in frontmatter")
+
         if fm:
             try:
                 if int(fm.get("day", -1)) != day:
@@ -143,13 +146,13 @@ def main() -> int:
                         f"{path.name}: previous={target} has no file"
                     )
 
-    # Orphan example labs.
+    # Orphan example labs (only day-* directories).
     referenced = set()
     for path in files:
         fm = parse_frontmatter(path.read_text(encoding="utf-8"))
         if "lab.path" in fm:
             referenced.add(fm["lab.path"])
-    for lab in sorted(EXAMPLES.glob("*/main.cpp")):
+    for lab in sorted(EXAMPLES.glob("day-*/main.cpp")):
         rel = str(lab.relative_to(ROOT))
         if rel not in referenced:
             problems.append(f"{rel}: no daily course references this lab")

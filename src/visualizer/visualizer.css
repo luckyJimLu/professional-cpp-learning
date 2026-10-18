@@ -19,8 +19,8 @@
 .trace-chip.is-active { color: #38bdf8; border-color: rgba(56, 189, 248, 0.35); background: rgba(56, 189, 248, 0.12); }
 .trace-library-button { color: #38bdf8; background: #162032; border-color: #25344a; }
 .trace-export-button { border-color: #334155; }
-.trace-mode-badge, .ref-count-badge { border-radius: 999px; padding: 3px 8px; font: 600 10px/1.3 var(--mono); white-space: nowrap; }
-.trace-mode-badge { color: #94a3b8; border: 1px solid #334155; background: #111827; }
+.trace-mode-badge, .ref-count-badge { border-radius: 999px; padding: 3px 10px; font: 600 11px/1.3 var(--mono); white-space: nowrap; }
+.trace-mode-badge { color: #e2e8f0; border: 1px solid #334155; background: #1e293b; }
 .trace-mode-badge.mode-preset { color: #c4b5fd; border-color: #5b4b8a; }
 .trace-mode-badge.mode-clang-vis { color: #6ee7b7; border-color: #166534; }
 .trace-mode-badge.mode-regex { color: #fbbf24; border-color: #92400e; }
@@ -31,7 +31,9 @@
 .trace-diagnostics button { flex: none; border: 1px solid currentColor; border-radius: 5px; color: inherit; background: transparent; cursor: pointer; }
 
 .workbench-mobile-switcher { display: none; gap: 6px; padding: 8px 10px; background: #161b22; border-bottom: 1px solid #1c2430; }
-.lab-session-strip { display: flex; min-height: 40px; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 12px; border-bottom: 1px solid #1e293b; color: #94a3b8; background: #0d131d; font: 600 11px/1.3 var(--mono); }
+.lab-session-strip { display: flex; min-height: 40px; align-items: center; justify-content: space-between; gap: 12px; padding: 7px 14px; border-bottom: 1px solid #1e293b; color: #f1f5f9; background: #0d131d; font: 600 12px/1.3 var(--mono); }
+.lab-session-title { display: inline-flex; align-items: center; gap: 8px; color: #f8fafc; font-weight: 600; font-size: 12px; letter-spacing: 0.02em; }
+.lab-session-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #38bdf8; box-shadow: 0 0 6px #38bdf8; flex-shrink: 0; }
 .switcher-tab { flex: 1; min-height: 36px; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; background: #0d1117; cursor: pointer; }
 .switcher-tab.is-active { color: #fff; border-color: #1a73e8; background: #00599c; }
 

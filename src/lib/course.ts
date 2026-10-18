@@ -33,6 +33,8 @@ export interface Lesson {
   topics: string[];
   guidelines: string[];
   labPath?: string;
+  labMode?: "rtos-sim";
+  rtosScenario?: string;
   path: string;
   raw: string;
   sections: LessonSection[];
@@ -206,6 +208,8 @@ function buildLesson(path: string, raw: string): Lesson | undefined {
   const { meta, body } = readFrontmatter(raw);
   const chapter = Number(meta.chapter || chapterFromBody(body)) || undefined;
   const nestedLabPath = raw.match(/^lab:\s*$[\s\S]*?^\s+path:\s*(.+)$/m)?.[1]?.trim();
+  const labMode = meta.lab === "rtos-sim" ? "rtos-sim" : undefined;
+  const rtosScenario = meta.rtos_scenario ? String(meta.rtos_scenario) : undefined;
   const sections = splitSections(body);
   const labSection = sections.find((section) => section.step === "lab");
   const nextSection = sections.find((section) => /下一步|next/i.test(section.title));
@@ -224,6 +228,8 @@ function buildLesson(path: string, raw: string): Lesson | undefined {
     topics,
     guidelines,
     labPath: nestedLabPath,
+    labMode,
+    rtosScenario,
     path: path.replace(/^\.\.\/\.\.\//, ""),
     raw: body,
     sections,

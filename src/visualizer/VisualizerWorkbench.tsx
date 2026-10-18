@@ -275,7 +275,15 @@ export function VisualizerWorkbench({
         </div>
       </div></>}
 
-      {variant === "lab" && <div className="lab-session-strip"><span>浏览器编译会话</span><span className={`trace-mode-badge mode-${session.mode}`}>{modeLabel}</span></div>}
+      {variant === "lab" && (
+        <div className="lab-session-strip">
+          <span className="lab-session-title">
+            <span className="lab-session-dot" aria-hidden="true" />
+            浏览器编译会话
+          </span>
+          <span className={`trace-mode-badge mode-${session.mode}`}>{modeLabel}</span>
+        </div>
+      )}
 
       {session.isStale && <div className="trace-stale-banner" role="status">代码已修改，点击“运行”更新内存轨迹</div>}
       {session.diagnostics.length > 0 && <div className={session.status === "error" ? "trace-diagnostics is-error" : "trace-diagnostics"} role={session.status === "error" ? "alert" : "status"}>{session.diagnostics.join(" ")}
