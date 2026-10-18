@@ -297,119 +297,75 @@ export function Shell({
       <aside className={`sidebar ${isSidebarCollapsed ? "is-collapsed" : ""}`}>
         <div className="sidebar-top-bar">
           {!isSidebarCollapsed ? (
-            <div className="sidebar-header-wrapper">
-              <div className="sidebar-logo-row">
-                <a
-                  className="brand-logo-link opencode-sidebar-brand"
-                  href="?view=today"
-                  aria-label="Pro C++ 学习指南"
-                  onClick={(e) => {
-                    if (!e.metaKey && !e.ctrlKey) {
-                      e.preventDefault();
-                      setView("today");
-                    }
-                  }}
+            <div className="sidebar-search-row">
+              <button
+                type="button"
+                className={`sidebar-search-box ${view === "search" ? "is-active" : ""}`}
+                onClick={handleHeaderSearchClick}
+                onMouseEnter={onPreloadSearch}
+                onFocus={onPreloadSearch}
+                title="搜索代码与课程 (Ctrl+K)"
+                aria-label="搜索代码与课程 (Ctrl+K)"
+              >
+                <svg
+                  className="sidebar-search-icon"
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
                 >
-                  <OpenCodeLogo showFullText={false} />
-                </a>
-                <div className="sidebar-control-actions">
-                  <button
-                    type="button"
-                    className="sidebar-control-btn sidebar-search-trigger-btn"
-                    title="搜索代码 (Ctrl+K)"
-                    aria-label="搜索 (Ctrl+K)"
-                    onClick={handleHeaderSearchClick}
-                    onMouseEnter={onPreloadSearch}
-                    onFocus={onPreloadSearch}
-                  >
-                    <svg
-                      className="search-icon"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
-                    >
-                      <circle cx="11" cy="11" r="8" />
-                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                    </svg>
-                  </button>
-                  <button
-                    type="button"
-                    className="sidebar-control-btn sidebar-toggle-btn"
-                    onClick={toggleSidebar}
-                    aria-label="收起侧边栏"
-                    title="收起侧边栏"
-                  >
-                    <svg
-                      className="toggle-sidebar-icon"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
-                    >
-                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                      <line x1="9" y1="3" x2="9" y2="21" />
-                      <path d="m16 10-3 2 3 2" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <span className="sidebar-search-placeholder">
+                  搜索课程...
+                </span>
+                <kbd className="sidebar-search-kbd">Ctrl K</kbd>
+              </button>
 
-              <div className="sidebar-search-container">
-                <button
-                  type="button"
-                  className={`sidebar-search-box ${view === "search" ? "is-active" : ""}`}
-                  onClick={handleHeaderSearchClick}
-                  onMouseEnter={onPreloadSearch}
-                  onFocus={onPreloadSearch}
-                  title="搜索代码与课程 (Ctrl+K)"
-                  aria-label="搜索代码与课程 (Ctrl+K)"
+              <button
+                type="button"
+                className="sidebar-collapse-btn"
+                onClick={toggleSidebar}
+                aria-label="收起侧边栏"
+                title="收起侧边栏"
+              >
+                <svg
+                  className="toggle-sidebar-icon"
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
                 >
-                  <svg
-                    className="sidebar-search-icon"
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <circle cx="11" cy="11" r="8" />
-                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                  </svg>
-                  <span className="sidebar-search-placeholder">
-                    搜索代码与课程...
-                  </span>
-                  <kbd className="sidebar-search-kbd">Ctrl K</kbd>
-                </button>
-              </div>
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                  <line x1="9" y1="3" x2="9" y2="21" />
+                  <path d="m16 10-3 2 3 2" />
+                </svg>
+              </button>
             </div>
           ) : (
             <div className="sidebar-collapsed-controls">
               <button
                 type="button"
-                className="sidebar-control-btn sidebar-toggle-btn"
+                className="sidebar-control-btn sidebar-expand-btn"
                 onClick={toggleSidebar}
                 aria-label="展开侧边栏"
                 title="展开侧边栏"
               >
                 <svg
                   className="toggle-sidebar-icon"
-                  width="18"
-                  height="18"
+                  width="15"
+                  height="15"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -425,7 +381,7 @@ export function Shell({
               </button>
               <button
                 type="button"
-                className="sidebar-control-btn"
+                className="sidebar-control-btn sidebar-collapsed-search-btn"
                 title="搜索代码 (Ctrl+K)"
                 aria-label="搜索 (Ctrl+K)"
                 onClick={handleHeaderSearchClick}
@@ -434,8 +390,8 @@ export function Shell({
               >
                 <svg
                   className="search-icon"
-                  width="18"
-                  height="18"
+                  width="15"
+                  height="15"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
