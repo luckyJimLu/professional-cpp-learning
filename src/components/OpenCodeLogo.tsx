@@ -282,9 +282,9 @@ interface OpenCodeLogoProps {
   showFullText?: boolean;
 }
 
-export const OpenCodeLogo: React.FC<OpenCodeLogoProps> = ({ showFullText = true }) => {
+export const OpenCodeLogo: React.FC<OpenCodeLogoProps> = ({ showFullText = false }) => {
   return (
-    <div className="opencode-brand" title="Professional C++ Learning Console">
+    <div className="opencode-brand" title="Pro C++ 学习指南">
       {/* High-contrast highlighted PRO badge in OpenCode block pixel typography */}
       <div className="opencode-pro-badge" aria-label="PRO">
         <PixelTextSvg
