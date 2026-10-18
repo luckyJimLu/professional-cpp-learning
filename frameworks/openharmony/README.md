@@ -23,6 +23,7 @@ OpenHarmony 项目及其轻量系统相关源码可从官方开源仓库获取�
 | [03 · 系统组件接口](03-system-components.md) | 启动、SAMGR、外设、日志与存储 | 已整理／静态核对 |
 | [04 · 工程核对指南](04-engineering-guide.md) | 版本锁定、接口选择、资源边界和回归要求 | 已整理／待板端验证 |
 | [05 · 官方资料索引](05-sources.md) | 官方文档、源码位置和固定提交 | 80 个文件／9 个仓库 |
+| [06 · samgr_lite 服务与通信机制](06-samgr-lite-service-communication.md) | Service/Feature/IUnknown、TaskPool、异步消息、Pub/Sub 与死锁边界 | PDF 内容整理／待固定版本源码复核 |
 | [逐符号接口索引](API-INDEX.md) | 声明、宏与函数表成员的源码定位 | 311 项／所选头文件 |
 | [来源清单](sources.json) / [接口清单](api-index.json) | SHA-256、固定链接与机器可读元数据 | 已入模块 |
 | [内容规划与学习路线](ROADMAP.md) | 后续教程和板端实验路线 | 持续维护 |
