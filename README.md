@@ -13,8 +13,8 @@
 
 ## 当前进度
 
-- **已发布：Day 1–52**
-- **下一课：Day 53**
+- **已发布：Day 1–53**
+- **下一课：Day 54**
 - 当前主线：**Chapter 6 · Designing for Reuse**
 - 更新方式：**GitHub Markdown only**
 
@@ -45,11 +45,11 @@
 
 ## 最近课程
 
+- [Day 53 · Designing a Successful Abstraction](daily/day-053-designing-successful-abstraction.md)
 - [Day 52 · Reconciling Generality and Ease of Use](daily/day-052-reconciling-generality-ease-of-use.md)
 - [Day 51 · Design General-Purpose Interfaces](daily/day-051-general-purpose-interfaces.md)
 - [Day 50 · Design Interfaces That Are Easy to Use](daily/day-050-easy-to-use-interfaces.md)
 - [Day 49 · Consider the Audience and Purpose](daily/day-049-consider-audience-purpose.md)
-- [Day 48 · Design Usable Interfaces](daily/day-048-design-usable-interfaces.md)
 
 ## 每日课程结构
 
@@ -80,13 +80,13 @@
 │   └── runnable-exercise-audit.md
 ├── patterns/
 ├── frameworks/
-│   └── openharmony/  # Mini／轻量系统文档与后续实验
+│   └── openharmony/
 ├── utils/
 │   └── windows-remote-script-runner/
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-052-*.md
+│   └── day-053-*.md
 ├── examples/
 │   └── day-XXX/
 │       ├── main.cpp
