@@ -76,9 +76,7 @@ next: 34
 `ModemSession` 不需要知道底层 transport 的具体类型，只关心：
 
 ```cpp
-virtual Status Write(
-    std::span<const std::uint8_t> data,
-    std::chrono::milliseconds timeout) = 0;
+virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 ```
 
 这带来的主要收益不是“少写代码”，而是：
@@ -123,12 +121,10 @@ virtual Status Write(
 
 ```cpp
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
 
-  virtual Status Write(
-      std::span<const std::uint8_t> data,
-      std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 ```
 
@@ -139,11 +135,7 @@ class ITransport {
 ### C 风格：函数指针 + context
 
 ```cpp
-typedef int (*write_fn)(
-    void* context,
-    const uint8_t* data,
-    size_t size,
-    uint32_t timeout_ms);
+typedef int (*write_fn)(void* context, const uint8_t* data, size_t size, uint32_t timeout_ms);
 
 typedef struct {
   void* context;
@@ -165,12 +157,10 @@ typedef struct {
 
 ```cpp
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
 
-  virtual Status Write(
-      std::span<const std::uint8_t> data,
-      std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 ```
 
@@ -220,10 +210,10 @@ virtual ~ITransport() = default;
 
 ```cpp
 class ModemSession {
- public:
+public:
   explicit ModemSession(ITransport& transport) : transport_(transport) {}
 
- private:
+private:
   ITransport& transport_;
 };
 ```
@@ -264,12 +254,10 @@ examples/day-033/main.cpp
 
 ```cpp
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
 
-  virtual Status Write(
-      std::span<const std::uint8_t> data,
-      std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 ```
 
@@ -288,12 +276,7 @@ class ITransport {
 把下面接口：
 
 ```cpp
-bool Send(
-    unsigned char* data,
-    int size,
-    int timeout,
-    bool wait,
-    bool retry);
+bool Send(unsigned char* data, int size, int timeout, bool wait, bool retry);
 ```
 
 重构为：
@@ -323,7 +306,7 @@ bool Send(
 
 ```cpp
 class ITransport {
- public:
+public:
   virtual bool Write(uint8_t* data, int size, int timeout) = 0;
 };
 ```

@@ -81,7 +81,7 @@ Implementation 决定隐藏细节
 
 ```cpp
 class Modem {
- public:
+public:
   Status SendTelemetry(...);
   Status SendAtCommand(...);
   Status ResetGpio(...);
@@ -159,13 +159,12 @@ int modem_send(void* uart,
 
 ```cpp
 class ModemClient final {
- public:
-  explicit ModemClient(ModemCore& modem)
-      : modem_(modem) {}
+public:
+  explicit ModemClient(ModemCore& modem) : modem_(modem) {}
 
   Status SendTelemetry(std::span<const std::byte> payload);
 
- private:
+private:
   ModemCore& modem_;
 };
 ```
@@ -174,13 +173,12 @@ diagnostics 可以有独立 view：
 
 ```cpp
 class ModemDiagnostics final {
- public:
-  explicit ModemDiagnostics(ModemCore& modem)
-      : modem_(modem) {}
+public:
+  explicit ModemDiagnostics(ModemCore& modem) : modem_(modem) {}
 
   [[nodiscard]] std::uint32_t ReadSignalDbm() const;
 
- private:
+private:
   ModemCore& modem_;
 };
 ```
@@ -228,12 +226,10 @@ Adapter 适合隔离：
 
 ```cpp
 class IByteTransport {
- public:
+public:
   virtual ~IByteTransport() = default;
 
-  virtual Status Write(
-      std::span<const std::byte> payload,
-      std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::byte> payload, std::chrono::milliseconds timeout) = 0;
 };
 ```
 
@@ -244,8 +240,7 @@ class IByteTransport {
 `ModemCore` 借用一个 transport：
 
 ```cpp
-explicit ModemCore(IByteTransport& transport)
-    : transport_(transport) {}
+explicit ModemCore(IByteTransport& transport) : transport_(transport) {}
 ```
 
 这里：
@@ -318,9 +313,7 @@ Embedded 额外检查：
 错误：
 
 ```cpp
-Status SendTelemetry(UART_HandleTypeDef* uart,
-                     const std::byte* data,
-                     std::size_t size);
+Status SendTelemetry(UART_HandleTypeDef* uart, const std::byte* data, std::size_t size);
 ```
 
 推荐：
@@ -335,7 +328,7 @@ Status SendTelemetry(std::span<const std::byte> payload);
 
 ```cpp
 class ModemApi {
- public:
+public:
   Status Send();
   Status FactoryReset();
   Status WriteRegister();
@@ -396,7 +389,7 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic \
 
 ```cpp
 class ModemManager {
- public:
+public:
   ModemManager() {
     uart_ = GlobalServiceLocator::GetUart();
   }
@@ -408,7 +401,7 @@ class ModemManager {
     return false;
   }
 
- private:
+private:
   UartDriver* uart_{};
 };
 ```

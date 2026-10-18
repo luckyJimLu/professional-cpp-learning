@@ -75,11 +75,11 @@ flowchart TD
 ```cpp
 template <typename ReadToken>
 auto async_read_some(const MutableBufferSequence& buffers, ReadToken&& token)
-  -> decltype(async_initiate<ReadToken, void(error_code, std::size_t)>(
+    -> decltype(async_initiate<ReadToken, void(error_code, std::size_t)>(
         initiate_async_receive(this), token, buffers, message_flags(0)))  // :1070-1084
 {
   return async_initiate<ReadToken, void(error_code, std::size_t)>(
-      initiate_async_receive(this), token, buffers, message_flags(0));    // :1083-1085
+      initiate_async_receive(this), token, buffers, message_flags(0));  // :1083-1085
 }
 ```
 
@@ -101,8 +101,8 @@ auto async_read_some(const MutableBufferSequence& buffers, ReadToken&& token)
 ```cpp
 // :405-411 源码注释 "Allocate and construct an operation to wrap the handler"
 reactive_socket_recv_op<MutableBufferSequence, Handler, io_executor>* op =
-  new (p.v) reactive_socket_recv_op<...>(
-      success_ec_, impl.socket_, impl.state_, buffers, flags, handler, io_ex); // :407-409
+    new (p.v) reactive_socket_recv_op<...>(success_ec_, impl.socket_, impl.state_, buffers, flags,
+                                           handler, io_ex);  // :407-409
 // :414-419 取消槽：将 cancellation_slot 与该次操作关联
 // :421-422 ASIO_HANDLER_CREATION(...)
 // :424-432 start_op(impl.socket_, impl.state_, op, ...) → :433 所有权转移给 reactor

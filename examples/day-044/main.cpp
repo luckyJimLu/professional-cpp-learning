@@ -14,19 +14,17 @@ enum class Status {
 };
 
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
-  virtual Status Write(std::span<const std::uint8_t> data,
-                       std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 
 class FakeTransport final : public ITransport {
- public:
+public:
   explicit FakeTransport(std::size_t failures_before_success)
       : failures_before_success_(failures_before_success) {}
 
-  Status Write(std::span<const std::uint8_t> data,
-               std::chrono::milliseconds timeout) override {
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override {
     if (data.empty()) {
       return Status::kInvalidArgument;
     }
@@ -40,32 +38,32 @@ class FakeTransport final : public ITransport {
     return Status::kOk;
   }
 
-  [[nodiscard]] std::size_t Attempts() const { return attempts_; }
+  [[nodiscard]] std::size_t Attempts() const {
+    return attempts_;
+  }
 
- private:
+private:
   std::size_t failures_before_success_;
   std::size_t attempts_{0};
 };
 
 class AtClient {
- public:
+public:
   explicit AtClient(ITransport& transport) : transport_(transport) {}
 
-  Status SendOnce(std::span<const std::uint8_t> command,
-                  std::chrono::milliseconds timeout) {
+  Status SendOnce(std::span<const std::uint8_t> command, std::chrono::milliseconds timeout) {
     return transport_.Write(command, timeout);
   }
 
- private:
+private:
   ITransport& transport_;
 };
 
 class RetrySender {
- public:
+public:
   explicit RetrySender(AtClient& client) : client_(client) {}
 
-  Status Send(std::span<const std::uint8_t> command,
-              std::chrono::milliseconds timeout,
+  Status Send(std::span<const std::uint8_t> command, std::chrono::milliseconds timeout,
               std::size_t max_attempts) {
     if (max_attempts == 0U) {
       return Status::kInvalidArgument;
@@ -81,7 +79,7 @@ class RetrySender {
     return status;
   }
 
- private:
+private:
   AtClient& client_;
 };
 
@@ -99,6 +97,5 @@ int main() {
   FakeTransport unused_transport{0U};
   AtClient unused_client{unused_transport};
   RetrySender invalid_sender{unused_client};
-  assert(invalid_sender.Send(kAtCommand, 100ms, 0U) ==
-         Status::kInvalidArgument);
+  assert(invalid_sender.Send(kAtCommand, 100ms, 0U) == Status::kInvalidArgument);
 }

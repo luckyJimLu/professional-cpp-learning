@@ -14,37 +14,34 @@ enum class Status {
 };
 
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
 
-  virtual Status Write(std::span<const std::uint8_t> data,
-                       std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 
 class TxCounterMixin {
- public:
+public:
   [[nodiscard]] std::size_t TxCount() const {
     return tx_count_;
   }
 
- protected:
+protected:
   void RecordTx() {
     ++tx_count_;
   }
 
- private:
+private:
   std::size_t tx_count_{0};
 };
 
 class UartTransport final : public ITransport, private TxCounterMixin {
- public:
-  explicit UartTransport(std::uint32_t baudrate_bps)
-      : baudrate_bps_(baudrate_bps) {}
+public:
+  explicit UartTransport(std::uint32_t baudrate_bps) : baudrate_bps_(baudrate_bps) {}
 
   using TxCounterMixin::TxCount;
 
-  Status Write(std::span<const std::uint8_t> data,
-               std::chrono::milliseconds timeout) override {
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override {
     if (data.empty()) {
       return Status::kInvalidArgument;
     }
@@ -60,16 +57,15 @@ class UartTransport final : public ITransport, private TxCounterMixin {
     return baudrate_bps_;
   }
 
- private:
+private:
   std::uint32_t baudrate_bps_;
 };
 
 class FakeTransport final : public ITransport, private TxCounterMixin {
- public:
+public:
   using TxCounterMixin::TxCount;
 
-  Status Write(std::span<const std::uint8_t> data,
-               std::chrono::milliseconds timeout) override {
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override {
     if (data.empty()) {
       return Status::kInvalidArgument;
     }
@@ -83,22 +79,19 @@ class FakeTransport final : public ITransport, private TxCounterMixin {
 };
 
 class ModemSession {
- public:
-  explicit ModemSession(ITransport& transport)
-      : transport_(transport) {}
+public:
+  explicit ModemSession(ITransport& transport) : transport_(transport) {}
 
-  Status Send(std::span<const std::uint8_t> command,
-              std::chrono::milliseconds timeout) {
+  Status Send(std::span<const std::uint8_t> command, std::chrono::milliseconds timeout) {
     return transport_.Write(command, timeout);
   }
 
- private:
+private:
   ITransport& transport_;
 };
 
 int main() {
-  constexpr std::array<std::uint8_t, 4> kAt{
-      0x41, 0x54, 0x0D, 0x0A};
+  constexpr std::array<std::uint8_t, 4> kAt{0x41, 0x54, 0x0D, 0x0A};
 
   UartTransport uart{115200U};
   ModemSession modem{uart};

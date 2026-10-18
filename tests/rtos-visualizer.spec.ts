@@ -56,3 +56,11 @@ test("narrow layout keeps editor, trace and playback reachable", async ({ page }
   await expect(page.locator(".timeline-panel")).toBeVisible();
   await expect(page.locator(".playback")).toBeVisible();
 });
+
+test("fullscreen toggle button is available and skip link is removed", async ({ page }) => {
+  await page.goto("/rtos.html");
+  await expect(page.locator(".skip-link")).toHaveCount(0);
+  const fullscreenBtn = page.getByRole("button", { name: "全屏模式" });
+  await expect(fullscreenBtn).toBeVisible();
+});
+

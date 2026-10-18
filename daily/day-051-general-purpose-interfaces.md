@@ -103,8 +103,7 @@ struct SendOptions {
   std::uint8_t max_attempts{1};
 };
 
-Status Send(std::span<const std::byte> payload,
-            SendOptions options = {});
+Status Send(std::span<const std::byte> payload, SendOptions options = {});
 ```
 
 如果 retry 行为真的有多个长期实现，再把它提升成 policy，而不是预先加入十几个 flags。
@@ -203,8 +202,7 @@ Status Send(Buffer data, int mode, int flags, void* extension);
 推荐：
 
 ```cpp
-Status Send(std::span<const std::byte> payload,
-            SendOptions options = {});
+Status Send(std::span<const std::byte> payload, SendOptions options = {});
 ```
 
 ### MUST：实时路径的“可配置”必须有资源上界
@@ -252,9 +250,9 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic \
 
 ```cpp
 class UniversalDevice {
- public:
-  bool Execute(void* data, int len, int mode, int retries,
-               bool async, bool trace, void* user_context);
+public:
+  bool Execute(void* data, int len, int mode, int retries, bool async, bool trace,
+               void* user_context);
 };
 ```
 

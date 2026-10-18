@@ -81,10 +81,13 @@ struct FakeTransport final : Transport {
   }
 };
 class Modem {
- public:
+public:
   explicit Modem(Transport& transport) : transport_{transport} {}
-  bool Ping() { return transport_.Write("AT\r\n"); }
- private:
+  bool Ping() {
+    return transport_.Write("AT\r\n");
+  }
+
+private:
   Transport& transport_;
 };
 int main() {

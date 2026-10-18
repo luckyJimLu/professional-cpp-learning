@@ -14,19 +14,15 @@ enum class Status {
 };
 
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
 
-  virtual Status Write(
-      std::span<const std::uint8_t> data,
-      std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 
 class FakeTransport final : public ITransport {
- public:
-  Status Write(
-      std::span<const std::uint8_t> data,
-      std::chrono::milliseconds timeout) override {
+public:
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override {
     if (data.empty()) {
       return Status::kInvalidArgument;
     }
@@ -53,23 +49,21 @@ class FakeTransport final : public ITransport {
     return last_first_byte_;
   }
 
- private:
+private:
   std::size_t write_count_{0};
   std::size_t last_size_{0};
   std::uint8_t last_first_byte_{0};
 };
 
 class ModemSession {
- public:
+public:
   explicit ModemSession(ITransport& transport) : transport_(transport) {}
 
-  Status Send(
-      std::span<const std::uint8_t> command,
-      std::chrono::milliseconds timeout) {
+  Status Send(std::span<const std::uint8_t> command, std::chrono::milliseconds timeout) {
     return transport_.Write(command, timeout);
   }
 
- private:
+private:
   ITransport& transport_;
 };
 

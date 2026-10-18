@@ -41,7 +41,7 @@ next: 35
 
 ~~~cpp
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
   virtual Status Write(std::span<const std::uint8_t> data) = 0;
 };
@@ -70,8 +70,7 @@ class UartTransport final : public ITransport {
 当对象可能通过基类 owning handle 管理时：
 
 ~~~cpp
-std::unique_ptr<ITransport> transport =
-    std::make_unique<UartTransport>();
+std::unique_ptr<ITransport> transport = std::make_unique<UartTransport>();
 ~~~
 
 基类应提供：
@@ -106,18 +105,14 @@ Modern C++ 可以把契约交给类型系统：
 
 ~~~cpp
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
-  virtual Status Write(
-      std::span<const std::uint8_t> data,
-      std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 
 class UartTransport final : public ITransport {
- public:
-  Status Write(
-      std::span<const std::uint8_t> data,
-      std::chrono::milliseconds timeout) override;
+public:
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override;
 };
 ~~~
 
@@ -134,9 +129,7 @@ Status Write(std::span<std::uint8_t> data);
 推荐：
 
 ~~~cpp
-Status Write(
-    std::span<const std::uint8_t> data,
-    std::chrono::milliseconds timeout) override;
+Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override;
 ~~~
 
 ### MUST：多态基类提供安全析构策略
@@ -186,13 +179,13 @@ ModemSession --borrows--> ITransport
 
 ~~~cpp
 class Driver {
- public:
+public:
   virtual bool Send(unsigned char* data, int len) = 0;
   ~Driver() = default;
 };
 
 class UartDriver : public Driver {
- public:
+public:
   bool Send(const unsigned char* data, int len);
 };
 ~~~

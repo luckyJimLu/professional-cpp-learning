@@ -17,16 +17,14 @@ struct SendOptions {
 };
 
 class IByteTransport {
- public:
+public:
   virtual ~IByteTransport() = default;
-  virtual Status Write(std::span<const std::byte> payload,
-                       std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::byte> payload, std::chrono::milliseconds timeout) = 0;
 };
 
 class FakeTransport final : public IByteTransport {
- public:
-  Status Write(std::span<const std::byte> payload,
-               std::chrono::milliseconds timeout) override {
+public:
+  Status Write(std::span<const std::byte> payload, std::chrono::milliseconds timeout) override {
     if (payload.empty()) {
       return Status::kInvalidArgument;
     }
@@ -37,14 +35,16 @@ class FakeTransport final : public IByteTransport {
     return Status::kOk;
   }
 
-  [[nodiscard]] std::uint32_t WriteCount() const { return write_count_; }
+  [[nodiscard]] std::uint32_t WriteCount() const {
+    return write_count_;
+  }
 
- private:
+private:
   std::uint32_t write_count_{0};
 };
 
 class Sender final {
- public:
+public:
   static constexpr std::uint8_t kMaxAttempts = 3;
 
   explicit Sender(IByteTransport& transport) : transport_(transport) {}
@@ -54,8 +54,8 @@ class Sender final {
   }
 
   Status SendWith(std::span<const std::byte> payload, SendOptions options) {
-    if (payload.empty() || options.timeout <= 0ms ||
-        options.max_attempts == 0 || options.max_attempts > kMaxAttempts) {
+    if (payload.empty() || options.timeout <= 0ms || options.max_attempts == 0 ||
+        options.max_attempts > kMaxAttempts) {
       return Status::kInvalidArgument;
     }
 
@@ -69,7 +69,7 @@ class Sender final {
     return status;
   }
 
- private:
+private:
   IByteTransport& transport_;
 };
 

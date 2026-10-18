@@ -59,9 +59,8 @@ return -1;
 ```cpp
 class ITransport {
 public:
-virtual ~ITransport() = default;
-virtual Status Send(std::span<const std::byte> data,
-std::chrono::milliseconds timeout) = 0;
+  virtual ~ITransport() = default;
+  virtual Status Send(std::span<const std::byte> data, std::chrono::milliseconds timeout) = 0;
 };
 ```
 
@@ -75,7 +74,8 @@ explicit ModemSession(ITransport& transport) : transport_{transport} {}
 private:
 ITransport& transport_; // borrowed, non-owning
 ```cpp
-};
+}
+;
 ```
 
 ## ⑤ 今日编码规范（10分钟）
@@ -92,9 +92,9 @@ ITransport& transport_; // borrowed, non-owning
 std::shared_ptr<UartDriver> g_uart;
 class Modem {
 public:
-int Send(const char* p, int n, bool retry, bool log) {
-return g_uart->Write(p, n);
-}
+  int Send(const char* p, int n, bool retry, bool log) {
+    return g_uart->Write(p, n);
+  }
 };
 ```
 
@@ -102,8 +102,8 @@ return g_uart->Write(p, n);
 
 ```cpp
 struct SendOptions {
-std::chrono::milliseconds timeout{1000};
-std::uint8_t max_retries{0};
+  std::chrono::milliseconds timeout{1000};
+  std::uint8_t max_retries{0};
 };
 ```
 
@@ -121,7 +121,8 @@ const SendOptions& options);
 private:
 ```cpp
 ITransport& transport_;
-};
+}
+;
 ```
 
 嵌入式注意：抽象不能掩盖无界等待或 heap allocation。硬实时路径必须能审计最坏执行时间和内存行为。
@@ -145,16 +146,14 @@ using namespace std::chrono_literals;
 enum class Status { kOk, kTimeout, kIoError, kInvalidArgument };
 
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
-  virtual Status Send(std::span<const std::byte> data,
-                      std::chrono::milliseconds timeout) = 0;
+  virtual Status Send(std::span<const std::byte> data, std::chrono::milliseconds timeout) = 0;
 };
 
 class FakeTransport final : public ITransport {
- public:
-  Status Send(std::span<const std::byte> data,
-              std::chrono::milliseconds timeout) override {
+public:
+  Status Send(std::span<const std::byte> data, std::chrono::milliseconds timeout) override {
     if (timeout <= 0ms || data.size() > last_frame_.size()) {
       return Status::kInvalidArgument;
     }
@@ -165,9 +164,11 @@ class FakeTransport final : public ITransport {
     return Status::kOk;
   }
 
-  [[nodiscard]] std::size_t LastSize() const { return last_size_; }
+  [[nodiscard]] std::size_t LastSize() const {
+    return last_size_;
+  }
 
- private:
+private:
   std::array<std::byte, 64> last_frame_{};
   std::size_t last_size_{0};
 };
@@ -177,7 +178,7 @@ struct SendOptions {
 };
 
 class ModemSession {
- public:
+public:
   explicit ModemSession(ITransport& transport) : transport_{transport} {}
 
   Status Send(std::span<const std::byte> command, const SendOptions& options) {
@@ -185,7 +186,7 @@ class ModemSession {
     return transport_.Send(command, options.timeout);
   }
 
- private:
+private:
   ITransport& transport_;
 };
 

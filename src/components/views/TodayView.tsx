@@ -89,9 +89,7 @@ export function TodayView({
               <span>在 GitHub 查看源码</span>
             </a>
           </div>
-          <div className="article-footer-right">
-            <span className="footer-meta">基于 Professional C++ (第6版) · C++23</span>
-          </div>
+
         </footer>
       </article>
     </div>

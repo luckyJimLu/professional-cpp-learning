@@ -7,41 +7,47 @@
 
 enum class Status { Ok, InvalidTimeout, EmptyBuffer, IoError };
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
-  virtual Status Write(std::span<const std::uint8_t> data,
-                       std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 class UartTransport final : public ITransport {
- public:
-  Status Write(std::span<const std::uint8_t> data,
-               std::chrono::milliseconds timeout) override {
-    if (timeout.count() <= 0) { return Status::InvalidTimeout; }
-    if (data.empty()) { return Status::EmptyBuffer; }
+public:
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override {
+    if (timeout.count() <= 0) {
+      return Status::InvalidTimeout;
+    }
+    if (data.empty()) {
+      return Status::EmptyBuffer;
+    }
     // Classroom stub: real platform code must implement timeout and I/O.
     return Status::Ok;
   }
 };
 class FakeTransport final : public ITransport {
- public:
+public:
   Status next_status{Status::Ok};
   int writes{0};
-  Status Write(std::span<const std::uint8_t> data,
-               std::chrono::milliseconds timeout) override {
-    if (timeout.count() <= 0) { return Status::InvalidTimeout; }
-    if (data.empty()) { return Status::EmptyBuffer; }
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override {
+    if (timeout.count() <= 0) {
+      return Status::InvalidTimeout;
+    }
+    if (data.empty()) {
+      return Status::EmptyBuffer;
+    }
     ++writes;
     return next_status;
   }
 };
 class ModemSession {
- public:
+public:
   explicit ModemSession(ITransport& transport) : transport_{transport} {}
   Status Ping() {
     constexpr std::array<std::uint8_t, 4> kCommand{'A', 'T', '\r', '\n'};
     return transport_.Write(kCommand, std::chrono::milliseconds{100});
   }
- private:
+
+private:
   ITransport& transport_;
 };
 int main() {

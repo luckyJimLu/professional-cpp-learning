@@ -38,10 +38,9 @@ guidelines:
 
 ```cpp
 class IByteSink {
- public:
+public:
   virtual ~IByteSink() = default;
-  virtual Status Write(std::span<const std::uint8_t> data,
-                       std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 ```
 
@@ -95,10 +94,10 @@ Modern C++ 可把 contract、borrow 与单位表达得更清楚：
 
 ```cpp
 class PacketSender {
- public:
+public:
   explicit PacketSender(IByteSink& sink) : sink_(sink) {}
 
- private:
+private:
   IByteSink& sink_;  // required non-owning dependency
 };
 ```
@@ -115,7 +114,7 @@ class PacketSender {
 extern UartDriver g_uart;
 
 class PacketSender {
- public:
+public:
   Status Send(std::span<const std::uint8_t> data) {
     return g_uart.Write(data, 100);
   }
@@ -126,10 +125,10 @@ class PacketSender {
 
 ```cpp
 class PacketSender {
- public:
+public:
   explicit PacketSender(IByteSink& sink) : sink_(sink) {}
 
- private:
+private:
   IByteSink& sink_;
 };
 ```
@@ -145,8 +144,7 @@ Status Send(Data data, int timeout);
 推荐：
 
 ```cpp
-Status Send(std::span<const std::uint8_t> data,
-            std::chrono::milliseconds timeout);
+Status Send(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout);
 ```
 
 ### SHOULD：公共接口只暴露真正稳定的最小能力
@@ -173,7 +171,7 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic \
 UartDriver* g_uart;
 
 class Protocol {
- public:
+public:
   bool Send(const uint8_t* p, int len) {
     return g_uart->Write(p, len, 1000) == 0;
   }

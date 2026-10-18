@@ -74,8 +74,8 @@ C++23 中可以用 concept 把这个要求写得更明确：
 
 template <typename T>
 concept LessComparable = requires(const T& lhs, const T& rhs) {
-  { lhs < rhs } -> std::convertible_to<bool>;
-};
+                           { lhs < rhs } -> std::convertible_to<bool>;
+                         };
 
 template <LessComparable T>
 const T& Max(const T& lhs, const T& rhs) {
@@ -146,11 +146,11 @@ struct event_queue {
 ```cpp
 template <typename T, std::size_t Capacity>
 class FixedQueue {
- public:
+public:
   bool Push(const T& value);
   bool Pop(T& value);
 
- private:
+private:
   std::array<T, Capacity> data_{};
   std::size_t head_{0};
   std::size_t tail_{0};
@@ -186,8 +186,8 @@ class Status;
 
 template <typename T>
 concept Writable = requires(T& writer) {
-  { writer.Write() } -> std::same_as<Status>;
-};
+                     { writer.Write() } -> std::same_as<Status>;
+                   };
 
 template <Writable T>
 Status Send(T& writer) {
@@ -218,8 +218,8 @@ if (!events.Push(event)) {
 错误方向：
 
 ```cpp
-template <typename Driver, typename Logger, typename Clock,
-          typename Retry, typename Storage, typename Metrics>
+template <typename Driver, typename Logger, typename Clock, typename Retry, typename Storage,
+          typename Metrics>
 class EverythingManager;
 ```
 
@@ -250,12 +250,12 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic \
 ```cpp
 template <typename T>
 class Queue {
- public:
+public:
   void Push(T value) {
     data_.push_back(value);
   }
 
- private:
+private:
   std::vector<T> data_;
 };
 ```

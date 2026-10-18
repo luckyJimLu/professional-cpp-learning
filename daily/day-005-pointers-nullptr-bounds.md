@@ -39,7 +39,7 @@ next: 6
 nullptr 表达空指针
 
 ```cpp
-Device* device {nullptr};
+Device* device{nullptr};
 ```
 
 不要用 0 表达空指针。可空借用可用指针；不可空借用优先引用。
@@ -54,11 +54,11 @@ std::optional<std::uint8_t> ParseFrame(
 std::span<const std::uint8_t> frame)
 ```cpp
 {
-constexpr std::size_t kMinimumFrameSize {2};
-if (frame.size() < kMinimumFrameSize) {
-return std::nullopt;
-}
-return frame.front();
+  constexpr std::size_t kMinimumFrameSize{2};
+  if (frame.size() < kMinimumFrameSize) {
+    return std::nullopt;
+  }
+  return frame.front();
 }
 ```
 
@@ -82,11 +82,11 @@ return frame.front();
 #include <optional>
 #include <span>
 
-constexpr std::size_t kHeaderSize {2};
+constexpr std::size_t kHeaderSize{2};
 
 struct TlvHeader {
-  std::uint8_t type {};
-  std::uint8_t length {};
+  std::uint8_t type{};
+  std::uint8_t length{};
 };
 
 std::optional<TlvHeader> ParseTlvHeader(std::span<const std::uint8_t> frame) {

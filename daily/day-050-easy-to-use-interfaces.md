@@ -100,8 +100,7 @@ device.Send(payload);
 如果所有参数都塞进一个函数，常用路径会被高级能力污染：
 
 ```cpp
-Send(payload, 500ms, Priority::kNormal, Retry::kNone,
-     nullptr, false, false);
+Send(payload, 500ms, Priority::kNormal, Retry::kNone, nullptr, false, false);
 ```
 
 更好的接口让常用路径有安全默认值：
@@ -270,7 +269,7 @@ RTOS 中一个常见反模式是把 modem task 的所有内部能力直接暴露
 
 ```cpp
 class ModemTask {
- public:
+public:
   QueueHandle_t GetQueue();
   UartHandle* GetUart();
   Status SendAt(...);
@@ -341,8 +340,7 @@ Send(payload, 500, 0, false, nullptr, 3);
 
 ```cpp
 Send(payload);
-Send(payload, SendOptions{.timeout = 2s,
-                          .priority = Priority::kHigh});
+Send(payload, SendOptions{.timeout = 2s, .priority = Priority::kHigh});
 ```
 
 ### SHOULD：fat subsystem 前可提供 Facade，但不要让 Facade 变成另一个 fat interface
@@ -389,18 +387,13 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic \
 
 ```cpp
 class NetworkModem {
- public:
+public:
   NetworkModem() = default;
 
   bool Initialize();
   void Cleanup();
 
-  bool Send(const void* data,
-            int length,
-            int timeout,
-            int priority,
-            bool retry,
-            bool trace);
+  bool Send(const void* data, int length, int timeout, int priority, bool retry, bool trace);
 
   void* GetUart();
   void* GetQueue();

@@ -42,8 +42,7 @@ const char* ToString(SensorError error) {
 }
 
 // Fake hardware: canned frames, one transfer times out.
-[[nodiscard]] bool I2cRead(std::uint8_t address,
-                           std::span<std::uint8_t> out,
+[[nodiscard]] bool I2cRead(std::uint8_t address, std::span<std::uint8_t> out,
                            std::chrono::milliseconds timeout) noexcept {
   assert(!out.empty() && "I2cRead with empty buffer is a bug");
   assert(timeout.count() > 0 && "I2cRead with non-positive timeout is a bug");
@@ -82,9 +81,8 @@ const char* ToString(SensorError error) {
   return static_cast<float>(raw[0]) + static_cast<float>(raw[1]) / 100.0f;
 }
 
-[[nodiscard]] SensorError ReadTemperature(
-    float& out_temp,
-    std::chrono::milliseconds timeout) noexcept {
+[[nodiscard]] SensorError ReadTemperature(float& out_temp,
+                                          std::chrono::milliseconds timeout) noexcept {
   std::array<std::uint8_t, 4> raw{};
   if (!I2cRead(kSensorAddress, raw, timeout)) {
     return SensorError::kTimeout;
@@ -110,12 +108,10 @@ int main() {
     }
     switch (err) {
       case SensorError::kOk:
-        std::cout << "read " << read << ": ok, temp="
-                  << std::format("{:.2f}", temp) << "\n";
+        std::cout << "read " << read << ": ok, temp=" << std::format("{:.2f}", temp) << "\n";
         break;
       case SensorError::kTimeout:
-        std::cout << "read " << read << ": " << ToString(err)
-                  << " again, giving up\n";
+        std::cout << "read " << read << ": " << ToString(err) << " again, giving up\n";
         break;
       case SensorError::kCrcMismatch:
         std::cout << "read " << read << ": crc mismatch, discarding frame\n";

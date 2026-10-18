@@ -64,14 +64,13 @@ ctx 生命周期、len 合法范围、timeout 单位和 retry 语义都不清楚
 ```cpp
 enum class Status { kOk, kTimeout, kIoError, kInvalidArgument };
 struct SendOptions {
-std::chrono::milliseconds timeout{1000ms};
-unsigned retry_count{0};
+  std::chrono::milliseconds timeout{1000ms};
+  unsigned retry_count{0};
 };
 class ITransport {
 public:
-virtual ~ITransport() = default;
-virtual Status Send(std::span<const std::byte> data,
-const SendOptions& options) = 0;
+  virtual ~ITransport() = default;
+  virtual Status Send(std::span<const std::byte> data, const SendOptions& options) = 0;
 };
 ```
 
@@ -92,11 +91,10 @@ Transfer(buf, 128, 1000, true, false);
 
 ```cpp
 struct TransferOptions {
-std::chrono::milliseconds timeout{1000ms};
-unsigned retry_count{0};
+  std::chrono::milliseconds timeout{1000ms};
+  unsigned retry_count{0};
 };
-Status Transfer(std::span<const std::byte> data,
-const TransferOptions& options);
+Status Transfer(std::span<const std::byte> data, const TransferOptions& options);
 ```
 
 嵌入式注意：不要为了抽象自动引入 heap、shared_ptr 或无界容器。抽象同样要接受 latency、Flash/RAM 和 worst-case behavior 审计。
@@ -116,7 +114,7 @@ const TransferOptions& options);
 enum class Status { kOk, kEmptyCommand, kCommandTooLarge };
 
 class CommandBuffer {
- public:
+public:
   static constexpr std::size_t kCapacity = 64;
 
   Status Store(std::span<const std::byte> command) {
@@ -133,7 +131,7 @@ class CommandBuffer {
     return {buffer_.data(), size_};
   }
 
- private:
+private:
   std::array<std::byte, kCapacity> buffer_{};
   std::size_t size_{0};
 };

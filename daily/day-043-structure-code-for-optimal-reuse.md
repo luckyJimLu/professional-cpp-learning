@@ -98,12 +98,11 @@ Modern C++ 可以把稳定职责分开：
 
 ```cpp
 class AtClient {
- public:
+public:
   explicit AtClient(IByteSink& sink) : sink_(sink) {}
-  Status Send(std::span<const std::uint8_t> command,
-              std::chrono::milliseconds timeout);
+  Status Send(std::span<const std::uint8_t> command, std::chrono::milliseconds timeout);
 
- private:
+private:
   IByteSink& sink_;
 };
 ```
@@ -128,9 +127,10 @@ class AtClient {
 
 ```cpp
 class AtClient {
- public:
+public:
   explicit AtClient(IByteSink& sink) : sink_(sink) {}
- private:
+
+private:
   IByteSink& sink_;
 };
 ```
@@ -163,7 +163,7 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic \
 
 ```cpp
 class ModemManager {
- public:
+public:
   Status Send(const char* command) {
     HAL_UartWrite(command);
     Log("sent");

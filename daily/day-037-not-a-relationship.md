@@ -96,7 +96,7 @@ ElectronicDevice
 
 ```cpp
 class CommunicationDevice {
- public:
+public:
   virtual ~CommunicationDevice() = default;
 };
 ```
@@ -154,7 +154,7 @@ switch (device->type) {
 
 ```cpp
 class Device {
- public:
+public:
   virtual ~Device() = default;
 };
 
@@ -169,7 +169,7 @@ class Display : public Device {};
 
 ```cpp
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
   virtual Status Write(...) = 0;
 };
@@ -247,7 +247,7 @@ ModemSession --uses--> ITransport
 
 ```cpp
 class Component {
- public:
+public:
   virtual ~Component() = default;
 };
 

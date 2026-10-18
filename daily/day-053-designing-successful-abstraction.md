@@ -62,8 +62,7 @@ int modem_send(void* uart_handle,
 Modern C++ 可以让调用者依赖稳定语义：
 
 ```cpp
-Status Send(std::span<const std::byte> payload,
-            std::chrono::milliseconds timeout);
+Status Send(std::span<const std::byte> payload, std::chrono::milliseconds timeout);
 ```
 
 底层 UART、SPI 或测试 Fake 由 transport boundary 隔离。收益是类型安全、可测试和平台替换；代价是必须认真设计 interface lifetime 与 dispatch 成本。
@@ -127,8 +126,7 @@ Status Send(void* uart_handle, const std::byte* data, int length);
 推荐：
 
 ```cpp
-Status Send(std::span<const std::byte> payload,
-            std::chrono::milliseconds timeout);
+Status Send(std::span<const std::byte> payload, std::chrono::milliseconds timeout);
 ```
 
 ### MUST：required non-owning dependency 使用明确 borrow

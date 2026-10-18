@@ -13,7 +13,7 @@ test("Day 3 uses a full-width compiler workspace and complete fenced source", as
   await page.setViewportSize({ width: 1600, height: 1000 });
   await page.goto("/?view=lab&day=3");
 
-  await expect(page.locator(".lab-task")).toContainText("实验 A");
+  await expect(page.locator(".lab-task")).toContainText("const、constexpr");
   await expect(page.locator(".lab-task")).not.toContainText("} // namespace modem");
   await expect(page.locator(".lab-task")).not.toContainText("编译：");
   await expect(page.locator(".cm-content")).toContainText("CalculateTotalTimeoutMs");

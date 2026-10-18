@@ -14,32 +14,29 @@ enum class Status {
 };
 
 class IByteSink {
- public:
+public:
   virtual ~IByteSink() = default;
-  virtual Status Write(std::span<const std::uint8_t> data,
-                       std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 
 class PacketSender {
- public:
+public:
   explicit PacketSender(IByteSink& sink) : sink_(sink) {}
 
-  Status Send(std::span<const std::uint8_t> payload,
-              std::chrono::milliseconds timeout) {
+  Status Send(std::span<const std::uint8_t> payload, std::chrono::milliseconds timeout) {
     if (payload.empty()) {
       return Status::kInvalidArgument;
     }
     return sink_.Write(payload, timeout);
   }
 
- private:
+private:
   IByteSink& sink_;
 };
 
 class FakeSink final : public IByteSink {
- public:
-  Status Write(std::span<const std::uint8_t> data,
-               std::chrono::milliseconds timeout) override {
+public:
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override {
     if (timeout <= 0ms) {
       return Status::kTimeout;
     }
@@ -47,9 +44,11 @@ class FakeSink final : public IByteSink {
     return Status::kOk;
   }
 
-  [[nodiscard]] std::size_t BytesWritten() const { return bytes_written_; }
+  [[nodiscard]] std::size_t BytesWritten() const {
+    return bytes_written_;
+  }
 
- private:
+private:
   std::size_t bytes_written_{0};
 };
 

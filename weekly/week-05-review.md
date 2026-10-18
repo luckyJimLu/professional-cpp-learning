@@ -59,11 +59,10 @@ class Modem : public UartDriver {};
 
 ```cpp
 class ModemSession {
- public:
-  explicit ModemSession(ITransport& transport)
-      : transport_(transport) {}
+public:
+  explicit ModemSession(ITransport& transport) : transport_(transport) {}
 
- private:
+private:
   ITransport& transport_;
 };
 ```
@@ -150,8 +149,7 @@ void Process(ITransport transport);
 多态对象通常应通过：
 
 ```cpp
-ITransport&
-ITransport*
+ITransport& ITransport*
 ```
 
 来保持动态类型语义。

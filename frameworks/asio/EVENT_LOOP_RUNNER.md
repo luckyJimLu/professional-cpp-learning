@@ -116,9 +116,9 @@ asio::io_context ctx;
 // 启动 4 个工作线程捕获执行
 std::vector<std::thread> workers;
 for (int i = 0; i < 4; ++i) {
-    workers.emplace_back([&ctx]() {
-        ctx.run(); // ❌ 严重 BUG！
-    });
+  workers.emplace_back([&ctx]() {
+    ctx.run();  // ❌ 严重 BUG！
+  });
 }
 
 // 主线程稍后才发起 async_accept 或 post 任务...
@@ -181,21 +181,18 @@ auto work_guard = asio::make_work_guard(ctx);
 // 2. 捕获线程，即使没有任务，线程池也会保持阻塞待命
 std::vector<std::thread> threads;
 for (int i = 0; i < 4; ++i) {
-    threads.emplace_back([&ctx]() {
-        ctx.run();
-    });
+  threads.emplace_back([&ctx]() { ctx.run(); });
 }
 
 // 3. 投递任务
 asio::post(ctx, []() {
-    std::cout << "Task running in captured thread: " 
-              << std::this_thread::get_id() << std::endl;
+  std::cout << "Task running in captured thread: " << std::this_thread::get_id() << std::endl;
 });
 
 // 4. 优雅停机：释放守护，等已排队任务全部处理完毕后，工作线程自然退出
 work_guard.reset();
 for (auto& t : threads) {
-    t.join();
+  t.join();
 }
 ```
 
@@ -296,49 +293,45 @@ sequenceDiagram
 
 class StrandEchoSession : public std::enable_shared_from_this<StrandEchoSession> {
 public:
-    StrandEchoSession(asio::ip::tcp::socket socket)
-        : socket_(std::move(socket)),
-          // 为每个连接绑定一个独立的 strand 执行器
-          strand_(socket_.get_executor()) {}
+  StrandEchoSession(asio::ip::tcp::socket socket)
+      : socket_(std::move(socket)),
+        // 为每个连接绑定一个独立的 strand 执行器
+        strand_(socket_.get_executor()) {}
 
-    void Start() {
-        DoRead();
-    }
+  void Start() {
+    DoRead();
+  }
 
 private:
-    void DoRead() {
-        auto self = shared_from_this();
-        socket_.async_read_some(
-            asio::buffer(data_),
-            // ★ 核心：使用 asio::bind_executor 将 handler 绑定到 strand 上！
-            // 无论底层哪个线程池 Worker 抢到这个 I/O 事件，都必须经过 strand 串行门禁排队！
-            asio::bind_executor(strand_,
-                [this, self](const asio::error_code& ec, std::size_t length) {
-                    if (!ec) {
-                        DoWrite(length);
-                    }
-                })
-        );
-    }
+  void DoRead() {
+    auto self = shared_from_this();
+    socket_.async_read_some(
+        asio::buffer(data_),
+        // ★ 核心：使用 asio::bind_executor 将 handler 绑定到 strand 上！
+        // 无论底层哪个线程池 Worker 抢到这个 I/O 事件，都必须经过 strand 串行门禁排队！
+        asio::bind_executor(strand_, [this, self](const asio::error_code& ec, std::size_t length) {
+          if (!ec) {
+            DoWrite(length);
+          }
+        }));
+  }
 
-    void DoWrite(std::size_t length) {
-        auto self = shared_from_this();
-        asio::async_write(
-            socket_, asio::buffer(data_, length),
-            // ★ 写操作同样绑定到同一个 strand
-            asio::bind_executor(strand_,
-                [this, self](const asio::error_code& ec, std::size_t /*length*/) {
-                    if (!ec) {
-                        DoRead();
-                    }
-                })
-        );
-    }
+  void DoWrite(std::size_t length) {
+    auto self = shared_from_this();
+    asio::async_write(socket_, asio::buffer(data_, length),
+                      // ★ 写操作同样绑定到同一个 strand
+                      asio::bind_executor(strand_, [this, self](const asio::error_code& ec,
+                                                                std::size_t /*length*/) {
+                        if (!ec) {
+                          DoRead();
+                        }
+                      }));
+  }
 
-    asio::ip::tcp::socket socket_;
-    // 现代 Asio strand 类型
-    asio::strand<asio::any_io_executor> strand_;
-    char data_[1024];
+  asio::ip::tcp::socket socket_;
+  // 现代 Asio strand 类型
+  asio::strand<asio::any_io_executor> strand_;
+  char data_[1024];
 };
 ```
 
@@ -365,72 +358,71 @@ private:
 
 ```cpp
 #include <asio.hpp>
+#include <functional>
 #include <iostream>
 #include <thread>
 #include <vector>
-#include <functional>
 
 class ThreadPoolRunner {
 public:
-    explicit ThreadPoolRunner(std::size_t pool_size)
-        : work_guard_(asio::make_work_guard(io_context_)) {
-        threads_.reserve(pool_size);
-        for (std::size_t i = 0; i < pool_size; ++i) {
-            threads_.emplace_back([this, i]() {
-                WorkerThreadLoop(i);
-            });
+  explicit ThreadPoolRunner(std::size_t pool_size)
+      : work_guard_(asio::make_work_guard(io_context_)) {
+    threads_.reserve(pool_size);
+    for (std::size_t i = 0; i < pool_size; ++i) {
+      threads_.emplace_back([this, i]() { WorkerThreadLoop(i); });
+    }
+  }
+
+  ~ThreadPoolRunner() {
+    Stop();
+  }
+
+  // 提交普通并发任务
+  template <typename F>
+  void Post(F&& task) {
+    asio::post(io_context_, std::forward<F>(task));
+  }
+
+  // 优雅停机：释放守护，等待所有未决任务排空执行完成
+  void Stop() {
+    if (!stopped_) {
+      stopped_ = true;
+      // 1. 释放工作守护，允许 work_count 归零
+      work_guard_.reset();
+      // 2. 等待所有被捕获线程退出 run()
+      for (auto& t : threads_) {
+        if (t.joinable()) {
+          t.join();
         }
+      }
     }
+  }
 
-    ~ThreadPoolRunner() {
-        Stop();
-    }
+  // 紧急停机：立刻取消并丢弃所有队列任务
+  void StopImmediate() {
+    io_context_.stop();
+    Stop();
+  }
 
-    // 提交普通并发任务
-    template <typename F>
-    void Post(F&& task) {
-        asio::post(io_context_, std::forward<F>(task));
-    }
-
-    // 优雅停机：释放守护，等待所有未决任务排空执行完成
-    void Stop() {
-        if (!stopped_) {
-            stopped_ = true;
-            // 1. 释放工作守护，允许 work_count 归零
-            work_guard_.reset();
-            // 2. 等待所有被捕获线程退出 run()
-            for (auto& t : threads_) {
-                if (t.joinable()) {
-                    t.join();
-                }
-            }
-        }
-    }
-
-    // 紧急停机：立刻取消并丢弃所有队列任务
-    void StopImmediate() {
-        io_context_.stop();
-        Stop();
-    }
-
-    asio::io_context& GetContext() { return io_context_; }
+  asio::io_context& GetContext() {
+    return io_context_;
+  }
 
 private:
-    void WorkerThreadLoop(std::size_t thread_id) {
-        try {
-            // 线程被捕获，进入事件调度死循环
-            io_context_.run();
-        } catch (const std::exception& e) {
-            std::cerr << "[Fatal Error in Worker " << thread_id << "]: " 
-                      << e.what() << std::endl;
-        }
+  void WorkerThreadLoop(std::size_t thread_id) {
+    try {
+      // 线程被捕获，进入事件调度死循环
+      io_context_.run();
+    } catch (const std::exception& e) {
+      std::cerr << "[Fatal Error in Worker " << thread_id << "]: " << e.what() << std::endl;
     }
+  }
 
-    asio::io_context io_context_;
-    // 现代工作守护对象，保证 io_context 在无任务时不提前退出
-    asio::executor_work_guard<asio::io_context::executor_type> work_guard_;
-    std::vector<std::thread> threads_;
-    bool stopped_{false};
+  asio::io_context io_context_;
+  // 现代工作守护对象，保证 io_context 在无任务时不提前退出
+  asio::executor_work_guard<asio::io_context::executor_type> work_guard_;
+  std::vector<std::thread> threads_;
+  bool stopped_{false};
 };
 ```
 

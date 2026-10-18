@@ -68,7 +68,7 @@ if (model == Model::kA) {
 
 ```cpp
 class ResetPolicy {
- public:
+public:
   virtual ~ResetPolicy() = default;
   virtual bool Reset() = 0;
 };
@@ -94,11 +94,11 @@ Open/Closed Principle 并不要求所有类都使用继承。C++ 中常见 custo
 
 ```cpp
 class ModemController {
- public:
+public:
   ModemController(Transport& transport, ResetPolicy& reset_policy)
       : transport_{transport}, reset_policy_{reset_policy} {}
 
- private:
+private:
   Transport& transport_;
   ResetPolicy& reset_policy_;
 };
@@ -144,19 +144,20 @@ int reset_modem(int modem_type) {
 
 ```cpp
 class ResetPolicy {
- public:
+public:
   virtual ~ResetPolicy() = default;
   virtual bool Reset() = 0;
 };
 
 class ModemController {
- public:
-  explicit ModemController(ResetPolicy& reset_policy)
-      : reset_policy_{reset_policy} {}
+public:
+  explicit ModemController(ResetPolicy& reset_policy) : reset_policy_{reset_policy} {}
 
-  bool Recover() { return reset_policy_.Reset(); }
+  bool Recover() {
+    return reset_policy_.Reset();
+  }
 
- private:
+private:
   ResetPolicy& reset_policy_;
 };
 ```
@@ -173,7 +174,7 @@ class ModemController {
 
 ```cpp
 class Plugin {
- public:
+public:
   virtual void ConfigureEverything(void* context) = 0;
 };
 ```
@@ -182,7 +183,7 @@ class Plugin {
 
 ```cpp
 class ResetPolicy {
- public:
+public:
   virtual ~ResetPolicy() = default;
   virtual bool Reset() = 0;
 };
@@ -203,8 +204,7 @@ bool Recover() {
 推荐：
 
 ```cpp
-explicit ModemController(ResetPolicy& reset_policy)
-    : reset_policy_{reset_policy} {}
+explicit ModemController(ResetPolicy& reset_policy) : reset_policy_{reset_policy} {}
 ```
 
 ### MUST：实时路径中的 runtime extensibility 必须有界
@@ -249,7 +249,8 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic \
 ```cpp
 bool Recover(int modem_type) {
   if (modem_type == 1) {
-    while (!gpio_ready()) {}
+    while (!gpio_ready()) {
+    }
     return gpio_reset();
   }
   if (modem_type == 2) {

@@ -14,20 +14,17 @@ enum class Status {
 };
 
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
 
-  virtual Status Write(std::span<const std::uint8_t> data,
-                       std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 
 class UartTransport final : public ITransport {
- public:
-  explicit UartTransport(std::uint32_t baudrate_bps)
-      : baudrate_bps_(baudrate_bps) {}
+public:
+  explicit UartTransport(std::uint32_t baudrate_bps) : baudrate_bps_(baudrate_bps) {}
 
-  Status Write(std::span<const std::uint8_t> data,
-               std::chrono::milliseconds timeout) override {
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override {
     if (data.empty()) {
       return Status::kInvalidArgument;
     }
@@ -40,20 +37,25 @@ class UartTransport final : public ITransport {
     return Status::kOk;
   }
 
-  [[nodiscard]] std::size_t WriteCount() const { return write_count_; }
-  [[nodiscard]] std::size_t LastSize() const { return last_size_; }
-  [[nodiscard]] std::uint32_t BaudrateBps() const { return baudrate_bps_; }
+  [[nodiscard]] std::size_t WriteCount() const {
+    return write_count_;
+  }
+  [[nodiscard]] std::size_t LastSize() const {
+    return last_size_;
+  }
+  [[nodiscard]] std::uint32_t BaudrateBps() const {
+    return baudrate_bps_;
+  }
 
- private:
+private:
   std::uint32_t baudrate_bps_;
   std::size_t write_count_{0};
   std::size_t last_size_{0};
 };
 
 class FakeTransport final : public ITransport {
- public:
-  Status Write(std::span<const std::uint8_t> data,
-               std::chrono::milliseconds timeout) override {
+public:
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override {
     if (data.empty()) {
       return Status::kInvalidArgument;
     }
@@ -66,39 +68,40 @@ class FakeTransport final : public ITransport {
     return Status::kOk;
   }
 
-  [[nodiscard]] std::size_t WriteCount() const { return write_count_; }
-  [[nodiscard]] std::size_t LastSize() const { return last_size_; }
+  [[nodiscard]] std::size_t WriteCount() const {
+    return write_count_;
+  }
+  [[nodiscard]] std::size_t LastSize() const {
+    return last_size_;
+  }
 
- private:
+private:
   std::size_t write_count_{0};
   std::size_t last_size_{0};
 };
 
 class ModemSession {
- public:
+public:
   explicit ModemSession(ITransport& transport) : transport_(transport) {}
 
-  Status Send(std::span<const std::uint8_t> command,
-              std::chrono::milliseconds timeout) {
+  Status Send(std::span<const std::uint8_t> command, std::chrono::milliseconds timeout) {
     if (command.empty()) {
       return Status::kInvalidArgument;
     }
     return transport_.Write(command, timeout);
   }
 
- private:
+private:
   ITransport& transport_;
 };
 
-Status SendCommand(ITransport& transport,
-                   std::span<const std::uint8_t> command,
+Status SendCommand(ITransport& transport, std::span<const std::uint8_t> command,
                    std::chrono::milliseconds timeout) {
   return transport.Write(command, timeout);
 }
 
 int main() {
-  constexpr std::array<std::uint8_t, 4> kAtCommand{
-      0x41, 0x54, 0x0D, 0x0A};
+  constexpr std::array<std::uint8_t, 4> kAtCommand{0x41, 0x54, 0x0D, 0x0A};
 
   UartTransport uart{115200U};
   ITransport& base_ref = uart;

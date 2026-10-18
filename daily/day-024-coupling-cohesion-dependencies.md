@@ -77,10 +77,13 @@ struct CountingSender {
 };
 template <class Sender>
 class Modem {
- public:
+public:
   explicit Modem(Sender& sender) : sender_{sender} {}
-  bool Ping() { return sender_.Send("AT"); }
- private:
+  bool Ping() {
+    return sender_.Send("AT");
+  }
+
+private:
   Sender& sender_;
 };
 int main() {

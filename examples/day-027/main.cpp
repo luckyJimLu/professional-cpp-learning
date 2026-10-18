@@ -3,9 +3,18 @@
 enum class State { Idle, Connecting, Ready };
 enum class Event { Start, Connected, Failed };
 bool Apply(State& state, Event event) {
-  if (state == State::Idle && event == Event::Start) { state = State::Connecting; return true; }
-  if (state == State::Connecting && event == Event::Connected) { state = State::Ready; return true; }
-  if (state == State::Connecting && event == Event::Failed) { state = State::Idle; return true; }
+  if (state == State::Idle && event == Event::Start) {
+    state = State::Connecting;
+    return true;
+  }
+  if (state == State::Connecting && event == Event::Connected) {
+    state = State::Ready;
+    return true;
+  }
+  if (state == State::Connecting && event == Event::Failed) {
+    state = State::Idle;
+    return true;
+  }
   return false;
 }
 int main() {

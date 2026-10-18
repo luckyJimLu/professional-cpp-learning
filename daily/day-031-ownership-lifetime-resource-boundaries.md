@@ -79,10 +79,10 @@ void modem_deinit(struct Modem* modem) {
 
 ```cpp
 class ModemSession {
- public:
+public:
   explicit ModemSession(ITransport& transport) : transport_(transport) {}
 
- private:
+private:
   ITransport& transport_;  // non-owning borrow
 };
 ```
@@ -112,11 +112,10 @@ std::unique_ptr<ITransport> transport_;
 
 ```cpp
 class ModemSession {
- public:
-  explicit ModemSession(std::shared_ptr<ITransport> transport)
-      : transport_(std::move(transport)) {}
+public:
+  explicit ModemSession(std::shared_ptr<ITransport> transport) : transport_(std::move(transport)) {}
 
- private:
+private:
   std::shared_ptr<ITransport> transport_;
 };
 ```
@@ -127,10 +126,10 @@ class ModemSession {
 
 ```cpp
 class ModemSession {
- public:
+public:
   explicit ModemSession(ITransport& transport) : transport_(transport) {}
 
- private:
+private:
   ITransport& transport_;
 };
 ```
@@ -161,16 +160,14 @@ enum class Status {
 };
 
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
-  virtual Status Write(std::span<const std::uint8_t> data,
-                       std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 
 class FakeTransport final : public ITransport {
- public:
-  Status Write(std::span<const std::uint8_t> data,
-               std::chrono::milliseconds timeout) override {
+public:
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override {
     if (data.empty()) {
       return Status::kInvalidArgument;
     }
@@ -181,22 +178,23 @@ class FakeTransport final : public ITransport {
     return Status::kOk;
   }
 
-  [[nodiscard]] std::size_t LastSize() const { return last_size_; }
+  [[nodiscard]] std::size_t LastSize() const {
+    return last_size_;
+  }
 
- private:
+private:
   std::size_t last_size_{0};
 };
 
 class ModemSession {
- public:
+public:
   explicit ModemSession(ITransport& transport) : transport_(transport) {}
 
-  Status Send(std::span<const std::uint8_t> data,
-              std::chrono::milliseconds timeout) {
+  Status Send(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) {
     return transport_.Write(data, timeout);
   }
 
- private:
+private:
   ITransport& transport_;
 };
 

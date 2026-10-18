@@ -4,7 +4,9 @@
 #include <limits>
 #include <optional>
 std::optional<int> CheckedCount(std::size_t size) {
-  if (size > static_cast<std::size_t>(std::numeric_limits<int>::max())) { return std::nullopt; }
+  if (size > static_cast<std::size_t>(std::numeric_limits<int>::max())) {
+    return std::nullopt;
+  }
   return static_cast<int>(size);
 }
 int main() {

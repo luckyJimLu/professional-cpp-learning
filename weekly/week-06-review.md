@@ -94,7 +94,7 @@ class SerialDevice : public Device {};
 UartDriver* g_uart;
 
 class Modem : public SerialDevice {
- public:
+public:
   bool Send(const uint8_t* data, int length) {
     return g_uart->Write(data, length, 1000) == 0;
   }

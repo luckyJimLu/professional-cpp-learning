@@ -66,10 +66,10 @@ Code Review 时说明规则如何帮助当前场景，不将风格约定当成�
 源码依赖同目录的 [config.hpp](../examples/day-014/config.hpp)，请在本地编译这个多文件实验。
 
 ```cpp
-#include "config.hpp"
-#include "config.hpp"
 #include <cassert>
 #include <iostream>
+
+#include "config.hpp"
 int main() {
   const modem::Config config{};
   assert(config.timeout.count() == 100);

@@ -14,17 +14,15 @@ struct CommandOptions {
 };
 
 class Transport {
- public:
+public:
   virtual ~Transport() = default;
-  virtual Status Exchange(std::string_view request,
-                          std::span<char> response,
+  virtual Status Exchange(std::string_view request, std::span<char> response,
                           std::chrono::milliseconds timeout) = 0;
 };
 
 class FakeTransport final : public Transport {
- public:
-  Status Exchange(std::string_view request,
-                  std::span<char> response,
+public:
+  Status Exchange(std::string_view request, std::span<char> response,
                   std::chrono::milliseconds timeout) override {
     (void)request;
     if (timeout <= 0ms) return Status::kTimeout;
@@ -36,19 +34,17 @@ class FakeTransport final : public Transport {
 };
 
 class ModemSession {
- public:
+public:
   explicit ModemSession(Transport& transport) : transport_(transport) {}
 
-  Status SendCommand(std::string_view command,
-                     std::span<char> response,
-                     CommandOptions options) {
+  Status SendCommand(std::string_view command, std::span<char> response, CommandOptions options) {
     if (command.empty() || response.empty() || options.timeout.count() <= 0) {
       return Status::kInvalidArgument;
     }
     return transport_.Exchange(command, response, options.timeout);
   }
 
- private:
+private:
   Transport& transport_;
 };
 

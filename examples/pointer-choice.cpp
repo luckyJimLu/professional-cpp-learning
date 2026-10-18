@@ -17,45 +17,49 @@ struct ITransport {
 };
 
 class TcpTransport final : public ITransport {
- public:
-  explicit TcpTransport(int& destruction_count)
-      : destruction_count_(destruction_count) {}
+public:
+  explicit TcpTransport(int& destruction_count) : destruction_count_(destruction_count) {}
   ~TcpTransport() override {
     ++destruction_count_;
     std::cout << "TcpTransport destroyed\n";
   }
-  void Send() override { std::cout << "TCP send\n"; }
+  void Send() override {
+    std::cout << "TCP send\n";
+  }
 
- private:
+private:
   int& destruction_count_;  // Test counter outlives the transport.
 };
 
 class OwnedService {
- public:
-  explicit OwnedService(std::unique_ptr<ITransport> transport)
-      : transport_(std::move(transport)) {
+public:
+  explicit OwnedService(std::unique_ptr<ITransport> transport) : transport_(std::move(transport)) {
     if (!transport_) {
       throw std::invalid_argument("transport required");
     }
   }
-  void Send() { transport_->Send(); }
+  void Send() {
+    transport_->Send();
+  }
 
- private:
-  Config config_{};  // Q1: Store simple configuration by value.
+private:
+  Config config_{};                        // Q1: Store simple configuration by value.
   std::unique_ptr<ITransport> transport_;  // Q2: This service owns it.
 };
 
 class BorrowedService {
- public:
+public:
   explicit BorrowedService(ITransport& transport) : transport_(transport) {}
-  void Send() { transport_.Send(); }
+  void Send() {
+    transport_.Send();
+  }
 
- private:
+private:
   ITransport& transport_;  // Q2: Application owns it; do not delete.
 };
 
 class Session {
- public:
+public:
   Session(int& handled_count, int& destruction_count)
       : handled_count_(handled_count), destruction_count_(destruction_count) {}
   ~Session() {
@@ -67,7 +71,7 @@ class Session {
     std::cout << "Session handled\n";
   }
 
- private:
+private:
   int& handled_count_;
   int& destruction_count_;
 };
@@ -76,8 +80,10 @@ class Session {
 // Tasks are destroyed after RunAll; an executor retaining callbacks would
 // also retain shared_ptr captures until those callbacks are released.
 class Executor {
- public:
-  void Post(std::function<void()> task) { tasks_.push_back(std::move(task)); }
+public:
+  void Post(std::function<void()> task) {
+    tasks_.push_back(std::move(task));
+  }
   void RunAll() {
     auto pending = std::move(tasks_);
     tasks_.clear();
@@ -86,7 +92,7 @@ class Executor {
     }
   }
 
- private:
+private:
   std::vector<std::function<void()>> tasks_;
 };
 

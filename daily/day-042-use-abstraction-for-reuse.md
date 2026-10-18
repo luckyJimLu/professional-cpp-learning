@@ -60,10 +60,9 @@ guidelines:
 
 ```cpp
 class IByteSink {
- public:
+public:
   virtual ~IByteSink() = default;
-  virtual Status Write(std::span<const std::uint8_t> data,
-                       std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 ```
 
@@ -89,9 +88,8 @@ UartSink   FakeSink     <- changing implementations
 
 ```cpp
 class IByteSink {
- public:
-  virtual Status WriteDma(std::uint32_t dma_channel,
-                          const std::uint8_t* data,
+public:
+  virtual Status WriteDma(std::uint32_t dma_channel, const std::uint8_t* data,
                           std::size_t size) = 0;
 };
 ```
@@ -101,8 +99,7 @@ class IByteSink {
 更稳定的 contract：
 
 ```cpp
-virtual Status Write(std::span<const std::uint8_t> data,
-                     std::chrono::milliseconds timeout) = 0;
+virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 ```
 
 ### Abstraction 不等于 virtual
@@ -127,8 +124,7 @@ struct byte_sink_ops {
 Modern C++ 可以把意图放进类型：
 
 ```cpp
-Status Write(std::span<const std::uint8_t> data,
-             std::chrono::milliseconds timeout);
+Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout);
 ```
 
 - `span`：非 owning 连续 buffer view；
@@ -146,10 +142,8 @@ Modern C++ 的价值不是把 C function pointer 全部换成 virtual，而是�
 
 ```cpp
 class ITransport {
- public:
-  virtual Status Send(UART_HandleTypeDef* uart,
-                      int dma_channel,
-                      const std::uint8_t* data,
+public:
+  virtual Status Send(UART_HandleTypeDef* uart, int dma_channel, const std::uint8_t* data,
                       int length) = 0;
 };
 ```
@@ -158,9 +152,8 @@ class ITransport {
 
 ```cpp
 class IByteSink {
- public:
-  virtual Status Write(std::span<const std::uint8_t> data,
-                       std::chrono::milliseconds timeout) = 0;
+public:
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 ```
 
@@ -186,7 +179,7 @@ explicit PacketSender(IByteSink& sink) : sink_(sink) {}
 
 ```cpp
 class ITransport {
- public:
+public:
   virtual void SetDmaChannel(int) = 0;
   virtual void SetIrqPriority(int) = 0;
   virtual void SetLinuxFd(int) = 0;
@@ -212,11 +205,8 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic \
 
 ```cpp
 class ModemProtocol {
- public:
-  bool Send(UART_HandleTypeDef* huart,
-            int dma_channel,
-            const uint8_t* data,
-            int length) {
+public:
+  bool Send(UART_HandleTypeDef* huart, int dma_channel, const uint8_t* data, int length) {
     return HAL_UART_Transmit_DMA(huart, data, length) == 0;
   }
 };

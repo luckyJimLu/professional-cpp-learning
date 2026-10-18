@@ -142,7 +142,7 @@
 
 ```cpp
 class SensorManager {
- public:
+public:
   SensorManager();
 
   float ReadTemperature();
@@ -152,7 +152,7 @@ class SensorManager {
   void SetBus(int bus);
   void* GetDriverHandle();
 
- private:
+private:
   void* driver_;
 };
 ```

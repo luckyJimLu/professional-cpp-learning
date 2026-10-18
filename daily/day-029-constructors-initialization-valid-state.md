@@ -70,13 +70,18 @@ Code Review 时说明规则如何帮助当前场景，不将风格约定当成�
 #include <iostream>
 #include <optional>
 class Config {
- public:
+public:
   static std::optional<Config> Create(std::chrono::milliseconds timeout) {
-    if (timeout.count() <= 0) { return std::nullopt; }
+    if (timeout.count() <= 0) {
+      return std::nullopt;
+    }
     return Config{timeout};
   }
-  std::chrono::milliseconds Timeout() const { return timeout_; }
- private:
+  std::chrono::milliseconds Timeout() const {
+    return timeout_;
+  }
+
+private:
   explicit Config(std::chrono::milliseconds timeout) : timeout_{timeout} {}
   std::chrono::milliseconds timeout_;
 };

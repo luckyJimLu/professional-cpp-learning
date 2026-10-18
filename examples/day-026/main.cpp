@@ -11,16 +11,14 @@ using namespace std::chrono_literals;
 enum class Status { kOk, kTimeout, kIoError, kInvalidArgument };
 
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
-  virtual Status Send(std::span<const std::byte> data,
-                      std::chrono::milliseconds timeout) = 0;
+  virtual Status Send(std::span<const std::byte> data, std::chrono::milliseconds timeout) = 0;
 };
 
 class FakeTransport final : public ITransport {
- public:
-  Status Send(std::span<const std::byte> data,
-              std::chrono::milliseconds timeout) override {
+public:
+  Status Send(std::span<const std::byte> data, std::chrono::milliseconds timeout) override {
     if (timeout <= 0ms || data.size() > last_frame_.size()) {
       return Status::kInvalidArgument;
     }
@@ -31,9 +29,11 @@ class FakeTransport final : public ITransport {
     return Status::kOk;
   }
 
-  [[nodiscard]] std::size_t LastSize() const { return last_size_; }
+  [[nodiscard]] std::size_t LastSize() const {
+    return last_size_;
+  }
 
- private:
+private:
   std::array<std::byte, 64> last_frame_{};
   std::size_t last_size_{0};
 };
@@ -43,7 +43,7 @@ struct SendOptions {
 };
 
 class ModemSession {
- public:
+public:
   explicit ModemSession(ITransport& transport) : transport_{transport} {}
 
   Status Send(std::span<const std::byte> command, const SendOptions& options) {
@@ -51,7 +51,7 @@ class ModemSession {
     return transport_.Send(command, options.timeout);
   }
 
- private:
+private:
   ITransport& transport_;
 };
 

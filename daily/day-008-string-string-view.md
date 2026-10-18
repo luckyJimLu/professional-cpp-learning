@@ -48,9 +48,8 @@ command += "\r\n";
 std::string_view 是借用视图
 
 ```cpp
-bool IsOkResponse(std::string_view response)
-{
-return response == "OK";
+bool IsOkResponse(std::string_view response) {
+  return response == "OK";
 }
 ```
 
@@ -59,9 +58,8 @@ return response == "OK";
 最大风险：悬空 view
 
 ```cpp
-std::string_view Bad()
-{
-std::string text{"OK"};
+std::string_view Bad() {
+  std::string text{"OK"};
 ```
 return text; // text 销毁后 view 悬空
 ```cpp
@@ -73,19 +71,17 @@ view 的生命周期不能超过它观察的数据。
 C 风格
 
 ```cpp
-int is_ok_response(const char* response)
-{
-if (response == NULL) return 0;
-return strcmp(response, "OK") == 0;
+int is_ok_response(const char* response) {
+  if (response == NULL) return 0;
+  return strcmp(response, "OK") == 0;
 }
 ```
 
 现代 C++
 
 ```cpp
-bool IsOkResponse(std::string_view response)
-{
-return response == "OK";
+bool IsOkResponse(std::string_view response) {
+  return response == "OK";
 }
 ```
 

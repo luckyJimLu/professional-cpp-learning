@@ -10,16 +10,14 @@ using namespace std::chrono_literals;
 enum class Status { kOk, kInvalidArgument, kTimeout, kNoSpace };
 
 class IByteSink {
- public:
+public:
   virtual ~IByteSink() = default;
-  virtual Status Write(std::span<const std::uint8_t> data,
-                       std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 
 class FixedBufferSink final : public IByteSink {
- public:
-  Status Write(std::span<const std::uint8_t> data,
-               std::chrono::milliseconds timeout) override {
+public:
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override {
     if (data.empty()) return Status::kInvalidArgument;
     if (timeout <= 0ms) return Status::kTimeout;
     if (data.size() > buffer_.size()) return Status::kNoSpace;
@@ -28,40 +26,42 @@ class FixedBufferSink final : public IByteSink {
     return Status::kOk;
   }
 
-  [[nodiscard]] std::size_t Size() const { return size_; }
+  [[nodiscard]] std::size_t Size() const {
+    return size_;
+  }
 
- private:
+private:
   std::array<std::uint8_t, 32> buffer_{};
   std::size_t size_{0};
 };
 
 class FakeSink final : public IByteSink {
- public:
-  Status Write(std::span<const std::uint8_t> data,
-               std::chrono::milliseconds timeout) override {
+public:
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override {
     if (data.empty()) return Status::kInvalidArgument;
     if (timeout <= 0ms) return Status::kTimeout;
     ++write_count_;
     return Status::kOk;
   }
 
-  [[nodiscard]] std::size_t WriteCount() const { return write_count_; }
+  [[nodiscard]] std::size_t WriteCount() const {
+    return write_count_;
+  }
 
- private:
+private:
   std::size_t write_count_{0};
 };
 
 class AtClient {
- public:
+public:
   explicit AtClient(IByteSink& sink) : sink_(sink) {}
 
-  Status Send(std::span<const std::uint8_t> command,
-              std::chrono::milliseconds timeout) {
+  Status Send(std::span<const std::uint8_t> command, std::chrono::milliseconds timeout) {
     if (command.empty()) return Status::kInvalidArgument;
     return sink_.Write(command, timeout);
   }
 
- private:
+private:
   IByteSink& sink_;
 };
 

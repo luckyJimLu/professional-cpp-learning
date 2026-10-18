@@ -60,17 +60,17 @@ next: 41
 
 ```cpp
 class TxCounterMixin {
- public:
+public:
   [[nodiscard]] std::size_t TxCount() const {
     return tx_count_;
   }
 
- protected:
+protected:
   void RecordTx() {
     ++tx_count_;
   }
 
- private:
+private:
   std::size_t tx_count_{0};
 };
 ```
@@ -79,7 +79,7 @@ concrete type 使用它：
 
 ```cpp
 class UartTransport final : private TxCounterMixin {
- public:
+public:
   using TxCounterMixin::TxCount;
 
   Status Write(std::span<const std::uint8_t> data) {
@@ -113,7 +113,7 @@ class UartTransport final : private TxCounterMixin {
 ```cpp
 template <typename Derived>
 class HealthCheckMixin {
- public:
+public:
   [[nodiscard]] bool Healthy() const {
     const auto& self = static_cast<const Derived&>(*this);
     return self.ErrorCount() == 0U;
@@ -125,12 +125,12 @@ class HealthCheckMixin {
 
 ```cpp
 class Modem final : public HealthCheckMixin<Modem> {
- public:
+public:
   [[nodiscard]] std::size_t ErrorCount() const {
     return error_count_;
   }
 
- private:
+private:
   std::size_t error_count_{0};
 };
 ```
@@ -184,13 +184,17 @@ static inline void record_tx(unsigned int* counter) {
 
 ```cpp
 class TxCounterMixin {
- protected:
-  void RecordTx() { ++tx_count_; }
+protected:
+  void RecordTx() {
+    ++tx_count_;
+  }
 
- public:
-  [[nodiscard]] std::size_t TxCount() const { return tx_count_; }
+public:
+  [[nodiscard]] std::size_t TxCount() const {
+    return tx_count_;
+  }
 
- private:
+private:
   std::size_t tx_count_{0};
 };
 ```
@@ -211,7 +215,7 @@ class TxCounterMixin {
 
 ```cpp
 class LoggingMixin {
- protected:
+protected:
   std::vector<std::string> logs_;
   FileHandle file_;
   Mutex mutex_;
@@ -224,10 +228,12 @@ class LoggingMixin {
 
 ```cpp
 class TxCounterMixin {
- protected:
-  void RecordTx() { ++tx_count_; }
+protected:
+  void RecordTx() {
+    ++tx_count_;
+  }
 
- private:
+private:
   std::size_t tx_count_{0};
 };
 ```
@@ -239,7 +245,7 @@ class TxCounterMixin {
 ```cpp
 template <typename T>
 class RetryMixin {
- public:
+public:
   void Retry() {
     static_cast<T*>(this)->DoSomethingMagic();
   }
@@ -251,8 +257,8 @@ class RetryMixin {
 ```cpp
 template <typename T>
 concept HasErrorCount = requires(const T& value) {
-  { value.ErrorCount() } -> std::convertible_to<std::size_t>;
-};
+                          { value.ErrorCount() } -> std::convertible_to<std::size_t>;
+                        };
 ```
 
 ### SHOULD：需要运行时替换、ownership 或复杂资源时优先 composition
@@ -260,21 +266,17 @@ concept HasErrorCount = requires(const T& value) {
 错误方向：
 
 ```cpp
-class Modem : public LoggerMixin,
-              public QueueMixin,
-              public UartMixin {
-};
+class Modem : public LoggerMixin, public QueueMixin, public UartMixin {};
 ```
 
 推荐：
 
 ```cpp
 class Modem {
- public:
-  Modem(UartDriver& uart, ILogger& logger)
-      : uart_(uart), logger_(logger) {}
+public:
+  Modem(UartDriver& uart, ILogger& logger) : uart_(uart), logger_(logger) {}
 
- private:
+private:
   UartDriver& uart_;
   ILogger& logger_;
 };
@@ -324,14 +326,13 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic \
 
 ```cpp
 class DriverMixin {
- protected:
+protected:
   std::vector<std::uint8_t> rx_buffer_;
   Mutex mutex_;
   virtual int ReadHardware() = 0;
 };
 
-class Modem : public DriverMixin {
-};
+class Modem : public DriverMixin {};
 ```
 
 要求：

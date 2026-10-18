@@ -3,7 +3,9 @@
 #include <iostream>
 enum class ConnectResult { Connected, InvalidTimeout };
 ConnectResult Connect(std::chrono::milliseconds timeout) {
-  if (timeout.count() <= 0) { return ConnectResult::InvalidTimeout; }
+  if (timeout.count() <= 0) {
+    return ConnectResult::InvalidTimeout;
+  }
   return ConnectResult::Connected;
 }
 int main() {

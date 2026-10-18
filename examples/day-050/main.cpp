@@ -23,17 +23,15 @@ struct SendOptions {
 };
 
 class IByteTransport {
- public:
+public:
   virtual ~IByteTransport() = default;
 
-  virtual Status Write(std::span<const std::byte> payload,
-                       std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::byte> payload, std::chrono::milliseconds timeout) = 0;
 };
 
 class FakeTransport final : public IByteTransport {
- public:
-  Status Write(std::span<const std::byte> payload,
-               std::chrono::milliseconds timeout) override {
+public:
+  Status Write(std::span<const std::byte> payload, std::chrono::milliseconds timeout) override {
     if (payload.empty()) {
       return Status::kInvalidArgument;
     }
@@ -44,18 +42,19 @@ class FakeTransport final : public IByteTransport {
     return Status::kOk;
   }
 
-  [[nodiscard]] std::size_t LastSize() const { return last_size_; }
+  [[nodiscard]] std::size_t LastSize() const {
+    return last_size_;
+  }
 
- private:
+private:
   std::size_t last_size_ = 0;
 };
 
 class ModemCore final {
- public:
+public:
   explicit ModemCore(IByteTransport& transport) : transport_(transport) {}
 
-  Status Send(std::span<const std::byte> payload,
-              const SendOptions& options) {
+  Status Send(std::span<const std::byte> payload, const SendOptions& options) {
     // Priority is part of the public policy even though this small lab's
     // fake transport does not implement different queues.
     if (options.priority == Priority::kHigh) {
@@ -68,26 +67,25 @@ class ModemCore final {
     return high_priority_requests_;
   }
 
- private:
+private:
   IByteTransport& transport_;
   std::size_t high_priority_requests_ = 0;
 };
 
 // Facade for the application's common use cases. It borrows ModemCore.
 class ModemFacade final {
- public:
+public:
   explicit ModemFacade(ModemCore& modem) : modem_(modem) {}
 
   Status SendTelemetry(std::span<const std::byte> payload) {
     return modem_.Send(payload, SendOptions{});
   }
 
-  Status SendTelemetry(std::span<const std::byte> payload,
-                       const SendOptions& options) {
+  Status SendTelemetry(std::span<const std::byte> payload, const SendOptions& options) {
     return modem_.Send(payload, options);
   }
 
- private:
+private:
   ModemCore& modem_;
 };
 
@@ -109,7 +107,6 @@ int main() {
   const Status advanced_status = modem.SendTelemetry(payload, urgent);
 
   std::cout << "common=" << (common_status == Status::kOk)
-            << " advanced=" << (advanced_status == Status::kOk)
-            << " size=" << transport.LastSize()
+            << " advanced=" << (advanced_status == Status::kOk) << " size=" << transport.LastSize()
             << " high_priority=" << core.HighPriorityRequests() << '\n';
 }

@@ -5,12 +5,12 @@
 #include <string_view>
 
 struct CregStatus {
-  int mode {};
-  int status {};
+  int mode{};
+  int status{};
 };
 
 std::optional<int> ParseInt(std::string_view text) {
-  int value {};
+  int value{};
   const char* const begin = text.data();
   const char* const end = begin + text.size();
   const auto [ptr, ec] = std::from_chars(begin, end, value);
@@ -21,7 +21,7 @@ std::optional<int> ParseInt(std::string_view text) {
 }
 
 std::optional<CregStatus> ParseCreg(std::string_view response) {
-  constexpr std::string_view kPrefix {"+CREG:"};
+  constexpr std::string_view kPrefix{"+CREG:"};
   if (!response.starts_with(kPrefix)) return std::nullopt;
   response.remove_prefix(kPrefix.size());
   while (!response.empty() && response.front() == ' ') response.remove_prefix(1);

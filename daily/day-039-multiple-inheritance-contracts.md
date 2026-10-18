@@ -60,20 +60,18 @@ next: 40
 
 ```cpp
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
-  virtual Status Write(std::span<const std::uint8_t> data,
-                       std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 
 class IHealthSource {
- public:
+public:
   virtual ~IHealthSource() = default;
   virtual HealthSnapshot ReadHealth() const = 0;
 };
 
-class ModemEndpoint final : public ITransport,
-                            public IHealthSource {
+class ModemEndpoint final : public ITransport, public IHealthSource {
   // ...
 };
 ```
@@ -93,7 +91,7 @@ ModemEndpoint is-an IHealthSource
 
 ```cpp
 class IEverythingDevice {
- public:
+public:
   virtual Status Write(...) = 0;
   virtual HealthSnapshot ReadHealth() const = 0;
   virtual void Reset() = 0;
@@ -114,18 +112,16 @@ void ReportHealth(const IHealthSource& health_source);
 
 ```cpp
 class UartBuffer {
- protected:
+protected:
   std::array<std::uint8_t, 256> buffer_{};
 };
 
 class RetryState {
- protected:
+protected:
   int retry_count_{0};
 };
 
-class Modem : public UartBuffer,
-              public RetryState {
-};
+class Modem : public UartBuffer, public RetryState {};
 ```
 
 这里继承并没有表达清晰的 is-a，只是在偷用实现。
@@ -134,7 +130,7 @@ class Modem : public UartBuffer,
 
 ```cpp
 class Modem {
- private:
+private:
   UartBuffer buffer_;
   RetryPolicy retry_policy_;
 };
@@ -148,12 +144,12 @@ class Modem {
 
 ```cpp
 class A {
- public:
+public:
   void Reset();
 };
 
 class B {
- public:
+public:
   void Reset();
 };
 
@@ -175,13 +171,11 @@ c.A::Reset();
 即使一个类实现多个 interface，依赖的所有权仍应单独表达：
 
 ```cpp
-class ModemEndpoint final : public ITransport,
-                            public IHealthSource {
- public:
-  explicit ModemEndpoint(UartDriver& uart)
-      : uart_(uart) {}
+class ModemEndpoint final : public ITransport, public IHealthSource {
+public:
+  explicit ModemEndpoint(UartDriver& uart) : uart_(uart) {}
 
- private:
+private:
   UartDriver& uart_;  // borrowed dependency
 };
 ```
@@ -214,13 +208,13 @@ struct health_ops {
 
 ```cpp
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
   virtual Status Write(...) = 0;
 };
 
 class IHealthSource {
- public:
+public:
   virtual ~IHealthSource() = default;
   virtual HealthSnapshot ReadHealth() const = 0;
 };
@@ -244,10 +238,7 @@ bool IsHealthy(const IHealthSource& source);
 错误写法：
 
 ```cpp
-class Modem : public UartDriver,
-              public Logger,
-              public RetryManager {
-};
+class Modem : public UartDriver, public Logger, public RetryManager {};
 ```
 
 这些大多是 implementation dependency，不是 Modem 的类型身份。
@@ -255,13 +246,11 @@ class Modem : public UartDriver,
 推荐写法：
 
 ```cpp
-class ModemEndpoint final : public ITransport,
-                            public IHealthSource {
- public:
-  ModemEndpoint(UartDriver& uart, ILogger& logger)
-      : uart_(uart), logger_(logger) {}
+class ModemEndpoint final : public ITransport, public IHealthSource {
+public:
+  ModemEndpoint(UartDriver& uart, ILogger& logger) : uart_(uart), logger_(logger) {}
 
- private:
+private:
   UartDriver& uart_;
   ILogger& logger_;
 };
@@ -281,10 +270,10 @@ class Modem : private UartDriver {
 
 ```cpp
 class Modem {
- public:
+public:
   explicit Modem(UartDriver& uart) : uart_(uart) {}
 
- private:
+private:
   UartDriver& uart_;
 };
 ```
@@ -332,24 +321,21 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic \
 
 ```cpp
 class DriverBase {
- protected:
+protected:
   int error_count_{0};
 };
 
 class LoggerBase {
- protected:
+protected:
   void Log(const char* text);
 };
 
 class HealthBase {
- public:
+public:
   virtual bool Healthy() const = 0;
 };
 
-class Modem : public DriverBase,
-              public LoggerBase,
-              public HealthBase {
-};
+class Modem : public DriverBase, public LoggerBase, public HealthBase {};
 ```
 
 要求：

@@ -56,7 +56,7 @@ ModemSession 负责 modem 会话策略；Transport 负责字节传输；HAL 负�
 C++
 ```cpp
 class PacketQueue {
-std::array<Packet, 8> packets_;
+  std::array<Packet, 8> packets_;
 };
 ```
 
@@ -88,7 +88,7 @@ static UartHandle* g_uart;
 int modem_init(UartHandle* uart) { g_uart = uart; return 0; }
 ```cpp
 int modem_send(const uint8_t* data, size_t size) {
-return uart_write(g_uart, data, size);
+  return uart_write(g_uart, data, size);
 }
 ```
 
@@ -105,7 +105,8 @@ virtual ~ITransport() = default;
 virtual Status Write(std::span<const std::uint8_t> data,
 ```cpp
 std::chrono::milliseconds timeout) = 0;
-};
+}
+;
 
 class ModemSession {
 ```
@@ -116,7 +117,8 @@ explicit ModemSession(ITransport& transport) : transport_(transport) {}
 private:
 ITransport& transport_; // borrowed
 ```cpp
-};
+}
+;
 ```
 
 ## ⑤ 今日编码规范（10分钟）
@@ -136,7 +138,8 @@ Modem(std::shared_ptr<Uart> uart) : uart_(std::move(uart)) {}
 private:
 ```cpp
 std::shared_ptr<Uart> uart_;
-};
+}
+;
 ```
 
 若 Modem 根本不参与 UART 所有权，shared_ptr 制造了虚假生命周期语义。
@@ -154,7 +157,8 @@ explicit Modem(Uart& uart) : uart_(uart) {}
 private:
 ```cpp
 Uart& uart_;
-};
+}
+;
 ```
 
 ## ⑥ 可编译小实验（20分钟）
@@ -178,16 +182,14 @@ using namespace std::chrono_literals;
 enum class Status { kOk, kInvalidArgument, kBufferTooSmall, kTimeout };
 
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
-  virtual Status Write(std::span<const std::uint8_t> data,
-                       std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 
 class FakeTransport final : public ITransport {
- public:
-  Status Write(std::span<const std::uint8_t> data,
-               std::chrono::milliseconds timeout) override {
+public:
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override {
     if (timeout <= 0ms) return Status::kTimeout;
     if (data.size() > buffer_.size()) return Status::kBufferTooSmall;
     size_ = data.size();
@@ -197,25 +199,26 @@ class FakeTransport final : public ITransport {
     return Status::kOk;
   }
 
-  [[nodiscard]] std::size_t Size() const { return size_; }
+  [[nodiscard]] std::size_t Size() const {
+    return size_;
+  }
 
- private:
+private:
   static constexpr std::size_t kCapacity = 64;
   std::array<std::uint8_t, kCapacity> buffer_{};
   std::size_t size_ = 0;
 };
 
 class ModemSession {
- public:
+public:
   explicit ModemSession(ITransport& transport) : transport_(transport) {}
 
-  Status Send(std::span<const std::uint8_t> data,
-              std::chrono::milliseconds timeout) {
+  Status Send(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) {
     if (data.empty()) return Status::kInvalidArgument;
     return transport_.Write(data, timeout);
   }
 
- private:
+private:
   ITransport& transport_;
 };
 

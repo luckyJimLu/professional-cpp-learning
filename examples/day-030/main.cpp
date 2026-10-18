@@ -11,16 +11,14 @@ using namespace std::chrono_literals;
 enum class Status { kOk, kInvalidArgument, kBufferTooSmall, kTimeout };
 
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
-  virtual Status Write(std::span<const std::uint8_t> data,
-                       std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 
 class FakeTransport final : public ITransport {
- public:
-  Status Write(std::span<const std::uint8_t> data,
-               std::chrono::milliseconds timeout) override {
+public:
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override {
     if (timeout <= 0ms) return Status::kTimeout;
     if (data.size() > buffer_.size()) return Status::kBufferTooSmall;
     size_ = data.size();
@@ -30,25 +28,26 @@ class FakeTransport final : public ITransport {
     return Status::kOk;
   }
 
-  [[nodiscard]] std::size_t Size() const { return size_; }
+  [[nodiscard]] std::size_t Size() const {
+    return size_;
+  }
 
- private:
+private:
   static constexpr std::size_t kCapacity = 64;
   std::array<std::uint8_t, kCapacity> buffer_{};
   std::size_t size_ = 0;
 };
 
 class ModemSession {
- public:
+public:
   explicit ModemSession(ITransport& transport) : transport_(transport) {}
 
-  Status Send(std::span<const std::uint8_t> data,
-              std::chrono::milliseconds timeout) {
+  Status Send(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) {
     if (data.empty()) return Status::kInvalidArgument;
     return transport_.Write(data, timeout);
   }
 
- private:
+private:
   ITransport& transport_;
 };
 

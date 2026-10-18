@@ -11,9 +11,7 @@ void deferredHandler() {
 
 int main() {
   rtos::thread handler({.name = "irq_worker", .priority = 5}, deferredHandler);
-  rtos::isr uart("UART_RX", [] {
-    irqSem.release_from_isr();
-  });
+  rtos::isr uart("UART_RX", [] { irqSem.release_from_isr(); });
   uart.trigger_at(4ms);
   handler.join();
   return 0;

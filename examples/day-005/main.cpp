@@ -6,11 +6,11 @@
 #include <optional>
 #include <span>
 
-constexpr std::size_t kHeaderSize {2};
+constexpr std::size_t kHeaderSize{2};
 
 struct TlvHeader {
-  std::uint8_t type {};
-  std::uint8_t length {};
+  std::uint8_t type{};
+  std::uint8_t length{};
 };
 
 std::optional<TlvHeader> ParseTlvHeader(std::span<const std::uint8_t> frame) {

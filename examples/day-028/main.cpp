@@ -3,15 +3,20 @@
 #include <cstddef>
 #include <iostream>
 class Buffer {
- public:
+public:
   bool Push(char value) {
-    if (size_ == data_.size()) { return false; }
+    if (size_ == data_.size()) {
+      return false;
+    }
     data_[size_] = value;
     ++size_;
     return true;
   }
-  std::size_t Size() const { return size_; }
- private:
+  std::size_t Size() const {
+    return size_;
+  }
+
+private:
   std::array<char, 2> data_{};
   std::size_t size_{0};
 };

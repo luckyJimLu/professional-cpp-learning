@@ -14,7 +14,7 @@ template <typename T, std::size_t Capacity>
 class FixedQueue {
   static_assert(Capacity > 0U, "FixedQueue capacity must be positive");
 
- public:
+public:
   [[nodiscard]] Status Push(const T& value) {
     if (size_ == Capacity) {
       return Status::kFull;
@@ -45,10 +45,14 @@ class FixedQueue {
     return Status::kOk;
   }
 
-  [[nodiscard]] std::size_t Size() const { return size_; }
-  [[nodiscard]] constexpr std::size_t CapacityValue() const { return Capacity; }
+  [[nodiscard]] std::size_t Size() const {
+    return size_;
+  }
+  [[nodiscard]] constexpr std::size_t CapacityValue() const {
+    return Capacity;
+  }
 
- private:
+private:
   std::array<T, Capacity> data_{};
   std::size_t head_{0U};
   std::size_t tail_{0U};
@@ -57,8 +61,8 @@ class FixedQueue {
 
 template <typename Queue, typename T>
 concept PopQueue = requires(Queue& queue, T& value) {
-  { queue.Pop(value) } -> std::same_as<Status>;
-};
+                     { queue.Pop(value) } -> std::same_as<Status>;
+                   };
 
 template <typename Queue, typename T>
   requires PopQueue<Queue, T>

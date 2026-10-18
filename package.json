@@ -15,7 +15,9 @@
     "test:e2e": "playwright test",
     "check:course": "python3 tools/check-course.py",
     "check:migration": "python3 tools/check-migration.py",
-    "check:reference-cpp": "cd references/system-design-notes && bash scripts/check-cpp-examples.sh"
+    "check:reference-cpp": "cd references/system-design-notes && bash scripts/check-cpp-examples.sh",
+    "format:cpp": "python3 tools/format-markdown-cpp.py --all",
+    "format:cpp:check": "python3 tools/format-markdown-cpp.py --all --check"
   },
   "dependencies": {
     "@codemirror/commands": "^6.11.1",

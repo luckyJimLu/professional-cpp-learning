@@ -19,27 +19,24 @@ struct HealthSnapshot {
 };
 
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
 
-  virtual Status Write(std::span<const std::uint8_t> data,
-                       std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 
 class IHealthSource {
- public:
+public:
   virtual ~IHealthSource() = default;
 
   [[nodiscard]] virtual HealthSnapshot ReadHealth() const = 0;
 };
 
 class UartDriver {
- public:
-  explicit UartDriver(std::uint32_t baudrate_bps)
-      : baudrate_bps_(baudrate_bps) {}
+public:
+  explicit UartDriver(std::uint32_t baudrate_bps) : baudrate_bps_(baudrate_bps) {}
 
-  Status Write(std::span<const std::uint8_t> data,
-               std::chrono::milliseconds timeout) {
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) {
     if (data.empty()) {
       return Status::kInvalidArgument;
     }
@@ -59,19 +56,16 @@ class UartDriver {
     return baudrate_bps_;
   }
 
- private:
+private:
   std::uint32_t baudrate_bps_;
   std::size_t write_count_{0};
 };
 
-class ModemEndpoint final : public ITransport,
-                            public IHealthSource {
- public:
-  explicit ModemEndpoint(UartDriver& uart)
-      : uart_(uart) {}
+class ModemEndpoint final : public ITransport, public IHealthSource {
+public:
+  explicit ModemEndpoint(UartDriver& uart) : uart_(uart) {}
 
-  Status Write(std::span<const std::uint8_t> data,
-               std::chrono::milliseconds timeout) override {
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override {
     return uart_.Write(data, timeout);
   }
 
@@ -82,13 +76,12 @@ class ModemEndpoint final : public ITransport,
     };
   }
 
- private:
+private:
   UartDriver& uart_;
 };
 
 Status SendAt(ITransport& transport) {
-  constexpr std::array<std::uint8_t, 4> kAt{
-      0x41, 0x54, 0x0D, 0x0A};
+  constexpr std::array<std::uint8_t, 4> kAt{0x41, 0x54, 0x0D, 0x0A};
   return transport.Write(kAt, 100ms);
 }
 

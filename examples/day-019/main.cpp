@@ -14,14 +14,14 @@ struct SessionOptions {
 };
 
 class Transport {
- public:
+public:
   virtual ~Transport() = default;
   virtual Status Send(std::string_view data) = 0;
   virtual Status Receive(std::span<char> out, std::chrono::milliseconds timeout) = 0;
 };
 
 class FakeTransport final : public Transport {
- public:
+public:
   Status Send(std::string_view data) override {
     last_sent_ = data;
     return Status::kOk;
@@ -42,7 +42,7 @@ class FakeTransport final : public Transport {
 };
 
 class ModemSession {
- public:
+public:
   ModemSession(Transport& transport, SessionOptions options)
       : transport_(transport), options_(options) {}
 
@@ -53,7 +53,7 @@ class ModemSession {
     return transport_.Receive(buffer, options_.timeout);
   }
 
- private:
+private:
   Transport& transport_;
   SessionOptions options_;
 };

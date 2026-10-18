@@ -185,10 +185,14 @@ enum class ModemState { kIdle, kDialing, kConnected, kError };
 
 const char* ToString(ModemState state) {
   switch (state) {
-    case ModemState::kIdle: return "idle";
-    case ModemState::kDialing: return "dialing";
-    case ModemState::kConnected: return "connected";
-    case ModemState::kError: return "error";
+    case ModemState::kIdle:
+      return "idle";
+    case ModemState::kDialing:
+      return "dialing";
+    case ModemState::kConnected:
+      return "connected";
+    case ModemState::kError:
+      return "error";
   }
   // 注意：没有 default，没有兜底 return
 }
@@ -241,9 +245,8 @@ enum class SensorError {
   kCrcMismatch,
 };
 
-[[nodiscard]] SensorError ReadTemperature(
-    float& out_temp,
-    std::chrono::milliseconds timeout) noexcept {
+[[nodiscard]] SensorError ReadTemperature(float& out_temp,
+                                          std::chrono::milliseconds timeout) noexcept {
   std::array<std::uint8_t, 4> raw{};
   if (!I2cRead(kSensorAddress, raw, timeout)) {
     return SensorError::kTimeout;
@@ -319,8 +322,7 @@ enum class SensorError {
 };
 
 // 模拟硬件：偶数次调用超时，用来演示错误路径
-[[nodiscard]] bool I2cRead(std::uint8_t address,
-                           std::span<std::uint8_t> out,
+[[nodiscard]] bool I2cRead(std::uint8_t address, std::span<std::uint8_t> out,
                            std::chrono::milliseconds timeout) noexcept {
   assert(!out.empty() && "I2cRead with empty buffer is a bug");
   // ... 硬件交互（演示用桩）

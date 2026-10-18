@@ -38,7 +38,11 @@ enum class、结构化绑定与类型安全状态机
 
 ```cpp
 enum class ModemState {
-kOff, kBooting, kRegistering, kReady, kError,
+  kOff,
+  kBooting,
+  kRegistering,
+  kReady,
+  kError,
 };
 ```
 
@@ -52,8 +56,8 @@ enum class 不会隐式转换成整数，也不会把枚举值泄漏到外层作
 
 ```cpp
 struct SignalInfo {
-int rssi_dbm {};
-int quality_percent {};
+  int rssi_dbm{};
+  int quality_percent{};
 };
 
 auto [rssi_dbm, quality_percent] = ReadSignal();
@@ -66,7 +70,7 @@ C 风格
 #define MODEM_READY 3
 ```cpp
 int modem_get_signal(int *rssi, int *quality) {
-if (rssi == NULL || quality == NULL) return -1;
+  if (rssi == NULL || quality == NULL) return -1;
 ```
 *rssi = -75; *quality = 65; return 0;
 ```cpp
@@ -77,8 +81,8 @@ if (rssi == NULL || quality == NULL) return -1;
 
 ```cpp
 struct SignalInfo {
-int rssi_dbm {};
-int quality_percent {};
+  int rssi_dbm{};
+  int quality_percent{};
 };
 ```
 
@@ -110,17 +114,22 @@ namespace modem {
 enum class State { kOff, kBooting, kRegistering, kReady, kError };
 
 struct SignalInfo {
-  int rssi_dbm {};
-  int quality_percent {};
+  int rssi_dbm{};
+  int quality_percent{};
 };
 
 [[nodiscard]] constexpr std::string_view ToString(State state) {
   switch (state) {
-    case State::kOff: return "off";
-    case State::kBooting: return "booting";
-    case State::kRegistering: return "registering";
-    case State::kReady: return "ready";
-    case State::kError: return "error";
+    case State::kOff:
+      return "off";
+    case State::kBooting:
+      return "booting";
+    case State::kRegistering:
+      return "registering";
+    case State::kReady:
+      return "ready";
+    case State::kError:
+      return "error";
   }
   return "invalid";
 }
@@ -131,12 +140,11 @@ struct SignalInfo {
 }  // namespace modem
 
 int main() {
-  const modem::State state {modem::State::kReady};
+  const modem::State state{modem::State::kReady};
   const auto [rssi_dbm, quality_percent] = modem::ReadSignal();
   assert(modem::ToString(state) == "ready");
   assert(rssi_dbm == -75);
-  std::cout << "State: " << modem::ToString(state)
-            << ", RSSI: " << rssi_dbm << " dBm"
+  std::cout << "State: " << modem::ToString(state) << ", RSSI: " << rssi_dbm << " dBm"
             << ", Quality: " << quality_percent << "%\n";
   return 0;
 }

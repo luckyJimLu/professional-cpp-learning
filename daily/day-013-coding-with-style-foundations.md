@@ -163,7 +163,7 @@ struct AttachOptions {
 };
 
 class ModemSession {
- public:
+public:
   Status Attach(const AttachOptions& options) {
     if (options.timeout <= 0ms) {
       return Status::kInvalidArgument;
@@ -172,7 +172,7 @@ class ModemSession {
     return Status::kOk;
   }
 
- private:
+private:
   AttachOptions options_{};
 };
 

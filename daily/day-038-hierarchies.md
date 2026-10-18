@@ -67,12 +67,10 @@ next: 39
 
 ```cpp
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
 
-  virtual Status Write(
-      std::span<const std::uint8_t> data,
-      std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 ```
 
@@ -202,11 +200,9 @@ int transport_write(struct transport* t) {
 
 ```cpp
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
-  virtual Status Write(
-      std::span<const std::uint8_t> data,
-      std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 ```
 
@@ -214,10 +210,8 @@ class ITransport {
 
 ```cpp
 class UartTransport final : public ITransport {
- public:
-  Status Write(
-      std::span<const std::uint8_t> data,
-      std::chrono::milliseconds timeout) override;
+public:
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override;
 };
 ```
 
@@ -241,7 +235,7 @@ Status SendAt(ITransport& transport);
 
 ```cpp
 class Device {
- public:
+public:
   virtual ~Device() = default;
 };
 ```
@@ -252,12 +246,10 @@ class Device {
 
 ```cpp
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
 
-  virtual Status Write(
-      std::span<const std::uint8_t> data,
-      std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 ```
 

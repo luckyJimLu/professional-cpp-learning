@@ -13,17 +13,15 @@ enum class Status {
 };
 
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
 
-  virtual Status Write(std::span<const std::uint8_t> data,
-                       std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 
 class FakeTransport final : public ITransport {
- public:
-  Status Write(std::span<const std::uint8_t> data,
-               std::chrono::milliseconds timeout) override {
+public:
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override {
     if (data.empty() || timeout <= 0ms) {
       return Status::kInvalidArgument;
     }
@@ -36,27 +34,25 @@ class FakeTransport final : public ITransport {
     return write_count_;
   }
 
- private:
+private:
   std::size_t write_count_{0};
 };
 
 class ModemSession {
- public:
-  explicit ModemSession(ITransport& transport)
-      : transport_(transport) {}
+public:
+  explicit ModemSession(ITransport& transport) : transport_(transport) {}
 
-  Status Send(std::span<const std::uint8_t> command,
-              std::chrono::milliseconds timeout) {
+  Status Send(std::span<const std::uint8_t> command, std::chrono::milliseconds timeout) {
     return transport_.Write(command, timeout);
   }
 
- private:
+private:
   ITransport& transport_;
 };
 
 // Deliberately unrelated class: no artificial common Device base class.
 class Watchdog {
- public:
+public:
   void Kick() {
     ++kick_count_;
   }
@@ -65,13 +61,12 @@ class Watchdog {
     return kick_count_;
   }
 
- private:
+private:
   std::size_t kick_count_{0};
 };
 
 int main() {
-  constexpr std::array<std::uint8_t, 4> kAt{
-      0x41, 0x54, 0x0D, 0x0A};
+  constexpr std::array<std::uint8_t, 4> kAt{0x41, 0x54, 0x0D, 0x0A};
 
   FakeTransport transport;
   ModemSession modem{transport};

@@ -70,9 +70,18 @@ Code Review 时说明规则如何帮助当前场景，不将风格约定当成�
 enum class State { Idle, Connecting, Ready };
 enum class Event { Start, Connected, Failed };
 bool Apply(State& state, Event event) {
-  if (state == State::Idle && event == Event::Start) { state = State::Connecting; return true; }
-  if (state == State::Connecting && event == Event::Connected) { state = State::Ready; return true; }
-  if (state == State::Connecting && event == Event::Failed) { state = State::Idle; return true; }
+  if (state == State::Idle && event == Event::Start) {
+    state = State::Connecting;
+    return true;
+  }
+  if (state == State::Connecting && event == Event::Connected) {
+    state = State::Ready;
+    return true;
+  }
+  if (state == State::Connecting && event == Event::Failed) {
+    state = State::Idle;
+    return true;
+  }
   return false;
 }
 int main() {

@@ -1,13 +1,13 @@
 #include <iostream>
 
 class ResetPolicy {
- public:
+public:
   virtual ~ResetPolicy() = default;
   virtual bool Reset() = 0;
 };
 
 class GpioResetPolicy final : public ResetPolicy {
- public:
+public:
   bool Reset() override {
     std::cout << "reset via GPIO\n";
     return true;
@@ -15,7 +15,7 @@ class GpioResetPolicy final : public ResetPolicy {
 };
 
 class AtResetPolicy final : public ResetPolicy {
- public:
+public:
   bool Reset() override {
     std::cout << "reset via AT command\n";
     return true;
@@ -23,13 +23,14 @@ class AtResetPolicy final : public ResetPolicy {
 };
 
 class ModemController {
- public:
-  explicit ModemController(ResetPolicy& reset_policy)
-      : reset_policy_{reset_policy} {}
+public:
+  explicit ModemController(ResetPolicy& reset_policy) : reset_policy_{reset_policy} {}
 
-  bool Recover() { return reset_policy_.Reset(); }
+  bool Recover() {
+    return reset_policy_.Reset();
+  }
 
- private:
+private:
   ResetPolicy& reset_policy_;
 };
 

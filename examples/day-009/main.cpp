@@ -35,13 +35,20 @@ std::optional<RegistrationState> ParseRegistrationState(std::string_view respons
   const auto [ptr, error] = std::from_chars(text.data(), text.data() + text.size(), value);
   if (error != std::errc{} || ptr == text.data()) return std::nullopt;
   switch (value) {
-    case 0: return RegistrationState::kNotRegistered;
-    case 1: return RegistrationState::kRegisteredHome;
-    case 2: return RegistrationState::kSearching;
-    case 3: return RegistrationState::kDenied;
-    case 4: return RegistrationState::kUnknown;
-    case 5: return RegistrationState::kRegisteredRoaming;
-    default: return std::nullopt;
+    case 0:
+      return RegistrationState::kNotRegistered;
+    case 1:
+      return RegistrationState::kRegisteredHome;
+    case 2:
+      return RegistrationState::kSearching;
+    case 3:
+      return RegistrationState::kDenied;
+    case 4:
+      return RegistrationState::kUnknown;
+    case 5:
+      return RegistrationState::kRegisteredRoaming;
+    default:
+      return std::nullopt;
   }
 }
 }  // namespace modem

@@ -87,11 +87,11 @@ Modern C++ 不应只是把它改成大 class，而应表达概念：
 
 ```cpp
 class AtClient {
- public:
+public:
   explicit AtClient(ITransport& transport) : transport_(transport) {}
-  Status Send(std::span<const std::uint8_t> command,
-              std::chrono::milliseconds timeout);
- private:
+  Status Send(std::span<const std::uint8_t> command, std::chrono::milliseconds timeout);
+
+private:
   ITransport& transport_;
 };
 ```
@@ -117,9 +117,10 @@ class AtClient {
 
 ```cpp
 class AtClient {
- public:
+public:
   explicit AtClient(ITransport& transport) : transport_(transport) {}
- private:
+
+private:
   ITransport& transport_;
 };
 ```
@@ -152,7 +153,7 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic \
 
 ```cpp
 class ModemManager {
- public:
+public:
   Status Send(std::span<const std::uint8_t> data) {
     Log(data);
     SaveToFlash(data);

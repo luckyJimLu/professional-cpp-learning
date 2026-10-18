@@ -101,8 +101,7 @@ if (frame.size() > kMaxFrameBytes) {
 “为了安全”不等于可以无限扫描、重试或等待。检查自身也应满足时间和空间预算。
 
 ```cpp
-SendStatus Send(std::span<const std::byte> frame,
-                std::chrono::milliseconds timeout);
+SendStatus Send(std::span<const std::byte> frame, std::chrono::milliseconds timeout);
 ```
 
 长度有界、timeout 显式、失败可观察，才能用于可审计的实时路径。
@@ -141,8 +140,7 @@ enum class SendStatus {
   kTimeout,
 };
 
-SendStatus Send(std::span<const std::byte> frame,
-                std::chrono::milliseconds timeout);
+SendStatus Send(std::span<const std::byte> frame, std::chrono::milliseconds timeout);
 ```
 
 `std::span` 把 buffer 与长度绑定，`std::chrono` 明确时间单位，`enum class` 保留错误语义。

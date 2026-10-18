@@ -7,7 +7,7 @@
 enum class Status { kOk, kEmptyCommand, kCommandTooLarge };
 
 class CommandBuffer {
- public:
+public:
   static constexpr std::size_t kCapacity = 64;
 
   Status Store(std::span<const std::byte> command) {
@@ -24,7 +24,7 @@ class CommandBuffer {
     return {buffer_.data(), size_};
   }
 
- private:
+private:
   std::array<std::byte, kCapacity> buffer_{};
   std::size_t size_{0};
 };

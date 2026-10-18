@@ -74,8 +74,7 @@ int Send(const uint8_t* data, int len, int timeout, int flags);
 Modern C++ 可以把 contract 放进类型：
 
 ```cpp
-SendResult Send(std::span<const std::byte> payload,
-                std::chrono::milliseconds timeout);
+SendResult Send(std::span<const std::byte> payload, std::chrono::milliseconds timeout);
 ```
 
 ### 2. Make invalid states hard to represent
@@ -152,16 +151,14 @@ enum class SendMode {
   kUrgent,
 };
 
-SendResult Send(std::span<const std::byte> payload,
-                std::chrono::milliseconds timeout,
+SendResult Send(std::span<const std::byte> payload, std::chrono::milliseconds timeout,
                 SendMode mode);
 ```
 
 调用点：
 
 ```cpp
-transport.Send(payload, std::chrono::milliseconds{1000},
-               SendMode::kNormal);
+transport.Send(payload, std::chrono::milliseconds{1000}, SendMode::kNormal);
 ```
 
 类型本身成为一部分文档，并给编译器更多检查机会。
@@ -214,8 +211,7 @@ Send(UART_HandleTypeDef* hal_uart, const uint8_t* data, size_t size);
 推荐：
 
 ```cpp
-SendResult Send(std::span<const std::byte> payload,
-                std::chrono::milliseconds timeout);
+SendResult Send(std::span<const std::byte> payload, std::chrono::milliseconds timeout);
 ```
 
 HAL handle 留在 concrete adapter 内部。
@@ -250,11 +246,7 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic \
 ### 修复违规代码
 
 ```cpp
-int Send(void* driver,
-         const unsigned char* data,
-         int len,
-         int timeout,
-         int urgent) {
+int Send(void* driver, const unsigned char* data, int len, int timeout, int urgent) {
   if (!data) {
     return -1;
   }

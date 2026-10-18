@@ -56,13 +56,12 @@ unsigned int len, int timeout_ms);
 ```cpp
 enum class Status { kOk, kTimeout, kIoError, kInvalidArgument };
 struct SendOptions {
-std::chrono::milliseconds timeout{1000};
+  std::chrono::milliseconds timeout{1000};
 };
 class Transport {
 public:
-virtual ~Transport() = default;
-virtual Status Send(std::span<const std::byte> data,
-const SendOptions& options) = 0;
+  virtual ~Transport() = default;
+  virtual Status Send(std::span<const std::byte> data, const SendOptions& options) = 0;
 };
 ```
 
@@ -83,7 +82,8 @@ public:
 int uart_fd;
 unsigned char* rx_buf;
 int Send(unsigned char* p, int n, int timeout);
-};
+}
+;
 ```
 
 推荐写法
@@ -102,7 +102,8 @@ std::chrono::milliseconds timeout);
 private:
 Transport& transport_; // borrowed, non-owning
 ```cpp
-};
+}
+;
 ```
 嵌入式注意：抽象层不能成为“性能免责层”。硬实时路径仍需审计 virtual dispatch、动态分配、锁、日志和最坏执行时间。不要为了架构漂亮而增加无法证明价值的层次。
 ## ⑥ 可编译的小实验 / 代码练习（20分钟）
@@ -121,19 +122,19 @@ Transport& transport_; // borrowed, non-owning
 using namespace std::chrono_literals;
 
 enum class Status { kOk, kTimeout, kIoError, kInvalidArgument };
-struct SendOptions { std::chrono::milliseconds timeout{1000ms}; };
+struct SendOptions {
+  std::chrono::milliseconds timeout{1000ms};
+};
 
 class Transport {
- public:
+public:
   virtual ~Transport() = default;
-  virtual Status Send(std::span<const std::byte> data,
-                      const SendOptions& options) = 0;
+  virtual Status Send(std::span<const std::byte> data, const SendOptions& options) = 0;
 };
 
 class FakeTransport final : public Transport {
- public:
-  Status Send(std::span<const std::byte> data,
-              const SendOptions& options) override {
+public:
+  Status Send(std::span<const std::byte> data, const SendOptions& options) override {
     if (data.empty()) return Status::kInvalidArgument;
     if (options.timeout <= 0ms) return Status::kTimeout;
     ++send_count_;
@@ -141,27 +142,30 @@ class FakeTransport final : public Transport {
     return Status::kOk;
   }
 
-  [[nodiscard]] std::size_t SendCount() const { return send_count_; }
-  [[nodiscard]] std::size_t LastSize() const { return last_size_; }
+  [[nodiscard]] std::size_t SendCount() const {
+    return send_count_;
+  }
+  [[nodiscard]] std::size_t LastSize() const {
+    return last_size_;
+  }
 
- private:
+private:
   std::size_t send_count_{0};
   std::size_t last_size_{0};
 };
 
 class ModemSession {
- public:
+public:
   explicit ModemSession(Transport& transport) : transport_(transport) {}
 
-  Status Execute(std::string_view command,
-                 std::chrono::milliseconds timeout) {
+  Status Execute(std::string_view command, std::chrono::milliseconds timeout) {
     if (command.empty()) return Status::kInvalidArgument;
     const auto* begin = reinterpret_cast<const std::byte*>(command.data());
     const std::span<const std::byte> bytes{begin, command.size()};
     return transport_.Send(bytes, SendOptions{.timeout = timeout});
   }
 
- private:
+private:
   Transport& transport_;
 };
 
@@ -170,8 +174,7 @@ int main() {
   ModemSession modem{transport};
   const Status status = modem.Execute("AT+CSQ\r\n", 500ms);
   assert(status == Status::kOk);
-  std::cout << "send_count=" << transport.SendCount()
-            << ", bytes=" << transport.LastSize() << '\n';
+  std::cout << "send_count=" << transport.SendCount() << ", bytes=" << transport.LastSize() << '\n';
   return 0;
 }
 ```

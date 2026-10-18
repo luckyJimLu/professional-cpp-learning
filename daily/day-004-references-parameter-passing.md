@@ -39,8 +39,8 @@ next: 5
 引用是对象的别名
 
 ```cpp
-int retry_count {3};
-int& retry_ref {retry_count};
+int retry_count{3};
+int& retry_ref{retry_count};
 retry_ref = 5;
 ```
 
@@ -49,12 +49,11 @@ const T&：大型只读对象常用形式
 struct ModemConfig
 ```cpp
 {
-std::uint32_t baud_rate_bps {115200};
-std::uint32_t timeout_ms {5000};
+  std::uint32_t baud_rate_bps{115200};
+  std::uint32_t timeout_ms{5000};
 };
 
-void PrintConfig(const ModemConfig& config)
-{
+void PrintConfig(const ModemConfig& config) {
 ```
 // 借用、只读、不复制
 ```cpp
@@ -66,9 +65,8 @@ void PrintConfig(const ModemConfig& config)
 T& 表达“必须存在，而且会修改”
 
 ```cpp
-void ResetRetryCount(std::uint8_t& retry_count)
-{
-retry_count = 0;
+void ResetRetryCount(std::uint8_t& retry_count) {
+  retry_count = 0;
 }
 ```
 
@@ -90,21 +88,19 @@ unique_ptr<T> -> 后续用于表达唯一所有权
 C：
 
 ```cpp
-void modem_set_timeout(modem_config_t* config, uint32_t timeout_ms)
-{
-if (config == NULL) {
-return;
-}
-config->timeout_ms = timeout_ms;
+void modem_set_timeout(modem_config_t* config, uint32_t timeout_ms) {
+  if (config == NULL) {
+    return;
+  }
+  config->timeout_ms = timeout_ms;
 }
 ```
 
 C++：如果 config 逻辑上不能为空，用引用直接表达约束：
 
 ```cpp
-void SetTimeout(ModemConfig& config, std::uint32_t timeout_ms)
-{
-config.timeout_ms = timeout_ms;
+void SetTimeout(ModemConfig& config, std::uint32_t timeout_ms) {
+  config.timeout_ms = timeout_ms;
 }
 ```
 
@@ -138,9 +134,9 @@ MUST：接口表达意图。 裸指针不要暗示所有权转移。嵌入式中
 
 namespace modem {
 struct Config {
-  std::uint32_t baud_rate_bps {115200};
-  std::uint32_t timeout_ms {5000};
-  std::uint8_t retry_count {3};
+  std::uint32_t baud_rate_bps{115200};
+  std::uint32_t timeout_ms{5000};
+  std::uint8_t retry_count{3};
 };
 
 void SetTimeout(Config& config, std::uint32_t timeout_ms) {
@@ -153,7 +149,7 @@ void PrintConfig(const Config& config) {
 }  // namespace modem
 
 int main() {
-  modem::Config config {};
+  modem::Config config{};
   modem::SetTimeout(config, 3000);
   assert(config.timeout_ms == 3000);
   modem::PrintConfig(config);

@@ -40,25 +40,25 @@ sequenceDiagram
 
 ```cpp
 // 要素 1：Session 封装连接上下文，并从 shared_ptr 派生自身管理能力
-class session
-  : public std::enable_shared_from_this<session>      // :20
+class session : public std::enable_shared_from_this<session>  // :20
 {
-  tcp::socket socket_;        // :60  连接 socket（值成员，随 session 存活）
-  char data_[max_length];     // :62  缓冲区（值成员）
+  tcp::socket socket_;     // :60  连接 socket（值成员，随 session 存活）
+  char data_[max_length];  // :62  缓冲区（值成员）
 };
 
 // 要素 2：创建与启动 —— make_shared + start
-std::make_shared<session>(std::move(socket))->start(); // :82
+std::make_shared<session>(std::move(socket))->start();  // :82
 
 // 要素 3：每个异步 Handler 按值捕获 shared_ptr
-void do_read()
-{
-  auto self(shared_from_this());                       // :36
-  socket_.async_read_some(                             // :37
+void do_read() {
+  auto self(shared_from_this());  // :36
+  socket_.async_read_some(        // :37
       boost::asio::buffer(data_, max_length),
-      [this, self](boost::system::error_code ec, std::size_t length) // :38
+      [this, self](boost::system::error_code ec, std::size_t length)  // :38
       {
-        if (!ec) { do_write(length); }
+        if (!ec) {
+          do_write(length);
+        }
       });
 }
 ```
@@ -180,8 +180,8 @@ sequenceDiagram
 
 ```cpp
 template <typename Handler, typename Alloc,
-    typename Operation = scheduler_operation>
-class executor_op : public Operation            // :30-32 操作对象基类
+          typename Operation = scheduler_operation>
+class executor_op : public Operation  // :30-32 操作对象基类
 {
   static void do_complete(void* owner, Operation* base, ...)  // :45
   {
@@ -189,14 +189,14 @@ class executor_op : public Operation            // :30-32 操作对象基类
     // ...（省略）
     // 源码注释（:57-62）："Make a copy of the handler so that the memory
     // can be deallocated before the upcall is made."
-    Handler handler(static_cast<Handler&&>(o->handler_));     // :63 handler 移到栈上
-    p.reset();                                                // :64 释放 op 内存
-    if (owner)                                                // :67
+    Handler handler(static_cast<Handler&&>(o->handler_));  // :63 handler 移到栈上
+    p.reset();                                             // :64 释放 op 内存
+    if (owner)                                             // :67
     {
-      static_cast<Handler&&>(handler)();                      // :71 调用用户 handler
+      static_cast<Handler&&>(handler)();  // :71 调用用户 handler
     }
   }
-  Handler handler_;   // :77  ← 你捕获的 shared_ptr<session> 就在这里
+  Handler handler_;  // :77  ← 你捕获的 shared_ptr<session> 就在这里
 };
 ```
 

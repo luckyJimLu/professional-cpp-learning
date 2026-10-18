@@ -14,20 +14,17 @@ enum class Status {
 };
 
 class IByteSink {
- public:
+public:
   virtual ~IByteSink() = default;
 
-  virtual Status Write(std::span<const std::uint8_t> data,
-                       std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 
 class UartSink final : public IByteSink {
- public:
-  explicit UartSink(std::uint32_t baudrate_bps)
-      : baudrate_bps_(baudrate_bps) {}
+public:
+  explicit UartSink(std::uint32_t baudrate_bps) : baudrate_bps_(baudrate_bps) {}
 
-  Status Write(std::span<const std::uint8_t> data,
-               std::chrono::milliseconds timeout) override {
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override {
     if (data.empty()) {
       return Status::kInvalidArgument;
     }
@@ -39,18 +36,21 @@ class UartSink final : public IByteSink {
     return Status::kOk;
   }
 
-  [[nodiscard]] std::size_t WriteCount() const { return write_count_; }
-  [[nodiscard]] std::uint32_t BaudrateBps() const { return baudrate_bps_; }
+  [[nodiscard]] std::size_t WriteCount() const {
+    return write_count_;
+  }
+  [[nodiscard]] std::uint32_t BaudrateBps() const {
+    return baudrate_bps_;
+  }
 
- private:
+private:
   std::uint32_t baudrate_bps_;
   std::size_t write_count_{0};
 };
 
 class FakeSink final : public IByteSink {
- public:
-  Status Write(std::span<const std::uint8_t> data,
-               std::chrono::milliseconds timeout) override {
+public:
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override {
     if (data.empty()) {
       return Status::kInvalidArgument;
     }
@@ -62,31 +62,31 @@ class FakeSink final : public IByteSink {
     return Status::kOk;
   }
 
-  [[nodiscard]] std::size_t LastSize() const { return last_size_; }
+  [[nodiscard]] std::size_t LastSize() const {
+    return last_size_;
+  }
 
- private:
+private:
   std::size_t last_size_{0};
 };
 
 class AtCommandClient {
- public:
+public:
   explicit AtCommandClient(IByteSink& sink) : sink_(sink) {}
 
-  Status Send(std::span<const std::uint8_t> command,
-              std::chrono::milliseconds timeout) {
+  Status Send(std::span<const std::uint8_t> command, std::chrono::milliseconds timeout) {
     if (command.empty()) {
       return Status::kInvalidArgument;
     }
     return sink_.Write(command, timeout);
   }
 
- private:
+private:
   IByteSink& sink_;
 };
 
 int main() {
-  constexpr std::array<std::uint8_t, 4> kAtCommand{
-      0x41, 0x54, 0x0D, 0x0A};
+  constexpr std::array<std::uint8_t, 4> kAtCommand{0x41, 0x54, 0x0D, 0x0A};
 
   UartSink uart{115200U};
   AtCommandClient production_client{uart};

@@ -60,11 +60,10 @@ next: 37
 
 ```cpp
 class ModemSession {
- public:
-  explicit ModemSession(ITransport& transport)
-      : transport_(transport) {}
+public:
+  explicit ModemSession(ITransport& transport) : transport_(transport) {}
 
- private:
+private:
   ITransport& transport_;
 };
 ```
@@ -81,9 +80,8 @@ ModemSession 并不是 Transport 的一种。
 
 ```cpp
 class UartTransport final : public ITransport {
- public:
-  Status Write(std::span<const std::uint8_t> data,
-               std::chrono::milliseconds timeout) override;
+public:
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override;
 };
 ```
 
@@ -111,16 +109,14 @@ UartTransport is-a ITransport
 
 ```cpp
 class BufferedTransport final : public ITransport {
- public:
-  explicit BufferedTransport(ITransport& inner)
-      : inner_(inner) {}
+public:
+  explicit BufferedTransport(ITransport& inner) : inner_(inner) {}
 
-  Status Write(std::span<const std::uint8_t> data,
-               std::chrono::milliseconds timeout) override {
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override {
     return inner_.Write(data, timeout);
   }
 
- private:
+private:
   ITransport& inner_;
 };
 ```
@@ -149,10 +145,9 @@ struct modem {
 
 ```cpp
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
-  virtual Status Write(std::span<const std::uint8_t> data,
-                       std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 
 class UartTransport final : public ITransport {
@@ -160,11 +155,10 @@ class UartTransport final : public ITransport {
 };
 
 class ModemSession {
- public:
-  explicit ModemSession(ITransport& transport)
-      : transport_(transport) {}
+public:
+  explicit ModemSession(ITransport& transport) : transport_(transport) {}
 
- private:
+private:
   ITransport& transport_;  // has-a / uses-a
 };
 ```
@@ -189,10 +183,10 @@ class Modem : public UartDriver {
 
 ```cpp
 class Modem {
- public:
+public:
   explicit Modem(UartDriver& uart) : uart_(uart) {}
 
- private:
+private:
   UartDriver& uart_;
 };
 ```
@@ -246,12 +240,12 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic   examples/day-036/main.cpp
 
 ```cpp
 class Logger {
- public:
+public:
   void Log(const char* text);
 };
 
 class Modem : public Logger {
- public:
+public:
   void Send();
 };
 ```

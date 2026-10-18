@@ -58,11 +58,10 @@ T&
 
 ```cpp
 class ModemSession {
- public:
-  explicit ModemSession(ITransport& transport)
-      : transport_(transport) {}
+public:
+  explicit ModemSession(ITransport& transport) : transport_(transport) {}
 
- private:
+private:
   ITransport& transport_;
 };
 ```
@@ -90,11 +89,10 @@ T*
 
 ```cpp
 class Driver {
- public:
-  explicit Driver(ILogger* logger)
-      : logger_(logger) {}
+public:
+  explicit Driver(ILogger* logger) : logger_(logger) {}
 
- private:
+private:
   ILogger* logger_;  // nullable, non-owning
 };
 ```
@@ -253,11 +251,10 @@ std::shared_ptr<T>
 
 ```cpp
 class Sender {
- public:
-  explicit Sender(IRetryStrategy& strategy)
-      : strategy_(strategy) {}
+public:
+  explicit Sender(IRetryStrategy& strategy) : strategy_(strategy) {}
 
- private:
+private:
   IRetryStrategy& strategy_;
 };
 ```
@@ -275,11 +272,10 @@ class Sender {
 
 ```cpp
 class Sender {
- public:
-  explicit Sender(std::unique_ptr<IRetryStrategy> strategy)
-      : strategy_(std::move(strategy)) {}
+public:
+  explicit Sender(std::unique_ptr<IRetryStrategy> strategy) : strategy_(std::move(strategy)) {}
 
- private:
+private:
   std::unique_ptr<IRetryStrategy> strategy_;
 };
 ```
@@ -308,8 +304,7 @@ std::shared_ptr<IRetryStrategy>
 Factory 是 `unique_ptr` 最经典的使用场景。
 
 ```cpp
-std::unique_ptr<ITransport> CreateTransport(
-    const TransportConfig& config);
+std::unique_ptr<ITransport> CreateTransport(const TransportConfig& config);
 ```
 
 它明确表达：
@@ -344,7 +339,7 @@ shared_ptr（只有真实共享 ownership 才用）
 
 ```cpp
 class IPlatformFactory {
- public:
+public:
   virtual ~IPlatformFactory() = default;
 
   virtual std::unique_ptr<ITransport> CreateTransport() = 0;
@@ -384,11 +379,10 @@ Adapter 经常只是 borrow 被适配对象：
 
 ```cpp
 class VendorUartAdapter final : public ITransport {
- public:
-  explicit VendorUartAdapter(VendorUart& uart)
-      : uart_(uart) {}
+public:
+  explicit VendorUartAdapter(VendorUart& uart) : uart_(uart) {}
 
- private:
+private:
   VendorUart& uart_;
 };
 ```
@@ -417,11 +411,10 @@ Decorator 有两种典型 ownership 模式。
 
 ```cpp
 class TracingTransport final : public ITransport {
- public:
-  explicit TracingTransport(ITransport& inner)
-      : inner_(inner) {}
+public:
+  explicit TracingTransport(ITransport& inner) : inner_(inner) {}
 
- private:
+private:
   ITransport& inner_;
 };
 ```
@@ -441,11 +434,10 @@ main()
 
 ```cpp
 class TracingTransport final : public ITransport {
- public:
-  explicit TracingTransport(std::unique_ptr<ITransport> inner)
-      : inner_(std::move(inner)) {}
+public:
+  explicit TracingTransport(std::unique_ptr<ITransport> inner) : inner_(std::move(inner)) {}
 
- private:
+private:
   std::unique_ptr<ITransport> inner_;
 };
 ```
@@ -472,11 +464,10 @@ Proxy 不代表固定 ownership。
 
 ```cpp
 class SensorProxy {
- public:
-  explicit SensorProxy(IRpcClient& client)
-      : client_(client) {}
+public:
+  explicit SensorProxy(IRpcClient& client) : client_(client) {}
 
- private:
+private:
   IRpcClient& client_;
 };
 ```
@@ -505,7 +496,7 @@ Observer 的典型错误：
 
 ```cpp
 class Publisher {
- private:
+private:
   std::vector<IObserver*> observers_;
 };
 ```
@@ -565,12 +556,12 @@ Subscription Subscribe(Callback callback);
 
 ```cpp
 class Handler {
- public:
+public:
   void SetNext(std::unique_ptr<Handler> next) {
     next_ = std::move(next);
   }
 
- private:
+private:
   std::unique_ptr<Handler> next_;
 };
 ```
@@ -665,11 +656,11 @@ PImpl 严格说不属于 Chapter 33 的模式清单，但在 C++ 稳定接口设
 
 ```cpp
 class Modem {
- public:
+public:
   Modem();
   ~Modem();
 
- private:
+private:
   class Impl;
   std::unique_ptr<Impl> impl_;
 };
@@ -726,12 +717,7 @@ Destructor / Release
 典型：
 
 ```cpp
-std::unique_ptr
-std::lock_guard
-std::jthread
-fstream
-SubscriptionToken
-SessionGuard
+std::unique_ptr std::lock_guard std::jthread fstream SubscriptionToken SessionGuard
 ```
 
 因此：
@@ -983,7 +969,7 @@ struct Config {
 };
 
 class Service {
- private:
+private:
   Config config_;
 };
 ```
@@ -1025,17 +1011,18 @@ classDiagram
 
 ```cpp
 class OwnedService {
- public:
-  explicit OwnedService(std::unique_ptr<ITransport> transport)
-      : transport_(std::move(transport)) {
+public:
+  explicit OwnedService(std::unique_ptr<ITransport> transport) : transport_(std::move(transport)) {
     if (!transport_) {
       throw std::invalid_argument("transport required");
     }
   }
 
-  void Send() { transport_->Send(); }
+  void Send() {
+    transport_->Send();
+  }
 
- private:
+private:
   Config config_{};
   std::unique_ptr<ITransport> transport_;
 };
@@ -1101,13 +1088,14 @@ classDiagram
 
 ```cpp
 class BorrowedService {
- public:
-  explicit BorrowedService(ITransport& transport)
-      : transport_(transport) {}
+public:
+  explicit BorrowedService(ITransport& transport) : transport_(transport) {}
 
-  void Send() { transport_.Send(); }
+  void Send() {
+    transport_.Send();
+  }
 
- private:
+private:
   ITransport& transport_;
 };
 ```
@@ -1116,9 +1104,9 @@ class BorrowedService {
 
 ```cpp
 class Application {
- private:
-  TcpTransport transport_;       // 先构造，后销毁
-  BorrowedService service_{transport_}; // 后构造，先销毁
+private:
+  TcpTransport transport_;               // 先构造，后销毁
+  BorrowedService service_{transport_};  // 后构造，先销毁
 };
 ```
 
@@ -1182,9 +1170,7 @@ classDiagram
 ```cpp
 auto session = std::make_shared<Session>();
 
-executor.Post([session] {
-  session->Handle();
-});
+executor.Post([session] { session->Handle(); });
 
 session.reset();
 executor.RunAll();

@@ -59,13 +59,8 @@ next: 53
 错误的折中是把所有能力压进一个函数：
 
 ```cpp
-Status Send(std::span<const std::byte> payload,
-            int channel,
-            int timeout,
-            int retries,
-            bool trace,
-            bool urgent,
-            bool raw_mode);
+Status Send(std::span<const std::byte> payload, int channel, int timeout, int retries, bool trace,
+            bool urgent, bool raw_mode);
 ```
 
 这既不真正通用，也不容易使用：调用点必须理解所有 policy，而且大量参数可以组成无意义状态。
@@ -76,8 +71,7 @@ Status Send(std::span<const std::byte> payload,
 
 ```cpp
 Status Send(std::span<const std::byte> payload);
-Status SendAdvanced(std::span<const std::byte> payload,
-                    SendOptions options);
+Status SendAdvanced(std::span<const std::byte> payload, SendOptions options);
 ```
 
 common path 使用安全默认值；advanced path 才暴露必要 customization。
@@ -129,8 +123,7 @@ struct SendOptions {
 };
 
 Status Send(std::span<const std::byte> payload);
-Status SendWith(std::span<const std::byte> payload,
-                SendOptions options);
+Status SendWith(std::span<const std::byte> payload, SendOptions options);
 ```
 
 类型系统承担单位和状态表达；common case 不要求调用者理解全部高级配置。
@@ -280,12 +273,7 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic \
 ### 修复违规代码
 
 ```cpp
-bool Send(void* transport,
-          void* data,
-          int length,
-          int timeout,
-          int retries,
-          bool urgent,
+bool Send(void* transport, void* data, int length, int timeout, int retries, bool urgent,
           bool trace);
 ```
 

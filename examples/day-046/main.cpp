@@ -16,19 +16,16 @@ enum class SendStatus {
 };
 
 class Transport {
- public:
+public:
   virtual ~Transport() = default;
-  virtual SendStatus Write(std::span<const std::byte> frame,
-                           std::chrono::milliseconds timeout) = 0;
+  virtual SendStatus Write(std::span<const std::byte> frame, std::chrono::milliseconds timeout) = 0;
 };
 
 class FakeTransport final : public Transport {
- public:
-  explicit FakeTransport(bool force_timeout = false)
-      : force_timeout_{force_timeout} {}
+public:
+  explicit FakeTransport(bool force_timeout = false) : force_timeout_{force_timeout} {}
 
-  SendStatus Write(std::span<const std::byte> frame,
-                   std::chrono::milliseconds timeout) override {
+  SendStatus Write(std::span<const std::byte> frame, std::chrono::milliseconds timeout) override {
     if (timeout <= 0ms || force_timeout_) {
       return SendStatus::kTimeout;
     }
@@ -36,15 +33,17 @@ class FakeTransport final : public Transport {
     return SendStatus::kOk;
   }
 
-  [[nodiscard]] std::size_t BytesWritten() const { return bytes_written_; }
+  [[nodiscard]] std::size_t BytesWritten() const {
+    return bytes_written_;
+  }
 
- private:
+private:
   bool force_timeout_{false};
   std::size_t bytes_written_{0U};
 };
 
 class FrameSender {
- public:
+public:
   static constexpr std::size_t kMaxFrameBytes{8U};
 
   explicit FrameSender(Transport& transport) : transport_{transport} {}
@@ -63,7 +62,7 @@ class FrameSender {
     return transport_.Write(frame, timeout);
   }
 
- private:
+private:
   Transport& transport_;
 };
 

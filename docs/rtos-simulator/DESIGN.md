@@ -96,32 +96,39 @@ flowchart LR
 ### 1.3 `rtos::` 扩展（标准库里没有的能力）
 
 ```cpp
-#include "rtos_sim.h"   // 只用于 IDE 补全和文档；模拟器根据它识别路由
+#include "rtos_sim.h"  // 只用于 IDE 补全和文档；模拟器根据它识别路由
 
 // 任务属性：优先级越大越高（与 FreeRTOS 一致）
 rtos::thread producer({.name = "producer", .priority = 3, .stack_words = 256}, ProducerTask);
-rtos::suspend(producer);  rtos::resume(producer);  rtos::terminate(producer); // vTaskDelete
+rtos::suspend(producer);
+rtos::resume(producer);
+rtos::terminate(producer);  // vTaskDelete
 rtos::this_task::set_priority(2);
-rtos::busy_for(5ms);      // 模拟占用 CPU 的计算，期间可以被抢占
+rtos::busy_for(5ms);  // 模拟占用 CPU 的计算，期间可以被抢占
 
-rtos::mutex m{rtos::no_priority_inheritance};   // 用于演示优先级反转
+rtos::mutex m{rtos::no_priority_inheritance};  // 用于演示优先级反转
 
-rtos::message_queue<int, 4> q;                  // 定长环形缓冲
-bool ok = q.send(42, 10ms);                     // 队列满时阻塞，超时返回 false
-int v;  q.receive(v, rtos::kWaitForever);
+rtos::message_queue<int, 4> q;  // 定长环形缓冲
+bool ok = q.send(42, 10ms);     // 队列满时阻塞，超时返回 false
+int v;
+q.receive(v, rtos::kWaitForever);
 
 rtos::event_group eg;
 eg.set(0b01);
 auto bits = eg.wait(0b11, {.wait_all = true, .clear_on_exit = true}, 100ms);
 
-rtos::notify(consumer, 1);                      // 任务通知
+rtos::notify(consumer, 1);  // 任务通知
 auto n = rtos::this_task::notify_take(rtos::kWaitForever);
 
-rtos::timer blink("blink", 100ms, rtos::periodic, []{ /* 在 timer service 任务中运行 */ });
+rtos::timer blink("blink", 100ms, rtos::periodic, [] { /* 在 timer service 任务中运行 */ });
 blink.start();
 
-rtos::isr uart("UART_RX", []{ q.send_from_isr(7); sem.release_from_isr(); });
-uart.trigger_at(50ms);  uart.trigger_every(200ms);
+rtos::isr uart("UART_RX", [] {
+  q.send_from_isr(7);
+  sem.release_from_isr();
+});
+uart.trigger_at(50ms);
+uart.trigger_every(200ms);
 
 rtos::config({.tick_ms = 1, .time_slice_ticks = 5, .spurious_wakeup_every = 0, .max_ticks = 2000});
 ```
@@ -141,10 +148,10 @@ stateDiagram-v2
     Running --> Ready: 被抢占 / yield / 时间片到
     Running --> Blocked: sleep / lock / acquire / wait / receive
     Blocked --> Ready: 资源可用 / 超时 / notify / 虚假唤醒
-    Running --> Suspended: rtos::suspend(self)
-    Ready --> Suspended: rtos::suspend
-    Blocked --> Suspended: rtos::suspend
-    Suspended --> Ready: rtos::resume
+    Running --> Suspended: rtos.suspend(self)
+    Ready --> Suspended: rtos.suspend
+    Blocked --> Suspended: rtos.suspend
+    Suspended --> Ready: rtos.resume
     Running --> Deleted: 函数 return / terminate
     Ready --> Deleted: terminate
     Blocked --> Deleted: terminate

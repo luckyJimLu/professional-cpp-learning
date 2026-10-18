@@ -66,8 +66,7 @@ sprintf(log_buf, "RSSI=%d, retry=%u", rssi, retry);
 现代 C++（非实时且工具链支持）：
 
 ```cpp
-const std::string message = std::format(
-"RSSI={} dBm, retry={}", rssi_dbm, retry_count);
+const std::string message = std::format("RSSI={} dBm, retry={}", rssi_dbm, retry_count);
 ```
 
 固定缓冲区边界场景仍可使用 snprintf，但应封装在边界层并检查返回值。
@@ -91,18 +90,15 @@ SHOULD：平台差异集中隔离。若 MCU 标准库不支持 std::format，把
 #include <iostream>
 
 struct RadioStatus {
-  int rssi_dbm {};
-  std::uint32_t timeout_ms {};
-  std::uint8_t retry_count {};
+  int rssi_dbm{};
+  std::uint32_t timeout_ms{};
+  std::uint8_t retry_count{};
 };
 
 bool FormatRadioStatusToBuffer(const RadioStatus& status, std::array<char, 96>& output) {
   const int written = std::snprintf(
-      output.data(), output.size(),
-      "RSSI=%d dBm, timeout=%u ms, retry=%u",
-      status.rssi_dbm,
-      static_cast<unsigned int>(status.timeout_ms),
-      static_cast<unsigned int>(status.retry_count));
+      output.data(), output.size(), "RSSI=%d dBm, timeout=%u ms, retry=%u", status.rssi_dbm,
+      static_cast<unsigned int>(status.timeout_ms), static_cast<unsigned int>(status.retry_count));
   if (written < 0) {
     return false;
   }
@@ -110,8 +106,8 @@ bool FormatRadioStatusToBuffer(const RadioStatus& status, std::array<char, 96>& 
 }
 
 int main() {
-  const RadioStatus status {-73, 5000U, 3U};
-  std::array<char, 96> output {};
+  const RadioStatus status{-73, 5000U, 3U};
+  std::array<char, 96> output{};
   const bool ok = FormatRadioStatusToBuffer(status, output);
   assert(ok);
   std::cout << output.data() << '\n';

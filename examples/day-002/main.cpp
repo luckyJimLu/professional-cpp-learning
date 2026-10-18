@@ -4,7 +4,9 @@
 #include <limits>
 #include <optional>
 std::optional<std::uint8_t> ToByte(int raw) {
-  if (raw < 0 || raw > std::numeric_limits<std::uint8_t>::max()) { return std::nullopt; }
+  if (raw < 0 || raw > std::numeric_limits<std::uint8_t>::max()) {
+    return std::nullopt;
+  }
   return static_cast<std::uint8_t>(raw);
 }
 int main() {

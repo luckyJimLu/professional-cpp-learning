@@ -37,7 +37,7 @@ next: 4
 1. const：把“不修改”写进接口
 
 ```cpp
-const std::uint32_t timeout_ms {5000};
+const std::uint32_t timeout_ms{5000};
 void PrintConfig(const ModemConfig& config);
 ```
 
@@ -46,17 +46,16 @@ void PrintConfig(const ModemConfig& config);
 2. constexpr：编译期常量语义
 
 ```cpp
-constexpr std::uint32_t kDefaultTimeoutMs {5000U};
-constexpr std::size_t kRxBufferSize {512U};
-std::array<std::uint8_t, kRxBufferSize> rx_buffer {};
+constexpr std::uint32_t kDefaultTimeoutMs{5000U};
+constexpr std::size_t kRxBufferSize{512U};
+std::array<std::uint8_t, kRxBufferSize> rx_buffer{};
 ```
 
 3. constexpr 函数 + static_assert
 
 ```cpp
-constexpr std::uint32_t SecondsToMs(std::uint32_t seconds)
-{
-return seconds * 1000U;
+constexpr std::uint32_t SecondsToMs(std::uint32_t seconds) {
+  return seconds * 1000U;
 }
 constexpr auto kBootTimeoutMs = SecondsToMs(5U);
 static_assert(kBootTimeoutMs == 5000U);
@@ -68,7 +67,7 @@ static_assert(kBootTimeoutMs == 5000U);
 
 ```cpp
 std::uint32_t ReadTimeoutFromNvram();
-const std::uint32_t timeout_ms {ReadTimeoutFromNvram()};
+const std::uint32_t timeout_ms{ReadTimeoutFromNvram()};
 ```
 
 它初始化后不变，但值来自运行期，因此不是编译期常量。
@@ -85,14 +84,13 @@ int calc_timeout(int retry) { return MODEM_TIMEOUT * retry; }
 
 ```cpp
 namespace modem {
-constexpr std::uint32_t kDefaultTimeoutMs {5000U};
-constexpr std::size_t kRxBufferSize {512U};
-constexpr std::uint32_t CalculateTimeoutMs(std::uint32_t retry_count)
-{
-return kDefaultTimeoutMs * retry_count;
+constexpr std::uint32_t kDefaultTimeoutMs{5000U};
+constexpr std::size_t kRxBufferSize{512U};
+constexpr std::uint32_t CalculateTimeoutMs(std::uint32_t retry_count) {
+  return kDefaultTimeoutMs * retry_count;
 }
 static_assert(CalculateTimeoutMs(3U) == 15000U);
-}
+}  // namespace modem
 ```
 
 ## ⑤ 今日编码规范 · 10 分钟
@@ -109,7 +107,7 @@ if (elapsed_ms > 5000U) { ResetModem(); }
 推荐：
 
 ```cpp
-constexpr std::uint32_t kResponseTimeoutMs {5000U};
+constexpr std::uint32_t kResponseTimeoutMs{5000U};
 ```
 if (elapsed_ms > kResponseTimeoutMs) { ResetModem(); }
 
@@ -123,35 +121,32 @@ if (elapsed_ms > kResponseTimeoutMs) { ResetModem(); }
 #include <iostream>
 
 namespace modem {
-constexpr std::uint32_t kDefaultTimeoutMs {5000U};
-constexpr std::uint32_t kMaxRetryCount {3U};
-constexpr std::size_t kRxBufferSize {512U};
+constexpr std::uint32_t kDefaultTimeoutMs{5000U};
+constexpr std::uint32_t kMaxRetryCount{3U};
+constexpr std::size_t kRxBufferSize{512U};
 
-constexpr std::uint32_t CalculateTotalTimeoutMs(std::uint32_t retry_count)
-{
-return kDefaultTimeoutMs * retry_count;
+constexpr std::uint32_t CalculateTotalTimeoutMs(std::uint32_t retry_count) {
+  return kDefaultTimeoutMs * retry_count;
 }
 
 static_assert(kRxBufferSize >= 256U);
 static_assert(CalculateTotalTimeoutMs(kMaxRetryCount) == 15000U);
 
 struct Config {
-std::uint32_t timeout_ms {kDefaultTimeoutMs};
-std::uint32_t retry_count {kMaxRetryCount};
+  std::uint32_t timeout_ms{kDefaultTimeoutMs};
+  std::uint32_t retry_count{kMaxRetryCount};
 };
 
-void PrintConfig(const Config& config)
-{
-std::cout << "timeout_ms = " << config.timeout_ms << '\n';
+void PrintConfig(const Config& config) {
+  std::cout << "timeout_ms = " << config.timeout_ms << '\n';
 }
-} // namespace modem
+}  // namespace modem
 
-int main()
-{
-std::array<std::uint8_t, modem::kRxBufferSize> rx_buffer {};
-const modem::Config config {};
-modem::PrintConfig(config);
-std::cout << rx_buffer.size() << '\n';
+int main() {
+  std::array<std::uint8_t, modem::kRxBufferSize> rx_buffer{};
+  const modem::Config config{};
+  modem::PrintConfig(config);
+  std::cout << rx_buffer.size() << '\n';
 }
 ```
 

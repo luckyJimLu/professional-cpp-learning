@@ -201,18 +201,14 @@ struct Transport {
 
 ```cpp
 class ITransport {
- public:
+public:
   virtual ~ITransport() = default;
 
-  virtual Status Write(
-      std::span<const std::uint8_t> data,
-      std::chrono::milliseconds timeout) = 0;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 
-Status SendCommand(
-    ITransport& transport,
-    std::span<const std::uint8_t> command,
-    std::chrono::milliseconds timeout) {
+Status SendCommand(ITransport& transport, std::span<const std::uint8_t> command,
+                   std::chrono::milliseconds timeout) {
   return transport.Write(command, timeout);
 }
 ```
@@ -255,11 +251,10 @@ void Poll(ITransport& transport);
 
 ```cpp
 class ModemSession {
- public:
-  explicit ModemSession(ITransport& transport)
-      : transport_(transport) {}
+public:
+  explicit ModemSession(ITransport& transport) : transport_(transport) {}
 
- private:
+private:
   ITransport& transport_;
 };
 ```
@@ -331,19 +326,19 @@ UartTransport / FakeTransport
 
 ```cpp
 class Driver {
- public:
+public:
   virtual bool Write(unsigned char* data, int size) {
     return false;
   }
 };
 
 class UartDriver : public Driver {
- public:
+public:
   bool Write(unsigned char* data, int size) override {
     return true;
   }
 
- private:
+private:
   int baudrate_;
 };
 

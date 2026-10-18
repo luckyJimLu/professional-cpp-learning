@@ -146,7 +146,7 @@ Retry Decision
 
 ```cpp
 class IRetryStrategy {
- public:
+public:
   virtual ~IRetryStrategy() = default;
 
   virtual bool ShouldRetry(std::size_t attempt) const = 0;
@@ -171,11 +171,10 @@ IRetryStrategy&
 ```cpp
 template <typename RetryPolicy>
 class Sender {
- public:
-  explicit Sender(RetryPolicy policy)
-      : policy_(std::move(policy)) {}
+public:
+  explicit Sender(RetryPolicy policy) : policy_(std::move(policy)) {}
 
- private:
+private:
   RetryPolicy policy_;
 };
 ```
@@ -228,7 +227,7 @@ Factory 创建出来的对象通常应该清晰表达 ownership：
 
 ```cpp
 class IPlatformFactory {
- public:
+public:
   virtual ~IPlatformFactory() = default;
 
   virtual std::unique_ptr<ITransport> CreateTransport() = 0;
@@ -261,7 +260,7 @@ Factory Method 解决的是：
 
 ```cpp
 class Session {
- protected:
+protected:
   virtual std::unique_ptr<ITransport> CreateTransport() = 0;
 };
 ```
@@ -279,9 +278,7 @@ Fake
 一个显式 factory function 往往更简单：
 
 ```cpp
-std::unique_ptr<ITransport> CreateTransport(
-    TransportType type,
-    const TransportConfig& config);
+std::unique_ptr<ITransport> CreateTransport(TransportType type, const TransportConfig& config);
 ```
 
 设计模式的目标是创建边界清楚，不是强迫使用某张 GoF 类图。
@@ -310,10 +307,8 @@ int uart_write(const uint8_t* data, size_t len, uint32_t timeout_ms);
 
 ```cpp
 class ITransport {
- public:
-  virtual Status Write(
-      std::span<const std::uint8_t> data,
-      std::chrono::milliseconds timeout) = 0;
+public:
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
 };
 ```
 
@@ -321,10 +316,8 @@ class ITransport {
 
 ```cpp
 class UartAdapter final : public ITransport {
- public:
-  Status Write(
-      std::span<const std::uint8_t> data,
-      std::chrono::milliseconds timeout) override;
+public:
+  Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) override;
 };
 ```
 
@@ -535,11 +528,10 @@ has-a ITransport
 
 ```cpp
 class TracingTransport final : public ITransport {
- public:
-  explicit TracingTransport(ITransport& inner)
-      : inner_(inner) {}
+public:
+  explicit TracingTransport(ITransport& inner) : inner_(inner) {}
 
- private:
+private:
   ITransport& inner_;
 };
 ```
@@ -631,13 +623,13 @@ Singleton 是最容易被滥用的模式之一。
 
 ```cpp
 class Logger {
- public:
+public:
   static Logger& Instance() {
     static Logger instance;
     return instance;
   }
 
- private:
+private:
   Logger() = default;
 };
 ```
