@@ -7,10 +7,16 @@
  */
 
 import { useEffect, useState } from "react";
+import { moveTabFocus } from "../../lib/keyboardTabs";
 import { CodeMirrorEditor } from "../../visualizer/CodeMirrorEditor.tsx";
 import type { SnapshotGranularity } from "../rtosReducer.ts";
 import type { RtosScenario } from "../scenarios.ts";
-import { taskColor, type RtosConfig, type RtosSnapshot, type VisualizerTraceV3 } from "../types.ts";
+import {
+  taskColor,
+  type RtosConfig,
+  type RtosSnapshot,
+  type VisualizerTraceV3,
+} from "../types.ts";
 import { useRtosSession } from "../useRtosSession.ts";
 import { KernelObjectsPanel } from "./KernelObjectsPanel.tsx";
 import { RtosConfigPopover } from "./RtosConfigPopover.tsx";
@@ -20,7 +26,9 @@ import { TaskTimeline } from "./TaskTimeline.tsx";
 import { WaitForGraph } from "./WaitForGraph.tsx";
 
 function DetailPanel({ snapshot }: { snapshot: RtosSnapshot | null }) {
-  const [tab, setTab] = useState<"tasks" | "objects" | "wait" | "stacks">("tasks");
+  const [tab, setTab] = useState<"tasks" | "objects" | "wait" | "stacks">(
+    "tasks",
+  );
 
   return (
     <section className="rtos-panel detail-panel">
@@ -36,6 +44,10 @@ function DetailPanel({ snapshot }: { snapshot: RtosSnapshot | null }) {
           <button
             key={id}
             role="tab"
+            id={`rtos-tab-${id}`}
+            aria-controls="rtos-detail-panel"
+            tabIndex={tab === id ? 0 : -1}
+            onKeyDown={moveTabFocus}
             aria-selected={tab === id}
             className={tab === id ? "is-active" : ""}
             onClick={() => setTab(id)}
@@ -45,16 +57,27 @@ function DetailPanel({ snapshot }: { snapshot: RtosSnapshot | null }) {
         ))}
       </div>
 
-      <div className="tab-body">
+      <div
+        className="tab-body"
+        id="rtos-detail-panel"
+        role="tabpanel"
+        aria-labelledby={`rtos-tab-${tab}`}
+        tabIndex={0}
+      >
         {!snapshot ? (
           <div className="empty-state">
             <strong>等待第一次运行</strong>
-            <span>你可以直接使用预置代码，或在左侧编辑后按 Ctrl / ⌘ + Enter。</span>
+            <span>
+              你可以直接使用预置代码，或在左侧编辑后按 Ctrl / ⌘ + Enter。
+            </span>
           </div>
         ) : tab === "tasks" ? (
           <TaskStateMachine snapshot={snapshot} />
         ) : tab === "objects" ? (
-          <KernelObjectsPanel objects={snapshot.objects} tasks={snapshot.tasks} />
+          <KernelObjectsPanel
+            objects={snapshot.objects}
+            tasks={snapshot.tasks}
+          />
         ) : tab === "wait" ? (
           <WaitForGraph snapshot={snapshot} />
         ) : (
@@ -112,7 +135,12 @@ function Playback({
   return (
     <footer className="playback">
       <div className="playback-buttons">
-        <button onClick={() => onChange(0)} disabled={!total || current === 0} aria-label="回到开始" title="回到开始">
+        <button
+          onClick={() => onChange(0)}
+          disabled={!total || current === 0}
+          aria-label="回到开始"
+          title="回到开始"
+        >
           ⏮
         </button>
         <button
@@ -123,7 +151,11 @@ function Playback({
         >
           ◀
         </button>
-        <button className="play-main" onClick={() => setPlaying((v) => !v)} disabled={!total}>
+        <button
+          className="play-main"
+          onClick={() => setPlaying((v) => !v)}
+          disabled={!total}
+        >
           {playing ? "暂停" : "播放"}
         </button>
         <button
@@ -172,7 +204,9 @@ function Playback({
       />
 
       <div className="playback-meta">
-        <span className="step-count">{total ? `${current + 1} / ${total}` : "0 / 0"}</span>
+        <span className="step-count">
+          {total ? `${current + 1} / ${total}` : "0 / 0"}
+        </span>
         <select
           aria-label="播放速度"
           className="playback-select"
@@ -187,21 +221,33 @@ function Playback({
           aria-label="快照粒度"
           className="playback-select"
           value={granularity}
-          onChange={(e) => onChangeGranularity(e.target.value as SnapshotGranularity)}
+          onChange={(e) =>
+            onChangeGranularity(e.target.value as SnapshotGranularity)
+          }
         >
           <option value="statement">粒度: 语句</option>
           <option value="kernel">粒度: 事件</option>
         </select>
-        <RtosConfigPopover config={config} onChangeConfig={onChangeConfig} trace={trace} />
+        <RtosConfigPopover
+          config={config}
+          onChangeConfig={onChangeConfig}
+          trace={trace}
+        />
       </div>
 
-      <button className="run-button" onClick={onRun} disabled={running} aria-busy={running}>
+      <button
+        className="run-button"
+        onClick={onRun}
+        disabled={running}
+        aria-busy={running}
+      >
         {running ? "模拟中…" : stale ? "重新运行" : "运行模拟"}
       </button>
 
       <div className="event-caption">
         <span>EVENT</span>
-        {snapshot?.description ?? (running ? "正在生成确定性轨迹…" : "运行模拟后逐步查看内核事件")}
+        {snapshot?.description ??
+          (running ? "正在生成确定性轨迹…" : "运行模拟后逐步查看内核事件")}
       </div>
     </footer>
   );
@@ -246,7 +292,9 @@ export function RtosWorkbench({ scenario }: { scenario: RtosScenario }) {
             <span className="panel-kicker">C++ SUBSET</span>
             <h2>任务代码</h2>
           </div>
-          <span className={session.stale ? "draft-badge is-stale" : "draft-badge"}>
+          <span
+            className={session.stale ? "draft-badge is-stale" : "draft-badge"}
+          >
             {session.stale ? "轨迹待更新" : "轨迹已同步"}
           </span>
         </div>

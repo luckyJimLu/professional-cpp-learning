@@ -76,3 +76,28 @@ All navigation supports real URLs and modified-click opening in a new tab.
 - Reading position is a convenience, not completion or mastery evidence.
 - Keep full article names readable and controls at least 44px tall on phones.
 - Honor reduced motion through the shared stylesheet; no new decorative animation.
+
+## Cross-screen refinement · October 2026
+
+Preserve the engineering handbook identity across the guide, course catalog, lesson,
+topic reader, lab, review and search. `src/product-ui.css` is the shared structural
+adapter loaded after the existing documentation styles; semantic palette values stay
+in `src/styles.css`. It owns consistent page headings, native disclosures, course
+rows, review cards and narrow-screen touch sizing. It must not define a second palette.
+
+The guide exposes its next action on desktop and phone. The course catalog uses
+full titles, URL-backed search/view state and expandable weeks, not a permanently
+expanded list of clipped titles. Reading surfaces stay bounded; code workbenches
+keep their existing full width. Mobile Compile Rail uses four columns over two rows,
+preserving all eight stages and their labels.
+
+Keep normal empty states neutral. Provide a route back into the task (review to
+course, search to suggestions, lab to code). A claimed clipboard success requires
+an actual successful write. Local reading and review records do not imply mastery.
+
+RTOS remains a separate technical workbench with its own established palette in
+`src/rtos-sim/rtos.css`. On small screens its complete playback/configuration controls
+sit between the editor and trace, rather than hiding export or speed controls.
+Native non-modal disclosures own its configuration popup; `keyboardTabs.ts` shares
+arrow-key tab behavior between its detail panel and the memory output panel. The memory workbench retains its shared session and rendering model,
+with larger mobile controls and consistent dark layout-switch buttons.

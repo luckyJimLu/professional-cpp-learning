@@ -158,17 +158,47 @@ export function Shell({
     });
   };
 
-  // 移动端抽屉无障碍：Escape 关闭与 inert 控制
+  // The drawer is the shared mobile navigation: trap focus, restore it on
+  // dismissal, and release inert content when crossing the desktop breakpoint.
   useEffect(() => {
-    const handleKeydown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && drawerRef.current?.open) {
-        drawerRef.current.open = false;
-        const main = document.getElementById("main-content");
-        if (main) main.removeAttribute("inert");
+    const release = () => {
+      if (drawerRef.current) drawerRef.current.open = false;
+      document.getElementById("main-content")?.removeAttribute("inert");
+    };
+    const handleKeydown = (event: KeyboardEvent) => {
+      if (!drawerRef.current?.open) return;
+      if (event.key === "Escape") {
+        release();
+        drawerRef.current.querySelector("summary")?.focus();
+      }
+      if (event.key === "Tab") {
+        const elements = [
+          ...drawerRef.current.querySelectorAll<HTMLElement>(
+            "summary, button, a[href]",
+          ),
+        ].filter((el) => el.tabIndex >= 0);
+        const first = elements[0];
+        const last = elements.at(-1);
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
       }
     };
+    const desktop = window.matchMedia("(min-width: 761px)");
+    const resize = () => {
+      if (desktop.matches) release();
+    };
     window.addEventListener("keydown", handleKeydown);
-    return () => window.removeEventListener("keydown", handleKeydown);
+    desktop.addEventListener("change", resize);
+    return () => {
+      release();
+      window.removeEventListener("keydown", handleKeydown);
+      desktop.removeEventListener("change", resize);
+    };
   }, []);
 
   const handleDrawerToggle = () => {
@@ -188,13 +218,18 @@ export function Shell({
       drawerRef.current.open = false;
       const main = document.getElementById("main-content");
       if (main) main.removeAttribute("inert");
+      drawerRef.current.querySelector("summary")?.focus();
     }
   };
 
   const label =
     view === "search"
       ? "代码搜索"
-      : (NAV.find((item) => item.id === view)?.label ?? "课程");
+      : view === "visualizer"
+        ? "内存可视化"
+        : view === "lesson"
+          ? "课程阅读"
+          : (NAV.find((item) => item.id === view)?.label ?? "课程");
 
   return (
     <div
@@ -210,11 +245,7 @@ export function Shell({
             className="mobile-menu mobile-drawer"
             onToggle={handleDrawerToggle}
           >
-            <summary
-              className="mobile-menu-trigger"
-              aria-label="打开导航菜单"
-              aria-expanded={drawerRef.current?.open ?? false}
-            >
+            <summary className="mobile-menu-trigger" aria-label="打开导航菜单">
               <span className="hamburger-icon" aria-hidden="true">
                 ☰
               </span>
@@ -291,6 +322,21 @@ export function Shell({
           >
             <OpenCodeLogo showFullText={false} />
           </a>
+        </div>
+        <div className="shell-context">
+          <span className="shell-current-page">{label}</span>
+          <button
+            type="button"
+            className="shell-search-action"
+            onClick={handleHeaderSearchClick}
+            aria-label="搜索代码与课程"
+            onMouseEnter={onPreloadSearch}
+            onFocus={onPreloadSearch}
+          >
+            <NavIcon id="search" />
+            <span>搜索</span>
+            <kbd>Ctrl K</kbd>
+          </button>
         </div>
       </header>
 
@@ -443,6 +489,7 @@ export function Shell({
           className={`content ${view === "visualizer" ? "is-visualizer-view" : ""}`}
           id="main-content"
           tabIndex={-1}
+          data-view={view}
         >
           {children}
         </main>

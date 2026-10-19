@@ -40,7 +40,11 @@ export function useLearningProgress() {
 
   const persist = useCallback((next: SavedProgress) => {
     setState(next);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    } catch {
+      // Keep the current session usable when persistent storage is unavailable.
+    }
   }, []);
 
   const markStep = useCallback(

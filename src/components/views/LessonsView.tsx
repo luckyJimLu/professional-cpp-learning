@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
-  latestNextSummary,
   learningPlan,
   lessonByDay,
   lessons,
   roadmapByWeek,
+  type Lesson,
 } from "../../lib/course";
 import { calculateReadingStats } from "../../lib/readingTime";
+import { navigate, useLocationParams } from "../../lib/navigation";
 import { PageHeader } from "../common/PageHeader";
 import { Markdown } from "../Markdown";
 
@@ -19,173 +20,193 @@ export function LessonsView({
   isDayComplete: (day: number) => boolean;
   currentDay?: number;
 }) {
-  const [filterText, setFilterText] = useState("");
-  const [activeTab, setActiveTab] = useState<"roadmap" | "all">("roadmap");
+  const params = useLocationParams();
+  const query = params.get("courseQuery") ?? "";
+  const [draft, setDraft] = useState(query);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const composingRef = useRef(false);
+  const activeTab = params.get("courseTab") === "all" ? "all" : "roadmap";
+  const target = lessonByDay(currentDay ?? 1) ?? lessons.at(-1);
   const weeks = roadmapByWeek();
-
-  const filteredLessons = lessons
+  useEffect(() => setDraft(query), [query]);
+  const setQuery = (value: string) =>
+    navigate({ courseQuery: value || undefined }, true);
+  const filtered = lessons
     .slice()
     .reverse()
     .filter((lesson) => {
-      if (!filterText.trim()) return true;
-      const term = filterText.toLowerCase();
-      return (
-        lesson.title.toLowerCase().includes(term) ||
-        String(lesson.day).includes(term) ||
-        (lesson.chapter && String(lesson.chapter).includes(term))
-      );
+      const text =
+        `${lesson.title} ${lesson.day} ${lesson.chapter ?? ""}`.toLowerCase();
+      return text.includes(query.trim().toLowerCase());
     });
-
-  const isSearching = filterText.trim().length > 0;
-
+  const row = (lesson: Lesson) => (
+    <a
+      className="course-row"
+      key={lesson.day}
+      href={`?view=lesson&day=${lesson.day}`}
+      onClick={(event) => {
+        if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey)
+          return;
+        event.preventDefault();
+        openLesson(lesson.day);
+      }}
+    >
+      <span className="course-day mono">
+        DAY {String(lesson.day).padStart(3, "0")}
+      </span>
+      <span className="course-row-content">
+        <strong>{lesson.title}</strong>
+        <small>
+          第 {lesson.week} 周 · 约 {calculateReadingStats(lesson.raw).minutes}{" "}
+          分钟阅读
+        </small>
+      </span>
+      <span
+        className={`course-state ${isDayComplete(lesson.day) ? "is-complete" : ""}`}
+        aria-label={isDayComplete(lesson.day) ? "已有完成记录" : "待学习"}
+      >
+        {isDayComplete(lesson.day) ? "✓" : "→"}
+      </span>
+    </a>
+  );
   return (
-    <div>
+    <div className="course-page">
       <PageHeader
         eyebrow="16 周进阶路线与目录"
         title="课程"
-        description="系统化从 C 思维进阶到 Modern C++ 架构。可按周循序渐进，也可按天数或主题检索。"
+        description="按周逐步进阶，或按标题、天数与章节查找。每一课都从理解走向可运行的实验。"
       />
-
-      <div className="course-toolbar" style={{ display: "flex", gap: "12px", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", marginBottom: "20px" }}>
-        <div className="search-input-row" style={{ maxWidth: 420, flex: 1, margin: 0 }}>
+      {target && (
+        <section className="course-resume" aria-label="继续学习">
+          <div>
+            <span className="page-eyebrow">
+              {currentDay && !lessonByDay(currentDay)
+                ? "最新课程 · 回顾与巩固"
+                : "继续学习"}
+            </span>
+            <strong>
+              Day {target.day} · {target.title}
+            </strong>
+          </div>
+          <button
+            type="button"
+            className="primary-button"
+            onClick={() => openLesson(target.day)}
+          >
+            打开课程 →
+          </button>
+        </section>
+      )}
+      <div className="course-toolbar">
+        <div className="search-input-row course-search">
           <input
+            ref={inputRef}
             type="search"
-            placeholder="按标题、天数或章节检索课程..."
-            value={filterText}
-            onChange={(e) => setFilterText(e.target.value)}
+            value={draft}
+            placeholder="标题、天数或章节"
             aria-label="检索课程"
+            onCompositionStart={() => {
+              composingRef.current = true;
+            }}
+            onCompositionEnd={(event) => {
+              composingRef.current = false;
+              setQuery(event.currentTarget.value);
+            }}
+            onChange={(event) => {
+              setDraft(event.target.value);
+              if (!composingRef.current) setQuery(event.target.value);
+            }}
           />
-          {filterText && (
+          {draft && (
             <button
               type="button"
               className="ghost-button"
-              onClick={() => setFilterText("")}
+              aria-label="清空课程搜索"
+              onClick={() => {
+                setDraft("");
+                setQuery("");
+                inputRef.current?.focus();
+              }}
             >
               清空
             </button>
           )}
         </div>
-
-        {!isSearching && (
-          <div className="course-tab-group" role="tablist" style={{ display: "inline-flex", gap: "4px", background: "rgba(0, 0, 0, 0.05)", padding: "3px", borderRadius: "8px" }}>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === "roadmap"}
-              className={`course-tab-btn ghost-button ${activeTab === "roadmap" ? "is-active" : ""}`}
-              onClick={() => setActiveTab("roadmap")}
-              style={activeTab === "roadmap" ? { background: "var(--surface, #fff)", fontWeight: 600, boxShadow: "0 1px 3px rgba(0,0,0,0.1)" } : { border: "none" }}
-            >
-              按周进阶路线
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === "all"}
-              className={`course-tab-btn ghost-button ${activeTab === "all" ? "is-active" : ""}`}
-              onClick={() => setActiveTab("all")}
-              style={activeTab === "all" ? { background: "var(--surface, #fff)", fontWeight: 600, boxShadow: "0 1px 3px rgba(0,0,0,0.1)" } : { border: "none" }}
-            >
-              完整目录 ({lessons.length})
-            </button>
-          </div>
-        )}
+        <div
+          className="course-tab-group"
+          role="group"
+          aria-label="课程浏览方式"
+        >
+          <button
+            type="button"
+            aria-pressed={activeTab === "roadmap"}
+            onClick={() => navigate({ courseTab: undefined })}
+          >
+            按周进阶
+          </button>
+          <button
+            type="button"
+            aria-pressed={activeTab === "all"}
+            onClick={() => navigate({ courseTab: "all" })}
+          >
+            完整目录 · {lessons.length}
+          </button>
+        </div>
       </div>
-
-      {isSearching ? (
-        <div className="lesson-index">
-          {filteredLessons.length === 0 ? (
-            <p className="empty-state">未找到匹配 "{filterText}" 的课程。</p>
+      {query.trim() ? (
+        <section aria-label="课程搜索结果" className="course-search-results">
+          <p className="result-summary" role="status">
+            找到 {filtered.length} 节课程
+          </p>
+          {filtered.length ? (
+            <div className="course-list">{filtered.map(row)}</div>
           ) : (
-            filteredLessons.map((lesson) => (
+            <div className="product-empty">
+              <h2>没有找到这节课程</h2>
+              <p>试试“指针”“54”或章节编号，也可以清空搜索回到进阶路线。</p>
               <button
-                key={lesson.day}
-                onClick={() => openLesson(lesson.day)}
-                type="button"
+                className="ghost-button"
+                onClick={() => {
+                  setDraft("");
+                  setQuery("");
+                  inputRef.current?.focus();
+                }}
               >
-                <span className="mono">
-                  DAY {String(lesson.day).padStart(3, "0")}
-                </span>
-                <strong>{lesson.title}</strong>
-                <span>
-                  第 {lesson.week} 周 · 约 {calculateReadingStats(lesson.raw).minutes} 分钟阅读
-                </span>
-                <i>{isDayComplete(lesson.day) ? "●" : "○"}</i>
+                清空搜索
               </button>
-            ))
+            </div>
           )}
-        </div>
-      ) : activeTab === "roadmap" ? (
-        <div className="roadmap">
-          {weeks.map((week) => (
-            <section className="roadmap-week" key={week.week}>
-              <div className="week-marker">
-                <span>阶段 {week.week}</span>
-                <strong>第 {week.week} 周</strong>
-              </div>
-              <div className="week-lessons">
-                {week.lessons.map((lesson) => {
-                  const complete = isDayComplete(lesson.day);
-                  const current = currentDay !== undefined && lesson.day === currentDay && !complete;
-                  return (
-                    <button
-                      key={lesson.day}
-                      onClick={() => openLesson(lesson.day)}
-                      type="button"
-                    >
-                      <span className="roadmap-state">
-                        {complete ? "●" : current ? "◐" : "○"}
-                      </span>
-                      <span className="mono">
-                        DAY {String(lesson.day).padStart(3, "0")}
-                      </span>
-                      <strong>{lesson.title}</strong>
-                    </button>
-                  );
-                })}
-              </div>
-            </section>
-          ))}
-          {currentDay !== undefined && !lessonByDay(currentDay) && (
-            <section className="roadmap-week upcoming">
-              <div className="week-marker">
-                <span>下一阶段</span>
-                <strong>第 {currentDay} 天</strong>
-              </div>
-              <div className="week-lessons">
-                <div className="roadmap-placeholder">
-                  <span className="roadmap-state">○</span>
-                  <span className="mono">第 {currentDay} 天</span>
-                  <strong>{latestNextSummary() ?? "下一课准备中"}</strong>
-                </div>
-              </div>
-            </section>
-          )}
-        </div>
+        </section>
+      ) : activeTab === "all" ? (
+        <div className="course-list">{lessons.map(row)}</div>
       ) : (
-        <div className="lesson-index">
-          {lessons.map((lesson) => (
-            <button
-              key={lesson.day}
-              onClick={() => openLesson(lesson.day)}
-              type="button"
+        <div className="course-weeks">
+          {weeks.map((week) => (
+            <details
+              className="course-week"
+              key={week.week}
+              open={week.week === target?.week}
             >
-              <span className="mono">
-                DAY {String(lesson.day).padStart(3, "0")}
-              </span>
-              <strong>{lesson.title}</strong>
-              <span>
-                第 {lesson.week} 周 · 约 {calculateReadingStats(lesson.raw).minutes} 分钟阅读
-              </span>
-              <i>{isDayComplete(lesson.day) ? "●" : "○"}</i>
-            </button>
+              <summary>
+                <span>
+                  <strong>第 {week.week} 周</strong>
+                  <small>
+                    Day {week.lessons[0]?.day}–{week.lessons.at(-1)?.day} ·{" "}
+                    {week.lessons.length} 节课程
+                  </small>
+                </span>
+                <span className="course-week-action">
+                  展开课程 <span aria-hidden="true">⌄</span>
+                </span>
+              </summary>
+              <div className="course-list">{week.lessons.map(row)}</div>
+            </details>
           ))}
         </div>
       )}
-
       <details className="source-details">
-        <summary>查看完整 16 周学习路线规划文档</summary>
-        <Markdown>{learningPlan}</Markdown>
+        <summary>查看完整 16 周学习路线</summary>
+        <Markdown embedDocument>{learningPlan}</Markdown>
       </details>
     </div>
   );

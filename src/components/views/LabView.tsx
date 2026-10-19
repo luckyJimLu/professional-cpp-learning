@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { type Lesson, type StepKey } from "../../lib/course";
 import { Markdown } from "../Markdown";
+import { PageHeader } from "../common/PageHeader";
 import { VisualizerWorkbench } from "../../visualizer/VisualizerWorkbench";
 import { inferTraceEventsFromCodeAndOutput } from "../../visualizer/reducer";
 import { useTraceSession } from "../../visualizer/useTraceSession";
@@ -82,7 +83,6 @@ export function LabView({
   const runStepDebugger = () => {
     try {
       traceSession.runApproximate();
-      markStep(lesson.day, "lab");
     } catch (err) {
       console.warn("Step debugger failed:", err);
     }
@@ -124,40 +124,66 @@ export function LabView({
   };
 
   const compilerBusy =
-    traceSession.state.status === "loading" || traceSession.state.status === "running";
+    traceSession.state.status === "loading" ||
+    traceSession.state.status === "running";
 
   return (
     <div className="lab-page-container">
+      <PageHeader
+        eyebrow="运行 · 观察 · 验证"
+        title="实验"
+        description="从当前课例开始。先查看任务与自测清单，再运行代码，结合输出或轨迹验证理解。"
+      />
       <div className="lab-shell lab-shell-runtime">
         <section className="lab-task">
           <div style={{ marginBottom: "14px" }}>
-            <span className="eyebrow" style={{ display: "block", marginBottom: "4px" }}>
+            <span
+              className="eyebrow"
+              style={{ display: "block", marginBottom: "4px" }}
+            >
               第 {lesson.day} 天实验 · {lesson.duration} 分钟
             </span>
-            <h2 style={{ margin: "0 0 12px 0", fontSize: "22px", lineHeight: "1.3" }}>
+            <h2
+              style={{
+                margin: "0 0 12px 0",
+                fontSize: "22px",
+                lineHeight: "1.3",
+              }}
+            >
               {lesson.title}
             </h2>
           </div>
-          {lab ? (
-            <Markdown>{labInstructions(lab.body)}</Markdown>
-          ) : (
-            <p>No lab section found.</p>
-          )}
+          <details className="lab-instructions">
+            <summary>
+              实验说明与自测清单 <span>展开查看</span>
+            </summary>
+            <div className="lab-instructions-body">
+              {lab ? (
+                <Markdown>{labInstructions(lab.body)}</Markdown>
+              ) : (
+                <p>当前课程暂无独立实验说明，可先阅读本课概念与示例。</p>
+              )}
 
-          {lesson.labChecklist.length > 0 && (
-            <div className="checklist">
-              <span className="eyebrow">CHECKLIST</span>
-              {lesson.labChecklist.map((item) => (
-                <label key={item}>
-                  <input type="checkbox" /> <span>{item}</span>
-                </label>
-              ))}
+              {lesson.labChecklist.length > 0 && (
+                <div className="checklist">
+                  <span className="eyebrow">CHECKLIST</span>
+                  {lesson.labChecklist.map((item) => (
+                    <label key={item}>
+                      <input type="checkbox" /> <span>{item}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-
+          </details>
+          <a className="lab-jump-link" href="#lab-workbench-title">
+            前往代码工作区 ↓
+          </a>
           {customOrigin && (
             <div className="custom-code-banner">
-              <span>已加载外部代码：<strong>{customOrigin}</strong></span>
+              <span>
+                已加载外部代码：<strong>{customOrigin}</strong>
+              </span>
               <button
                 className="ghost-button"
                 onClick={resetToLessonSource}
@@ -180,7 +206,9 @@ export function LabView({
               <button
                 className="ghost-button"
                 onClick={resetToLessonSource}
-                disabled={compilerBusy || traceSession.state.code === sourceCode}
+                disabled={
+                  compilerBusy || traceSession.state.code === sourceCode
+                }
                 type="button"
               >
                 重置代码
@@ -204,19 +232,34 @@ export function LabView({
           )}
         </section>
 
-        <section className="code-workbench" aria-labelledby="lab-workbench-title">
+        <section
+          className="code-workbench"
+          aria-labelledby="lab-workbench-title"
+        >
           <header className="lab-workbench-header">
             <div>
               <span className="eyebrow">工作区</span>
               <h2 id="lab-workbench-title">
-                {lesson.labMode === "rtos-sim" ? "RTOS 并发模拟实验" : "代码、运行与内存分析"}
+                {lesson.labMode === "rtos-sim"
+                  ? "RTOS 并发模拟实验"
+                  : "代码、运行与内存分析"}
               </h2>
             </div>
+            {lesson.labMode !== "rtos-sim" && (
+              <button
+                type="button"
+                className="primary-button"
+                onClick={runCompiler}
+                disabled={compilerBusy}
+                aria-busy={compilerBusy}
+              >
+                {compilerBusy ? "运行中…" : "运行当前课例"}
+              </button>
+            )}
             {lesson.labMode === "rtos-sim" && (
               <a
                 className="primary-button"
                 href={`${import.meta.env.BASE_URL}rtos.html?scenario=${encodeURIComponent(lesson.rtosScenario ?? "round-robin")}&day=${lesson.day}`}
-                onClick={() => markStep(lesson.day, "lab")}
               >
                 在模拟器中打开 ↗
               </a>
@@ -225,7 +268,8 @@ export function LabView({
           {lesson.labMode === "rtos-sim" ? (
             <div className="custom-code-banner" style={{ margin: "16px" }}>
               <span>
-                本章只支持模拟执行（受限 C++ 子集，确定性 tick 调度，不调用 Clang/WASM）。请点击右上角「在模拟器中打开 ↗」进入全屏并发工作台。
+                本章使用确定性 RTOS
+                教学模拟器。选择“在模拟器中打开”后，可运行场景、回放任务切换并观察同步关系；打开页面本身不会标记实验完成。
               </span>
             </div>
           ) : (

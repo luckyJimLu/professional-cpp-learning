@@ -196,3 +196,15 @@ shows the latest published lesson when the next lesson is unavailable.
 
 - At desktop widths (1100px and above), topic and heading directories open by default in a sticky reading column beside the document. On smaller screens they start collapsed; resizing updates the layout and disclosure defaults.
 - Topic reading normalizes repeated top-level Markdown headings through the shared renderer AST option; fenced code and stored Markdown are unchanged. The heading directory reads the resulting section IDs.
+
+## 14. Shared UI refinement
+
+- `PageHeader.tsx` renders the provided eyebrow, page title and description consistently. `src/product-ui.css` owns cross-page structural styling; existing semantic tokens remain in `styles.css`.
+- The guide's primary learning action is visible on desktop and phone; its destination is an existing published course when the planned course is unavailable.
+- Courses persist `courseQuery` and `courseTab` in URL query state. IME composition does not commit partial queries. Clearing returns focus to the course input. Current-week disclosure starts open; full article titles may wrap.
+- Review cards and queued knowledge points link back to actual courses. Repository progress is identified as a baseline, not an assessment. Removing a review item means removing it from the list, not claiming mastery.
+- Lab instructions and checklists live in a native disclosure; the workbench remains reachable without expanding them. The top run action delegates to the same compiler/session handler as the workbench. Merely opening the RTOS page or generating an approximate memory trace does not complete the lab stage.
+- Shell owns the mobile drawer focus loop, Escape dismissal, focus restoration, and removing background inertness after switching to desktop width. Header search uses the same route/shortcut owner as sidebar search.
+- CodeBlock reports clipboard success only after the write resolves. Failure leaves manual copy and retry available.
+- RTOS detail tabs support Left/Right, Home/End and tabpanel associations. Its configuration is a native non-modal disclosure with Escape/outside dismissal. Mobile retains playback speed, granularity, configuration and export.
+- Regression owners: `tests/ui-polish.spec.ts`, existing topics/search/docs/visualizer/browser-compiler/RTOS browser suites. Touch target, keyboard and viewport checks supplement static design checks; they are not a full accessibility certification.

@@ -440,3 +440,19 @@
   .memory-zone, .stack-frame-card, .heap-block-card { border-color: CanvasText; }
 }
 
+
+/* Keep all memory workbench actions touch-operable on narrow screens. */
+@media (max-width: 760px) {
+  .trace-toolbar { flex-wrap: wrap; gap: 10px; padding: 10px; }
+  .trace-toolbar-presets, .trace-toolbar-actions { flex-wrap: wrap; }
+  .trace-chip, .trace-library-button, .trace-export-button, .switcher-tab { min-height: 44px; }
+  .trace-diagnostics { flex-direction: column; }
+  .trace-diagnostics button { min-height: 44px; }
+}
+.memory-layout-toggle { display: flex; gap: 4px; }
+.memory-layout-toggle button { min-height: 32px; padding: 4px 8px; border: 1px solid #334155; border-radius: 5px; background: #0d131d; color: #cbd5e1; cursor: pointer; }
+.memory-layout-toggle button[aria-pressed="true"] { color: #7dd3fc; border-color: #0e7490; background: #102c40; }
+.memory-layout-toggle button:disabled { color: #64748b; cursor: not-allowed; }
+@media (max-width: 760px) {
+  .memory-layout-toggle button { min-height: 44px; }
+}

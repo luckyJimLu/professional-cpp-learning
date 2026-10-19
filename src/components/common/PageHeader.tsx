@@ -1,4 +1,5 @@
 export function PageHeader({
+  eyebrow,
   title,
   description,
 }: {
@@ -8,8 +9,9 @@ export function PageHeader({
 }) {
   return (
     <header className="page-header">
+      {eyebrow && <p className="page-eyebrow">{eyebrow}</p>}
       <h1>{title}</h1>
-      {description && <p>{description}</p>}
+      {description && <p className="page-description">{description}</p>}
     </header>
   );
 }

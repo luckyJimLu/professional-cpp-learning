@@ -79,7 +79,9 @@ export default function App() {
         ? selectedLesson?.title
         : view === "search"
           ? "代码搜索"
-          : NAV.find((item) => item.id === view)?.label;
+          : view === "visualizer"
+            ? "内存可视化"
+            : NAV.find((item) => item.id === view)?.label;
     document.title = `${title ?? "学习文档"} · Professional C++`;
   }, [view, selectedLesson]);
 
@@ -166,7 +168,14 @@ export default function App() {
   const isEmbed = params.get("embed") === "true";
   if (isEmbed) {
     return (
-      <div style={{ width: "100vw", height: "100vh", overflow: "hidden", background: "#090d13" }}>
+      <div
+        style={{
+          width: "100vw",
+          height: "100vh",
+          overflow: "hidden",
+          background: "#090d13",
+        }}
+      >
         {page ?? <VisualizerView />}
       </div>
     );

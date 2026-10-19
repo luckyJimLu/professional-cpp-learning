@@ -35,7 +35,15 @@ export function DeferredContent({
 }) {
   return (
     <ContentErrorBoundary label={label}>
-      <Suspense fallback={<p role="status">正在加载{label}…</p>}>
+      <Suspense
+        fallback={
+          <section className="product-loading" role="status">
+            <span className="page-eyebrow">正在准备内容</span>
+            <strong>正在加载{label}…</strong>
+            <p>请稍候，载入后即可继续操作。</p>
+          </section>
+        }
+      >
         {children}
       </Suspense>
     </ContentErrorBoundary>

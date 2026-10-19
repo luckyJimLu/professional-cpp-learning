@@ -15,6 +15,7 @@ export function CodeBlock({
   copiedLabel = "已复制",
 }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
+  const [copyFailed, setCopyFailed] = useState(false);
   const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -25,15 +26,17 @@ export function CodeBlock({
     };
   }, []);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(codeString).catch(() => {
-      // Clipboard API may be unavailable in some contexts
-    });
-    setCopied(true);
-    if (timerRef.current !== null) {
-      window.clearTimeout(timerRef.current);
+  const handleCopy = async () => {
+    setCopyFailed(false);
+    try {
+      await navigator.clipboard.writeText(codeString);
+      setCopied(true);
+      if (timerRef.current !== null) window.clearTimeout(timerRef.current);
+      timerRef.current = window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
+      setCopyFailed(true);
     }
-    timerRef.current = window.setTimeout(() => setCopied(false), 2000);
   };
 
   const displayLang = lang.trim() ? lang.toUpperCase() : "TEXT";
@@ -91,6 +94,11 @@ export function CodeBlock({
           )}
         </button>
       </div>
+      {copyFailed && (
+        <p className="copy-error" role="status">
+          未能复制，请选中代码手动复制，或重试。
+        </p>
+      )}
       <pre>
         <HighlightedCode code={codeString} language={lang} />
       </pre>

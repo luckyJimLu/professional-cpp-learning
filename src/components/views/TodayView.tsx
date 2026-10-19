@@ -23,15 +23,19 @@ export function TodayView({
     <div className="docs-layout today-layout">
       <article className="guide-document">
         <header className="guide-title" id="introduction">
+          <p className="page-eyebrow">Professional C++ · 工程化学习</p>
           <h1>从 C 出发，写出专业的 C++</h1>
           <p className="guide-lead">
-            面向具备 C 与基础嵌入式经验的开发者，每天一小时，配合可运行实验从语言机制走向系统架构。
+            面向具备 C
+            与基础嵌入式经验的开发者，每天一小时，配合可运行实验从语言机制走向系统架构。
           </p>
           <div className="guide-hero-cta">
             <button
               type="button"
               className="primary-button hero-cta-btn"
-              onClick={() => openLesson(currentDay > 1 ? target?.day ?? 1 : 1)}
+              onClick={() =>
+                openLesson(currentDay > 1 ? (target?.day ?? 1) : 1)
+              }
             >
               {currentDay > 1
                 ? `继续学习 · Day ${target?.day ?? 1} →`
@@ -43,6 +47,50 @@ export function TodayView({
           </div>
         </header>
 
+        {target && (
+          <section className="guide-current-lesson" aria-label="当前课程">
+            <div>
+              <span className="page-eyebrow">
+                {planned ? "下一次学习" : "最新课程 · 可以开始复习"}
+              </span>
+              <h2>
+                Day {target.day} · {target.title}
+              </h2>
+              <p>
+                第 {target.week} 周
+                {target.chapter ? ` · 第 ${target.chapter} 章` : ""} ·{" "}
+                {target.duration} 分钟学习计划
+              </p>
+            </div>
+            <button
+              className="ghost-button"
+              onClick={() => openLesson(target.day)}
+              type="button"
+            >
+              打开课程 →
+            </button>
+          </section>
+        )}
+        <nav className="guide-pathways" aria-label="学习入口">
+          <a href="?view=topics">
+            <strong>
+              按专题深入 <span aria-hidden="true">→</span>
+            </strong>
+            <span>接口、所有权、嵌入式与系统工程</span>
+          </a>
+          <a href="?view=lab">
+            <strong>
+              动手做实验 <span aria-hidden="true">→</span>
+            </strong>
+            <span>运行源码，观察输出与内存变化</span>
+          </a>
+          <a href={`${import.meta.env.BASE_URL}rtos.html`}>
+            <strong>
+              理解并发调度 <span aria-hidden="true">→</span>
+            </strong>
+            <span>回放任务、同步与中断的执行过程</span>
+          </a>
+        </nav>
         <section id="learning-method" className="guide-section">
           <h2>每天一小时 · 学习闭环</h2>
           <p>
@@ -89,7 +137,6 @@ export function TodayView({
               <span>在 GitHub 查看源码</span>
             </a>
           </div>
-
         </footer>
       </article>
     </div>

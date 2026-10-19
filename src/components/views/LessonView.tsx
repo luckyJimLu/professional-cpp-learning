@@ -30,6 +30,8 @@ export function LessonView({
     STEP_DEFS.find((step) => !isStepComplete(lesson.day, step.key))?.key ??
     "pass";
   const [active, setActive] = useState<StepKey>(firstIncomplete);
+  const [queuedReview, setQueuedReview] = useState<Set<StepKey>>(new Set());
+  useEffect(() => setQueuedReview(new Set()), [lesson.day]);
 
   useEffect(() => {
     const hash = window.location.hash.slice(1);
@@ -64,7 +66,9 @@ export function LessonView({
   const navigate = (step: StepKey) => {
     setActive(step);
     document.getElementById(`section-${step}`)?.scrollIntoView({
-      behavior: "smooth",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
       block: "start",
     });
   };
@@ -121,21 +125,29 @@ export function LessonView({
             >
               <div className="section-heading">
                 <div>
-                  <span className="eyebrow">{definition.label} · {definition.title}</span>
+                  <span className="eyebrow">
+                    {definition.label} · {definition.title}
+                  </span>
                   <h2>{section.title}</h2>
                 </div>
                 <div className="section-actions">
                   <button
                     className="review-later"
-                    onClick={() =>
+                    aria-pressed={queuedReview.has(section.step!)}
+                    onClick={() => {
                       addWeakPoint(
                         `Day ${lesson.day} · ${definition.title} · ${lesson.title}`,
-                      )
-                    }
+                      );
+                      setQueuedReview((previous) =>
+                        new Set(previous).add(section.step!),
+                      );
+                    }}
                     type="button"
                     title="加入复盘薄弱点清单"
                   >
-                    稍后复习
+                    {queuedReview.has(section.step!)
+                      ? "已加入复习"
+                      : "稍后复习"}
                   </button>
                   <button
                     className={cx("section-check", complete && "is-complete")}

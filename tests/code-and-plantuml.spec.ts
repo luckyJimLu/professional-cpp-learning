@@ -2,7 +2,9 @@ import { expect, test } from "@playwright/test";
 
 test("C++ code blocks render with syntax highlighting and copy button", async ({
   page,
+  context,
 }) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   await page.goto("/?view=lesson&day=1");
 
   // Code card exists
@@ -22,6 +24,9 @@ test("C++ code blocks render with syntax highlighting and copy button", async ({
   await expect(copyBtn).toContainText("复制代码");
   await copyBtn.click();
   await expect(copyBtn).toContainText("已复制");
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toContain(
+    "int main()",
+  );
 });
 
 test("PlantUML diagram renders with preview, source toggle and copy", async ({

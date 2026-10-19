@@ -24,169 +24,108 @@ export function ReviewView({
     ...completed.map((lesson) => lesson.chapter ?? 0),
     0,
   );
-
   const reviews = lessons.filter(
     (lesson) => lesson.day % 7 === 0 || /review|复盘/i.test(lesson.title),
   );
-
   return (
-    <div>
+    <div className="review-page">
       <PageHeader
-        eyebrow="学习进度与复盘"
+        eyebrow="回顾 · 练习 · 再验证"
         title="复盘"
-        description="跟踪学习进度闭环，回顾薄弱点清单，完成每周工程里程碑复盘。"
+        description="从待复习的知识点开始，回到对应课程和实验，再检查是否能独立解释与实现。"
       />
-
-      <section
-        className="progress-card"
-        style={{
-          background: "var(--surface, #fff)",
-          border: "1px solid var(--line, #e2e8f0)",
-          borderRadius: "12px",
-          padding: "20px 24px",
-          marginBottom: "28px",
-        }}
-      >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: "20px",
-            alignItems: "center",
-          }}
-        >
-          <div>
-            <span
-              className="eyebrow"
-              style={{ display: "block", marginBottom: "4px" }}
-            >
-              当前进度
-            </span>
-            <strong
-              style={{
-                fontSize: "24px",
-                fontFamily: "var(--mono, monospace)",
-                color: "var(--blue, #00599c)",
-              }}
-            >
-              Day {completedDay}
-            </strong>
-            <span
-              style={{ fontSize: "14px", color: "#64748b", marginLeft: "8px" }}
-            >
-              / 已发布 {lessons.length} 节
-            </span>
-            <div
-              className="mini-progress"
-              style={{
-                marginTop: "10px",
-                height: "6px",
-                background: "rgba(0,0,0,0.06)",
-                borderRadius: "3px",
-                overflow: "hidden",
-              }}
-            >
-              <i
-                style={{
-                  display: "block",
-                  height: "100%",
-                  background: "var(--green, #18794e)",
-                  width: `${Math.min(100, (completed.length / lessons.length) * 100)}%`,
-                }}
-              />
-            </div>
-          </div>
-
-          <div>
-            <span
-              className="eyebrow"
-              style={{ display: "block", marginBottom: "4px" }}
-            >
-              正在进行
-            </span>
-            <strong style={{ fontSize: "18px" }}>第 {currentChapter || 1} 章</strong>
-            <p style={{ margin: "4px 0 0", fontSize: "13px", color: "#64748b" }}>
-              {latestNextSummary() ?? `待学习 Day ${nextPlannedDay}`}
-            </p>
-          </div>
-
-          <div>
-            <span
-              className="eyebrow"
-              style={{ display: "block", marginBottom: "4px" }}
-            >
-              待复习阶段
-            </span>
-            <strong
-              style={{
-                fontSize: "18px",
-                color: weakPoints.length > 0 ? "var(--amber, #b35c00)" : "inherit",
-              }}
-            >
-              {weakPoints.length} 个
-            </strong>
-            <p style={{ margin: "4px 0 0", fontSize: "13px", color: "#64748b" }}>
-              {weakPoints.length > 0
-                ? "标记了稍后复习的知识点"
-                : "当前无待复习记录"}
-            </p>
-          </div>
+      <section className="review-overview" aria-label="学习记录概览">
+        <div>
+          <span>课程记录</span>
+          <strong>Day {completedDay}</strong>
+          <small>已发布 {lessons.length} 节</small>
+        </div>
+        <div>
+          <span>当前主线</span>
+          <strong>第 {currentChapter || 1} 章</strong>
+          <small>{latestNextSummary() ?? `待学习 Day ${nextPlannedDay}`}</small>
+        </div>
+        <div>
+          <span>待复习</span>
+          <strong>{weakPoints.length} 个知识点</strong>
+          <small>从课程中标记，按需回顾</small>
         </div>
       </section>
-
-      <section className="weak-points">
-        <div className="weak-points-header">
-          <div>
-            <span className="eyebrow">薄弱点清单</span>
-            <h2>待复习阶段</h2>
-          </div>
-          <span className="mono">{weakPoints.length} 待复习</span>
+      <p className="record-note">
+        记录包含仓库已有的学习基线与本浏览器的操作，不代表测评结果或掌握程度。
+      </p>
+      <section className="review-points" aria-labelledby="review-points-title">
+        <div className="section-title-row">
+          <h2 id="review-points-title">待复习知识点</h2>
+          <span>{weakPoints.length} 项</span>
         </div>
-
         {weakPoints.length === 0 ? (
-          <p className="empty-state">
-            暂无待复习项。在课程阅读中遇到不确定的阶段时，点击「稍后复习」即可加入此列表。
-          </p>
+          <div className="product-empty">
+            <strong>暂时没有待复习项</strong>
+            <p>阅读课程时选择“稍后复习”，就可以把不确定的知识点收集到这里。</p>
+            <a className="ghost-button" href="?view=lessons">
+              浏览课程 →
+            </a>
+          </div>
         ) : (
-          <div className="weak-point-list">
-            {weakPoints.map((point) => (
-              <div key={point}>
-                <span>{point}</span>
-                <button onClick={() => removeWeakPoint(point)} type="button">
-                  已掌握 ✓
-                </button>
-              </div>
-            ))}
+          <div className="review-point-list">
+            {weakPoints.map((point) => {
+              const day = /Day (\d+)/.exec(point)?.[1];
+              return (
+                <div key={point}>
+                  <div>
+                    <strong>{point}</strong>
+                    {day && (
+                      <a href={`?view=lesson&day=${day}`}>返回这节课程 →</a>
+                    )}
+                  </div>
+                  <button
+                    className="ghost-button"
+                    type="button"
+                    onClick={() => removeWeakPoint(point)}
+                    aria-label={`移出复习清单：${point}`}
+                  >
+                    移出清单
+                  </button>
+                </div>
+              );
+            })}
           </div>
         )}
       </section>
-
-      <div style={{ marginTop: "32px" }}>
-        <span
-          className="eyebrow"
-          style={{ display: "block", marginBottom: "8px" }}
-        >
-          CHECKPOINTS
-        </span>
-        <h2 style={{ margin: "0 0 16px 0", fontSize: "20px" }}>
-          每周复盘检查点
-        </h2>
-        <div className="review-list">
+      <section
+        className="review-checkpoints"
+        aria-labelledby="review-checkpoints-title"
+      >
+        <div className="section-title-row">
+          <h2 id="review-checkpoints-title">每周复盘检查点</h2>
+          <span>{reviews.length} 个阶段</span>
+        </div>
+        <div className="review-checkpoint-grid">
           {reviews.map((lesson) => (
-            <article key={lesson.day}>
-              <span className="mono">DAY {lesson.day}</span>
-              <h2>{lesson.title}</h2>
+            <a
+              key={lesson.day}
+              href={`?view=lesson&day=${lesson.day}`}
+              className="review-checkpoint"
+            >
+              <span className="mono">
+                DAY {String(lesson.day).padStart(3, "0")}
+              </span>
+              <h3>{lesson.title}</h3>
               <p>
                 {lesson.nextSummary ??
-                  "复盘本周在接口契约、生命周期、资源所有权与错误边界的理解。"}
+                  "回顾接口契约、生命周期、资源所有权与错误边界。"}
               </p>
-              <strong>
-                {isDayComplete(lesson.day) ? "已通过" : "待复盘"}
-              </strong>
-            </article>
+              <span className="review-checkpoint-footer">
+                <span>
+                  {isDayComplete(lesson.day) ? "已有学习记录" : "待复盘"}
+                </span>
+                <strong>打开复盘 →</strong>
+              </span>
+            </a>
           ))}
         </div>
-      </div>
+      </section>
     </div>
   );
 }

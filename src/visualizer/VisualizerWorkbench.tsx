@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { CodeMirrorEditor } from "./CodeMirrorEditor";
+import { moveTabFocus } from "../lib/keyboardTabs";
 import { MemoryCanvas, type MemoryLayoutMode } from "./MemoryCanvas";
 import { PRESET_TRACES_META, loadPresetTrace } from "./presetTraces";
 import { TraceSelectorModal } from "./TraceSelectorModal";
@@ -28,7 +29,10 @@ export function VisualizerWorkbench({
   const [activeTab, setActiveTab] = useState<"memory" | "terminal">(
     session.snapshots.length ? "memory" : "terminal",
   );
-  const [mobilePane, setMobilePane] = useState<"code" | "output">("output");
+  const [mobilePane, setMobilePane] = useState<"code" | "output">(variant === "lab" ? "code" : "output");
+  useEffect(() => {
+    if (session.status === "loading" || session.status === "running") setMobilePane("output");
+  }, [session.status]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const currentSnapshot = session.snapshots[session.currentStep] ?? null;
   const totalSteps = session.snapshots.length;
@@ -414,8 +418,8 @@ export function VisualizerWorkbench({
         <div className="output-split-pane">
           <div className="output-tabs-header">
             <div className="output-segmented-toggle" role="tablist" aria-label="输出类型">
-              <button type="button" role="tab" aria-selected={activeTab === "memory"} className={`segmented-tab ${activeTab === "memory" ? "is-active" : ""}`} onClick={() => setActiveTab("memory")}>内存视图</button>
-              <button type="button" role="tab" aria-selected={activeTab === "terminal"} className={`segmented-tab ${activeTab === "terminal" ? "is-active" : ""}`} onClick={() => setActiveTab("terminal")}>终端</button>
+              <button type="button" role="tab" id="memory-tab-memory" aria-controls="memory-tab-panel" tabIndex={activeTab === "memory" ? 0 : -1} onKeyDown={moveTabFocus} aria-selected={activeTab === "memory"} className={`segmented-tab ${activeTab === "memory" ? "is-active" : ""}`} onClick={() => setActiveTab("memory")}>内存视图</button>
+              <button type="button" role="tab" id="memory-tab-terminal" aria-controls="memory-tab-panel" tabIndex={activeTab === "terminal" ? 0 : -1} onKeyDown={moveTabFocus} aria-selected={activeTab === "terminal"} className={`segmented-tab ${activeTab === "terminal" ? "is-active" : ""}`} onClick={() => setActiveTab("terminal")}>终端</button>
             </div>
 
             {activeTab === "memory" && (
@@ -424,6 +428,7 @@ export function VisualizerWorkbench({
                   <button
                     type="button"
                     className={`memory-layout-btn ${layoutMode === "horizontal" ? "is-active" : ""}`}
+                    aria-pressed={layoutMode === "horizontal"}
                     title="横向排列：调用栈与堆左右并排（流动感最佳）"
                     onClick={() => {
                       setLayoutMode("horizontal");
@@ -436,6 +441,7 @@ export function VisualizerWorkbench({
                   <button
                     type="button"
                     className={`memory-layout-btn ${layoutMode === "vertical" ? "is-active" : ""}`}
+                    aria-pressed={layoutMode === "vertical"}
                     title="纵向排列：调用栈在上，堆在下（适合小屏或窄分栏）"
                     onClick={() => {
                       setLayoutMode("vertical");
@@ -449,7 +455,7 @@ export function VisualizerWorkbench({
               </div>
             )}
           </div>
-          <div className="output-tab-panel" role="tabpanel">
+          <div className="output-tab-panel" id="memory-tab-panel" role="tabpanel" aria-labelledby={`memory-tab-${activeTab}`} tabIndex={0}>
             {activeTab === "memory" ? (
               <MemoryCanvas
                 snapshot={currentSnapshot}

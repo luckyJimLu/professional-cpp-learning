@@ -69,7 +69,7 @@ export function RtosApp() {
             <i />
           </span>
           <div>
-            <strong>RTOS 并发模拟器</strong>
+            <h1>RTOS 并发模拟器</h1>
             <span>DETERMINISTIC KERNEL LAB</span>
           </div>
         </div>

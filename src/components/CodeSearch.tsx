@@ -1,10 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  codeEntries,
-  searchCode,
-  type CodeEntry,
-} from "../lib/search";
+import { codeEntries, searchCode, type CodeEntry } from "../lib/search";
 import { navigate, useLocationParams } from "../lib/navigation";
+import { PageHeader } from "./common/PageHeader";
 
 function Highlight({ text, query }: { text: string; query: string }) {
   const trimmed = query.trim();
@@ -113,6 +110,11 @@ export function CodeSearch() {
 
   return (
     <div className="search-page-container">
+      <PageHeader
+        eyebrow="课程源码 · 专题示例 · 工程实践"
+        title="代码搜索"
+        description="查找函数、类型或关键字，查看原文件行号，或将示例带入实验工作区。"
+      />
       <form
         className="search-clean-form"
         role="search"
@@ -203,6 +205,7 @@ export function CodeSearch() {
 
       {!query.trim() && (
         <div className="search-quick-tags-panel">
+          <p className="search-example-label">从一个熟悉的关键字开始</p>
           <div className="search-quick-chips">
             {[
               "std::mutex",
@@ -224,13 +227,20 @@ export function CodeSearch() {
               </button>
             ))}
           </div>
+          <p className="search-scope-note">
+            范围：C/C++ 源文件及 Markdown
+            中的代码片段。输入中文时，确认候选词后再搜索。
+          </p>
         </div>
       )}
 
       {query.trim() && results.length === 0 && (
         <section className="search-empty">
-          <h2 className="visually-hidden">没有找到匹配代码</h2>
-          <p>没有找到与 &quot;{query}&quot; 匹配的代码或文档内容</p>
+          <h2>没有找到匹配代码</h2>
+          <p>
+            没有找到与 &quot;{query}&quot;
+            匹配的代码片段。试试更短的函数名、类型名，或清空搜索重新查找。
+          </p>
         </section>
       )}
 
@@ -274,9 +284,7 @@ export function CodeSearch() {
                   .slice(Math.max(0, lineIndex - 1), lineIndex + 2)
                   .map((line, i) => (
                     <span className="preview-line" key={i}>
-                      <span>
-                        {entry.line + Math.max(0, lineIndex - 1) + i}
-                      </span>
+                      <span>{entry.line + Math.max(0, lineIndex - 1) + i}</span>
                       <code>
                         <Highlight text={line} query={query.trim()} />
                       </code>
@@ -325,15 +333,15 @@ export function CodeSearch() {
               {selected.path.endsWith(".md") &&
                 (selected.category === "topics" ||
                   selected.category === "patterns") && (
-                <button
-                  className="action-pill"
-                  onClick={() =>
-                    navigate({ view: "topics", topic: selected.path })
-                  }
-                >
-                  阅读所在文档 →
-                </button>
-              )}
+                  <button
+                    className="action-pill"
+                    onClick={() =>
+                      navigate({ view: "topics", topic: selected.path })
+                    }
+                  >
+                    阅读所在文档 →
+                  </button>
+                )}
               {selected.path.startsWith("daily/") && (
                 <button
                   className="action-pill"

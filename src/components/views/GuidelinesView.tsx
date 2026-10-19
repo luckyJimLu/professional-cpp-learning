@@ -4,14 +4,14 @@ import { Markdown } from "../Markdown";
 
 export function GuidelinesView() {
   return (
-    <div>
+    <div className="reading-page guidelines-page">
       <PageHeader
-        eyebrow="ENGINEERING RULES"
-        title="Embedded C++ Guidelines"
+        eyebrow="工程规范 · Embedded C++"
+        title="编码规范"
         description="复习类型安全、资源管理与嵌入式开发中的编码规范。"
       />
       <article className="document-card">
-        <Markdown>{guideline}</Markdown>
+        <Markdown embedDocument>{guideline}</Markdown>
       </article>
     </div>
   );

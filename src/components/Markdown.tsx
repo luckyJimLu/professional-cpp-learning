@@ -5,6 +5,14 @@ import type { Root } from "mdast";
 
 // Legacy topic documents sometimes use multiple h1 sections. Keep one title
 // and normalize later sections in the Markdown AST, leaving fenced code intact.
+function embeddedHeadings() {
+  return (tree: Root) => {
+    for (const node of tree.children) {
+      if (node.type === "heading")
+        node.depth = Math.min(6, node.depth + 1) as 1 | 2 | 3 | 4 | 5 | 6;
+    }
+  };
+}
 function documentHeadings() {
   return (tree: Root) => {
     let hasTitle = false;
@@ -99,6 +107,7 @@ export function Markdown({
   onNavigate,
   resolveHref,
   normalizeDocumentHeadings = false,
+  embedDocument = false,
 }: {
   children: string;
   className?: string;
@@ -106,14 +115,17 @@ export function Markdown({
   onNavigate?: (href: string) => boolean;
   resolveHref?: (href: string) => string;
   normalizeDocumentHeadings?: boolean;
+  embedDocument?: boolean;
 }) {
   return (
     <div className={`markdown ${className}`}>
       <ReactMarkdown
         remarkPlugins={
-          normalizeDocumentHeadings
-            ? [remarkGfm, documentHeadings]
-            : [remarkGfm]
+          embedDocument
+            ? [remarkGfm, embeddedHeadings]
+            : normalizeDocumentHeadings
+              ? [remarkGfm, documentHeadings]
+              : [remarkGfm]
         }
         components={{
           ...components,
