@@ -182,3 +182,17 @@ Markdown lessons only. Anchor targets clear the sticky header. Navigation uses
 query URLs compatible with the GitHub Pages repository base path.
 `App.tsx` owns localized document titles. The homepage is a learning guide and
 shows the latest published lesson when the next lesson is unavailable.
+
+## 13. Topic browsing and reading
+
+- The topic root (`?view=topics`) is a catalog; a `topic` query opens a document.
+- `topicCategory` is a URL-backed domain filter. Filter changes show the catalog, never a stale article from another category.
+- Series and article lists derive from repository Markdown. OpenHarmony and TRACE32 belong to embedded systems; Asio has its own network/async domain.
+- Catalog series expose full article titles through native disclosures. Reading has a separate series directory, heading directory and adjacent article links.
+- Native `<select>` owns domain selection, including its platform popup. `Topics.tsx` owns the selector; `src/docs.css` owns layout and focus treatment. Verify keyboard and narrow-screen behavior in `tests/topics.spec.ts`.
+- `Markdown.tsx` remains the renderer/anchor owner. Topic heading navigation uses rendered h2 IDs rather than a second heading parser.
+- Reading positions and the last-read document are stored locally, without implying completion. Storage failure must leave reading and navigation usable.
+- On phones, the shared Shell drawer remains the only global navigation; topic controls use full-width disclosures and prose has no nested card padding.
+
+- At desktop widths (1100px and above), topic and heading directories open by default in a sticky reading column beside the document. On smaller screens they start collapsed; resizing updates the layout and disclosure defaults.
+- Topic reading normalizes repeated top-level Markdown headings through the shared renderer AST option; fenced code and stored Markdown are unchanged. The heading directory reads the resulting section IDs.

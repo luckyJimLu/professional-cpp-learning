@@ -52,10 +52,10 @@ test("migrated bilingual documents and images work on a narrow viewport", async 
       (img: HTMLImageElement) => img.complete && img.naturalWidth > 0,
     ),
   ).toBe(true);
-  await page.getByRole("button", { name: "Read in English" }).click();
+  await page.getByRole("link", { name: "Read in English" }).click();
   await expect(page).toHaveURL(/index.en.md/);
   await page.reload();
-  await expect(page.getByRole("button", { name: "阅读中文版" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "阅读中文版" })).toBeVisible();
   await page.setViewportSize({ width: 390, height: 844 });
   expect(
     await page.evaluate(

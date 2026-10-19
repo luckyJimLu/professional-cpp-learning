@@ -43,20 +43,7 @@ jobs:
       - name: Compile and run standalone C++ labs and exercises
         shell: bash
         run: |
-          set -euo pipefail
-          mapfile -t sources < <(find examples/day-* -maxdepth 1 -type f -name '*.cpp' | sort)
-          if [ "${#sources[@]}" -eq 0 ]; then
-            echo "No standalone C++ labs or exercises found."
-            exit 1
-          fi
-
-          for source in "${sources[@]}"; do
-            output="/tmp/$(echo "$source" | tr '/.' '__')"
-            echo "Compiling $source"
-            g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic "$source" -o "$output"
-            echo "Running $source"
-            "$output"
-          done
+          python3 tools/check-examples.py
 
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium

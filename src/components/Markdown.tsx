@@ -1,6 +1,28 @@
 import { isValidElement, type ReactNode } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
+import type { Root } from "mdast";
+
+// Legacy topic documents sometimes use multiple h1 sections. Keep one title
+// and normalize later sections in the Markdown AST, leaving fenced code intact.
+function documentHeadings() {
+  return (tree: Root) => {
+    let hasTitle = false;
+    let sectionShift = 0;
+    for (const node of tree.children) {
+      if (node.type !== "heading") continue;
+      if (node.depth === 1) {
+        if (!hasTitle) {
+          hasTitle = true;
+          continue;
+        }
+        sectionShift = 1;
+      }
+      node.depth = Math.min(6, node.depth + sectionShift) as
+        1 | 2 | 3 | 4 | 5 | 6;
+    }
+  };
+}
 import { resolveAsset } from "../lib/contentAssets";
 import { MermaidDiagram } from "./MermaidDiagram";
 import { PlantUmlDiagram, isPlantUmlSource } from "./PlantUmlDiagram";
@@ -22,6 +44,18 @@ function headingId(value: ReactNode) {
 }
 
 const components: Components = {
+  table({ children }) {
+    return (
+      <div
+        className="markdown-table-scroll"
+        role="region"
+        aria-label="数据表格，可横向滚动"
+        tabIndex={0}
+      >
+        <table>{children}</table>
+      </div>
+    );
+  },
   h2({ children }) {
     return <h2 id={headingId(children)}>{children}</h2>;
   },
@@ -52,12 +86,7 @@ const components: Components = {
         return <PlantUmlDiagram key={codeString} code={codeString} />;
       }
 
-      return (
-        <CodeBlock
-          lang={lang}
-          codeString={codeString}
-        />
-      );
+      return <CodeBlock lang={lang} codeString={codeString} />;
     }
     return <pre {...props}>{children}</pre>;
   },
@@ -69,17 +98,23 @@ export function Markdown({
   sourcePath,
   onNavigate,
   resolveHref,
+  normalizeDocumentHeadings = false,
 }: {
   children: string;
   className?: string;
   sourcePath?: string;
   onNavigate?: (href: string) => boolean;
   resolveHref?: (href: string) => string;
+  normalizeDocumentHeadings?: boolean;
 }) {
   return (
     <div className={`markdown ${className}`}>
       <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
+        remarkPlugins={
+          normalizeDocumentHeadings
+            ? [remarkGfm, documentHeadings]
+            : [remarkGfm]
+        }
         components={{
           ...components,
           img({ node: _node, src, alt, ...props }) {

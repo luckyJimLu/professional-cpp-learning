@@ -1,13 +1,5 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
-import {
-  NAV,
-  type View,
-} from "../lib/navigation";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { NAV, type View } from "../lib/navigation";
 import { OpenCodeLogo } from "./OpenCodeLogo";
 
 function NavIcon({ id }: { id: string }) {
@@ -143,7 +135,11 @@ export function Shell({
 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
     if (typeof window !== "undefined") {
-      return localStorage.getItem("cpp_console_sidebar_collapsed") === "true";
+      try {
+        return localStorage.getItem("cpp_console_sidebar_collapsed") === "true";
+      } catch {
+        return false;
+      }
     }
     return false;
   });
@@ -152,7 +148,11 @@ export function Shell({
     setIsSidebarCollapsed((prev) => {
       const next = !prev;
       if (typeof window !== "undefined") {
-        localStorage.setItem("cpp_console_sidebar_collapsed", String(next));
+        try {
+          localStorage.setItem("cpp_console_sidebar_collapsed", String(next));
+        } catch {
+          /* Navigation remains usable when storage is blocked. */
+        }
       }
       return next;
     });
@@ -322,9 +322,7 @@ export function Shell({
                   <circle cx="11" cy="11" r="8" />
                   <line x1="21" y1="21" x2="16.65" y2="16.65" />
                 </svg>
-                <span className="sidebar-search-placeholder">
-                  搜索课程...
-                </span>
+                <span className="sidebar-search-placeholder">搜索课程...</span>
                 <kbd className="sidebar-search-kbd">Ctrl K</kbd>
               </button>
 
@@ -427,8 +425,14 @@ export function Shell({
               </button>
             );
           })}
-          <a className="nav-item" href={`${import.meta.env.BASE_URL}rtos.html`} title="RTOS 模拟器">
-            <span className="nav-icon" aria-hidden="true">⌁</span>
+          <a
+            className="nav-item"
+            href={`${import.meta.env.BASE_URL}rtos.html`}
+            title="RTOS 模拟器"
+          >
+            <span className="nav-icon" aria-hidden="true">
+              ⌁
+            </span>
             <span>RTOS 模拟器 ↗</span>
           </a>
         </nav>

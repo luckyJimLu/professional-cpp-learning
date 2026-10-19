@@ -39,7 +39,7 @@ export function CodeBlock({
   const displayLang = lang.trim() ? lang.toUpperCase() : "TEXT";
 
   return (
-    <div className="code-block-card">
+    <div className="code-block-card" data-language={lang.toLowerCase()}>
       <div className="code-block-header">
         <span className="code-block-lang">{displayLang}</span>
         <button
