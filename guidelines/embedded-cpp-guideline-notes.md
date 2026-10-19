@@ -47,6 +47,15 @@
 - policy、mechanism、observation 若具有独立变化原因，应拆成可组合组件；上层负责 orchestration。
 - 解耦不能以隐藏 ownership、service locator 或无界运行时注册为代价，尤其是实时路径。
 
+### SOLID 与 Embedded 边界
+
+- SRP 用于隔离真实变化原因，不等于每个函数建立一个类；transport、protocol、diagnostics、storage 只有在变化原因独立时才拆分。
+- OCP 只为已识别扩展点建立稳定 contract，不为假想未来提前设计万能插件系统。
+- LSP 要求 Fake/Mock 与 production implementation 保持相同 contract，包括 timeout、错误语义、容量和线程上下文约束。
+- ISP 按 caller purpose 设计小接口；避免 application 被迫依赖 reset、diagnostics、factory-test 等无关能力，也避免过度拆成单函数接口。
+- DIP 要求 required dependency 显式注入；禁止用 service locator、可写全局对象或 `shared_ptr` 掩盖 ownership 与初始化顺序。
+- SOLID 不等于 runtime polymorphism；固定固件配置应同时评估 composition、template/concept 与 virtual interface 的 flash、WCET、测试性和生命周期成本。
+
 ### Usable Interfaces
 
 - 公共 API 应让正确用法自然、错误用法困难；不要把关键 contract 留在注释、magic value 或调用顺序约定中。
