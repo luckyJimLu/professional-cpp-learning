@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
 
 test("Day 33 compiles and runs in the browser", async ({ page }) => {
@@ -32,4 +33,25 @@ test("Day 3 uses a full-width compiler workspace and complete fenced source", as
   await page.setViewportSize({ width: 1000, height: 900 });
   await expect(page.getByRole("group", { name: "移动端工作区" })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
+test("Day 14 bundles its local header and runs in the browser", async ({ page }) => {
+  await page.goto("/?view=lab&day=14");
+  await expect(page.locator(".cm-content")).toContainText('#line 1 "config.hpp"');
+  await page.getByRole("button", { name: "运行代码", exact: true }).click();
+  await expect(page.getByText(/exit 0/i)).toBeVisible();
+  await expect(page.locator(".terminal-output")).toContainText("header is self-contained");
+});
+
+
+test("ownership example rejects null without requiring browser exceptions", async ({ page }) => {
+  const code = readFileSync(new URL("../examples/pointer-choice.cpp", import.meta.url), "utf8");
+  await page.addInitScript((source) => {
+    sessionStorage.setItem("lab_custom_code", source);
+    sessionStorage.setItem("lab_custom_title", "所有权示例");
+  }, code);
+  await page.goto("/?view=lab&day=1");
+  await page.getByRole("button", { name: "运行代码", exact: true }).click();
+  await expect(page.getByText(/exit 0/i)).toBeVisible();
+  await expect(page.locator(".terminal-output")).toContainText("All ownership checks passed");
 });

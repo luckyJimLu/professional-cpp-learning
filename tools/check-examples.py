@@ -27,6 +27,10 @@ def main() -> int:
     if args.sanitize:
         flags += ['-g', '-fsanitize=address,undefined', '-fno-omit-frame-pointer',
                   '-fno-sanitize-recover=all']
+    # A main.cpp can accidentally mask missing header dependencies. Check each
+    # course header in isolation and include it twice to exercise its guard.
+    headers = sorted((ROOT / 'examples').glob('day-*/*.hpp'))
+    headers += sorted((ROOT / 'examples').glob('day-*/*.h'))
     failures = 0
     with tempfile.TemporaryDirectory(prefix='cpp-examples-') as build_dir:
         for index, source in enumerate(sources):
@@ -41,7 +45,18 @@ def main() -> int:
             except (subprocess.SubprocessError, OSError) as error:
                 failures += 1
                 print(f'FAIL {name}: {error}', file=sys.stderr, flush=True)
-    print(f'{len(sources)} examples checked; {failures} failed.')
+        for index, header in enumerate(headers):
+            name = str(header.relative_to(ROOT))
+            probe = Path(build_dir) / f'header-{index}.cpp'
+            probe.write_text(f'#include "{header.as_posix()}"\n' * 2, encoding='utf-8')
+            try:
+                subprocess.run(compiler + flags + ['-fsyntax-only', str(probe)],
+                               cwd=ROOT, check=True, timeout=60)
+                print(f'PASS {name} (self-contained, repeated inclusion)', flush=True)
+            except (subprocess.SubprocessError, OSError) as error:
+                failures += 1
+                print(f'FAIL {name}: {error}', file=sys.stderr, flush=True)
+    print(f'{len(sources)} examples and {len(headers)} headers checked; {failures} failed.')
     return 1 if failures else 0
 
 

@@ -2,7 +2,7 @@
 #include <functional>
 #include <iostream>
 #include <memory>
-#include <stdexcept>
+#include <optional>
 #include <utility>
 #include <vector>
 
@@ -33,16 +33,17 @@ private:
 
 class OwnedService {
 public:
-  explicit OwnedService(std::unique_ptr<ITransport> transport) : transport_(std::move(transport)) {
-    if (!transport_) {
-      throw std::invalid_argument("transport required");
-    }
+  [[nodiscard]] static std::optional<OwnedService> Create(std::unique_ptr<ITransport> transport) {
+    if (!transport) return std::nullopt;
+    return OwnedService(std::move(transport));
   }
   void Send() {
     transport_->Send();
   }
 
 private:
+  explicit OwnedService(std::unique_ptr<ITransport> transport) : transport_(std::move(transport)) {}
+
   Config config_{};                        // Q1: Store simple configuration by value.
   std::unique_ptr<ITransport> transport_;  // Q2: This service owns it.
 };
@@ -100,20 +101,15 @@ void CheckExclusiveOwnership() {
   int destroyed = 0;
   {
     auto transport = std::make_unique<TcpTransport>(destroyed);
-    OwnedService service(std::move(transport));
+    auto service = OwnedService::Create(std::move(transport));
+    assert(service.has_value());
     assert(!transport);
-    service.Send();
+    service->Send();
     assert(destroyed == 0);
   }
   assert(destroyed == 1);
 
-  bool rejected_null = false;
-  try {
-    OwnedService invalid(nullptr);
-  } catch (const std::invalid_argument&) {
-    rejected_null = true;
-  }
-  assert(rejected_null);
+  assert(!OwnedService::Create(nullptr));
 }
 
 void CheckBorrowing() {

@@ -1012,10 +1012,9 @@ classDiagram
 ```cpp
 class OwnedService {
 public:
-  explicit OwnedService(std::unique_ptr<ITransport> transport) : transport_(std::move(transport)) {
-    if (!transport_) {
-      throw std::invalid_argument("transport required");
-    }
+  [[nodiscard]] static std::optional<OwnedService> Create(std::unique_ptr<ITransport> transport) {
+    if (!transport) return std::nullopt;
+    return OwnedService(std::move(transport));
   }
 
   void Send() {
@@ -1023,10 +1022,14 @@ public:
   }
 
 private:
+  explicit OwnedService(std::unique_ptr<ITransport> transport) : transport_(std::move(transport)) {}
+
   Config config_{};
   std::unique_ptr<ITransport> transport_;
 };
 ```
+
+工厂返回 `std::optional<OwnedService>`：传入空指针时返回 `std::nullopt`，调用者检查成功后使用 `service->Send()`。需要包含 `<optional>`、`<memory>` 和 `<utility>`；该写法也适用于禁用异常的浏览器编译环境。
 
 `ITransport` 的定义必须包含虚析构函数：
 

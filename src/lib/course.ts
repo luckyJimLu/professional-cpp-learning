@@ -57,6 +57,32 @@ const rawExamples = import.meta.glob("../../examples/**/main.cpp", {
   eager: true,
 }) as Record<string, string>;
 
+// The browser compiler accepts one translation unit. Bundle the example's local
+// headers while retaining include guards and original filenames in diagnostics.
+const rawExampleHeaders = import.meta.glob("../../examples/**/*.{h,hpp}", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+}) as Record<string, string>;
+
+function bundleExample(path: string, source: string, stack: string[] = []): string {
+  return source.replace(/^[ \t]*#include[ \t]+"([^"\n]+)"[^\n]*$/gm,
+    (directive, name: string, offset: number) => {
+      const parts = `${path.slice(0, path.lastIndexOf("/"))}/${name}`.split("/");
+      const normalized: string[] = [];
+      for (const part of parts) {
+        if (part === ".." && normalized.length && normalized.at(-1) !== "..") normalized.pop();
+        else if (part !== ".") normalized.push(part);
+      }
+      const headerPath = normalized.join("/");
+      const header = rawExampleHeaders[headerPath];
+      if (header === undefined || stack.includes(headerPath)) return directive;
+      const line = source.slice(0, offset).split("\n").length;
+      const bundled = bundleExample(headerPath, header, [...stack, headerPath]);
+      return `#line 1 "${name}"\n${bundled}\n#line ${line + 1} "${path.split("/").at(-1)}"`;
+    });
+}
+
 function parseScalar(value: string): string | number | boolean | string[] {
   const array = value.trim().match(/^\[(.*)\]$/);
   if (array) return array[1].split(",").map((item) => item.trim().replace(/^["']|["']$/g, "")).filter(Boolean);
@@ -194,11 +220,12 @@ function exampleForDay(day: number, labPath?: string): string | undefined {
   if (labPath) {
     const normalized = labPath.replace(/^\.\//, "");
     const direct = Object.entries(rawExamples).find(([path]) => path.endsWith(normalized));
-    if (direct) return direct[1];
+    if (direct) return bundleExample(direct[0], direct[1]);
   }
 
   const token = `/day-${String(day).padStart(3, "0")}/main.cpp`;
-  return Object.entries(rawExamples).find(([path]) => path.includes(token))?.[1];
+  const example = Object.entries(rawExamples).find(([path]) => path.includes(token));
+  return example ? bundleExample(example[0], example[1]) : undefined;
 }
 
 function buildLesson(path: string, raw: string): Lesson | undefined {

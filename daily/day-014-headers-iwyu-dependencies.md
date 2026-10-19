@@ -63,13 +63,14 @@ Code Review 时说明规则如何帮助当前场景，不将风格约定当成�
 
 完整源码：[main.cpp](../examples/day-014/main.cpp)。
 
-源码依赖同目录的 [config.hpp](../examples/day-014/config.hpp)，请在本地编译这个多文件实验。
+源码依赖同目录的 [config.hpp](../examples/day-014/config.hpp)。网页实验室会自动展开本地头文件，可直接运行；本地仍保留多文件结构，便于练习头文件自包含检查。
 
 ```cpp
 #include <cassert>
 #include <iostream>
 
 #include "config.hpp"
+#include "config.hpp"  // Verify that the include guard permits repeated inclusion.
 int main() {
   const modem::Config config{};
   assert(config.timeout.count() == 100);
