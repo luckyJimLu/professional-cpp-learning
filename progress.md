@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 53**。下一课从 **Day 54** 继续。
+当前仓库课程已发布到 **Day 54**。下一课从 **Day 55** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -57,17 +57,19 @@
 | 51 | Design General-Purpose Interfaces | 已发布 | [day-051](daily/day-051-general-purpose-interfaces.md) |
 | 52 | Reconciling Generality and Ease of Use | 已发布 | [day-052](daily/day-052-reconciling-generality-ease-of-use.md) |
 | 53 | Designing a Successful Abstraction | 已发布 | [day-053](daily/day-053-designing-successful-abstraction.md) |
+| 54 | The SOLID Principles | 已发布 | [day-054](daily/day-054-solid-principles.md) |
 
 ## 最新发布详情
 
-- **日期**：2026-10-18
+- **日期**：2026-10-19
 - **章节**：Chapter 6 · Designing for Reuse
-- **主题**：Designing a Successful Abstraction
-- **关键知识点**：稳定 contract、invariant、implementation hiding、resource bound、runtime vs compile-time abstraction
-- **设计模式 / 稳定边界**：Adapter 隔离平台 transport；required dependency 显式注入；不为简单组装强行增加 Factory/Facade/Strategy
-- **Lab**：[examples/day-053/main.cpp](examples/day-053/main.cpp)
-- **Runnable Exercise**：[examples/day-053/exercise-01.cpp](examples/day-053/exercise-01.cpp)
-- **上一课**：[Day 52 · Reconciling Generality and Ease of Use](daily/day-052-reconciling-generality-ease-of-use.md)
+- **主题**：The SOLID Principles
+- **关键知识点**：SRP、OCP、LSP、ISP、DIP；稳定边界；runtime vs compile-time polymorphism；显式依赖
+- **设计模式 / 稳定边界**：Adapter 隔离 transport；Dependency Injection 支撑 DIP；小接口支撑 ISP；不为 SOLID 强行增加 Factory/Strategy
+- **Lab**：[examples/day-054/main.cpp](examples/day-054/main.cpp)
+- **Runnable Exercise**：[examples/day-054/exercise-01.cpp](examples/day-054/exercise-01.cpp)
+- **上一课**：[Day 53 · Designing a Successful Abstraction](daily/day-053-designing-successful-abstraction.md)
+- **下一课**：Chapter 6 · Summary / Exercises，完成本章收束后再进入 Chapter 7 · Memory Management
 
 ## 规则
 
