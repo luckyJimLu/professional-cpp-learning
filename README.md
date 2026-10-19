@@ -13,8 +13,8 @@
 
 ## 当前进度
 
-- **已发布：Day 1–53**
-- **下一课：Day 54**
+- **已发布：Day 1–54**
+- **下一课：Day 55 · Chapter 6 Summary / Exercises**
 - 当前主线：**Chapter 6 · Designing for Reuse**
 - 更新方式：**GitHub Markdown only**
 
@@ -45,11 +45,11 @@
 
 ## 最近课程
 
+- [Day 54 · The SOLID Principles](daily/day-054-solid-principles.md)
 - [Day 53 · Designing a Successful Abstraction](daily/day-053-designing-successful-abstraction.md)
 - [Day 52 · Reconciling Generality and Ease of Use](daily/day-052-reconciling-generality-ease-of-use.md)
 - [Day 51 · Design General-Purpose Interfaces](daily/day-051-general-purpose-interfaces.md)
 - [Day 50 · Design Interfaces That Are Easy to Use](daily/day-050-easy-to-use-interfaces.md)
-- [Day 49 · Consider the Audience and Purpose](daily/day-049-consider-audience-purpose.md)
 
 ## 每日课程结构
 
@@ -86,7 +86,7 @@
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-053-*.md
+│   └── day-054-*.md
 ├── examples/
 │   └── day-XXX/
 │       ├── main.cpp
