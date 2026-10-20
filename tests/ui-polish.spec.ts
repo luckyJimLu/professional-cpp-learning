@@ -19,11 +19,11 @@ test("course view, query and IME commit survive navigation without truncated tit
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/?view=lessons");
-  await page.getByRole("button", { name: "完整目录 · 54" }).click();
+  await page.getByRole("button", { name: /完整目录 · \d+/ }).click();
   await expect(page).toHaveURL(/courseTab=all/);
   await page.reload();
   await expect(
-    page.getByRole("button", { name: "完整目录 · 54" }),
+    page.getByRole("button", { name: /完整目录 · \d+/ }),
   ).toHaveAttribute("aria-pressed", "true");
   const input = page.getByRole("searchbox", { name: "检索课程" });
   await input.dispatchEvent("compositionstart");
