@@ -259,7 +259,7 @@ flowchart TD
 - ❌ **低级做法：在 Session 内部到处加 `std::mutex`**
   - 代码极易死锁；
   - 线程反复在锁上阻塞，白白消耗 CPU 切换开销，抵消了多线程事件循环的高吞吐优势。
-- ✅ **工业标准做法：`asio::strand`（免锁串行化调度器）**
+- ✅ **工业标准做法：`asio::strand`（Handler 串行化适配器）**
   - `strand` 保证：**所有由同一个 `strand` 派发的 Handlers，绝对严格按照先后顺序串行执行，绝对不会发生多线程并发！**
 
 ```mermaid

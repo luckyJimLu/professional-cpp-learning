@@ -1,6 +1,6 @@
 # Asio 智能指针使用场景：异步会话（Session）生命周期管理
 
-> 基于 [README.md](README.md) 与 [ARCHITECTURE.md](ARCHITECTURE.md) | 版本 1.38.2
+> 基于 [README.md](README.md) 与 [ARCHITECTURE.md](ARCHITECTURE.md) | 示例基线 Asio 1.30.2；内部源码图示需按所选 revision 复核
 >
 > 所有结论均标注源码出处；所有图均采用标准 Mermaid 格式编写，在 GitHub 及 VS Code 中可原生渲染。
 
@@ -8,7 +8,7 @@
 
 ## 1. 问题：异步操作与栈变量生命周期的错配
 
-异步操作（`async_write` / `async_read`）发起后**立即返回**，发起它的函数栈帧随之销毁。若连接上下文（socket、缓冲区、状态机）放在栈上或仅由裸指针持有，当 OS 层 I/O 稍后完成、库回调处理器时，上下文早已析构 —— **use-after-free**。
+异步操作（`async_write` / `async_read`）不会在发起调用中等待整个 I/O 完成；发起调用返回不等于调用者所在函数已经退出。风险在于：函数之后退出并销毁栈上的连接上下文，而完成处理仍会访问该对象或 buffer。裸指针捕获不延长生命周期，这时可能发生 **use-after-free**。
 
 ```mermaid
 sequenceDiagram

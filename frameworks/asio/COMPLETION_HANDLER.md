@@ -1,6 +1,6 @@
 # Asio 回调与处理函数：异步完成通知与任务链状态机
 
-> 基于 [README.md](README.md) 与 [ARCHITECTURE.md](ARCHITECTURE.md) 编写 | 版本 1.38.2
+> 基于 [README.md](README.md) 与 [ARCHITECTURE.md](ARCHITECTURE.md) 编写 | 示例基线 Asio 1.30.2；内部源码图示需按所选 revision 复核
 >
 > 所有结论均标注源码出处（行号对应源文件）；所有图均为 **Mermaid** 格式。
 

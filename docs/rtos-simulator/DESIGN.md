@@ -1,5 +1,7 @@
 # RTOS 并发可视化模拟器 · 实施方案
 
+当前学习入口：[9 场景教学手册](LEARNING-GUIDE.md)。本文含历史分期设计；场景列表与实际配置以 `src/rtos-sim/scenarios.ts` 为准，独立文件以 `examples/rtos/` 为准。
+
 ## 目标
 
 给现有的 C++ 可视化器加一条**RTOS 模拟器链路**，让学习者能逐步回放并观察：线程（任务）的创建、调度、销毁，以及锁、信号量、条件变量、消息队列、事件组、任务通知、软件定时器和中断这些异步通信机制。
@@ -416,7 +418,7 @@ frontmatter 解析新增可选字段 `lab: rtos-sim`、`rtos_scenario: <id>`。
 #### [NEW] `include/rtos_sim.h`
 **只有声明**（给 IDE 补全和 API 文档用），注释里写明“本头文件仅供模拟器识别，不可链接运行”。
 
-#### [NEW] `examples/rtos/*.cpp` —— 8 个预置场景
+#### [NEW] `examples/rtos/*.cpp` —— 8 个独立示例文件，对应网页 9 个预置场景
 
 | 场景 | 教学点 |
 |---|---|
@@ -474,7 +476,7 @@ node --test tests/rtos-objects.test.ts     # 各原语语义：
 #   - ISR 中调用 lock() → error 诊断
 #   - 哲学家就餐场景检测出环 [P0→f1→P1→…→P0]；scoped_lock 版本无死锁
 node --test tests/rtos-reducer.test.ts     # 快照数、timelineUntilTick 单调、截断上限
-node tools/check-rtos-examples.ts          # 8 个预置场景全部模拟成功，0 个 error
+node tools/check-rtos-examples.ts          # 核对 8 个示例文件和 9 个网页预置场景，0 个 error
 npm run lint && npm run build              # 类型检查 + 构建
 ```
 
@@ -491,5 +493,5 @@ npm run build && npx playwright test tests/rtos-visualizer.spec.ts
 
 ### 手动验证
 
-- 在 `npm run dev` 下访问 `http://localhost:3000/rtos.html`，逐个打开 8 个场景，检查各视图联动（拖动 VCR 时 Gantt 游标、对象面板、栈视图同步更新）。
+- 在 `npm run dev` 下访问 `http://localhost:3000/rtos.html`，逐个打开 9 个预置场景，检查各视图联动（拖动 VCR 时 Gantt 游标、对象面板、栈视图同步更新）。
 - 故意写不支持的语法（例如 `int* p`），确认会给出清晰的行级提示。

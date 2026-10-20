@@ -1,4 +1,4 @@
-# Professional C++ 16 周学习路线
+# Professional C++ 学习路线与章节里程碑
 
 主教材：*Professional C++, Sixth Edition*（Marc Gregoire，C++23）
 
@@ -11,7 +11,23 @@
 
 面向已有 C / 嵌入式开发基础的学习者，建立现代 C++ 工程能力，并尽量将示例贴近 RTOS、BSP、Driver、Middleware、Modem 与 Embedded Linux。
 
-## 16 周路线
+## 当前执行方式
+
+原始 16 周路线用于说明章节顺序，不作为当前完成日期承诺。实际已发布 Day 1–55，完成 Chapter 6；下一课进入 Chapter 7。原计划第 3 周覆盖 Ch4–6，而实际持续至第 8 周，应使用已发布课程和验收证据校准节奏。
+
+| 里程碑 | 完成条件 | 当前状态 |
+| --- | --- | --- |
+| Ch1–3 基础与风格 | 能说明类型、借用与错误边界，运行对应 Lab | 已发布；个人能力需独立自测 |
+| Ch4–6 设计与复用 | 明确变化轴、不变量、接口与资源约束，完成章末评审 | 已发布至 Day 55；见 [Chapter 6 评审](chapter-06-review.md) |
+| Ch7 内存管理 | 按教材小节发布；完成所有权、RAII 与生命周期用例 | 下一阶段，不预先创建 Day 56 |
+| Ch8–24 语言与标准库 | 每章主 Lab、错误路径与小结均可运行 | 后续逐章规划 |
+| Ch25–34 并发与工程 | 跨模块实验、性能／资源证据、测试与调试闭环 | 后续逐章规划 |
+
+每章开始时列出小节和实验目标；章末根据实际用时调整剩余安排。`week` 继续表示 Day 的组织周次；周复盘按七天归档，章末评审不必等到周末。Day 50–55 的 Ch6 总结可先完成，Week 08 在 Day 56 发布后再补齐，不能提前标记一整周完成。
+
+总入口：[内容覆盖矩阵](content-map.md) · [实验环境](lab-environments.md) · [贯穿实验](engineering-learning-path.md)。
+
+## 原始 16 周顺序参考（非当前日历承诺）
 
 - **第 1–2 周 · Part I**
   - Ch1 A Crash Course in C++ and the Standard Library

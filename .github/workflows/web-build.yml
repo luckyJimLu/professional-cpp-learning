@@ -34,8 +34,14 @@ jobs:
       - name: Check migrated C++ examples
         run: |
           sudo apt-get update
-          sudo apt-get install -y libboost1.83-dev
+          sudo apt-get install -y libboost1.83-dev cmake
           npm run check:reference-cpp
+
+      - name: Check Standalone Asio echo examples
+        run: |
+          cmake -S frameworks/asio/examples -B build/asio -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wconversion -Wpedantic -Werror"
+          cmake --build build/asio -j2
+          python3 tools/check-asio-echo.py --bin-dir build/asio
 
       - name: Typecheck and build
         run: npm run build

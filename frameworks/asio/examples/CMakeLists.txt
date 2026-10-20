@@ -6,18 +6,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(FetchContent)
 
-# 优先查找本地同级 asio 仓库头文件，未检测到则通过 FetchContent 自动下载
-find_path(LOCAL_ASIO_INCLUDE asio.hpp
-  PATHS
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../asio/include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../asio/include"
-    "/home/lujingjing/Project/asio/include"
-)
+set(ASIO_ROOT "" CACHE PATH "Optional Asio 1.30.2 checkout or installation root")
+unset(LOCAL_ASIO_INCLUDE CACHE)
+unset(LOCAL_ASIO_INCLUDE)
+if(ASIO_ROOT)
+  find_path(LOCAL_ASIO_INCLUDE asio.hpp
+    PATHS "${ASIO_ROOT}/asio/include" "${ASIO_ROOT}/include" "${ASIO_ROOT}"
+    NO_DEFAULT_PATH REQUIRED)
+endif()
 
 if(LOCAL_ASIO_INCLUDE)
   message(STATUS "Using local standalone Asio headers from: ${LOCAL_ASIO_INCLUDE}")
   add_library(asio_headers INTERFACE)
-  target_include_directories(asio_headers INTERFACE ${LOCAL_ASIO_INCLUDE})
+  set(ASIO_INCLUDE_DIR "${LOCAL_ASIO_INCLUDE}")
+  target_include_directories(asio_headers SYSTEM INTERFACE ${ASIO_INCLUDE_DIR})
   target_compile_definitions(asio_headers INTERFACE ASIO_STANDALONE)
 else()
   message(STATUS "Local Asio not found, fetching standalone Asio from GitHub...")
@@ -29,8 +31,15 @@ else()
   )
   FetchContent_MakeAvailable(asio)
   add_library(asio_headers INTERFACE)
-  target_include_directories(asio_headers INTERFACE ${asio_SOURCE_DIR}/asio/include)
+  set(ASIO_INCLUDE_DIR "${asio_SOURCE_DIR}/asio/include")
+  target_include_directories(asio_headers SYSTEM INTERFACE ${ASIO_INCLUDE_DIR})
   target_compile_definitions(asio_headers INTERFACE ASIO_STANDALONE)
+endif()
+
+file(STRINGS "${ASIO_INCLUDE_DIR}/asio/version.hpp" ASIO_VERSION_LINE
+  REGEX "^#define ASIO_VERSION [0-9]+")
+if(NOT ASIO_VERSION_LINE MATCHES "^#define ASIO_VERSION 103002([^0-9]|$)")
+  message(FATAL_ERROR "Expected Asio 1.30.2 (ASIO_VERSION 103002): ${ASIO_VERSION_LINE}")
 endif()
 
 find_package(Threads REQUIRED)

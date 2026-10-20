@@ -1,6 +1,6 @@
 # Asio 开发架构文档
 
-> 基于 [README.md](README.md) 编写 | 版本 1.38.2 | 许可证：Boost Software License 1.0
+> 基于 [README.md](README.md) 编写 | 示例基线 Asio 1.30.2；内部源码图示需按所选 revision 复核 | 许可证：Boost Software License 1.0
 >
 > 文中所有架构图、类图与时序图均采用 **Mermaid** 格式编写，在 GitHub、VS Code 及各类 Markdown 预览器中均可直接渲染。
 
@@ -39,7 +39,7 @@ Asio 是跨平台、仅头文件的 C++ 网络/底层 I/O 库。其架构围绕�
 
 - **Executor**：统一的调度接口（`dispatch` / `post` / `defer`），携带"在哪里、如何执行"的语义。
 - **io_context::executor_type**：绑定到具体 `io_context` 的执行器，I/O 对象通过它获得关联的执行环境。
-- **strand**：串行化适配器，保证经其派发的处理器不并发执行，是免锁编程的核心工具。
+- **strand**：串行化适配器，保证经其派发的处理器不并发执行，可用于串行访问该执行上下文内的共享状态；这不等同于 lock-free，也不保护绕过该 strand 的访问。
 - **any_io_executor**：类型擦除执行器（类似 `std::function`），允许 I/O 对象在运行时持有任意执行器。
 - **executor_work_guard**：工作守卫，防止事件循环因无未完成工作而提前退出。
 
@@ -71,7 +71,7 @@ Asio 是跨平台、仅头文件的 C++ 网络/底层 I/O 库。其架构围绕�
 - `cancellation_signal`：发出取消请求的信号源。
 - `cancellation_slot`：与一次异步操作关联的取消槽，操作发起时登记取消处理器。
 - `cancellation_state` / `cancellation_type`：过滤取消类型（`terminal` / `partial` / `total`）。
-- `cancel_after` / `cancel_at`：到相对/绝对时间点自动 emit 取消。
+- `cancel_after` / `cancel_at`：较新接口的定时取消适配思路；本文图示不作为 1.30.2 API 可用性的证明。基线实验用 `steady_timer` 和显式取消。
 
 ### 2.8 平台反应器（Reactor Backends）
 
@@ -685,7 +685,7 @@ sequenceDiagram
     App->>App: 为新连接启动读循环 /<br/>再次 async_accept() 等待下一连接
 ```
 
-### 5.6 定时取消流程（cancel_after）
+### 5.6 定时取消流程（扩展概念图，非 1.30.2 可运行示例）
 
 ```mermaid
 sequenceDiagram
@@ -721,7 +721,7 @@ sequenceDiagram
 |---|---|---|
 | `io_context` | 需外部同步或 strand | 多线程可同时调用 `run()`，但共享 I/O 对象的处理器需 `strand` 串行化 |
 | I/O 对象（socket 等） | 不安全 | 官方约定：不同对象之间安全，同一对象共享不安全（显式说明的除外） |
-| `strand` | 安全 | 保证经其派发的处理器互斥执行 |
+| `strand` | 串行执行保证 | 仅覆盖经同一 strand 调度的 Handler；跨上下文访问另需同步，不承诺 lock-free |
 | `execution_context::service` | 安全 | 服务内部自行保证状态一致性 |
 | `thread_pool` | 安全 | 设计为多线程提交任务 |
 
