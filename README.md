@@ -26,9 +26,9 @@
 
 ## 当前进度
 
-- **已发布：Day 1–54**
-- **下一课：Day 55 · Chapter 6 Summary / Exercises**
-- 当前主线：**Chapter 6 · Designing for Reuse**
+- **已发布：Day 1–55**
+- **下一课：Day 56 · Chapter 7 · Memory Management**
+- 当前主线：**Chapter 6 已收束；下一课进入 Chapter 7 · Memory Management**
 - 更新方式：**GitHub Markdown only**
 
 ## 快速入口
@@ -63,11 +63,11 @@
 
 ## 最近课程
 
+- [Day 55 · Chapter 6 Summary and Engineering Exercises](daily/day-055-chapter6-review-exercises.md)
 - [Day 54 · The SOLID Principles](daily/day-054-solid-principles.md)
 - [Day 53 · Designing a Successful Abstraction](daily/day-053-designing-successful-abstraction.md)
 - [Day 52 · Reconciling Generality and Ease of Use](daily/day-052-reconciling-generality-ease-of-use.md)
 - [Day 51 · Design General-Purpose Interfaces](daily/day-051-general-purpose-interfaces.md)
-- [Day 50 · Design Interfaces That Are Easy to Use](daily/day-050-easy-to-use-interfaces.md)
 
 ## 每日课程结构
 
@@ -90,20 +90,11 @@
 
 ## 专题与模拟器
 
-**OpenHarmony Mini／轻量系统**：涵盖 LiteOS-M 功能分层、LOS／CMSIS 接口、启动流程、
-SAMGR Lite 服务通信和外设组件；提供固定版本来源、校验值与逐符号索引。
-核心资料以 `OpenHarmony-v5.0.0-Release` 为研究基线，具体接口和组件可用性仍需结合所选版本与板卡核对。
+**OpenHarmony Mini／轻量系统**：涵盖 LiteOS-M 功能分层、LOS／CMSIS 接口、启动流程、SAMGR Lite 服务通信和外设组件；提供固定版本来源、校验值与逐符号索引。
 
-**嵌入式 C++ 扩展**：Mini C++11 运行时与异步架构、Zephyr C++20／ZPP、Asio 异步生命周期、
-TRACE32 稳定性分析，与主线中的 ownership、RAII、接口契约和资源预算对照阅读。
+**嵌入式 C++ 扩展**：Mini C++11 运行时与异步架构、Zephyr C++20／ZPP、Asio 异步生命周期、TRACE32 稳定性分析，与主线中的 ownership、RAII、接口契约和资源预算对照阅读。
 
-**RTOS 并发模拟器**：使用受限 C++ 子集进行确定性解释执行，观察时间片与抢占、线程生命周期、
-消息队列、互斥与优先级继承、信号量、条件变量与虚假唤醒、事件组／任务通知、软定时器和 ISR。
-内置场景包含生产者／消费者、优先级反转与哲学家就餐等；可查看等待环、调整内核参数并导出轨迹。
-
-模拟器使用教学用 `rtos::` 扩展和部分标准库风格接口，不执行任意 C++，也不等同于真实 LiteOS-M
-或其他 RTOS。其源码位于 [examples/rtos](examples/rtos/)，接口说明见 [rtos_sim.h](include/rtos_sim.h)。
-该头文件仅提供声明，示例由模拟器解释执行，不作为宿主机 standalone 程序链接运行。
+**RTOS 并发模拟器**：使用受限 C++ 子集进行确定性解释执行，观察时间片与抢占、线程生命周期、消息队列、互斥与优先级继承、信号量、条件变量与虚假唤醒、事件组／任务通知、软定时器和 ISR。
 
 ## 仓库结构
 
@@ -111,35 +102,23 @@ TRACE32 稳定性分析，与主线中的 ownership、RAII、接口契约和资�
 .
 ├── README.md
 ├── progress.md
-├── DESIGN.md / UX-CONTRACT.md    # 视觉与交互约定
-├── daily/                       # 已发布课程 Day 1–54
-├── weekly/                      # 周复盘
-├── patterns/                    # 设计模式、所有权与智能指针
+├── DESIGN.md / UX-CONTRACT.md
+├── daily/                       # 已发布课程 Day 1–55
+├── weekly/
+├── patterns/
 ├── frameworks/
-│   ├── asio/
-│   ├── openharmony/              # 内核、接口、启动、服务通信与资料索引
-│   └── trace32/
 ├── docs/
-│   ├── runnable-exercise-audit.md
-│   ├── harmonyos-mini-cpp11-compatibility.md
-│   ├── zephyr-cpp20-zpp.md
-│   └── rtos-simulator/DESIGN.md
 ├── examples/
 │   ├── day-XXX/                 # main.cpp 与独立 exercise-XX.cpp
-│   └── rtos/                    # 由 RTOS 模拟器解释执行的教学场景
-├── include/                     # 可视化与 RTOS 教学接口
+│   └── rtos/
+├── include/
 ├── src/
-│   ├── components/              # 课程、专题与共享 Markdown 阅读组件
-│   ├── visualizer/              # 内存可视化
-│   ├── rtos-sim/                # 受限语法、解释器、模拟内核与可视化界面
-│   └── workers/                 # 后台编译／模拟工作线程
-├── index.html / rtos.html        # 学习平台与 RTOS 模拟器入口
+├── index.html / rtos.html
 ├── references/system-design-notes/
 ├── guidelines/
 ├── utils/
-│   └── windows-remote-script-runner/
-├── tools/                       # 内容、示例与格式检查
-└── tests/                       # 浏览器与模拟器回归用例
+├── tools/
+└── tests/
 ```
 
 ## 编码规范基线
@@ -155,58 +134,30 @@ TRACE32 稳定性分析，与主线中的 ownership、RAII、接口契约和资�
 
 ## 本地启动与验证
 
-建议使用 **Node.js 24**（与 CI 一致）、npm 和 Python 3。原生示例检查还需要支持 C++23 的
-GCC／Clang，C++ 格式检查需要安装 `clang-format`。浏览器 Lab 的 Clang/WASM 与宿主机编译器是两套独立环境。
+建议使用 **Node.js 24**（与 CI 一致）、npm 和 Python 3。原生示例检查还需要支持 C++23 的 GCC／Clang。
 
 ```bash
 npm install
 npm run dev
+npm run lint
+npm run check:course
+npm run check:migration
+npm run check:examples
+npm run format:cpp:check
+npm run build
 ```
 
-本地入口：
-
-- 学习平台：`http://localhost:3000/`
-- 专题目录：`http://localhost:3000/?view=topics`
-- RTOS 模拟器：`http://localhost:3000/rtos.html`
-
-`predev` / `prebuild` 会自动复制浏览器编译器资源；首次安装和启动需要获取相关依赖。
-课程与专题正文仍以仓库 Markdown 为内容源，Web UI 负责导航、阅读、实验及复盘。
-
-### 内容、示例与构建检查
-
-```bash
-npm run lint                 # TypeScript 类型检查
-npm run check:course         # 课程元数据、链接与独立练习结构
-npm run check:migration      # 导入资料完整性
-npm run check:examples       # C++23 严格编译并运行每日／顶层独立示例
-npm run format:cpp:check     # 检查 Markdown 与示例中的 C++ 格式
-npm run build               # 类型检查与生产构建
-```
-
-独立示例检查会把 warnings 视为错误，并设置编译／运行超时；不包含 `examples/rtos/` 的模拟器专用场景。
-可用 `CXX` 选择编译器，支持的环境中可额外启用内存检查：
+独立示例检查会把 warnings 视为错误，并设置编译／运行超时；不包含 `examples/rtos/` 的模拟器专用场景。可用 `CXX` 选择编译器，支持的环境中可额外启用内存检查：
 
 ```bash
 python3 tools/check-examples.py --sanitize
 ```
 
-### 浏览器测试
+浏览器测试：
 
 ```bash
 npx playwright install chromium
 npm run test:e2e
 ```
 
-测试使用生产构建的预览服务，请先执行 `npm run build`。覆盖课程导航、专题桌面／手机阅读、
-代码搜索、图表、浏览器编译器与 RTOS 工作台等交互；按需执行专题相关回归：
-
-```bash
-npx playwright test tests/topics.spec.ts tests/search.spec.ts tests/docs.spec.ts
-```
-
-模拟器的内核、对象与解释器测试位于 `tests/rtos-*.test.ts`，浏览器界面测试位于
-`tests/rtos-visualizer.spec.ts`；完整设计与机制边界见 [RTOS 模拟器方案](docs/rtos-simulator/DESIGN.md)。
-
-设计与交互约定见 [DESIGN.md](DESIGN.md)、[UX-CONTRACT.md](UX-CONTRACT.md) 与
-[Learning UX](docs/learning-ux.md)。从 `system-design-notes` 导入的资料位于
-`references/system-design-notes/`，详见 [迁移说明](docs/content-migration.md)。
+课程与专题正文仍以仓库 Markdown 为内容源，Web UI 负责导航、阅读、实验及复盘。设计与交互约定见 [DESIGN.md](DESIGN.md)、[UX-CONTRACT.md](UX-CONTRACT.md) 与 [Learning UX](docs/learning-ux.md)。
