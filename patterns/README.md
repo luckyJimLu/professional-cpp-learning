@@ -6,6 +6,13 @@
 
 本专题与《Professional C++, Sixth Edition》Chapter 33 · **Applying Design Patterns** 对齐，但不替代后续 Day 课程；它作为提前建立全局认知的专题索引。
 
+## 书籍案例与可运行示例
+
+- [分类索引、来源与运行方法](book-examples.md)：依据三本 C++ 书籍整理，覆盖 GoF 23 种模式、9项补充与1个定价变体，共33个独立 C++17 程序。
+- [创建型](01-creational-patterns.md) · [结构型](02-structural-patterns.md) · [行为型](03-behavioral-patterns.md) · [C++ 补充惯用法](04-cpp-techniques.md) · [装饰器定价案例](05-decorator-pricing.md)。
+
+每项包含书中案例及改写说明、使用场景、使用原因、好处、取舍与完整源码。运行 `python3 tools/check-examples.py --patterns-only` 验证本专题；默认的全仓库示例检查也会包含这些源码。
+
 ---
 
 ## 1. 先区分：Design Technique vs Design Pattern
@@ -94,7 +101,7 @@ Chapter 33 重点讲解以下模式：
 |---|---|---|---|
 | Strategy | Behavioral | 算法/策略 | virtual、template、lambda、function object |
 | Abstract Factory | Creational | 产品族创建 | abstract interface + `unique_ptr` |
-| Factory Method | Creational | 单个对象创建决策 | virtual factory / static factory |
+| Factory Method | Creational | 子类决定单个对象创建 | virtual factory；静态工厂作为单独创建惯用法 |
 | Adapter | Structural | 不兼容接口转换 | composition / wrapper |
 | Proxy | Structural | 访问控制 | wrapper + lazy/remote/access policy |
 | Iterator | Behavioral | 遍历协议 | iterator / range |
