@@ -173,6 +173,8 @@ export function CodeSearch() {
               aria-label="清除搜索"
               title="清除搜索"
               onClick={() => {
+                if (debounceTimerRef.current)
+                  window.clearTimeout(debounceTimerRef.current);
                 setDraft("");
                 updateQuery("");
                 inputRef.current?.focus();
@@ -278,7 +280,8 @@ export function CodeSearch() {
                           : "规范"}
                 </span>
               </div>
-              <strong>{entry.path}</strong>
+              <strong>{entry.title}</strong>
+              <span className="result-source-path">{entry.path}</span>
               <pre>
                 {entry.lines
                   .slice(Math.max(0, lineIndex - 1), lineIndex + 2)

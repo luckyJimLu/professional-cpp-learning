@@ -30,6 +30,7 @@ export const topics = Object.entries(sources)
       id: raw.match(/^id:\s*(.+)$/m)?.[1]?.trim(),
       locale: /\.en\.md$/.test(path) ? "en" : "zh",
       group: topicGroup(path),
+      summary: raw.match(/^summary:\s*["']?(.+?)["']?\s*$/m)?.[1],
       body,
       raw,
     };
@@ -68,12 +69,13 @@ export function topicSummary(topic: Topic) {
     .split(/\n\s*\n/)
     .map((text) => text.replace(/^>\s?/gm, "").trim())
     .find((text) => text && !/^[#|<!\-]/.test(text) && !/^\d+\./.test(text));
-  return (paragraph ?? "阅读原理、接口与工程实践。")
+  const text = (topic.summary ?? paragraph ?? "阅读原理、接口与工程实践。")
     .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
     .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
     .replace(/[*_`]/g, "")
     .replace(/\s+/g, " ")
-    .slice(0, 110);
+    .trim();
+  return text.match(/^.*?[。！？]/)?.[0]?.trim() ?? text;
 }
 
 export function seriesTopics(topic: Topic) {

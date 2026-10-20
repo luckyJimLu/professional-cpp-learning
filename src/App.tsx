@@ -1,4 +1,4 @@
-import { lazy, useEffect, useMemo, type ReactNode } from "react";
+import { lazy, useEffect, useMemo, useState, type ReactNode } from "react";
 import { DeferredContent } from "./components/DeferredContent";
 import { Shell } from "./components/Shell";
 import {
@@ -48,6 +48,22 @@ export default function App() {
   const selectedDay =
     Number(params.get("day")) || latestLesson()?.day || repoCompletedDay;
   const progress = useLearningProgress();
+  const [lastLessonDay, setLastLessonDay] = useState<number | undefined>(() => {
+    try {
+      const day = Number(localStorage.getItem("professional-cpp:last-lesson"));
+      return lessonByDay(day)?.day;
+    } catch {
+      return undefined;
+    }
+  });
+  useEffect(() => {
+    if (view !== "lesson" || !lessonByDay(selectedDay)) return;
+    setLastLessonDay(selectedDay);
+    try {
+      localStorage.setItem("professional-cpp:last-lesson", String(selectedDay));
+    } catch {}
+  }, [view, selectedDay]);
+
   const completedDay = Math.max(
     repoCompletedDay,
     ...progress.state.completedDays,
@@ -95,6 +111,7 @@ export default function App() {
     case "today":
       page = (
         <TodayView
+          lastLessonDay={lastLessonDay}
           currentDay={currentLearningDay}
           openLesson={openLesson}
           isStepComplete={progress.isStepComplete}

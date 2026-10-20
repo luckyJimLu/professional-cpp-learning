@@ -101,3 +101,14 @@ sit between the editor and trace, rather than hiding export or speed controls.
 Native non-modal disclosures own its configuration popup; `keyboardTabs.ts` shares
 arrow-key tab behavior between its detail panel and the memory output panel. The memory workbench retains its shared session and rendering model,
 with larger mobile controls and consistent dark layout-switch buttons.
+
+## Task-first refinement · 20 October 2026
+
+Keep the existing palette and typography. The signature of the engineering workspaces
+is the relationship between source line, current event and object/task state. One shared
+compile/playback toolbar lives outside source/output visibility so phone users can
+operate a trace while inspecting it. Run actions use brand emphasis; red remains an
+error/danger cue. Lab secondary actions share the task disclosure; code should enter
+the first phone viewport. Course themes derive from chapter metadata and topic summaries
+remain content-owned. Review tasks precede historical summaries. A browser's last-read
+course is navigation convenience, explicitly separate from completion or mastery.

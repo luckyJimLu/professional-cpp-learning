@@ -203,8 +203,18 @@ shows the latest published lesson when the next lesson is unavailable.
 - The guide's primary learning action is visible on desktop and phone; its destination is an existing published course when the planned course is unavailable.
 - Courses persist `courseQuery` and `courseTab` in URL query state. IME composition does not commit partial queries. Clearing returns focus to the course input. Current-week disclosure starts open; full article titles may wrap.
 - Review cards and queued knowledge points link back to actual courses. Repository progress is identified as a baseline, not an assessment. Removing a review item means removing it from the list, not claiming mastery.
-- Lab instructions and checklists live in a native disclosure; the workbench remains reachable without expanding them. The top run action delegates to the same compiler/session handler as the workbench. Merely opening the RTOS page or generating an approximate memory trace does not complete the lab stage.
+- Lab instructions and checklists live in a native disclosure; the workbench remains reachable without expanding them. The shared workbench toolbar owns the sole compile action and remains visible in source and output modes. Merely opening the RTOS page or generating an approximate memory trace does not complete the lab stage.
 - Shell owns the mobile drawer focus loop, Escape dismissal, focus restoration, and removing background inertness after switching to desktop width. Header search uses the same route/shortcut owner as sidebar search.
 - CodeBlock reports clipboard success only after the write resolves. Failure leaves manual copy and retry available.
 - RTOS detail tabs support Left/Right, Home/End and tabpanel associations. Its configuration is a native non-modal disclosure with Escape/outside dismissal. Mobile retains playback speed, granularity, configuration and export.
 - Regression owners: `tests/ui-polish.spec.ts`, existing topics/search/docs/visualizer/browser-compiler/RTOS browser suites. Touch target, keyboard and viewport checks supplement static design checks; they are not a full accessibility certification.
+
+## 15. Task-first navigation and workspaces
+
+- `VisualizerWorkbench.tsx` owns one compile/playback toolbar outside pane visibility; phone output mode supports play/pause, back, step and reset without changing panes. Existing event evidence labels remain authoritative.
+- Lab task instructions, hints and reset use the same native disclosure. External-source status remains visible outside it. The compiler action is named “运行代码” everywhere in the Lab workspace.
+- Course week themes derive from lesson chapter metadata; current-week anchors preserve real URL navigation.
+- Topic Markdown may supply `summary` metadata. Without it, a complete introductory sentence is used instead of cutting a word at an arbitrary character limit.
+- Search entries retain source paths and line numbers while displaying content titles. One authored clear action cancels pending query commits and restores input focus.
+- `App.tsx` stores only a valid last-visited lesson ID under `professional-cpp:last-lesson`. Reading does not mark completion. Missing/unavailable storage falls back to the published learning plan/latest course.
+- Review tasks come before baseline summaries in DOM order. The guidelines chapter index reads the shared renderer's actual heading IDs.

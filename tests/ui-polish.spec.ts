@@ -104,16 +104,18 @@ test("mobile lab reaches its workspace without expanding instructions", async ({
   await page.goto("/?view=lab&day=54");
   await expect(page.locator(".lab-instructions")).not.toHaveAttribute("open");
   await expect(
-    page.getByRole("button", { name: "运行当前课例" }),
+    page.getByRole("button", { name: "运行代码", exact: true }),
   ).toBeVisible();
   const bounds = await page
-    .getByRole("button", { name: "运行当前课例" })
+    .getByRole("button", { name: "运行代码", exact: true })
     .boundingBox();
   expect(bounds!.y).toBeLessThan(844);
   await page.locator(".lab-instructions summary").click();
   await expect(page.locator(".lab-instructions .checklist")).toBeVisible();
   await page.locator(".lab-instructions summary").click();
-  await page.getByRole("link", { name: "前往代码工作区 ↓" }).click();
+  expect((await page.locator(".cm-content").boundingBox())!.y).toBeLessThan(
+    420,
+  );
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
@@ -227,4 +229,61 @@ test("memory workbench exposes keyboard output tabs and selected layout", async 
   await expect(page.locator(".memory-canvas-root")).toHaveClass(
     /layout-vertical/,
   );
+});
+
+test("mobile output keeps playback controls through repeated steps and pane switches", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/?view=visualizer");
+  const play = page.getByRole("button", { name: "自动连续播放", exact: true });
+  await expect(play).toBeVisible();
+  const step = page.locator(".vscode-step-button");
+  await step.click();
+  await expect(step).toContainText("2/");
+  await step.click();
+  await expect(step).toContainText("3/");
+  await expect(
+    page.locator(".mobile-show-output .output-split-pane"),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "源码", exact: true }).click();
+  await expect(play).toBeVisible();
+  await page.getByRole("button", { name: "输出", exact: true }).click();
+  await expect(play).toBeVisible();
+  await play.click();
+  await expect(
+    page.getByRole("button", { name: "暂停自动播放" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "暂停自动播放" }).click();
+  await page.getByRole("button", { name: "重置到第一步", exact: true }).click();
+  await expect(step).toContainText("1/");
+});
+
+test("home resumes a real local visit without claiming completion", async ({
+  page,
+}) => {
+  await page.goto("/?view=lesson&day=7");
+  await expect(page.locator(".lesson-document h1")).toBeVisible();
+  await page.goto("/");
+  await expect(page.locator(".guide-hero-cta .primary-button")).toContainText(
+    "继续阅读 · Day 7",
+  );
+  await expect(page.locator(".guide-current-lesson")).toContainText(
+    "不代表完成",
+  );
+  await page.locator(".guide-hero-cta .primary-button").click();
+  await expect(page).toHaveURL(/day=7/);
+});
+
+test("clearing code search cancels pending input and restores focus", async ({
+  page,
+}) => {
+  await page.goto("/?view=search");
+  const input = page.getByRole("searchbox", { name: "搜索代码" });
+  await input.fill("unique_ptr");
+  await page.getByRole("button", { name: "清除搜索", exact: true }).click();
+  await expect(input).toBeFocused();
+  await page.waitForTimeout(400);
+  await expect(input).toHaveValue("");
+  expect(new URL(page.url()).searchParams.get("q")).toBeNull();
 });

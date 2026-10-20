@@ -34,26 +34,6 @@ export function ReviewView({
         title="复盘"
         description="从待复习的知识点开始，回到对应课程和实验，再检查是否能独立解释与实现。"
       />
-      <section className="review-overview" aria-label="学习记录概览">
-        <div>
-          <span>课程记录</span>
-          <strong>Day {completedDay}</strong>
-          <small>已发布 {lessons.length} 节</small>
-        </div>
-        <div>
-          <span>当前主线</span>
-          <strong>第 {currentChapter || 1} 章</strong>
-          <small>{latestNextSummary() ?? `待学习 Day ${nextPlannedDay}`}</small>
-        </div>
-        <div>
-          <span>待复习</span>
-          <strong>{weakPoints.length} 个知识点</strong>
-          <small>从课程中标记，按需回顾</small>
-        </div>
-      </section>
-      <p className="record-note">
-        记录包含仓库已有的学习基线与本浏览器的操作，不代表测评结果或掌握程度。
-      </p>
       <section className="review-points" aria-labelledby="review-points-title">
         <div className="section-title-row">
           <h2 id="review-points-title">待复习知识点</h2>
@@ -93,6 +73,26 @@ export function ReviewView({
           </div>
         )}
       </section>
+      <section className="review-overview" aria-label="学习记录概览">
+        <div>
+          <span>仓库学习基线与记录</span>
+          <strong>Day {completedDay}</strong>
+          <small>已发布 {lessons.length} 节</small>
+        </div>
+        <div>
+          <span>当前主线</span>
+          <strong>第 {currentChapter || 1} 章</strong>
+          <small>{latestNextSummary() ?? `待学习 Day ${nextPlannedDay}`}</small>
+        </div>
+        <div>
+          <span>待复习</span>
+          <strong>{weakPoints.length} 个知识点</strong>
+          <small>从课程中标记，按需回顾</small>
+        </div>
+      </section>
+      <p className="record-note">
+        记录包含仓库已有的学习基线与本浏览器的操作，不代表测评结果或掌握程度。
+      </p>
       <section
         className="review-checkpoints"
         aria-labelledby="review-checkpoints-title"

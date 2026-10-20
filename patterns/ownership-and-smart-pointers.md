@@ -1,3 +1,6 @@
+---
+summary: 通过值、借用、独占拥有与共享生命周期，判断对象的存放方式及异步任务的存活边界。
+---
 # Design Patterns 下的 Ownership 与 Smart Pointers
 
 > 设计模式解决“对象如何协作”，智能指针解决“对象由谁负责活着”。

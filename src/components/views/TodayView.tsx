@@ -8,16 +8,19 @@ import { CompileRail } from "../common/CompileRail";
 
 export function TodayView({
   currentDay,
+  lastLessonDay,
   openLesson,
   isStepComplete,
 }: {
   currentDay: number;
+  lastLessonDay?: number;
   openLesson: (day: number) => void;
   isStepComplete: (day: number, step: StepKey) => boolean;
 }) {
   const latest = latestLesson();
   const planned = lessonByDay(currentDay);
-  const target = planned ?? latest;
+  const recent = lastLessonDay ? lessonByDay(lastLessonDay) : undefined;
+  const target = recent ?? planned ?? latest;
 
   return (
     <div className="docs-layout today-layout">
@@ -33,13 +36,13 @@ export function TodayView({
             <button
               type="button"
               className="primary-button hero-cta-btn"
-              onClick={() =>
-                openLesson(currentDay > 1 ? (target?.day ?? 1) : 1)
-              }
+              onClick={() => openLesson(target?.day ?? 1)}
             >
-              {currentDay > 1
-                ? `继续学习 · Day ${target?.day ?? 1} →`
-                : "开始 Day 1 →"}
+              {recent
+                ? `继续阅读 · Day ${recent.day} →`
+                : planned
+                  ? `打开计划课程 · Day ${planned.day} →`
+                  : `打开最新课程 · Day ${latest?.day ?? 1} →`}
             </button>
             <a href="?view=lessons" className="ghost-button">
               浏览全部课程 ({lessons.length} 节)
@@ -51,7 +54,11 @@ export function TodayView({
           <section className="guide-current-lesson" aria-label="当前课程">
             <div>
               <span className="page-eyebrow">
-                {planned ? "下一次学习" : "最新课程 · 可以开始复习"}
+                {recent
+                  ? "本浏览器上次阅读 · 不代表完成"
+                  : planned
+                    ? "仓库学习计划"
+                    : "最新发布 · 可开始复习"}
               </span>
               <h2>
                 Day {target.day} · {target.title}
@@ -62,13 +69,6 @@ export function TodayView({
                 {target.duration} 分钟学习计划
               </p>
             </div>
-            <button
-              className="ghost-button"
-              onClick={() => openLesson(target.day)}
-              type="button"
-            >
-              打开课程 →
-            </button>
           </section>
         )}
         <nav className="guide-pathways" aria-label="学习入口">

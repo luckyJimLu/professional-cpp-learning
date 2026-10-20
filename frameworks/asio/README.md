@@ -1,3 +1,6 @@
+---
+summary: 理解事件循环、异步回调与协程，通过 TCP Echo 示例掌握 Asio 的生命周期与执行模型。
+---
 # 经典工业级框架源码解构 · Asio
 
 > 本专题为 **Professional C++ Learning** 的工业级框架进阶拓展模块。

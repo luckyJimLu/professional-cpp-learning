@@ -1,3 +1,4 @@
+import { lessonByDay } from "./course";
 const sourceFiles = import.meta.glob(
   [
     "../../examples/**/*.{cpp,h,hpp,cc,cxx,ipp}",
@@ -14,16 +15,12 @@ const sourceFiles = import.meta.glob(
   { query: "?raw", import: "default", eager: true },
 ) as Record<string, string>;
 
-export type CodeCategory =
-  | "all"
-  | "daily"
-  | "topics"
-  | "examples"
-  | "patterns";
+export type CodeCategory = "all" | "daily" | "topics" | "examples" | "patterns";
 
 export interface CodeEntry {
   id: string;
   path: string;
+  title: string;
   code: string;
   line: number;
   kind: "file" | "snippet";
@@ -48,12 +45,19 @@ export const codeEntries: CodeEntry[] = Object.entries(
 ).flatMap<CodeEntry>(([sourcePath, raw]) => {
   const path = sourcePath.slice(6);
   const category = resolveCategory(path);
+  const day = /day-(\d+)/.exec(path)?.[1];
+  const heading = raw.match(/^#\s+(.+)$/m)?.[1];
+  const lesson = day ? lessonByDay(Number(day)) : undefined;
+  const title = lesson
+    ? `Day ${lesson.day} · ${lesson.title}`
+    : (heading ?? path.split("/").at(-1) ?? path);
 
   if (!path.endsWith(".md")) {
     return [
       {
         id: path,
         path,
+        title,
         code: raw,
         line: 1,
         kind: "file",
@@ -74,6 +78,7 @@ export const codeEntries: CodeEntry[] = Object.entries(
     return {
       id: `${path}:${line}`,
       path,
+      title,
       code: match[2],
       line,
       kind: "snippet" as const,
@@ -171,8 +176,12 @@ function getDefaultCounts(kind: string): Record<string, number> {
   return counts;
 }
 
-export const totalFileCount = codeEntries.filter((entry) => entry.kind === "file").length;
-export const totalSnippetCount = codeEntries.filter((entry) => entry.kind === "snippet").length;
+export const totalFileCount = codeEntries.filter(
+  (entry) => entry.kind === "file",
+).length;
+export const totalSnippetCount = codeEntries.filter(
+  (entry) => entry.kind === "snippet",
+).length;
 
 export function getCategoryCounts(
   query: string,

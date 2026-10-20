@@ -136,7 +136,7 @@ export function LabView({
       />
       <div className="lab-shell lab-shell-runtime">
         <section className="lab-task">
-          <div style={{ marginBottom: "14px" }}>
+          <div>
             <span
               className="eyebrow"
               style={{ display: "block", marginBottom: "4px" }}
@@ -146,7 +146,6 @@ export function LabView({
             <h2
               style={{
                 margin: "0 0 12px 0",
-                fontSize: "22px",
                 lineHeight: "1.3",
               }}
             >
@@ -175,10 +174,45 @@ export function LabView({
                 </div>
               )}
             </div>
+
+            <div className="lab-actions">
+              <button
+                className="ghost-button"
+                onClick={() => setHint((value) => !value)}
+                type="button"
+              >
+                {hint ? "隐藏提示" : "显示提示"}
+              </button>
+              {!customOrigin && (
+                <button
+                  className="ghost-button"
+                  onClick={resetToLessonSource}
+                  disabled={
+                    compilerBusy || traceSession.state.code === sourceCode
+                  }
+                  type="button"
+                >
+                  重置代码
+                </button>
+              )}
+            </div>
+
+            {hint && (
+              <div className="hint">
+                {lesson.sections.find((section) => section.step === "rules") ? (
+                  <Markdown>
+                    {
+                      lesson.sections.find(
+                        (section) => section.step === "rules",
+                      )!.body
+                    }
+                  </Markdown>
+                ) : (
+                  "复习本课的规范要点，以此作为实验自测清单。"
+                )}
+              </div>
+            )}
           </details>
-          <a className="lab-jump-link" href="#lab-workbench-title">
-            前往代码工作区 ↓
-          </a>
           {customOrigin && (
             <div className="custom-code-banner">
               <span>
@@ -193,50 +227,15 @@ export function LabView({
               </button>
             </div>
           )}
-
-          <div className="lab-actions">
-            <button
-              className="ghost-button"
-              onClick={() => setHint((value) => !value)}
-              type="button"
-            >
-              {hint ? "隐藏提示" : "显示提示"}
-            </button>
-            {!customOrigin && (
-              <button
-                className="ghost-button"
-                onClick={resetToLessonSource}
-                disabled={
-                  compilerBusy || traceSession.state.code === sourceCode
-                }
-                type="button"
-              >
-                重置代码
-              </button>
-            )}
-          </div>
-
-          {hint && (
-            <div className="hint">
-              {lesson.sections.find((section) => section.step === "rules") ? (
-                <Markdown>
-                  {
-                    lesson.sections.find((section) => section.step === "rules")!
-                      .body
-                  }
-                </Markdown>
-              ) : (
-                "复习本课的规范要点，以此作为实验自测清单。"
-              )}
-            </div>
-          )}
         </section>
 
         <section
           className="code-workbench"
           aria-labelledby="lab-workbench-title"
         >
-          <header className="lab-workbench-header">
+          <header
+            className={`lab-workbench-header ${lesson.labMode !== "rtos-sim" ? "is-compiler" : ""}`}
+          >
             <div>
               <span className="eyebrow">工作区</span>
               <h2 id="lab-workbench-title">
@@ -245,17 +244,6 @@ export function LabView({
                   : "代码、运行与内存分析"}
               </h2>
             </div>
-            {lesson.labMode !== "rtos-sim" && (
-              <button
-                type="button"
-                className="primary-button"
-                onClick={runCompiler}
-                disabled={compilerBusy}
-                aria-busy={compilerBusy}
-              >
-                {compilerBusy ? "运行中…" : "运行当前课例"}
-              </button>
-            )}
             {lesson.labMode === "rtos-sim" && (
               <a
                 className="primary-button"

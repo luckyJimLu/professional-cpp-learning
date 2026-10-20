@@ -181,15 +181,35 @@ export function LessonsView({
         <div className="course-list">{lessons.map(row)}</div>
       ) : (
         <div className="course-weeks">
+          {target && (
+            <a className="course-locate" href={`#course-week-${target.week}`}>
+              定位当前周 · 第 {target.week} 周 ↓
+            </a>
+          )}
           {weeks.map((week) => (
             <details
               className="course-week"
               key={week.week}
+              id={`course-week-${week.week}`}
               open={week.week === target?.week}
             >
               <summary>
                 <span>
-                  <strong>第 {week.week} 周</strong>
+                  <strong>
+                    第 {week.week} 周
+                    {week.week === target?.week ? " · 当前周" : ""}
+                  </strong>
+                  <span className="course-week-theme">
+                    {Array.from(
+                      new Set(
+                        week.lessons.map(
+                          (lesson) => lesson.chapterTitle || lesson.title,
+                        ),
+                      ),
+                    )
+                      .slice(0, 2)
+                      .join(" / ")}
+                  </span>
                   <small>
                     Day {week.lessons[0]?.day}–{week.lessons.at(-1)?.day} ·{" "}
                     {week.lessons.length} 节课程

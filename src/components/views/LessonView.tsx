@@ -39,28 +39,45 @@ export function LessonView({
       document.getElementById(hash)?.scrollIntoView();
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        if (visible.length > 0) {
-          const stepKey = visible[0].target.id.replace(
-            "section-",
-            "",
-          ) as StepKey;
-          setActive(stepKey);
-        }
-      },
-      { rootMargin: "-120px 0px -50% 0px", threshold: 0.1 },
-    );
-
-    STEP_DEFS.forEach((step) => {
-      const el = document.getElementById(`section-${step.key}`);
-      if (el) observer.observe(el);
+    const sections = STEP_DEFS.flatMap((step) => {
+      const element = document.getElementById(`section-${step.key}`);
+      return element ? [{ key: step.key, element }] : [];
     });
-
-    return () => observer.disconnect();
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      // Section height must not decide whether a long chapter is current.
+      const passed = sections.filter(
+        ({ element }) =>
+          element.getBoundingClientRect().top <=
+          (Number.parseFloat(getComputedStyle(element).scrollMarginTop) ||
+            100) +
+            2,
+      );
+      const atBottom =
+        window.scrollY > 0 &&
+        window.scrollY + window.innerHeight >=
+          document.documentElement.scrollHeight - 2;
+      const current = atBottom
+        ? sections.at(-1)
+        : (passed.at(-1) ?? sections[0]);
+      if (current) setActive(current.key);
+    };
+    const schedule = () => {
+      if (!frame) frame = window.requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    const observer = new ResizeObserver(schedule);
+    const article = document.querySelector(".lesson-document");
+    if (article) observer.observe(article);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      observer.disconnect();
+    };
   }, [lesson.day]);
 
   const navigate = (step: StepKey) => {
