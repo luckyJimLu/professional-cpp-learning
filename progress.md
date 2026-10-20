@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 54**。下一课从 **Day 55** 继续。
+当前仓库课程已发布到 **Day 55**。下一课从 **Day 56** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -58,18 +58,19 @@
 | 52 | Reconciling Generality and Ease of Use | 已发布 | [day-052](daily/day-052-reconciling-generality-ease-of-use.md) |
 | 53 | Designing a Successful Abstraction | 已发布 | [day-053](daily/day-053-designing-successful-abstraction.md) |
 | 54 | The SOLID Principles | 已发布 | [day-054](daily/day-054-solid-principles.md) |
+| 55 | Chapter 6 Summary and Engineering Exercises | 已发布 | [day-055](daily/day-055-chapter6-review-exercises.md) |
 
 ## 最新发布详情
 
-- **日期**：2026-10-19
-- **章节**：Chapter 6 · Designing for Reuse
-- **主题**：The SOLID Principles
-- **关键知识点**：SRP、OCP、LSP、ISP、DIP；稳定边界；runtime vs compile-time polymorphism；显式依赖
-- **设计模式 / 稳定边界**：Adapter 隔离 transport；Dependency Injection 支撑 DIP；小接口支撑 ISP；不为 SOLID 强行增加 Factory/Strategy
-- **Lab**：[examples/day-054/main.cpp](examples/day-054/main.cpp)
-- **Runnable Exercise**：[examples/day-054/exercise-01.cpp](examples/day-054/exercise-01.cpp)
-- **上一课**：[Day 53 · Designing a Successful Abstraction](daily/day-053-designing-successful-abstraction.md)
-- **下一课**：Chapter 6 · Summary / Exercises，完成本章收束后再进入 Chapter 7 · Memory Management
+- **日期**：2026-10-20
+- **章节**：Chapter 6 · Designing for Reuse · Summary / Exercises
+- **主题**：Chapter 6 Summary and Engineering Exercises
+- **关键知识点**：reuse、abstraction、extensibility、usable interface、SOLID、compile-time vs runtime extensibility、有界资源与显式 timeout
+- **设计模式 / 稳定边界**：Adapter 隔离 transport；Dependency Injection 显式 required dependency；composition 优先；没有真实变化轴时拒绝 Factory/Strategy
+- **Lab**：[examples/day-055/main.cpp](examples/day-055/main.cpp)
+- **Runnable Exercise**：[examples/day-055/exercise-01.cpp](examples/day-055/exercise-01.cpp)
+- **上一课**：[Day 54 · The SOLID Principles](daily/day-054-solid-principles.md)
+- **下一课**：Chapter 7 · Memory Management，严格按教材顺序进入资源与内存管理主线
 
 ## 规则
 
