@@ -1,10 +1,10 @@
-# 结构型设计模式：书籍案例与 C++17 示例
+# 结构型模式（Structural Patterns）
 
 [返回分类索引](book-examples.md) · [工程化学习指南](README.md)
 
 本页来源缩写和改写规则见[书籍来源](book-examples.md#书籍来源)。完整 `.cpp` 可单独编译；每项分别说明使用场景、使用原因、好处和边界。
 
-## 适配器
+## 适配器（Adapter）
 
 **来源：** M 第6章 LineToPointAdapter，pp.89–97；H 第16章 The Adapter Pattern
 
@@ -60,7 +60,7 @@ int main() {
 }
 ```
 
-## 桥接
+## 桥接（Bridge）
 
 **来源：** M 第7章 Bridge，pp.102–105；S Guideline 28: Build Bridges to Remove Physical Dependencies
 
@@ -114,7 +114,7 @@ int main() {
 }
 ```
 
-## 组合
+## 组合（Composite）
 
 **来源：** M 第8章 Grouping Graphic Objects，pp.111–114
 
@@ -172,7 +172,7 @@ int main() {
 }
 ```
 
-## 装饰器
+## 装饰器（Decorator）
 
 **来源：** M 第9章 Dynamic Decorator，pp.119–124；S Guideline 35: Use Decorators to Add Customization Hierarchically；H 第16章
 
@@ -222,7 +222,7 @@ int main() {
 }
 ```
 
-## 外观
+## 外观（Facade）
 
 **来源：** M 第10章 How the Terminal Works / An Advanced Terminal，pp.133–138
 
@@ -274,7 +274,7 @@ int main() {
 }
 ```
 
-## 享元
+## 享元（Flyweight）
 
 **来源：** M 第11章 User Names，pp.139–143
 
@@ -322,7 +322,7 @@ int main() {
 }
 ```
 
-## 代理
+## 代理（Proxy）
 
 **来源：** M 第12章 Virtual Proxy，pp.152–154
 

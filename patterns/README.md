@@ -8,7 +8,7 @@
 
 ## 书籍案例与可运行示例
 
-- [分类索引、来源与运行方法](book-examples.md)：依据三本 C++ 书籍整理，覆盖 GoF 23 种模式、9项补充与1个定价变体，共33个独立 C++17 程序。
+- [设计模式分类（Design Pattern Catalog）](book-examples.md)：依据三本 C++ 书籍整理，覆盖 GoF 23 种模式、9项补充与1个定价变体，共33个独立 C++17 程序。
 - [创建型](01-creational-patterns.md) · [结构型](02-structural-patterns.md) · [行为型](03-behavioral-patterns.md) · [C++ 补充惯用法](04-cpp-techniques.md) · [装饰器定价案例](05-decorator-pricing.md)。
 
 每项包含书中案例及改写说明、使用场景、使用原因、好处、取舍与完整源码。运行 `python3 tools/check-examples.py --patterns-only` 验证本专题；默认的全仓库示例检查也会包含这些源码。

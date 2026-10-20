@@ -1,10 +1,10 @@
-# 创建型设计模式：书籍案例与 C++17 示例
+# 创建型模式（Creational Patterns）
 
 [返回分类索引](book-examples.md) · [工程化学习指南](README.md)
 
 本页来源缩写和改写规则见[书籍来源](book-examples.md#书籍来源)。完整 `.cpp` 可单独编译；每项分别说明使用场景、使用原因、好处和边界。
 
-## 工厂方法
+## 工厂方法（Factory Method）
 
 **来源：** M 第3章 Factories，pp.49–60；H 第13章 Virtual Constructors and Factories
 
@@ -57,7 +57,7 @@ int main() {
 }
 ```
 
-## 抽象工厂
+## 抽象工厂（Abstract Factory）
 
 **来源：** M 第3章 Abstract Factory，pp.56–59
 
@@ -122,7 +122,7 @@ int main() {
 }
 ```
 
-## 建造者
+## 建造者（Builder）
 
 **来源：** M 第2章 Simple Builder / Fluent Builder，pp.33–47；H 第9章 Builder
 
@@ -168,7 +168,7 @@ int main() {
 }
 ```
 
-## 原型
+## 原型（Prototype）
 
 **来源：** M 第4章 Duplication via Copy Construction，pp.63–74；S Guideline 30: Apply Prototype for Abstract Copy Operations
 
@@ -222,7 +222,7 @@ int main() {
 }
 ```
 
-## 单例
+## 单例（Singleton）
 
 **来源：** M 第5章 Classic Implementation / Thread Safety / The Trouble with Singleton，pp.75–86；S Guideline 38: Design Singletons for Change
 

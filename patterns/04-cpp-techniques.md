@@ -1,10 +1,10 @@
-# C++ 补充模式与惯用法：书籍案例
+# 补充模式与惯用法（Additional Patterns and Idioms）
 
 [返回分类索引](book-examples.md) · [工程化学习指南](README.md)
 
 本页来源缩写和改写规则见[书籍来源](book-examples.md#书籍来源)。完整 `.cpp` 可单独编译；每项分别说明使用场景、使用原因、好处和边界。
 
-## 静态工厂
+## 静态工厂（Static Factory）
 
 **来源：** M 第3章 Factory Method / Factory，pp.49–56
 
@@ -51,7 +51,7 @@ int main() {
 }
 ```
 
-## 空对象
+## 空对象（Null Object）
 
 **来源：** M 第19章 Null Object，pp.237–242
 
@@ -110,7 +110,7 @@ int main() {
 }
 ```
 
-## RAII
+## 资源获取即初始化（Resource Acquisition Is Initialization）
 
 **来源：** H 第5章 A Comprehensive Look at RAII，RAII for other resources；S 第1章 RAII 讨论
 
@@ -160,7 +160,7 @@ int main() {
 }
 ```
 
-## ScopeGuard
+## 作用域守卫（Scope Guard）
 
 **来源：** H 第11章 ScopeGuard basics / Generic ScopeGuard，约 pp.295–305
 
@@ -221,7 +221,7 @@ int main() {
 }
 ```
 
-## CRTP
+## 奇异递归模板模式（Curiously Recurring Template Pattern）
 
 **来源：** H 第8章 The Curiously Recurring Template Pattern；M 第1章 Important Concepts，pp.5–6
 
@@ -270,7 +270,7 @@ int main() {
 }
 ```
 
-## 策略类设计
+## 策略类设计（Policy-Based Design）
 
 **来源：** H 第15章 Strategy pattern and policy-based design / Foundations；M 第22章 Static Strategy，pp.278–279
 
@@ -320,7 +320,7 @@ int main() {
 }
 ```
 
-## 类型擦除
+## 类型擦除（Type Erasure）
 
 **来源：** H 第6章 Understanding Type Erasure；S Guidelines 31–34（External Polymorphism / Type Erasure）
 
@@ -389,7 +389,7 @@ int main() {
 }
 ```
 
-## Pimpl
+## 实现隐藏（Pointer to Implementation）
 
 **来源：** M 第7章 The Pimpl Idiom，pp.99–102；S Guideline 28（Bridge / Pimpl）
 
@@ -443,7 +443,7 @@ int main() {
 }
 ```
 
-## Monitor
+## 后台进度监控（Monitor）
 
 **来源：** H 第18章 Patterns for Concurrency / Monitor pattern，约 pp.571–573
 

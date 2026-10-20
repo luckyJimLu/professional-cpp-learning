@@ -1,10 +1,10 @@
-# 行为型设计模式：书籍案例与 C++17 示例
+# 行为型模式（Behavioral Patterns）
 
 [返回分类索引](book-examples.md) · [工程化学习指南](README.md)
 
 本页来源缩写和改写规则见[书籍来源](book-examples.md#书籍来源)。完整 `.cpp` 可单独编译；每项分别说明使用场景、使用原因、好处和边界。
 
-## 责任链
+## 责任链（Chain of Responsibility）
 
 **来源：** M 第13章 Pointer Chain，pp.161–166
 
@@ -59,7 +59,7 @@ int main() {
 }
 ```
 
-## 命令
+## 命令（Command）
 
 **来源：** M 第14章 BankAccountCommand / Undo Operations，pp.173–183
 
@@ -124,7 +124,7 @@ int main() {
 }
 ```
 
-## 解释器
+## 解释器（Interpreter）
 
 **来源：** M 第15章 Numeric Expression Evaluator / Abstract Syntax Tree，pp.189–202
 
@@ -179,7 +179,7 @@ int main() {
 }
 ```
 
-## 迭代器
+## 迭代器（Iterator）
 
 **来源：** M 第16章 Traversing a Binary Tree，pp.208–215
 
@@ -253,7 +253,7 @@ int main() {
 }
 ```
 
-## 中介者
+## 中介者（Mediator）
 
 **来源：** M 第17章 Chat Room，pp.217–223
 
@@ -305,7 +305,7 @@ int main() {
 }
 ```
 
-## 备忘录
+## 备忘录（Memento）
 
 **来源：** M 第18章 Bank Account / Undo and Redo，pp.229–235
 
@@ -369,7 +369,7 @@ int main() {
 }
 ```
 
-## 观察者
+## 观察者（Observer）
 
 **来源：** M 第20章 Observable / Unsubscription and Thread Safety / Reentrancy，pp.243–256
 
@@ -441,7 +441,7 @@ int main() {
 }
 ```
 
-## 状态
+## 状态（State）
 
 **来源：** M 第21章 Handmade State Machine，pp.263–267
 
@@ -500,7 +500,7 @@ int main() {
 }
 ```
 
-## 策略
+## 策略（Strategy）
 
 **来源：** M 第22章 Dynamic Strategy，pp.273–278；S Guideline 19: Use Strategy to Isolate How Things Are Done
 
@@ -559,7 +559,7 @@ int main() {
 }
 ```
 
-## 模板方法
+## 模板方法（Template Method）
 
 **来源：** M 第23章 Game Simulation，pp.281–284；H 第14章 Template Method / Non-Virtual Interface
 
@@ -621,7 +621,7 @@ int main() {
 }
 ```
 
-## 访问者
+## 访问者（Visitor）
 
 **来源：** M 第24章 Classic Visitor，pp.293–297；S Guideline 16: Use Visitor to Extend Operations；H 第17章
 

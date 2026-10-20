@@ -37,7 +37,7 @@
 - [Runnable Exercise Audit & Contract](docs/runnable-exercise-audit.md)
 - [完整学习进度](progress.md)
 - [C++ Design Patterns · 工程化专题](patterns/)
-- [设计模式书籍案例 · 23 种经典模式与 C++17 可运行代码](patterns/book-examples.md)
+- [设计模式分类（Design Pattern Catalog）](patterns/book-examples.md)
 - [Ownership & Smart Pointers](patterns/ownership-and-smart-pointers.md)
 - [Asio 框架解构](frameworks/asio/)
 - [OpenHarmony · Mini／轻量系统](frameworks/openharmony/README.md)

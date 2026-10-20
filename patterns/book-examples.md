@@ -1,4 +1,4 @@
-# 设计模式书籍案例：分类索引与可运行 C++17 代码
+# 设计模式分类（Design Pattern Catalog）
 
 从对象创建、对象组合与行为协作三个角度，阅读书中案例，定位变化轴、稳定边界与 ownership，再运行独立示例验证行为。
 
@@ -61,60 +61,60 @@ g++ -std=c++17 -Wall -Wextra -Wconversion -Wpedantic -Werror -pthread \
 
 ## 分类目录
 
-### [创建型设计模式：书籍案例与 C++17 示例](01-creational-patterns.md)
+### [创建型模式（Creational Patterns）](01-creational-patterns.md)
 
 | 模式 | 书中案例 / 改写要点 | 独立源码 |
 | --- | --- | --- |
-| [工厂方法](01-creational-patterns.md#工厂方法) | 工厂接口创建饮品；这里改写为 Creator 的虚工厂方法，避免把静态工厂误称为 GoF 工厂方法。 | [factory_method.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/creational/factory_method.cpp) |
-| [抽象工厂](01-creational-patterns.md#抽象工厂) | 书中的 CoffeeFactory/TeaFactory 创建热饮；本例扩展为饮品与杯具的配套产品族，以展示 GoF 产品族约束。 | [abstract_factory.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/creational/abstract_factory.cpp) |
-| [建造者](01-creational-patterns.md#建造者) | HtmlBuilder 逐步创建列表；改写保留链式添加和最终构建。 | [builder.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/creational/builder.cpp) |
-| [原型](01-creational-patterns.md#原型) | 联系人与地址的深拷贝；补充多态 clone 接口。 | [prototype.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/creational/prototype.cpp) |
-| [单例](01-creational-patterns.md#单例) | 函数内 static 数据库实例，禁用复制。 | [singleton.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/creational/singleton.cpp) |
+| [工厂方法（Factory Method）](01-creational-patterns.md#工厂方法factory-method) | 工厂接口创建饮品；这里改写为 Creator 的虚工厂方法，避免把静态工厂误称为 GoF 工厂方法。 | [factory_method.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/creational/factory_method.cpp) |
+| [抽象工厂（Abstract Factory）](01-creational-patterns.md#抽象工厂abstract-factory) | 书中的 CoffeeFactory/TeaFactory 创建热饮；本例扩展为饮品与杯具的配套产品族，以展示 GoF 产品族约束。 | [abstract_factory.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/creational/abstract_factory.cpp) |
+| [建造者（Builder）](01-creational-patterns.md#建造者builder) | HtmlBuilder 逐步创建列表；改写保留链式添加和最终构建。 | [builder.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/creational/builder.cpp) |
+| [原型（Prototype）](01-creational-patterns.md#原型prototype) | 联系人与地址的深拷贝；补充多态 clone 接口。 | [prototype.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/creational/prototype.cpp) |
+| [单例（Singleton）](01-creational-patterns.md#单例singleton) | 函数内 static 数据库实例，禁用复制。 | [singleton.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/creational/singleton.cpp) |
 
-### [结构型设计模式：书籍案例与 C++17 示例](02-structural-patterns.md)
-
-| 模式 | 书中案例 / 改写要点 | 独立源码 |
-| --- | --- | --- |
-| [适配器](02-structural-patterns.md#适配器) | 将直线转换为点序列，供只会处理点的旧接口使用。 | [adapter.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/structural/adapter.cpp) |
-| [桥接](02-structural-patterns.md#桥接) | Circle 通过 Renderer 调用矢量或栅格实现；不再为每种组合派生类。 | [bridge.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/structural/bridge.cpp) |
-| [组合](02-structural-patterns.md#组合) | GraphicObject 的叶节点和 Group 共享 draw 接口；组可递归包含组。 | [composite.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/structural/composite.cpp) |
-| [装饰器](02-structural-patterns.md#装饰器) | ColoredShape 包装 Shape 并增加颜色描述。 | [decorator.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/structural/decorator.cpp) |
-| [外观](02-structural-patterns.md#外观) | 终端的缓冲区和视口封装到一个便捷接口；以下是简化改写。 | [facade.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/structural/facade.cpp) |
-| [享元](02-structural-patterns.md#享元) | 将重复用户名字符串驻留；改写使用共享的不可变字符串。 | [flyweight.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/structural/flyweight.cpp) |
-| [代理](02-structural-patterns.md#代理) | LazyBitmap 在第一次 draw 时才构造真实 Bitmap。 | [proxy.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/structural/proxy.cpp) |
-
-### [行为型设计模式：书籍案例与 C++17 示例](03-behavioral-patterns.md)
+### [结构型模式（Structural Patterns）](02-structural-patterns.md)
 
 | 模式 | 书中案例 / 改写要点 | 独立源码 |
 | --- | --- | --- |
-| [责任链](03-behavioral-patterns.md#责任链) | CreatureModifier 链逐步修改角色属性，某个处理器可以停止转发。 | [chain_of_responsibility.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/chain_of_responsibility.cpp) |
-| [命令](03-behavioral-patterns.md#命令) | 将账户存取操作封装为对象，记录执行结果以决定是否撤销。 | [command.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/command.cpp) |
-| [解释器](03-behavioral-patterns.md#解释器) | 将整数与加减组合为表达式树并递归求值；本例只实现 AST 求值层。 | [interpreter.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/interpreter.cpp) |
-| [迭代器](03-behavioral-patterns.md#迭代器) | 二叉树中序遍历，迭代器隐藏栈和节点细节。 | [iterator.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/iterator.cpp) |
-| [中介者](03-behavioral-patterns.md#中介者) | 聊天室负责加入与广播，参与者不持有彼此的引用。 | [mediator.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/mediator.cpp) |
-| [备忘录](03-behavioral-patterns.md#备忘录) | 账户返回私有状态快照，再恢复到指定快照。 | [memento.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/memento.cpp) |
-| [观察者](03-behavioral-patterns.md#观察者) | 属性变化通知订阅者；改写增加订阅 ID 与回调期间退订处理。 | [observer.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/observer.cpp) |
-| [状态](03-behavioral-patterns.md#状态) | 电话状态和触发事件组成转移表；避免散落的条件判断。 | [state.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/state.cpp) |
-| [策略](03-behavioral-patterns.md#策略) | TextProcessor 将列表格式委派给 HTML 或 Markdown 策略。 | [strategy.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/strategy.cpp) |
-| [模板方法](03-behavioral-patterns.md#模板方法) | Game::run 固定游戏流程，子类实现开始、回合和结束条件。 | [template_method.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/template_method.cpp) |
-| [访问者](03-behavioral-patterns.md#访问者) | 数值与加法表达式通过 accept 分派给求值访问者。 | [visitor.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/visitor.cpp) |
+| [适配器（Adapter）](02-structural-patterns.md#适配器adapter) | 将直线转换为点序列，供只会处理点的旧接口使用。 | [adapter.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/structural/adapter.cpp) |
+| [桥接（Bridge）](02-structural-patterns.md#桥接bridge) | Circle 通过 Renderer 调用矢量或栅格实现；不再为每种组合派生类。 | [bridge.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/structural/bridge.cpp) |
+| [组合（Composite）](02-structural-patterns.md#组合composite) | GraphicObject 的叶节点和 Group 共享 draw 接口；组可递归包含组。 | [composite.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/structural/composite.cpp) |
+| [装饰器（Decorator）](02-structural-patterns.md#装饰器decorator) | ColoredShape 包装 Shape 并增加颜色描述。 | [decorator.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/structural/decorator.cpp) |
+| [外观（Facade）](02-structural-patterns.md#外观facade) | 终端的缓冲区和视口封装到一个便捷接口；以下是简化改写。 | [facade.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/structural/facade.cpp) |
+| [享元（Flyweight）](02-structural-patterns.md#享元flyweight) | 将重复用户名字符串驻留；改写使用共享的不可变字符串。 | [flyweight.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/structural/flyweight.cpp) |
+| [代理（Proxy）](02-structural-patterns.md#代理proxy) | LazyBitmap 在第一次 draw 时才构造真实 Bitmap。 | [proxy.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/structural/proxy.cpp) |
 
-### [C++ 补充模式与惯用法：书籍案例](04-cpp-techniques.md)
+### [行为型模式（Behavioral Patterns）](03-behavioral-patterns.md)
 
 | 模式 | 书中案例 / 改写要点 | 独立源码 |
 | --- | --- | --- |
-| [静态工厂](04-cpp-techniques.md#静态工厂) | Point::NewCartesian / NewPolar 用有意义的名称替代参数意义不同但签名相同的构造函数。 | [static_factory.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/cpp_extensions/static_factory.cpp) |
-| [空对象](04-cpp-techniques.md#空对象) | NullLogger 实现日志接口但不执行任何操作。 | [null_object.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/cpp_extensions/null_object.cpp) |
-| [RAII](04-cpp-techniques.md#raii) | 书中 mutex_guard 的锁资源绑定对象生命周期；本例用标准 lock_guard 表达同一规则。 | [raii.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/cpp_extensions/raii.cpp) |
-| [ScopeGuard](04-cpp-techniques.md#scopeguard) | 插入后注册 undo，成功后 commit 取消回滚；以下改写为无复制的 C++17 守卫。 | [scope_guard.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/cpp_extensions/scope_guard.cpp) |
-| [CRTP](04-cpp-techniques.md#crtp) | 基类以派生类为模板参数，把接口调用静态转发给派生实现；示例为教学改写。 | [crtp.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/cpp_extensions/crtp.cpp) |
-| [策略类设计](04-cpp-techniques.md#策略类设计) | 以模板参数选择格式策略，保留书中的编译期策略思想。 | [policy.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/cpp_extensions/policy.cpp) |
-| [类型擦除](04-cpp-techniques.md#类型擦除) | 通过 Concept/Model 封装不需要继承统一基类的具体对象；形状示例为教学改写。 | [type_erasure.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/cpp_extensions/type_erasure.cpp) |
-| [Pimpl](04-cpp-techniques.md#pimpl) | Person 的实现成员放入 Person::Impl；以下以 unique_ptr 管理生命周期。 | [pimpl.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/cpp_extensions/pimpl.cpp) |
-| [Monitor](04-cpp-techniques.md#monitor) | 书中后台线程定时读取原子进度并退出；本例缩短周期且不输出不确定时间序列。 | [monitor.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/cpp_extensions/monitor.cpp) |
+| [责任链（Chain of Responsibility）](03-behavioral-patterns.md#责任链chain-of-responsibility) | CreatureModifier 链逐步修改角色属性，某个处理器可以停止转发。 | [chain_of_responsibility.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/chain_of_responsibility.cpp) |
+| [命令（Command）](03-behavioral-patterns.md#命令command) | 将账户存取操作封装为对象，记录执行结果以决定是否撤销。 | [command.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/command.cpp) |
+| [解释器（Interpreter）](03-behavioral-patterns.md#解释器interpreter) | 将整数与加减组合为表达式树并递归求值；本例只实现 AST 求值层。 | [interpreter.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/interpreter.cpp) |
+| [迭代器（Iterator）](03-behavioral-patterns.md#迭代器iterator) | 二叉树中序遍历，迭代器隐藏栈和节点细节。 | [iterator.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/iterator.cpp) |
+| [中介者（Mediator）](03-behavioral-patterns.md#中介者mediator) | 聊天室负责加入与广播，参与者不持有彼此的引用。 | [mediator.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/mediator.cpp) |
+| [备忘录（Memento）](03-behavioral-patterns.md#备忘录memento) | 账户返回私有状态快照，再恢复到指定快照。 | [memento.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/memento.cpp) |
+| [观察者（Observer）](03-behavioral-patterns.md#观察者observer) | 属性变化通知订阅者；改写增加订阅 ID 与回调期间退订处理。 | [observer.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/observer.cpp) |
+| [状态（State）](03-behavioral-patterns.md#状态state) | 电话状态和触发事件组成转移表；避免散落的条件判断。 | [state.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/state.cpp) |
+| [策略（Strategy）](03-behavioral-patterns.md#策略strategy) | TextProcessor 将列表格式委派给 HTML 或 Markdown 策略。 | [strategy.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/strategy.cpp) |
+| [模板方法（Template Method）](03-behavioral-patterns.md#模板方法template-method) | Game::run 固定游戏流程，子类实现开始、回合和结束条件。 | [template_method.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/template_method.cpp) |
+| [访问者（Visitor）](03-behavioral-patterns.md#访问者visitor) | 数值与加法表达式通过 accept 分派给求值访问者。 | [visitor.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/behavioral/visitor.cpp) |
 
-### [装饰器工程案例：税费、折扣与组合顺序](05-decorator-pricing.md)
+### [补充模式与惯用法（Additional Patterns and Idioms）](04-cpp-techniques.md)
 
 | 模式 | 书中案例 / 改写要点 | 独立源码 |
 | --- | --- | --- |
-| [装饰器变体：税费与折扣](05-decorator-pricing.md#装饰器变体税费与折扣) | CppBook / ConferenceTicket 的价格修饰器；以下用整数分和固定折扣金额简化 Money，保留层层包装结构。 | [decorator_pricing.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/variants/decorator_pricing.cpp) |
+| [静态工厂（Static Factory）](04-cpp-techniques.md#静态工厂static-factory) | Point::NewCartesian / NewPolar 用有意义的名称替代参数意义不同但签名相同的构造函数。 | [static_factory.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/cpp_extensions/static_factory.cpp) |
+| [空对象（Null Object）](04-cpp-techniques.md#空对象null-object) | NullLogger 实现日志接口但不执行任何操作。 | [null_object.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/cpp_extensions/null_object.cpp) |
+| [资源获取即初始化（Resource Acquisition Is Initialization）](04-cpp-techniques.md#资源获取即初始化resource-acquisition-is-initialization) | 书中 mutex_guard 的锁资源绑定对象生命周期；本例用标准 lock_guard 表达同一规则。 | [raii.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/cpp_extensions/raii.cpp) |
+| [作用域守卫（Scope Guard）](04-cpp-techniques.md#作用域守卫scope-guard) | 插入后注册 undo，成功后 commit 取消回滚；以下改写为无复制的 C++17 守卫。 | [scope_guard.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/cpp_extensions/scope_guard.cpp) |
+| [奇异递归模板模式（Curiously Recurring Template Pattern）](04-cpp-techniques.md#奇异递归模板模式curiously-recurring-template-pattern) | 基类以派生类为模板参数，把接口调用静态转发给派生实现；示例为教学改写。 | [crtp.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/cpp_extensions/crtp.cpp) |
+| [策略类设计（Policy-Based Design）](04-cpp-techniques.md#策略类设计policy-based-design) | 以模板参数选择格式策略，保留书中的编译期策略思想。 | [policy.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/cpp_extensions/policy.cpp) |
+| [类型擦除（Type Erasure）](04-cpp-techniques.md#类型擦除type-erasure) | 通过 Concept/Model 封装不需要继承统一基类的具体对象；形状示例为教学改写。 | [type_erasure.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/cpp_extensions/type_erasure.cpp) |
+| [实现隐藏（Pointer to Implementation）](04-cpp-techniques.md#实现隐藏pointer-to-implementation) | Person 的实现成员放入 Person::Impl；以下以 unique_ptr 管理生命周期。 | [pimpl.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/cpp_extensions/pimpl.cpp) |
+| [后台进度监控（Monitor）](04-cpp-techniques.md#后台进度监控monitor) | 书中后台线程定时读取原子进度并退出；本例缩短周期且不输出不确定时间序列。 | [monitor.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/cpp_extensions/monitor.cpp) |
+
+### [装饰器模式：税费与折扣（Decorator Pattern: Tax and Discount）](05-decorator-pricing.md)
+
+| 模式 | 书中案例 / 改写要点 | 独立源码 |
+| --- | --- | --- |
+| [装饰器变体：税费与折扣（Decorator: Tax and Discount）](05-decorator-pricing.md#装饰器变体税费与折扣decorator-tax-and-discount) | CppBook / ConferenceTicket 的价格修饰器；以下用整数分和固定折扣金额简化 Money，保留层层包装结构。 | [decorator_pricing.cpp](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/patterns/examples/variants/decorator_pricing.cpp) |

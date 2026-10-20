@@ -1,10 +1,10 @@
-# 装饰器工程案例：税费、折扣与组合顺序
+# 装饰器模式：税费与折扣（Decorator Pattern: Tax and Discount）
 
 [返回分类索引](book-examples.md) · [工程化学习指南](README.md)
 
 本页来源缩写和改写规则见[书籍来源](book-examples.md#书籍来源)。完整 `.cpp` 可单独编译；每项分别说明使用场景、使用原因、好处和边界。
 
-## 装饰器变体：税费与折扣
+## 装饰器变体：税费与折扣（Decorator: Tax and Discount）
 
 **来源：** S Guideline 35: Use Decorators to Add Customization Hierarchically
 
