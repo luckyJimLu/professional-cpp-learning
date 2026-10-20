@@ -16,9 +16,14 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--sanitize', action='store_true',
                         help='enable AddressSanitizer and UndefinedBehaviorSanitizer')
+    parser.add_argument('--patterns-only', action='store_true',
+                        help='check only the book-based C++17 design pattern examples')
     args = parser.parse_args()
-    sources = sorted((ROOT / 'examples').glob('day-*/*.cpp'))
-    sources += sorted((ROOT / 'examples').glob('*.cpp'))
+    pattern_sources = sorted((ROOT / 'patterns' / 'examples').glob('*/*.cpp'))
+    sources = [] if args.patterns_only else sorted((ROOT / 'examples').glob('day-*/*.cpp'))
+    if not args.patterns_only:
+        sources += sorted((ROOT / 'examples').glob('*.cpp'))
+    sources += pattern_sources
     if not sources:
         print('No standalone C++ examples found.', file=sys.stderr)
         return 1
@@ -29,15 +34,20 @@ def main() -> int:
                   '-fno-sanitize-recover=all']
     # A main.cpp can accidentally mask missing header dependencies. Check each
     # course header in isolation and include it twice to exercise its guard.
-    headers = sorted((ROOT / 'examples').glob('day-*/*.hpp'))
-    headers += sorted((ROOT / 'examples').glob('day-*/*.h'))
+    headers = [] if args.patterns_only else sorted((ROOT / 'examples').glob('day-*/*.hpp'))
+    if not args.patterns_only:
+        headers += sorted((ROOT / 'examples').glob('day-*/*.h'))
     failures = 0
     with tempfile.TemporaryDirectory(prefix='cpp-examples-') as build_dir:
         for index, source in enumerate(sources):
             name = str(source.relative_to(ROOT))
             output = str(Path(build_dir) / str(index))
+            # Keep these book adaptations runnable with their documented C++17 baseline.
+            source_flags = flags
+            if source in pattern_sources:
+                source_flags = ['-std=c++17', *flags[1:], '-pthread']
             try:
-                subprocess.run(compiler + flags + [str(source), '-o', output],
+                subprocess.run(compiler + source_flags + [str(source), '-o', output],
                                cwd=ROOT, check=True, timeout=60)
                 subprocess.run([output], cwd=ROOT, check=True, timeout=10,
                                stdout=subprocess.DEVNULL)
