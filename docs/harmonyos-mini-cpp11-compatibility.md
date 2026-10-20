@@ -126,3 +126,7 @@ private:
 - [Google Drive 原始文档](https://docs.google.com/document/d/1qjkYzdBRwUWaIXXA4Mo5zRwbTGQn3y_ffu7B67NSgSY/edit)
 - [OpenHarmony kernel_liteos_m](https://github.com/openharmony/kernel_liteos_m)
 - [OpenHarmony LiteOS-M overview](https://gitee.com/openharmony/docs/blob/9c5954d6491ee755e5f2c5d4ffbc707056ef0141/en/device-dev/kernel/kernel-mini-overview.md)
+
+## 实验路径与证据
+
+版本与运行时边界统一见 [环境矩阵](lab-environments.md)。先用 [主机通道](engineering-learning-path.md) 验证所有权和取消契约，再按 [OpenHarmony 首次构建](../frameworks/openharmony/07-first-build-lab.md) 选择并验证目标。本文不声明已完成任何板卡验证。

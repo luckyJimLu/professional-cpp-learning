@@ -8,7 +8,7 @@
     {
       "stepIndex": 0,
       "line": 5,
-      "description": "进入 main()，在栈上分配 std::vector 结构体（内部包含 begin, end, end_of_storage 三个原生指针，初始均为 nullptr）",
+      "description": "教学示意：用三个管理指针表示 vector 状态；实际对象布局由标准库实现决定",
       "activeOp": "var_decl",
       "callStack": [
         {
@@ -93,7 +93,7 @@
     {
       "stepIndex": 2,
       "line": 10,
-      "description": "vec.push_back(20)：容量不足触发扩容！在堆上分配 2 倍新缓冲区 (0x4020, cap=2)，将 10 复制过去并写入 20，释放旧缓冲区 0x4010",
+      "description": "本预置示例将容量从 1 扩到 2 并搬迁元素、释放旧缓冲区；两倍增长不是标准保证",
       "activeOp": "heap_alloc",
       "callStack": [
         {
@@ -159,7 +159,7 @@
     {
       "stepIndex": 3,
       "line": 13,
-      "description": "vec.push_back(30)：再次触碰容量上限！扩容至 cap=4 (0x4040)，旧数据搬迁，写入 30，释放 0x4020",
+      "description": "本预置示例将容量从 2 扩到 4；重新分配后旧存储上的借用失效",
       "activeOp": "heap_alloc",
       "callStack": [
         {

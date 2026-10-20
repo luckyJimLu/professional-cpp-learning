@@ -63,3 +63,7 @@ OpenHarmony 项目及其轻量系统相关源码可从官方开源仓库获取�
    `examples/` 中，并标明目标环境，不能当作宿主机 standalone Lab 使用。
 
 本目录 Markdown 会被现有 Learning Console 的专题与搜索机制自动收录。
+
+## 首次构建与跨模块实验
+
+新增 [07 · 首次构建与启动实验手册](07-first-build-lab.md)，当前为待执行操作手册，不是板端成功记录。[启动调用链](06-mini-system-boot-flow.md) 与 [SAMGR 通信](06-samgr-lite-service-communication.md) 分别按职责阅读；两个历史 06 文件暂不重命名，以保留已有链接。总路线见 [内容覆盖矩阵](../../docs/content-map.md)。

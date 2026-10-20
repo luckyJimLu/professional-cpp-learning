@@ -2,6 +2,7 @@ const assets = import.meta.glob(
   [
     "../../references/**/*.{svg,png,jpg,jpeg,gif,webp,pdf,cpp,hpp,py,sh,puml}",
     "../../frameworks/trace32/**/*.{cmm,cpp}",
+    "../../examples/modem-channel-*.cpp",
   ],
   { query: "?url", import: "default", eager: true },
 ) as Record<string, string>;

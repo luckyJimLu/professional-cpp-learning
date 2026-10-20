@@ -108,3 +108,7 @@ classDiagram
 - [Zephyr 官方文档](https://docs.zephyrproject.org/)
 - [ZPP 源码](https://github.com/lowlander/zpp)
 - [鸿蒙 Mini 服务与通信机制（同一 Drive）](https://docs.google.com/document/d/1DBdnkJ_jHSz1ACFSMk9Ya9XHjTHeq9pk8bGYw31_3a0/edit)
+
+## 适配与验证记录
+
+选择 Zephyr、ZPP revision、板卡、工具链与 Kconfig 后，再按 [环境卡](lab-environments.md) 记录实际支持。可用 [主机通道](engineering-learning-path.md) 作为业务契约基线；目标线程、栈、时钟、取消与析构上下文须重新验证。本文仍为资料整理与学习任务，未声明该移植已完成。

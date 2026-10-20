@@ -975,3 +975,7 @@ Singleton  = 唯一实例，但优先考虑不用它
 
 - Marc Gregoire, *Professional C++, Sixth Edition*, Chapter 32–33.
 - Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides, *Design Patterns: Elements of Reusable Object-Oriented Software*.
+
+## 工程选型与验收
+
+完成分类阅读后进入 [工程工作坊](engineering-workshop.md)，以直接组合为基线比较模式，并用 [五项评审标准](../guidelines/review-rubric.md) 验收。跨模块入口见 [内容总索引](../docs/content-map.md)。

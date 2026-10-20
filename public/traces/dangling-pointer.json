@@ -2,8 +2,8 @@
   "id": "dangling-pointer",
   "title": "野指针（悬挂指针）与内存泄漏检测",
   "category": "memory_safety",
-  "description": "内存安全核心案例：观察指针在堆对象已被 delete 之后依然保存旧地址的情况（野指针/悬挂指针 Dangling Pointer），以及丢失堆指针造成的内存泄漏。",
-  "sourceCode": "#include <iostream>\n\nstruct Buffer {\n    int data;\n    Buffer(int d) : data(d) { std::cout << \"Allocated\\n\"; }\n    ~Buffer() { std::cout << \"Deallocated\\n\"; }\n};\n\nint main() {\n    std::cout << \"--- Step 1: new 分配堆内存 ---\\n\";\n    Buffer* ptr = new Buffer(99);\n\n    std::cout << \"--- Step 2: delete 释放堆内存 ---\\n\";\n    delete ptr; // 堆内存已销毁，但 ptr 仍持有旧地址 0x5010！\n\n    std::cout << \"--- Step 3: 产生悬挂指针 (Dangling Pointer) ---\\n\";\n    // ptr->data = 100; // 未定义行为 (UB)\n\n    std::cout << \"--- Step 4: 最佳实践：置空 nullptr ---\\n\";\n    ptr = nullptr;\n\n    return 0;\n}",
+  "description": "观察释放后保留旧地址的悬挂状态；局部置空不会修复其他别名，越界／失效解引用保持未执行。",
+  "sourceCode": "#include <iostream>\n\nstruct Buffer {\n    int data;\n    Buffer(int d) : data(d) { std::cout << \"Allocated\\n\"; }\n    ~Buffer() { std::cout << \"Deallocated\\n\"; }\n};\n\nint main() {\n    std::cout << \"--- Step 1: new 分配堆内存 ---\\n\";\n    Buffer* ptr = new Buffer(99);\n\n    std::cout << \"--- Step 2: delete 释放堆内存 ---\\n\";\n    delete ptr; // 堆内存已销毁，但 ptr 仍持有旧地址 0x5010！\n\n    std::cout << \"--- Step 3: 产生悬挂指针 (Dangling Pointer) ---\\n\";\n    // ptr->data = 100; // 未定义行为 (UB)\n\n    std::cout << \"--- Step 4: 仅清除此指针的旧地址 ---\\n\";\n    ptr = nullptr;\n\n    return 0;\n}",
   "snapshots": [
     {
       "stepIndex": 0,
@@ -179,7 +179,7 @@
     {
       "stepIndex": 4,
       "line": 20,
-      "description": "ptr = nullptr：执行防御性置空，指针安全解除与失效堆地址的关联，告警消除！",
+      "description": "ptr = nullptr 仅清除这个变量的旧地址；其他别名和已排队回调的失效风险仍需单独处理",
       "activeOp": "ptr_set",
       "callStack": [
         {
@@ -213,7 +213,7 @@
         }
       ],
       "pointers": [],
-      "stdout": "--- Step 1: new 分配堆内存 ---\nAllocated\n--- Step 2: delete 释放堆内存 ---\nDeallocated\n--- Step 3: 产生悬挂指针 (Dangling Pointer) ---\n--- Step 4: 最佳实践：置空 nullptr ---",
+      "stdout": "--- Step 1: new 分配堆内存 ---\nAllocated\n--- Step 2: delete 释放堆内存 ---\nDeallocated\n--- Step 3: 产生悬挂指针 (Dangling Pointer) ---\n--- Step 4: 仅清除此指针的旧地址 ---",
       "warnings": []
     }
   ]

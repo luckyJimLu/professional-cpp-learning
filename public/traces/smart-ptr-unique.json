@@ -138,7 +138,7 @@
     {
       "stepIndex": 3,
       "line": 18,
-      "description": "检查 p1 状态：确认 p1 为 nullptr，杜绝二次释放或指针别名冲突",
+      "description": "确认移动后的 p1 为 nullptr；其他裸别名不会因此自动清空，仍需遵守 owner 的生命周期",
       "activeOp": "step",
       "callStack": [
         {

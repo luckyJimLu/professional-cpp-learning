@@ -5,6 +5,21 @@ const sources = import.meta.glob(
     "../../patterns/**/*.md",
     "../../frameworks/**/*.md",
     "../../docs/mermaid.md",
+    "../../docs/content-map.md",
+    "../../docs/lab-environments.md",
+    "../../docs/engineering-learning-path.md",
+    "../../docs/chapter-06-review.md",
+    "../../docs/historical-exercises.md",
+    "../../docs/reference-reading-guide.md",
+    "../../docs/content-refinement-validation.md",
+    "../../docs/memory-visualizer-guide.md",
+    "../../docs/rtos-simulator/LEARNING-GUIDE.md",
+    "../../docs/learning-plan.md",
+    "../../docs/content-migration.md",
+    "../../docs/harmonyos-mini-cpp11-compatibility.md",
+    "../../docs/zephyr-cpp20-zpp.md",
+    "../../guidelines/*.md",
+    "../../utils/**/*.md",
     "../../references/system-design-notes/content/**/*.md",
   ],
   { query: "?raw", import: "default", eager: true },
@@ -16,7 +31,7 @@ export function topicGroup(path: string) {
   if (/Cpp System/.test(path)) return "C++ 系统架构";
   if (/embedded-systems|frameworks\/(trace32|openharmony)/.test(path))
     return "嵌入式系统";
-  if (/Development Tools/.test(path)) return "开发工具";
+  if (/Development Tools|^utils\//.test(path)) return "开发工具";
   if (/patterns/.test(path)) return "设计模式";
   if (/frameworks\/asio/.test(path)) return "网络与异步";
   return "框架与阅读指南";
@@ -60,6 +75,9 @@ export function topicSeries(topic: Topic) {
     return "TRACE32 · RTOS 稳定性分析";
   if (path.startsWith("frameworks/asio/")) return "Asio · 网络与异步";
   if (path.startsWith("patterns/")) return "C++ 设计模式";
+  if (path.startsWith("docs/") && path !== "docs/mermaid.md")
+    return "学习路线与实验手册";
+  if (path.startsWith("guidelines/")) return "工程规范与评审";
   return topic.group;
 }
 
@@ -87,6 +105,8 @@ export function seriesTopics(topic: Topic) {
     )
     .sort(
       (a, b) =>
+        Number(b.path === "docs/content-map.md") -
+          Number(a.path === "docs/content-map.md") ||
         Number(b.path.endsWith("/README.md")) -
           Number(a.path.endsWith("/README.md")) ||
         a.path.localeCompare(b.path, "zh-CN", { numeric: true }),

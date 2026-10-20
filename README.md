@@ -31,9 +31,18 @@
 - 当前主线：**Chapter 6 已收束；下一课进入 Chapter 7 · Memory Management**
 - 更新方式：**GitHub Markdown only**
 
+## 内容体系与实验路线
+
+- [内容总索引与覆盖矩阵](docs/content-map.md)
+- [实验环境与版本矩阵](docs/lab-environments.md)
+- [Modem 数据通道贯穿实验](docs/engineering-learning-path.md)
+- [Chapter 6 章末评审](docs/chapter-06-review.md)
+- [历史练习迁移清单](docs/historical-exercises.md)
+- [参考资料导读](docs/reference-reading-guide.md)
+
 ## 快速入口
 
-- [16 周学习路线](docs/learning-plan.md)
+- [章节里程碑与原始 16 周顺序参考](docs/learning-plan.md)
 - [Runnable Exercise Audit & Contract](docs/runnable-exercise-audit.md)
 - [完整学习进度](progress.md)
 - [C++ Design Patterns · 工程化专题](patterns/)

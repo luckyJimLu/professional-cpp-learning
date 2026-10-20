@@ -44,7 +44,7 @@ export const PRESET_TRACES_META: PresetTraceMeta[] = [
     title: "vector 动态扩容与搬迁",
     category: "data_structures",
     badge: "底盘架构",
-    description: "超出 capacity 时的两倍新内存申请、旧元素搬迁与深释放",
+    description: "本示例使用两倍扩容，观察搬迁与借用失效；增长倍率非标准保证",
     fileUrl: "/traces/vector-grow.json",
   },
   {
@@ -52,7 +52,7 @@ export const PRESET_TRACES_META: PresetTraceMeta[] = [
     title: "悬挂指针与内存泄漏",
     category: "memory_safety",
     badge: "安全陷阱",
-    description: "提前 delete 导致的野指针 (Dangling Pointer) 与置空防护",
+    description: "局部置空只改变一个变量；其他别名仍需生命周期管理",
     fileUrl: "/traces/dangling-pointer.json",
   },
 ];
@@ -69,7 +69,9 @@ export const BUNDLED_PRESET_TRACES: Record<string, VisualizerTrace> = {
 /**
  * 异步获取指定 preset 的 Trace 数据，优先走 fetch，失败则降级到内置缓存
  */
-export async function loadPresetTrace(id: string): Promise<VisualizerTrace | null> {
+export async function loadPresetTrace(
+  id: string,
+): Promise<VisualizerTrace | null> {
   const meta = PRESET_TRACES_META.find((p) => p.id === id);
   if (!meta) return BUNDLED_PRESET_TRACES[id] || null;
 
@@ -77,7 +79,9 @@ export async function loadPresetTrace(id: string): Promise<VisualizerTrace | nul
     // 兼容 Vite base 路径与 GitHub Pages 子路径
     const basePath = import.meta.env.BASE_URL || "/";
     const cleanBase = basePath.endsWith("/") ? basePath : `${basePath}/`;
-    const tracePath = meta.fileUrl.startsWith("/") ? meta.fileUrl.slice(1) : meta.fileUrl;
+    const tracePath = meta.fileUrl.startsWith("/")
+      ? meta.fileUrl.slice(1)
+      : meta.fileUrl;
     const fetchUrl = `${cleanBase}${tracePath}`;
 
     const res = await fetch(fetchUrl);
@@ -87,9 +91,11 @@ export async function loadPresetTrace(id: string): Promise<VisualizerTrace | nul
       return data;
     }
   } catch (err) {
-    console.warn(`[TraceLoader] Failed to fetch ${meta.fileUrl}, checking fallback cache:`, err);
+    console.warn(
+      `[TraceLoader] Failed to fetch ${meta.fileUrl}, checking fallback cache:`,
+      err,
+    );
   }
 
   return BUNDLED_PRESET_TRACES[id] || null;
 }
-

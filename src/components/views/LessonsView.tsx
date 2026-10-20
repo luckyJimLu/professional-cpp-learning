@@ -72,7 +72,7 @@ export function LessonsView({
   return (
     <div className="course-page">
       <PageHeader
-        eyebrow="16 周进阶路线与目录"
+        eyebrow="章节里程碑与课程目录"
         title="课程"
         description="按周逐步进阶，或按标题、天数与章节查找。每一课都从理解走向可运行的实验。"
       />
@@ -225,7 +225,7 @@ export function LessonsView({
         </div>
       )}
       <details className="source-details">
-        <summary>查看完整 16 周学习路线</summary>
+        <summary>查看章节里程碑与原始路线</summary>
         <Markdown embedDocument>{learningPlan}</Markdown>
       </details>
     </div>

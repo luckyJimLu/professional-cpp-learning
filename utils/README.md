@@ -38,7 +38,7 @@ VS Code Remote-SSH Window
         ├── SCP symbols
         ├── SCP firmware
         ├── SCP Windows scripts
-        ├── verify build_id / commit / SHA-256
+        ├── compare build_id / commit; independently verify SHA-256
         └── Set-Location $LocalRoot
                 ↓
         PS D:\Dev\target-runtime>
@@ -99,7 +99,7 @@ Remote-SSH Window 中推荐长期保留两个 Terminal：
 [Remote Linux]                  [Local Windows]
 dev@server:~/project$           PS D:\Dev\target-runtime>
 
-OpenCode / build                SCP / debug / flash / test
+OpenCode / build                SCP / independent hash check / debug / flash / test
 ```
 
 Windows Local Terminal 使用 VS Code：
@@ -148,3 +148,7 @@ sync-build.ps1 成功完成 manifest、symbols、firmware、scripts 同步和校
 
 不要只给建议，完成实现并检查 diff；无法在 Linux 验证的 Windows 行为明确列为本机待验证项。
 ```
+
+## 操作与验收
+
+以 [操作和失败清单](windows-remote-script-runner/OPERATIONS.md) 为当前脚本能力边界：默认 init；产物按需下载；hash 需独立核对，不能将 ready 当成完整校验。相关证据格式见 [内容总索引](../docs/content-map.md)。

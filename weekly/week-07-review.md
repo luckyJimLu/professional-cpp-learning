@@ -198,3 +198,7 @@ private:
 ```
 
 下一周继续 Chapter 6，并逐步进入 general-purpose interface、generality vs ease-of-use、successful abstraction 与 SOLID。
+
+## 后续章末评审
+
+Chapter 6 发布至 Day 55 后，可独立完成 [章末评审与答案](../docs/chapter-06-review.md)，按 [五项标准](../guidelines/review-rubric.md) 留下证据。Week 08 在对应七天全部发布后再编写，不把章末总结提前记作完整周复盘。
