@@ -26,9 +26,9 @@
 
 ## 当前进度
 
-- **已发布：Day 1–55**
-- **下一课：Day 56 · Chapter 7 · Memory Management**
-- 当前主线：**Chapter 6 已收束；下一课进入 Chapter 7 · Memory Management**
+- **已发布：Day 1–56**
+- **下一课：Day 57 · Chapter 7 · Memory Management**
+- 当前主线：**Chapter 7 · Memory Management：ownership / RAII / dynamic lifetime**
 - 更新方式：**GitHub Markdown only**
 
 ## 内容体系与实验路线
@@ -73,11 +73,11 @@
 
 ## 最近课程
 
+- [Day 56 · Memory Management Foundations · Ownership and RAII](daily/day-056-memory-management-ownership-raii.md)
 - [Day 55 · Chapter 6 Summary and Engineering Exercises](daily/day-055-chapter6-review-exercises.md)
 - [Day 54 · The SOLID Principles](daily/day-054-solid-principles.md)
 - [Day 53 · Designing a Successful Abstraction](daily/day-053-designing-successful-abstraction.md)
 - [Day 52 · Reconciling Generality and Ease of Use](daily/day-052-reconciling-generality-ease-of-use.md)
-- [Day 51 · Design General-Purpose Interfaces](daily/day-051-general-purpose-interfaces.md)
 
 ## 每日课程结构
 
@@ -113,7 +113,7 @@
 ├── README.md
 ├── progress.md
 ├── DESIGN.md / UX-CONTRACT.md
-├── daily/                       # 已发布课程 Day 1–55
+├── daily/                       # 已发布课程 Day 1–56
 ├── weekly/
 ├── patterns/
 ├── frameworks/
