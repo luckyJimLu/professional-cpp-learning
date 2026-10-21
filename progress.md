@@ -1,76 +1,27 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 55**。下一课从 **Day 56** 继续。
-
-| Day | 主题 | 状态 | 文件 |
-|---:|---|---|---|
-| 1 | 从 C 进入现代 C++ | 已发布 | [day-001](daily/day-001-from-c-to-modern-cpp.md) |
-| 2 | 变量、统一初始化与安全类型转换 | 已发布 | [day-002](daily/day-002-variables-initialization-casts.md) |
-| 3 | const、constexpr 与编译期思维 | 已发布 | [day-003](daily/day-003-const-constexpr.md) |
-| 4 | 引用、const 引用与参数传递 | 已发布 | [day-004](daily/day-004-references-parameter-passing.md) |
-| 5 | 指针、nullptr 与数组边界 | 已发布 | [day-005](daily/day-005-pointers-nullptr-bounds.md) |
-| 6 | enum class、结构化绑定与类型安全状态机 | 已发布 | [day-006](daily/day-006-enum-class-state-machine.md) |
-| 7 | 第一周复盘：Modem 控制模块 | 已发布 | [day-007](daily/day-007-week1-review-modem-control.md) |
-| 8 | std::string 与 std::string_view | 已发布 | [day-008](daily/day-008-string-string-view.md) |
-| 9 | std::string 操作 | 已发布 | [day-009](daily/day-009-string-operations.md) |
-| 10 | string_view 生命周期 | 已发布 | [day-010](daily/day-010-string-view-lifetime.md) |
-| 11 | 字符串格式化、字符编码 | 已发布 | [day-011](daily/day-011-formatting-encoding.md) |
-| 12 | 原始字符串与命令模板 | 已发布 | [day-012](daily/day-012-raw-strings-command-templates.md) |
-| 13 | Coding with Style 基础 | 已发布 | [day-013](daily/day-013-coding-with-style-foundations.md) |
-| 14 | 头文件、自包含与依赖边界 | 已发布 | [day-014](daily/day-014-headers-iwyu-dependencies.md) |
-| 15 | 命名与接口意图 | 已发布 | [day-015](daily/day-015-naming-interface-intent.md) |
-| 16 | clang-format、clang-tidy 与告警 | 已发布 | [day-016](daily/day-016-format-tidy-warnings.md) |
-| 17 | 错误处理、断言与控制流 | 已发布 | [day-017](daily/day-017-errors-assert-control-flow.md) |
-| 18 | 函数边界与可维护性 | 已发布 | [day-018](daily/day-018-function-boundaries-control-flow.md) |
-| 19 | 从需求到架构边界 | 已发布 | [day-019](daily/day-019-requirements-architecture-boundaries.md) |
-| 20 | 需求、用例与设计决策 | 已发布 | [day-020](daily/day-020-requirements-use-cases-decisions.md) |
-| 21 | 周复盘：可测试 Modem 架构 | 已发布 | [day-021](daily/day-021-weekly-review-testable-modem-architecture.md) |
-| 22 | 抽象：稳定接口与隐藏实现 | 已发布 | [day-022](daily/day-022-abstraction-stable-interface.md) |
-| 23 | 复用：标准库、第三方库或自研 | 已发布 | [day-023](daily/day-023-reuse-stdlib-third-party-own.md) |
-| 24 | 耦合、内聚与依赖管理 | 已发布 | [day-024](daily/day-024-coupling-cohesion-dependencies.md) |
-| 25 | 设计文档、接口契约与原型 | 已发布 | [day-025](daily/day-025-design-doc-contract-prototype.md) |
-| 26 | 设计取舍与稳定边界 | 已发布 | [day-026](daily/day-026-tradeoffs-change-stable-boundaries.md) |
-| 27 | Chapter 4 收束 | 已发布 | [day-027](daily/day-027-chapter4-wrap-stable-design.md) |
-| 28 | 类的不变量与最小公共接口 | 已发布 | [day-028](daily/day-028-class-invariants-minimal-interface.md) |
-| 29 | 构造、初始化与有效状态 | 已发布 | [day-029](daily/day-029-constructors-initialization-valid-state.md) |
-| 30 | Composition 与职责 | 已发布 | [day-030](daily/day-030-composition-object-responsibilities.md) |
-| 31 | 所有权、生命周期与资源边界 | 已发布 | [day-031](daily/day-031-ownership-lifetime-resource-boundaries.md) |
-| 32 | is-a、not-a、层次与 Mixin | 已发布 | [day-032](daily/day-032-inheritance-is-a-hierarchies-mixins.md) |
-| 33 | Polymorphism and Virtual Interfaces | 已发布 | [day-033](daily/day-033-polymorphism-virtual-interfaces.md) |
-| 34 | override、final 与安全多态析构 | 已发布 | [day-034](daily/day-034-override-final-safe-polymorphic-destruction.md) |
-| 35 | Object Slicing 与生命周期边界 | 已发布 | [day-035](daily/day-035-object-slicing-dynamic-type-lifetime.md) |
-| 36 | Has-a 与 Is-a 的边界 | 已发布 | [day-036](daily/day-036-has-a-vs-is-a-boundary.md) |
-| 37 | Not-a Relationship | 已发布 | [day-037](daily/day-037-not-a-relationship.md) |
-| 38 | Hierarchies | 已发布 | [day-038](daily/day-038-hierarchies.md) |
-| 39 | Multiple Inheritance | 已发布 | [day-039](daily/day-039-multiple-inheritance-contracts.md) |
-| 40 | Mixin Classes | 已发布 | [day-040](daily/day-040-mixin-classes.md) |
-| 41 | Designing for Reuse：复用从稳定 Contract 开始 | 已发布 | [day-041](daily/day-041-reuse-contracts-components.md) |
-| 42 | Use Abstraction | 已发布 | [day-042](daily/day-042-use-abstraction-for-reuse.md) |
-| 43 | Structure Your Code for Optimal Reuse | 已发布 | [day-043](daily/day-043-structure-code-for-optimal-reuse.md) |
-| 44 | Avoid Combining Unrelated Concepts | 已发布 | [day-044](daily/day-044-separate-unrelated-concepts.md) |
-| 45 | Templates for Generic Data Structures and Algorithms | 已发布 | [day-045](daily/day-045-templates-generic-data-structures-algorithms.md) |
-| 46 | Checks and Safeguards | 已发布 | [day-046](daily/day-046-checks-safeguards.md) |
-| 47 | Design for Extensibility | 已发布 | [day-047](daily/day-047-design-for-extensibility.md) |
-| 48 | Design Usable Interfaces | 已发布 | [day-048](daily/day-048-design-usable-interfaces.md) |
-| 49 | Consider the Audience and Purpose | 已发布 | [day-049](daily/day-049-consider-audience-purpose.md) |
-| 50 | Design Interfaces That Are Easy to Use | 已发布 | [day-050](daily/day-050-easy-to-use-interfaces.md) |
-| 51 | Design General-Purpose Interfaces | 已发布 | [day-051](daily/day-051-general-purpose-interfaces.md) |
-| 52 | Reconciling Generality and Ease of Use | 已发布 | [day-052](daily/day-052-reconciling-generality-ease-of-use.md) |
-| 53 | Designing a Successful Abstraction | 已发布 | [day-053](daily/day-053-designing-successful-abstraction.md) |
-| 54 | The SOLID Principles | 已发布 | [day-054](daily/day-054-solid-principles.md) |
-| 55 | Chapter 6 Summary and Engineering Exercises | 已发布 | [day-055](daily/day-055-chapter6-review-exercises.md) |
+当前仓库课程已发布到 **Day 56**。下一课从 **Day 57** 继续。
 
 ## 最新发布详情
 
-- **日期**：2026-10-20
-- **章节**：Chapter 6 · Designing for Reuse · Summary / Exercises
-- **主题**：Chapter 6 Summary and Engineering Exercises
-- **关键知识点**：reuse、abstraction、extensibility、usable interface、SOLID、compile-time vs runtime extensibility、有界资源与显式 timeout
-- **设计模式 / 稳定边界**：Adapter 隔离 transport；Dependency Injection 显式 required dependency；composition 优先；没有真实变化轴时拒绝 Factory/Strategy
-- **Lab**：[examples/day-055/main.cpp](examples/day-055/main.cpp)
-- **Runnable Exercise**：[examples/day-055/exercise-01.cpp](examples/day-055/exercise-01.cpp)
-- **上一课**：[Day 54 · The SOLID Principles](daily/day-054-solid-principles.md)
-- **下一课**：Chapter 7 · Memory Management，严格按教材顺序进入资源与内存管理主线
+- **日期**：2026-10-21
+- **章节**：Chapter 7 · Memory Management
+- **主题**：Memory Management Foundations · Ownership and RAII
+- **关键知识点**：automatic/dynamic lifetime、RAII、single ownership、`unique_ptr`、borrow/view、allocation timing
+- **设计模式 / 稳定边界**：RAII + explicit ownership boundary；Dependency Injection 不等于 ownership transfer；单 owner 场景拒绝滥用 `shared_ptr`
+- **Lab**：[examples/day-056/main.cpp](examples/day-056/main.cpp)
+- **Runnable Exercise**：[examples/day-056/exercise-01.cpp](examples/day-056/exercise-01.cpp)
+- **上一课**：[Day 55 · Chapter 6 Summary and Engineering Exercises](daily/day-055-chapter6-review-exercises.md)
+- **本课**：[Day 56 · Memory Management Foundations · Ownership and RAII](daily/day-056-memory-management-ownership-raii.md)
+- **下一课**：继续 Chapter 7 · Memory Management 的动态内存与安全资源管理主线
+
+## 已发布课程
+
+Day 1–55 保持现有已发布状态；新增：
+
+| Day | 主题 | 状态 | 文件 |
+|---:|---|---|---|
+| 56 | Memory Management Foundations · Ownership and RAII | 已发布 | [day-056](daily/day-056-memory-management-ownership-raii.md) |
 
 ## 规则
 
