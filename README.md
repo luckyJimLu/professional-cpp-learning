@@ -13,9 +13,9 @@
 
 ## 当前进度
 
-- **已发布：Day 1–57**
-- **下一课：Day 58 · Chapter 7 · Memory Management**
-- 当前主线：**Chapter 7 · Memory Management：smart pointers / ownership transfer / borrowing**
+- **已发布：Day 1–58**
+- **下一课：Day 59 · Chapter 7 · Memory Management**
+- 当前主线：**Chapter 7 · Memory Management：allocation failure / arrays / resource boundaries**
 - 更新方式：**GitHub Markdown only**
 
 ## 快速入口
@@ -39,11 +39,11 @@
 
 ## 最近课程
 
+- [Day 58 · Allocation Failure · Arrays and Resource Boundaries](daily/day-058-allocation-failure-resource-boundaries.md)
 - [Day 57 · Smart Pointers · Ownership Transfer and Borrowing](daily/day-057-smart-pointers-ownership-transfer.md)
 - [Day 56 · Memory Management Foundations · Ownership and RAII](daily/day-056-memory-management-ownership-raii.md)
 - [Day 55 · Chapter 6 Summary and Engineering Exercises](daily/day-055-chapter6-review-exercises.md)
 - [Day 54 · The SOLID Principles](daily/day-054-solid-principles.md)
-- [Day 53 · Designing a Successful Abstraction](daily/day-053-designing-successful-abstraction.md)
 
 ## 每日课程结构
 
@@ -70,7 +70,7 @@
 .
 ├── README.md
 ├── progress.md
-├── daily/                       # 已发布课程 Day 1–57
+├── daily/                       # 已发布课程 Day 1–58
 ├── weekly/
 ├── patterns/
 ├── frameworks/
