@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { type Lesson, type StepKey } from "../../lib/course";
 import { Markdown } from "../Markdown";
 import { PageHeader } from "../common/PageHeader";
@@ -58,6 +58,19 @@ export function LabView({
   });
 
   const [hint, setHint] = useState(false);
+  const instructionsRef = useRef<HTMLDetailsElement>(null);
+
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 980px)");
+    const syncDisclosure = () => {
+      if (instructionsRef.current) {
+        instructionsRef.current.open = desktop.matches;
+      }
+    };
+    syncDisclosure();
+    desktop.addEventListener("change", syncDisclosure);
+    return () => desktop.removeEventListener("change", syncDisclosure);
+  }, [lesson.day]);
   const initialCode = (() => {
     try {
       const custom = sessionStorage.getItem("lab_custom_code");
@@ -136,25 +149,16 @@ export function LabView({
       />
       <div className="lab-shell lab-shell-runtime">
         <section className="lab-task">
-          <div>
-            <span
-              className="eyebrow"
-              style={{ display: "block", marginBottom: "4px" }}
-            >
+          <div className="lab-task-header">
+            <span className="page-eyebrow">
               第 {lesson.day} 天实验 · {lesson.duration} 分钟
             </span>
-            <h2
-              style={{
-                margin: "0 0 12px 0",
-                lineHeight: "1.3",
-              }}
-            >
-              {lesson.title}
-            </h2>
+            <h2>{lesson.title}</h2>
           </div>
-          <details className="lab-instructions">
+          <details ref={instructionsRef} className="lab-instructions">
             <summary>
-              实验说明与自测清单 <span>展开查看</span>
+              <strong>实验说明与自测清单</strong>
+              <span>点击展开或收起 ▾</span>
             </summary>
             <div className="lab-instructions-body">
               {lab ? (

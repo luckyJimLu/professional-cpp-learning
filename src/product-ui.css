@@ -777,3 +777,737 @@
 }
 .search-result > strong { font-family: inherit; font-size: 16px; font-weight: 650; line-height: 1.6; }
 .guidelines-page .reading-index { max-width: 860px; }
+
+/* ==========================================================================
+   Unified Layout, Contrast & Component Refinements
+   ========================================================================== */
+
+:root {
+  --content-max: 1120px;
+  --muted: #52606d;
+}
+
+/* 1. Unified Page Container Width */
+.content > :is(
+  .today-layout,
+  .course-page,
+  .review-page,
+  .reading-page,
+  .lab-page-container
+),
+.topics-catalog,
+.topic-reading {
+  max-width: var(--content-max);
+  margin-inline: auto;
+}
+
+/* 2. Unified Eyebrow & Typography Contrast */
+.page-header .page-eyebrow,
+.page-eyebrow,
+.topic-eyebrow,
+.lab-task-header .page-eyebrow {
+  display: block;
+  color: var(--blue);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  letter-spacing: 0.05em;
+  line-height: 1.5;
+  margin: 0 0 6px;
+}
+
+.page-header h1,
+.guide-title h1 {
+  text-wrap: balance;
+}
+
+.page-header .page-description,
+.guide-lead {
+  text-wrap: pretty;
+}
+
+/* 3. Unified Buttons & Links (No raw browser underlines on buttons/nav) */
+.primary-button,
+.ghost-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  line-height: 1.2;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.ghost-button {
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+}
+
+.ghost-button:hover:not(:disabled) {
+  color: var(--blue);
+  border-color: var(--blue);
+  background: var(--blue-soft);
+}
+
+/* 4. Header Breadcrumb & Sidebar Progress Pill (Deduplicating Search) */
+.shell-current-page {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 16px;
+  border-left: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.shell-current-page strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.shell-breadcrumb-sep {
+  color: var(--line-strong);
+}
+
+.sidebar-progress-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: 1;
+  min-width: 0;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 89, 156, 0.22);
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.sidebar-progress-pill:hover {
+  border-color: var(--blue);
+  background: #dcecfb;
+}
+
+.sidebar-progress-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--blue);
+  flex-shrink: 0;
+}
+
+.sidebar-progress-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-item,
+.nav-item-external {
+  text-decoration: none;
+}
+
+.nav-item-external {
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+  border-radius: 0 0 6px 6px;
+}
+
+.nav-external-badge {
+  margin-left: auto;
+  padding: 1px 5px;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+  background: var(--canvas);
+  color: var(--muted);
+  font-size: 0.6875rem;
+  line-height: 1.2;
+}
+
+/* 5. Homepage (TodayView): Unified Hero Card, Pathway Icons, Light Pipeline & Right Aside */
+@media (min-width: 1100px) {
+  .today-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 250px;
+    gap: 32px;
+    align-items: start;
+  }
+}
+
+.today-aside {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .today-aside {
+    position: sticky;
+    top: calc(var(--header-height) + 24px);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+.today-aside-card {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.today-aside-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 8px;
+}
+
+.today-aside-nav a {
+  padding: 7px 10px;
+  border-radius: 6px;
+  color: var(--ink);
+  font-size: 0.8125rem;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.today-aside-nav a:hover {
+  color: var(--blue);
+  background: var(--blue-soft);
+}
+
+.today-aside-stats {
+  display: grid;
+  gap: 10px;
+  margin: 10px 0 0;
+}
+
+.today-aside-stats div {
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.today-aside-stats div:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.today-aside-stats dt {
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin-bottom: 2px;
+}
+
+.today-aside-stats dd {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.guide-current-lesson {
+  display: block;
+  padding: 24px;
+  border: 1px solid var(--line-strong);
+  border-left: 4px solid var(--blue);
+  border-radius: var(--radius);
+  margin: 20px 0 28px;
+  background: var(--surface);
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+}
+
+.guide-current-main {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.guide-current-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.guide-current-top .page-eyebrow {
+  margin: 0;
+}
+
+.guide-current-badge {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.guide-current-lesson h2 {
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  line-height: 1.35;
+  margin: 2px 0;
+}
+
+.guide-current-meta {
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+.guide-progress-bar {
+  height: 6px;
+  margin: 4px 0;
+}
+
+.guide-current-lesson .guide-hero-cta {
+  margin: 8px 0 0;
+}
+
+.pathway-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+.guide-section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 32px 0 12px;
+}
+
+.guide-section-header h2 {
+  margin: 0;
+}
+
+.guide-section-badge {
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--canvas);
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Light-surface interactive CompileRail on Homepage */
+.guide-pipeline {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-top: 18px;
+}
+
+.guide-pipeline .compile-rail {
+  margin: 0 0 16px;
+  gap: 6px;
+}
+
+.guide-pipeline .rail-step {
+  padding: 10px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--canvas);
+  color: var(--muted);
+  text-align: left;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.guide-pipeline .rail-step:hover {
+  border-color: var(--blue);
+  color: var(--ink);
+  background: var(--surface);
+}
+
+.guide-pipeline .rail-step.is-current {
+  border-color: var(--blue);
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+.guide-pipeline .rail-step.is-complete {
+  border-color: #a8d8bd;
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.guide-pipeline .rail-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.guide-pipeline .rail-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  opacity: 1;
+  margin-bottom: 6px;
+}
+
+.guide-pipeline .rail-line {
+  background: var(--line-strong);
+}
+
+.pipeline-stage-detail {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--canvas);
+}
+
+.pipeline-stage-info {
+  display: grid;
+  gap: 4px;
+}
+
+.pipeline-stage-tag {
+  color: var(--blue);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.pipeline-stage-info strong {
+  font-size: 0.9375rem;
+  color: var(--ink);
+}
+
+.pipeline-stage-info p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.pipeline-stage-link {
+  flex-shrink: 0;
+}
+
+/* 6. Courses Page (LessonsView): Current Week Highlight, Badges & Locate Button */
+.course-toolbar-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.course-locate {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid rgba(0, 89, 156, 0.28);
+  border-radius: 8px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.course-locate:hover {
+  border-color: var(--blue);
+  background: #dcecfb;
+}
+
+.course-week.is-current-week {
+  border-color: var(--blue);
+  border-left: 4px solid var(--blue);
+  box-shadow: 0 2px 10px rgba(0, 89, 156, 0.06);
+}
+
+.course-week.is-week-complete {
+  border-left: 3px solid var(--green);
+}
+
+.course-week-heading-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.week-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--canvas);
+  color: var(--muted);
+  border: 1px solid var(--line);
+}
+
+.week-badge.is-current {
+  background: var(--blue-soft);
+  color: var(--blue);
+  border-color: rgba(0, 89, 156, 0.25);
+}
+
+.week-badge.is-complete {
+  background: var(--green-soft);
+  color: var(--green);
+  border-color: #a8d8bd;
+}
+
+.course-week-theme {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+/* 7. Topics Catalog: Color-coded Domain Badges & Clean Card Headers */
+.topic-domain-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+.topic-collection[data-domain="嵌入式系统"] .topic-domain-badge {
+  background: #eaf6ef;
+  color: #18794e;
+}
+
+.topic-collection[data-domain="网络与异步"] .topic-domain-badge,
+.topic-collection[data-domain="Boost.Asio"] .topic-domain-badge {
+  background: #eef2ff;
+  color: #3730a3;
+}
+
+.topic-collection[data-domain="设计模式"] .topic-domain-badge,
+.topic-collection[data-domain="C++ 系统架构"] .topic-domain-badge {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.topic-count-badge {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.topic-collection h2 a {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.topic-card-arrow {
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.topic-collection h2 a:hover .topic-card-arrow {
+  transform: translateX(3px);
+}
+
+.topic-dir-toggle {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+/* 8. Guidelines View: Sticky Right Directory & Structured Rule Cards */
+.guidelines-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.guidelines-document {
+  max-width: none;
+  width: 100%;
+  order: 2;
+}
+
+.guidelines-aside {
+  order: 1;
+}
+
+@media (min-width: 1100px) {
+  .guidelines-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 28px;
+    align-items: start;
+  }
+
+  .guidelines-document {
+    order: 1;
+  }
+
+  .guidelines-aside {
+    order: 2;
+    position: sticky;
+    top: calc(var(--header-height) + 20px);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: calc(100dvh - var(--header-height) - 40px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+  }
+}
+
+.guidelines-page .reading-index {
+  max-width: none;
+  margin: 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0 16px;
+}
+
+.guidelines-page .reading-index summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.reading-index-count {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.guidelines-page .reading-index nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 0 14px;
+  border-top: 1px solid var(--line);
+}
+
+.guidelines-page .reading-index nav a {
+  min-height: 34px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  color: var(--ink);
+  font-size: 0.8125rem;
+  text-decoration: none;
+  line-height: 1.4;
+}
+
+.guidelines-page .reading-index nav a.is-sub-heading {
+  padding-left: 20px;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.guidelines-page .reading-index nav a:hover,
+.guidelines-page .reading-index nav a[aria-current="location"] {
+  color: var(--blue);
+  background: var(--blue-soft);
+  font-weight: 600;
+}
+
+.guidelines-related-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.guidelines-related-card a {
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.guidelines-related-card a:hover {
+  border-color: var(--blue);
+  background: var(--blue-soft);
+}
+
+.guidelines-related-card strong {
+  color: var(--blue);
+  font-size: 0.8125rem;
+}
+
+.guidelines-related-card span {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.guidelines-document .markdown h2 {
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+  margin-top: 32px;
+}
+
+.guidelines-document .markdown ul {
+  display: grid;
+  gap: 8px;
+  padding-left: 20px;
+}
+
+.guidelines-document .markdown ul li {
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--canvas);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+
+.guidelines-document .markdown ul li::marker {
+  color: var(--blue);
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .pipeline-stage-detail {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .course-toolbar-actions {
+    width: 100%;
+  }
+  .course-locate {
+    width: 100%;
+    justify-content: center;
+  }
+}

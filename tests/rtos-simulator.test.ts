@@ -39,6 +39,84 @@ test("simulation is deterministic", () => {
   assert.ok((first.trace?.timeline.length ?? 0) > 2);
 });
 
+test("all preset scenarios expose the state transition promised by their lesson", () => {
+  const run = (id: string) => {
+    const scenario = findScenario(id);
+    const result = simulateRtos(scenario.code, scenario.config);
+    assert.ok(result.trace, `${id} should produce a trace`);
+    return result.trace;
+  };
+
+  const roundRobin = run("round-robin");
+  assert.deepEqual(
+    roundRobin.events.filter((e) => e.op === "stdout").map((e) => e.text.trim()),
+    ["A start", "B start", "A done", "B done"],
+  );
+  assert.deepEqual(
+    roundRobin.timeline.filter((s) => s.task === "t0" || s.task === "t1").slice(0, 6).map((s) => s.task),
+    ["t0", "t1", "t0", "t1", "t0", "t1"],
+  );
+
+  const mutex = run("mutex");
+  assert.deepEqual(
+    mutex.events.filter((e) => e.op === "obj_op" && e.objectId === "o0").map((e) => [e.action, e.ok]),
+    [["lock", true], ["lock", false], ["unlock", true], ["lock", true], ["unlock", true]],
+  );
+  assert.ok(mutex.events.some((e) => e.op === "prio_inherit" && e.to === 5));
+  assert.ok(mutex.events.some((e) => e.op === "prio_restore" && e.to === 2));
+
+  const queue = run("queue");
+  const send42 = queue.events.find(
+    (e) => e.op === "obj_op" && e.action === "send" && e.ok && e.value === "42",
+  );
+  assert.ok(send42?.state?.kind === "queue");
+  assert.deepEqual(send42.state.buffer, ["42"]);
+  const receive42 = queue.events.find(
+    (e) => e.op === "obj_op" && e.action === "receive" && e.ok && e.value === "42",
+  );
+  assert.ok(receive42?.state?.kind === "queue");
+  assert.deepEqual(receive42.state.buffer, []);
+
+  const semaphore = run("semaphore");
+  assert.deepEqual(
+    semaphore.events.filter((e) => e.op === "obj_op" && e.objectId === "o0").map((e) => [e.action, e.ok]),
+    [["acquire", false], ["release", true], ["acquire", true]],
+  );
+
+  const lifecycle = run("thread-lifecycle");
+  const workerId = lifecycle.events.find((e) => e.op === "task_create" && e.name === "worker")?.task;
+  assert.ok(workerId);
+  const workerStates = new Set([
+    "Ready",
+    ...lifecycle.events
+      .filter((e) => e.op === "task_state" && e.task === workerId)
+      .flatMap((e) => [e.from, e.to]),
+  ]);
+  assert.deepEqual(workerStates, new Set(["Ready", "Running", "Blocked", "Suspended", "Deleted"]));
+
+  const condvar = run("condvar-spurious");
+  assert.ok(condvar.events.some((e) => e.op === "spurious_wakeup"));
+  assert.ok(condvar.events.some((e) => e.op === "obj_op" && e.action === "wait" && e.ok));
+  assert.ok(condvar.events.some((e) => e.op === "obj_op" && e.action === "notify_one" && e.ok));
+
+  const deadlock = run("dining-philosophers");
+  assert.equal(deadlock.endedReason, "deadlock");
+  assert.ok(deadlock.events.some((e) => e.op === "deadlock_detected" && e.cycle.length === 5));
+
+  const isr = run("isr-deferred");
+  assert.ok(isr.events.some((e) => e.op === "isr_exit" && e.resume !== null));
+  assert.ok(isr.events.some((e) => e.op === "obj_op" && e.action === "acquire" && e.ok));
+
+  const eventGroup = run("timer-eventgroup");
+  assert.ok(eventGroup.events.some((e) => e.op === "timer_fire" && e.timer === "heartbeat"));
+  assert.ok(eventGroup.events.some(
+    (e) => e.op === "obj_op" && e.action === "set" && e.state?.kind === "event_group" && e.state.bits === 0b11,
+  ));
+  assert.ok(eventGroup.events.some(
+    (e) => e.op === "obj_op" && e.action === "event_wait" && e.ok && e.value === "0b11" && e.state?.kind === "event_group" && e.state.bits === 0,
+  ));
+});
+
 test("mutex contention produces priority inheritance and restoration", () => {
   const scenario = RTOS_SCENARIOS.find((s) => s.id === "mutex")!;
   const result = simulateRtos(scenario.code, scenario.config);

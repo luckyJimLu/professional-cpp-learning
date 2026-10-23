@@ -78,6 +78,20 @@ interface Task {
   relockResult: Value | null;
   /** 阻塞接收被发送方唤醒后，等任务真正获得运行机会时再从队列取值 */
   pendingQueueReceiveId: string | null;
+  /** 阻塞中的对象操作；唤醒后转成完成事件，避免轨迹只有“开始等待”没有“完成”。 */
+  waitingObjectCompletion: {
+    objectId: string;
+    action: string;
+    line: number;
+    value?: string;
+  } | null;
+  pendingObjectCompletion: {
+    objectId: string;
+    action: string;
+    ok: boolean;
+    line: number;
+    value?: string;
+  } | null;
   /** 无继承互斥锁发生优先级反转的起始 tick */
   inversionStartTick: number | null;
 }
@@ -196,6 +210,8 @@ export function runScheduler(runtime: InterpreterRuntime, config: RtosConfig): S
       relockMutexId: null,
       relockResult: null,
       pendingQueueReceiveId: null,
+      waitingObjectCompletion: null,
+      pendingObjectCompletion: null,
       inversionStartTick: null,
     };
     tasks.set(id, t);
@@ -289,6 +305,13 @@ export function runScheduler(runtime: InterpreterRuntime, config: RtosConfig): S
   };
 
   const wake = (t: Task, value: Value = VOID, detail = "ready"): void => {
+    if (t.waitingObjectCompletion) {
+      t.pendingObjectCompletion = {
+        ...t.waitingObjectCompletion,
+        ok: detail !== "timeout",
+      };
+      t.waitingObjectCompletion = null;
+    }
     t.pending = { value };
     t.wake = null;
     t.objectId = null;
@@ -379,6 +402,11 @@ export function runScheduler(runtime: InterpreterRuntime, config: RtosConfig): S
       return true;
     }
     if (!o.waiters.includes(t.id)) o.waiters.push(t.id);
+    t.waitingObjectCompletion = {
+      objectId: o.id,
+      action: mode,
+      line,
+    };
     if (isRelock) {
       t.relockMutexId = o.id;
       t.relockResult = relockReturnVal;
@@ -807,6 +835,11 @@ export function runScheduler(runtime: InterpreterRuntime, config: RtosConfig): S
         cv.attachedLock = mtx.id;
         if (!cv.waiters.includes(t.id)) cv.waiters.push(t.id);
         cv.waiterLocks.set(t.id, mtx.id);
+        t.waitingObjectCompletion = {
+          objectId: cv.id,
+          action: c.kind === "cv_wait_for" ? "wait_for" : "wait",
+          line: c.line,
+        };
         const wakeTick = c.kind === "cv_wait_for" ? tick + msToTicks(c.ms) : null;
         block(t, "CondVar", cv.id, wakeTick);
         emitOp(t.id, cv.id, c.kind === "cv_wait_for" ? "wait_for" : "wait", false, c.line);
@@ -860,6 +893,11 @@ export function runScheduler(runtime: InterpreterRuntime, config: RtosConfig): S
           return true;
         }
         if (!o.waiters.includes(t.id)) o.waiters.push(t.id);
+        t.waitingObjectCompletion = {
+          objectId: o.id,
+          action: c.kind === "sem_try_acquire_for" ? "try_acquire_for" : "acquire",
+          line: c.line,
+        };
         const wakeTick = c.kind === "sem_try_acquire_for" ? tick + msToTicks(c.ms) : null;
         block(t, "Semaphore", o.id, wakeTick);
         emitOp(t.id, o.id, "acquire", false, c.line);
@@ -920,6 +958,12 @@ export function runScheduler(runtime: InterpreterRuntime, config: RtosConfig): S
         }
         o.senders.push(t.id);
         o.senderValues.set(t.id, c.value);
+        t.waitingObjectCompletion = {
+          objectId: o.id,
+          action: "send",
+          line: c.line,
+          value: valStr,
+        };
         block(t, "QueueSend", o.id, c.forever ? null : tick + msToTicks(c.timeoutMs ?? 0));
         emitOp(t.id, o.id, "send", false, c.line, valStr);
         return false;
@@ -961,6 +1005,14 @@ export function runScheduler(runtime: InterpreterRuntime, config: RtosConfig): S
         const o = objects.get(c.objectId);
         if (o?.kind === "event_group") {
           o.bits |= c.bits;
+          emitOp(
+            actor,
+            o.id,
+            c.kind === "event_set_from_isr" ? "set_from_isr" : "set",
+            true,
+            c.line,
+            `0b${c.bits.toString(2)}`,
+          );
           // 检查满足条件的等待者（按优先级 + FIFO）
           const satisfied = o.waiters
             .filter((w) => o.matches(w.mask, w.all))
@@ -973,17 +1025,12 @@ export function runScheduler(runtime: InterpreterRuntime, config: RtosConfig): S
           for (const { w, task } of satisfied) {
             o.removeWaiter(task.id);
             if (w.clearOnExit) clearMask |= w.mask;
+            if (task.waitingObjectCompletion?.objectId === o.id) {
+              task.waitingObjectCompletion.value = `0b${matchedBits.toString(2)}`;
+            }
             wake(task, intValue(matchedBits), "event_group");
           }
           if (clearMask) o.bits &= ~clearMask;
-          emitOp(
-            actor,
-            o.id,
-            c.kind === "event_set_from_isr" ? "set_from_isr" : "set",
-            true,
-            c.line,
-            `0b${c.bits.toString(2)}`,
-          );
           t.pending = { value: intValue(o.bits) };
           const top = ready();
           return inIsr || !top || top.id === t.id;
@@ -1028,6 +1075,11 @@ export function runScheduler(runtime: InterpreterRuntime, config: RtosConfig): S
           all: c.waitAll,
           clearOnExit: c.clearOnExit,
         });
+        t.waitingObjectCompletion = {
+          objectId: o.id,
+          action: "event_wait",
+          line: c.line,
+        };
         block(t, "EventGroup", o.id, c.forever ? null : tick + msToTicks(c.timeoutMs ?? 0));
         emitOp(t.id, o.id, "event_wait", false, c.line, `0b${c.mask.toString(2)}`);
         return false;
@@ -1074,6 +1126,8 @@ export function runScheduler(runtime: InterpreterRuntime, config: RtosConfig): S
         relockMutexId: null,
         relockResult: null,
         pendingQueueReceiveId: null,
+        waitingObjectCompletion: null,
+        pendingObjectCompletion: null,
         inversionStartTick: null,
       };
       let keep = true;
@@ -1285,6 +1339,19 @@ export function runScheduler(runtime: InterpreterRuntime, config: RtosConfig): S
           t.pending = { value: item };
         }
       }
+    }
+
+    if (t.pendingObjectCompletion) {
+      const completion = t.pendingObjectCompletion;
+      t.pendingObjectCompletion = null;
+      emitOp(
+        t.id,
+        completion.objectId,
+        completion.action,
+        completion.ok,
+        completion.line,
+        completion.value,
+      );
     }
 
     // 8. 若任务正在模拟占用 CPU 的 busy_for

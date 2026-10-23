@@ -75,6 +75,7 @@ function NavIcon({ id }: { id: string }) {
 export function Shell({
   view,
   setView,
+  currentDay,
   onPreloadSearch,
   children,
 }: {
@@ -324,7 +325,13 @@ export function Shell({
           </a>
         </div>
         <div className="shell-context">
-          <span className="shell-current-page">{label}</span>
+          <nav aria-label="当前位置" className="shell-current-page">
+            <span className="shell-breadcrumb-root">工程手册</span>
+            <span className="shell-breadcrumb-sep" aria-hidden="true">
+              ›
+            </span>
+            <strong>{label}</strong>
+          </nav>
           <button
             type="button"
             className="shell-search-action"
@@ -334,7 +341,7 @@ export function Shell({
             onFocus={onPreloadSearch}
           >
             <NavIcon id="search" />
-            <span>搜索</span>
+            <span>搜索代码与课程</span>
             <kbd>Ctrl K</kbd>
           </button>
         </div>
@@ -346,30 +353,14 @@ export function Shell({
             <div className="sidebar-search-row">
               <button
                 type="button"
-                className={`sidebar-search-box ${view === "search" ? "is-active" : ""}`}
-                onClick={handleHeaderSearchClick}
-                onMouseEnter={onPreloadSearch}
-                onFocus={onPreloadSearch}
-                title="搜索代码与课程 (Ctrl+K)"
-                aria-label="搜索代码与课程 (Ctrl+K)"
+                className="sidebar-progress-pill"
+                onClick={() => setView("lessons")}
+                title="查看课程路线与当前进度"
               >
-                <svg
-                  className="sidebar-search-icon"
-                  width="13"
-                  height="13"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
-                <span className="sidebar-search-placeholder">搜索课程...</span>
-                <kbd className="sidebar-search-kbd">Ctrl K</kbd>
+                <span className="sidebar-progress-dot" aria-hidden="true" />
+                <span className="sidebar-progress-text">
+                  当前进度 · Day {Math.min(currentDay, 58)}
+                </span>
               </button>
 
               <button
@@ -423,31 +414,6 @@ export function Shell({
                   <path d="m13 10 3 2-3 2" />
                 </svg>
               </button>
-              <button
-                type="button"
-                className="sidebar-control-btn sidebar-collapsed-search-btn"
-                title="搜索代码 (Ctrl+K)"
-                aria-label="搜索 (Ctrl+K)"
-                onClick={handleHeaderSearchClick}
-                onMouseEnter={onPreloadSearch}
-                onFocus={onPreloadSearch}
-              >
-                <svg
-                  className="search-icon"
-                  width="15"
-                  height="15"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
-              </button>
             </div>
           )}
         </div>
@@ -472,14 +438,17 @@ export function Shell({
             );
           })}
           <a
-            className="nav-item"
+            className="nav-item nav-item-external"
             href={`${import.meta.env.BASE_URL}rtos.html`}
             title="RTOS 模拟器"
           >
             <span className="nav-icon" aria-hidden="true">
               ⌁
             </span>
-            <span>RTOS 模拟器 ↗</span>
+            <span>RTOS 模拟器</span>
+            <small className="nav-external-badge" aria-hidden="true">
+              ↗
+            </small>
           </a>
         </nav>
       </aside>

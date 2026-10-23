@@ -492,7 +492,7 @@ export function VisualizerWorkbench({
           <button
             type="button"
             className="vscode-step-button"
-            title="生成近似轨迹或回放下一步（F10）"
+            title="静态语法推演：免编译快速预演栈与堆内存变化（快捷键 F10）"
             disabled={busy || !session.code.trim()}
             onClick={() => {
               setIsPlaying(false);

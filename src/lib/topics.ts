@@ -86,7 +86,13 @@ export function topicSummary(topic: Topic) {
     .replace(/```[\s\S]*?```/g, "")
     .split(/\n\s*\n/)
     .map((text) => text.replace(/^>\s?/gm, "").trim())
-    .find((text) => text && !/^[#|<!\-]/.test(text) && !/^\d+\./.test(text));
+    .find(
+      (text) =>
+        text &&
+        !/^[#|<!\-]/.test(text) &&
+        !/^\d+\./.test(text) &&
+        !/不复制原始规范全文/.test(text),
+    );
   const text = (topic.summary ?? paragraph ?? "阅读原理、接口与工程实践。")
     .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
     .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")

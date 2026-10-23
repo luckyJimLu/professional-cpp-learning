@@ -78,9 +78,11 @@ export function Topics() {
   return (
     <div className="topics-page-view topics-catalog">
       <header className="page-header topics-page-header">
-        <p className="topic-eyebrow">阅读 · 源码 · 工程实践</p>
+        <p className="page-eyebrow topic-eyebrow">阅读 · 源码 · 工程实践</p>
         <h1>专题知识库</h1>
-        <p>先选一个专题，沿着目录深入。随时回到上次阅读的位置。</p>
+        <p className="page-description">
+          先选一个专题，沿着目录深入。随时回到上次阅读的位置。
+        </p>
       </header>
       {path && (
         <p className="topic-notice" role="status">
@@ -139,10 +141,14 @@ export function Topics() {
       ) : (
         <div className="topic-collections">
           {collections.map(({ title, articles }) => (
-            <section className="topic-collection" key={title}>
+            <section
+              className="topic-collection"
+              key={title}
+              data-domain={articles[0].group}
+            >
               <div className="topic-collection-meta">
-                <span>{articles[0].group}</span>
-                <span>{articles.length} 篇</span>
+                <span className="topic-domain-badge">{articles[0].group}</span>
+                <span className="topic-count-badge">{articles.length} 篇</span>
               </div>
               <h2>
                 <a
@@ -151,14 +157,19 @@ export function Topics() {
                     category === "all" ? undefined : category,
                   )}
                 >
-                  {title}
-                  <span aria-hidden="true"> →</span>
+                  <span>{title}</span>
+                  <span className="topic-card-arrow" aria-hidden="true">
+                    →
+                  </span>
                 </a>
               </h2>
               <p>{topicSummary(articles[0])}</p>
               <details className="topic-collection-directory">
                 <summary>
-                  查看文章目录 <span aria-hidden="true">＋</span>
+                  <span>查看文章目录</span>
+                  <span className="topic-dir-toggle" aria-hidden="true">
+                    {articles.length} 篇 ▾
+                  </span>
                 </summary>
                 <nav aria-label={`${title}文章目录`}>
                   {articles.map((topic) => (

@@ -47,8 +47,8 @@ void workerB() {
 }
 
 int main() {
-  rtos::thread a({.name = "worker A", .priority = 3}, workerA);
-  rtos::thread b({.name = "worker B", .priority = 3}, workerB);
+  rtos::thread a({.name = "worker A", .priority = 2}, workerA);
+  rtos::thread b({.name = "worker B", .priority = 2}, workerB);
   a.join();
   b.join();
   return 0;
