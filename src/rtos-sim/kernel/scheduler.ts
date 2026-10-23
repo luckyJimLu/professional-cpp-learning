@@ -76,6 +76,8 @@ interface Task {
   /** 若任務从 CondVar 唤醒后正在等待重新锁住 Mutex，记录目标锁与唤醒结果 */
   relockMutexId: string | null;
   relockResult: Value | null;
+  /** 阻塞接收被发送方唤醒后，等任务真正获得运行机会时再从队列取值 */
+  pendingQueueReceiveId: string | null;
   /** 无继承互斥锁发生优先级反转的起始 tick */
   inversionStartTick: number | null;
 }
@@ -193,6 +195,7 @@ export function runScheduler(runtime: InterpreterRuntime, config: RtosConfig): S
       detached: kind !== "user",
       relockMutexId: null,
       relockResult: null,
+      pendingQueueReceiveId: null,
       inversionStartTick: null,
     };
     tasks.set(id, t);
@@ -893,9 +896,13 @@ export function runScheduler(runtime: InterpreterRuntime, config: RtosConfig): S
         const valStr = formatValue(c.value);
         const receiver = pickWaiter(o.receivers);
         if (receiver) {
-          o.removeWaiter(receiver.id);
-          wake(receiver, c.value, "queue_receive");
+          // 队列发送始终先写入缓冲区。等待中的接收者只在真正被调度时
+          // 完成出队，这样轨迹会准确呈现 send → wake/preempt → receive。
+          o.enqueue(c.value);
           emitOp(actor, o.id, c.kind === "queue_send_from_isr" ? "send_from_isr" : "send", true, c.line, valStr);
+          o.removeWaiter(receiver.id);
+          receiver.pendingQueueReceiveId = o.id;
+          wake(receiver, VOID, "queue_receive");
           t.pending = { value: boolValue(true) };
           const top = ready();
           return inIsr || !top || top.id === t.id;
@@ -1066,6 +1073,7 @@ export function runScheduler(runtime: InterpreterRuntime, config: RtosConfig): S
         detached: true,
         relockMutexId: null,
         relockResult: null,
+        pendingQueueReceiveId: null,
         inversionStartTick: null,
       };
       let keep = true;
@@ -1265,6 +1273,18 @@ export function runScheduler(runtime: InterpreterRuntime, config: RtosConfig): S
     closeSegment(t.id);
     if (t.state !== "Running") {
       transition(t, "Running", null, "dispatch");
+    }
+
+    if (t.pendingQueueReceiveId) {
+      const queue = objects.get(t.pendingQueueReceiveId);
+      t.pendingQueueReceiveId = null;
+      if (queue?.kind === "queue") {
+        const item = queue.dequeue();
+        if (item !== undefined) {
+          emitOp(t.id, queue.id, "receive", true, t.line, formatValue(item));
+          t.pending = { value: item };
+        }
+      }
     }
 
     // 8. 若任务正在模拟占用 CPU 的 busy_for

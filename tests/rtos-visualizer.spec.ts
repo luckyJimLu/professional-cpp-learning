@@ -40,6 +40,20 @@ test("scenario selection updates URL, source and trace", async ({ page }) => {
   await expect(page.locator(".timeline-segment")).toHaveCount(9);
 });
 
+test("queue replay shows 42 entering before the consumer receives it", async ({ page }) => {
+  await page.goto("/rtos.html?scenario=queue");
+  await page.getByRole("tab", { name: "内核对象" }).click();
+
+  const replay = page.getByLabel("回放步骤");
+  await replay.fill("23");
+  await expect(page.locator(".event-caption")).toContainText("发送消息 samples [42]");
+  await expect(page.locator(".object-card")).toContainText("缓冲 [42]");
+
+  await replay.fill("27");
+  await expect(page.locator(".event-caption")).toContainText("接收消息 samples [42]");
+  await expect(page.locator(".object-card")).toContainText("缓冲 [空]");
+});
+
 test("dining philosophers scenario displays deadlock warning and wait-for graph", async ({ page }) => {
   await page.goto("/rtos.html?scenario=dining-philosophers");
   await page.getByRole("button", { name: "跳到结尾" }).click();
@@ -63,4 +77,3 @@ test("fullscreen toggle button is available and skip link is removed", async ({ 
   const fullscreenBtn = page.getByRole("button", { name: "全屏模式" });
   await expect(fullscreenBtn).toBeVisible();
 });
-

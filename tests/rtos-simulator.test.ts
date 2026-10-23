@@ -50,12 +50,21 @@ test("mutex contention produces priority inheritance and restoration", () => {
 test("queue wakes the consumer and carries the value", () => {
   const scenario = RTOS_SCENARIOS.find((s) => s.id === "queue")!;
   const result = simulateRtos(scenario.code, scenario.config);
+  const queueOps = result.trace?.events.filter(
+    (e) => e.op === "obj_op" && e.state?.kind === "queue" && e.state.name === "samples",
+  );
   const stdout = result.trace?.events
     .filter((e) => e.op === "stdout")
     .map((e) => e.text)
     .join("");
   assert.equal(stdout, "sample=42\n");
   assert.ok(result.trace?.events.some((e) => e.op === "task_state" && e.reason === "QueueReceive"));
+  assert.deepEqual(queueOps?.map((e) => [e.action, e.value, e.state?.buffer]), [
+    ["receive", undefined, []],
+    ["send", "42", ["42"]],
+    ["receive", "42", []],
+    ["send", "84", ["84"]],
+  ]);
 });
 
 test("condvar predicate loop survives spurious wakeups while bare wait wakes prematurely", () => {
