@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 58**。下一课从 **Day 59** 继续。
+当前仓库课程已发布到 **Day 59**。下一课从 **Day 60** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -8,20 +8,21 @@
 | 56 | Memory Management Foundations · Ownership and RAII | 已发布 | [day-056](daily/day-056-memory-management-ownership-raii.md) |
 | 57 | Smart Pointers · Ownership Transfer and Borrowing | 已发布 | [day-057](daily/day-057-smart-pointers-ownership-transfer.md) |
 | 58 | Allocation Failure · Arrays and Resource Boundaries | 已发布 | [day-058](daily/day-058-allocation-failure-resource-boundaries.md) |
+| 59 | Custom Deleters · Non-Memory Resources and RAII Boundaries | 已发布 | [day-059](daily/day-059-custom-deleters-non-memory-resources.md) |
 
 > Day 1–55 的完整逐日记录仍保存在 `daily/` 与 Git 历史中；本表从 Day 56 起保持最近课程摘要，避免进度文件重复承担完整目录职责。
 
 ## 最新发布详情
 
-- **日期**：2026-10-23
+- **日期**：2026-10-24
 - **章节**：Chapter 7 · Memory Management
-- **主题**：Allocation Failure · Arrays and Resource Boundaries
-- **关键知识点**：allocation failure、`new (std::nothrow)`、`unique_ptr<T[]>`、`span`、显式 error model、实时 allocation boundary
-- **设计模式 / 稳定边界**：RAII + explicit resource boundary；Adapter 仅用于平台 acquire/release；Factory 仅在 runtime allocator strategy 真有变化时使用
-- **Lab**：[examples/day-058/main.cpp](examples/day-058/main.cpp)
-- **Runnable Exercise**：[examples/day-058/exercise-01.cpp](examples/day-058/exercise-01.cpp)
-- **上一课**：[Day 57 · Smart Pointers · Ownership Transfer and Borrowing](daily/day-057-smart-pointers-ownership-transfer.md)
-- **下一课**：继续 Chapter 7，深入自定义资源释放、deleter 与非内存资源的 RAII 边界
+- **主题**：Custom Deleters · Non-Memory Resources and RAII Boundaries
+- **关键知识点**：custom deleter、`unique_ptr<T, Deleter>`、非内存资源、acquire/release 配对、move-only owner、teardown context
+- **设计模式 / 稳定边界**：RAII + 小型 Adapter；required dependency 使用 borrow/DI；固定 BSP 不强行引入 Factory/shared ownership
+- **Lab**：[examples/day-059/main.cpp](examples/day-059/main.cpp)
+- **Runnable Exercise**：[examples/day-059/exercise-01.cpp](examples/day-059/exercise-01.cpp)
+- **上一课**：[Day 58 · Allocation Failure · Arrays and Resource Boundaries](daily/day-058-allocation-failure-resource-boundaries.md)
+- **下一课**：继续 Chapter 7，深入 shared ownership、`shared_ptr` / `weak_ptr` 控制块、适用边界与 Embedded 成本
 
 ## 规则
 
