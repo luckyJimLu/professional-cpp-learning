@@ -152,6 +152,10 @@ Progress should prioritize learning evidence over vanity metrics.
 
 Skill bars MUST be described as coverage/evidence, not objective mastery scores unless a real assessment system is introduced.
 
+Published repository days MUST NOT prefill learner completion. A day becomes complete
+only after all eight learning stages have recorded evidence. Publication counts and
+course position use labels such as “已发布” or “课程”, never “当前进度”.
+
 ## 10. Markdown diagrams and topics
 
 - `src/components/Markdown.tsx` is the shared owner for Markdown across lessons, roadmap, guidelines and topics.
@@ -205,6 +209,7 @@ shows the latest published lesson when the next lesson is unavailable.
 - Review cards and queued knowledge points link back to actual courses. Repository progress is identified as a baseline, not an assessment. Removing a review item means removing it from the list, not claiming mastery.
 - Lab instructions and checklists live in a native disclosure; the workbench remains reachable without expanding them. The shared workbench toolbar owns the sole compile action and remains visible in source and output modes. Merely opening the RTOS page or generating an approximate memory trace does not complete the lab stage.
 - Shell owns the mobile drawer focus loop, Escape dismissal, focus restoration, and removing background inertness after switching to desktop width. Header search uses the same route/shortcut owner as sidebar search.
+- Activating a primary navigation destination scrolls to the top and focuses the new main region. Escape from the mobile drawer restores its trigger; choosing a destination moves focus into the destination instead.
 - CodeBlock reports clipboard success only after the write resolves. Failure leaves manual copy and retry available.
 - RTOS detail tabs support Left/Right, Home/End and tabpanel associations. Its configuration is a native non-modal disclosure with Escape/outside dismissal. Mobile retains playback speed, granularity, configuration and export.
 - Regression owners: `tests/ui-polish.spec.ts`, existing topics/search/docs/visualizer/browser-compiler/RTOS browser suites. Touch target, keyboard and viewport checks supplement static design checks; they are not a full accessibility certification.

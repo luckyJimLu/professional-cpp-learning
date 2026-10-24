@@ -102,7 +102,7 @@ export function TodayView({
                       : "最新发布 · 可开始复习"}
                 </span>
                 <span className="guide-current-badge mono">
-                  进度 {target.day} / {lessons.length} 节 · 第 {target.week} 周
+                  课程 {target.day} / {lessons.length} 节 · 第 {target.week} 周
                 </span>
               </div>
               <h2>
@@ -117,11 +117,15 @@ export function TodayView({
               </p>
               <div
                 className="mini-progress guide-progress-bar"
-                aria-hidden="true"
+                role="progressbar"
+                aria-label={`Day ${target.day} 学习阶段`}
+                aria-valuemin={0}
+                aria-valuemax={STEP_DEFS.length}
+                aria-valuenow={completedSteps}
               >
                 <i
                   style={{
-                    width: `${Math.max(6, Math.round((target.day / Math.max(lessons.length, 1)) * 100))}%`,
+                    width: `${Math.round((completedSteps / STEP_DEFS.length) * 100)}%`,
                   }}
                 />
               </div>

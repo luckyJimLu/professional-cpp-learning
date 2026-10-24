@@ -94,6 +94,9 @@ preserving all eight stages and their labels.
 Keep normal empty states neutral. Provide a route back into the task (review to
 course, search to suggestions, lab to code). A claimed clipboard success requires
 an actual successful write. Local reading and review records do not imply mastery.
+Repository publication is content availability, never learner completion. Progress
+bars and completion marks reflect recorded learning stages only; route changes move
+focus to the new main region while browser Back/Forward keeps its native behavior.
 
 RTOS remains a separate technical workbench with its own established palette in
 `src/rtos-sim/rtos.css`. On small screens its complete playback/configuration controls

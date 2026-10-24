@@ -87,6 +87,18 @@ export function Shell({
 }) {
   const drawerRef = useRef<HTMLDetailsElement>(null);
 
+  const focusMainContent = () => {
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      document.getElementById("main-content")?.focus({ preventScroll: true });
+    });
+  };
+
+  const goToView = (nextView: View) => {
+    setView(nextView);
+    focusMainContent();
+  };
+
   const triggerMainSearchFocus = () => {
     const mainInput = document.getElementById(
       "code-query",
@@ -214,12 +226,12 @@ export function Shell({
     }
   };
 
-  const closeDrawer = () => {
+  const closeDrawer = (restoreTriggerFocus = true) => {
     if (drawerRef.current) {
       drawerRef.current.open = false;
       const main = document.getElementById("main-content");
       if (main) main.removeAttribute("inert");
-      drawerRef.current.querySelector("summary")?.focus();
+      if (restoreTriggerFocus) drawerRef.current.querySelector("summary")?.focus();
     }
   };
 
@@ -254,7 +266,7 @@ export function Shell({
             <div
               className="drawer-overlay"
               aria-hidden="true"
-              onClick={closeDrawer}
+              onClick={() => closeDrawer()}
             />
             <div className="drawer-content">
               <div className="drawer-header">
@@ -263,7 +275,7 @@ export function Shell({
                   type="button"
                   className="drawer-close-btn"
                   aria-label="关闭导航菜单"
-                  onClick={closeDrawer}
+                  onClick={() => closeDrawer()}
                 >
                   ✕
                 </button>
@@ -281,7 +293,8 @@ export function Shell({
                     }
                     onClick={() => {
                       setView(item.id);
-                      closeDrawer();
+                      closeDrawer(false);
+                      focusMainContent();
                     }}
                   >
                     <NavIcon id={item.id} />
@@ -294,7 +307,7 @@ export function Shell({
                   aria-current={view === "search" ? "page" : undefined}
                   onClick={() => {
                     setView("search");
-                    closeDrawer();
+                    closeDrawer(false);
                     requestAnimationFrame(() => {
                       triggerMainSearchFocus();
                     });
@@ -317,7 +330,7 @@ export function Shell({
             onClick={(e) => {
               if (!e.metaKey && !e.ctrlKey) {
                 e.preventDefault();
-                setView("today");
+                goToView("today");
               }
             }}
           >
@@ -337,6 +350,7 @@ export function Shell({
             className="shell-search-action"
             onClick={handleHeaderSearchClick}
             aria-label="搜索代码与课程"
+            aria-keyshortcuts="Control+K Meta+K"
             onMouseEnter={onPreloadSearch}
             onFocus={onPreloadSearch}
           >
@@ -354,12 +368,12 @@ export function Shell({
               <button
                 type="button"
                 className="sidebar-progress-pill"
-                onClick={() => setView("lessons")}
-                title="查看课程路线与当前进度"
+                onClick={() => goToView("lessons")}
+                title="查看已发布课程与学习记录"
               >
                 <span className="sidebar-progress-dot" aria-hidden="true" />
                 <span className="sidebar-progress-text">
-                  当前进度 · Day {Math.min(currentDay, 58)}
+                  已发布 · Day {Math.min(currentDay, 58)}
                 </span>
               </button>
 
@@ -428,7 +442,7 @@ export function Shell({
                 type="button"
                 className={`nav-item ${isActive ? "is-active" : ""}`}
                 aria-current={isActive ? "page" : undefined}
-                onClick={() => setView(item.id)}
+                onClick={() => goToView(item.id)}
                 title={item.label}
                 aria-label={item.label}
               >

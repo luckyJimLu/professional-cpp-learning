@@ -1,9 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
-import { repoCompletedDay, STEP_DEFS, type StepKey } from "./course";
+import { STEP_DEFS, type StepKey } from "./course";
 
 const STORAGE_KEY = "professional-cpp-learning-console:v1";
 
 interface SavedProgress {
+  version: 2;
   completedDays: number[];
   steps: Record<string, StepKey[]>;
   weakPoints: string[];
@@ -11,7 +12,8 @@ interface SavedProgress {
 
 function initialState(): SavedProgress {
   return {
-    completedDays: Array.from({ length: repoCompletedDay }, (_, index) => index + 1),
+    version: 2,
+    completedDays: [],
     steps: {},
     weakPoints: [],
   };
@@ -22,12 +24,22 @@ function loadState(): SavedProgress {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return initialState();
     const parsed = JSON.parse(raw) as Partial<SavedProgress>;
-    const baseline = initialState();
+    const steps = parsed.steps ?? {};
+    // v1 prefilled every published repository day as "complete". Completion is
+    // learning evidence, so migrate only days whose eight stages were recorded.
+    const completedDays =
+      parsed.version === 2
+        ? (parsed.completedDays ?? [])
+        : Object.entries(steps)
+            .filter(([, completed]) =>
+              STEP_DEFS.every((step) => completed.includes(step.key)),
+            )
+            .map(([day]) => Number(day))
+            .filter((day) => Number.isFinite(day));
     return {
-      completedDays: Array.from(
-        new Set([...(baseline.completedDays ?? []), ...(parsed.completedDays ?? [])]),
-      ).sort((a, b) => a - b),
-      steps: parsed.steps ?? {},
+      version: 2,
+      completedDays: Array.from(new Set(completedDays)).sort((a, b) => a - b),
+      steps,
       weakPoints: parsed.weakPoints ?? [],
     };
   } catch {
@@ -54,7 +66,12 @@ export function useLearningProgress() {
       const steps = { ...state.steps, [String(day)]: [...current] };
       const completedDays = new Set(state.completedDays);
       if (STEP_DEFS.every((item) => current.has(item.key))) completedDays.add(day);
-      persist({ ...state, steps, completedDays: [...completedDays].sort((a, b) => a - b) });
+      persist({
+        ...state,
+        version: 2,
+        steps,
+        completedDays: [...completedDays].sort((a, b) => a - b),
+      });
     },
     [persist, state],
   );

@@ -14,6 +14,30 @@ test("desktop guide offers a direct next action and learning pathways", async ({
   await expect(page.locator(".lesson-document h1")).toBeVisible();
 });
 
+test("published lessons are not presented as learner completion", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(page.getByRole("progressbar", { name: /Day 58 学习阶段/ })).toHaveAttribute(
+    "aria-valuenow",
+    "0",
+  );
+  await expect(page.locator(".guide-current-meta")).toContainText("已完成 0 / 8 阶段");
+  await page.goto("/?view=lessons");
+  await expect(page.locator(".course-state.is-complete")).toHaveCount(0);
+  await expect(page.locator(".sidebar-progress-pill")).toContainText("已发布 · Day 58");
+});
+
+test("primary navigation moves focus into the destination", async ({ page }) => {
+  await page.goto("/");
+  await page
+    .getByRole("navigation", { name: "Primary navigation" })
+    .getByRole("button", { name: "课程" })
+    .click();
+  await expect(page.locator("#main-content")).toBeFocused();
+  await expect(page).toHaveURL(/view=lessons/);
+});
+
 test("course view, query and IME commit survive navigation without truncated titles", async ({
   page,
 }) => {
