@@ -1,0 +1,18 @@
+{
+  "name": "professional-cpp-slides",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "slidev lesson-01.md --open",
+    "build": "slidev build lesson-01.md --out dist/lesson-01",
+    "export": "slidev export lesson-01.md --output dist/lesson-01.pdf"
+  },
+  "dependencies": {
+    "@slidev/cli": "^53.0.0",
+    "@slidev/theme-default": "^0.25.0",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "playwright-chromium": "^1.64.1"
+  }
+}
