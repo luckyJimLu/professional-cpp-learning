@@ -77,9 +77,11 @@ export function KernelObjectCard({
             </span>
           ))}
         </div>
+        <div className="queue-direction"><span>先出队 ← 队首</span><span>队尾 ← 入队</span></div>
         <p>
           缓冲 [{object.buffer.join(" · ") || "空"}] · {object.buffer.length}/{object.capacity}
         </p>
+        {object.capacity > 8 && <p>图示前 8 项，完整缓冲见上方。</p>}
       </article>
     );
   }

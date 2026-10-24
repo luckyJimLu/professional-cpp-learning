@@ -153,7 +153,10 @@ function Playback({
         </button>
         <button
           className="play-main"
-          onClick={() => setPlaying((v) => !v)}
+          onClick={() => {
+            if (!playing && current >= total - 1) onChange(0);
+            setPlaying((v) => !v);
+          }}
           disabled={!total}
         >
           {playing ? "暂停" : "播放"}
@@ -245,7 +248,7 @@ function Playback({
       </button>
 
       <div className="event-caption">
-        <span>EVENT</span>
+        <span>当前事件</span>
         {snapshot?.description ??
           (running ? "正在生成确定性轨迹…" : "运行模拟后逐步查看内核事件")}
       </div>

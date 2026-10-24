@@ -54,6 +54,64 @@ html,body,#root{height:100%;overflow:hidden}.rtos-app{height:100%;display:grid;g
   .tabs button { min-height: 44px; flex: 1 1 40%; }
 }
 .scenario-context label { flex-shrink: 0; white-space: nowrap; }
+/* Inspection workbench: readable state, compact trace and a distinct event strip. */
+.rtos-workbench { grid-template-columns: minmax(320px, 38%) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
+.rtos-header { grid-template-columns: 230px minmax(0, 1fr) auto; gap: 20px; }
+.scenario-context { flex-wrap: wrap; gap: 4px 10px; }
+.scenario-context p { flex-basis: 100%; white-space: normal; line-height: 1.4; font-size: 11px; }
+.trace-pane { gap: 12px; padding: 14px; grid-template-rows: minmax(220px, .8fr) minmax(220px, 1.2fr) minmax(76px, auto); }
+.rtos-panel, .console-panel { border-radius: 10px; }
+.panel-heading { height: auto; min-height: 58px; gap: 12px; flex-wrap: wrap; }
+.panel-kicker { font-size: 10px; letter-spacing: .1em; }
+.timeline-panel { display: flex; flex-direction: column; min-height: 190px; overflow: hidden; }
+.timeline-scroll { height: auto; min-height: 0; flex: 1; padding: 8px; }
+.timeline-scroll svg { display: block; min-width: 620px; height: auto; }
+.timeline-label, .timeline-tick { font-size: 12px; }
+.timeline-legend { gap: 8px; flex-wrap: wrap; }
+.detail-panel { grid-template-rows: auto minmax(0, 1fr); }
+.tabs { padding: 6px 10px; gap: 4px; }
+.tabs button { border-radius: 6px; }
+.tab-body { padding: 16px; }
+.task-grid, .object-grid { grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 12px; align-items: start; }
+.task-card, .object-card { padding: 14px; border-radius: 8px; min-width: 0; }
+.task-card strong, .object-card strong { font-size: 14px; overflow-wrap: anywhere; }
+.object-card > div { flex-wrap: wrap; }
+.object-kind { font-size: 10px; padding: 4px 6px; }
+.object-badge, .state { font-size: 10px; padding: 4px 6px; }
+.object-card p { font-size: 12px; line-height: 1.7; overflow-wrap: anywhere; }
+.task-card dt { font-size: 11px; color: var(--rtos-muted); }
+.task-card dd { font-size: 12px; }
+.queue-slots, .bit-grid { gap: 6px; margin-top: 16px; }
+.queue-slot, .bit-cell { min-width: 44px; height: 42px; padding: 0 10px; font-size: 17px; border-radius: 6px; }
+.object-card .queue-direction { justify-content: space-between; gap: 12px; margin-top: 8px; color: var(--rtos-muted); font-size: 11px; }
+.token-dot { width: 12px; height: 12px; }
+.console-panel { max-height: 150px; overflow: auto; }
+.console-panel pre { font-size: 12px; }
+.playback { grid-template-columns: auto minmax(80px, 1fr) auto auto; grid-template-rows: auto auto; gap: 12px; padding: 0 16px 12px; }
+.event-caption { grid-row: 1; padding: 10px 0; border-bottom: 1px solid var(--rtos-line); font-size: 13px; white-space: normal; overflow-wrap: anywhere; line-height: 1.5; min-height: 42px; }
+.event-caption span { flex-shrink: 0; color: var(--rtos-cyan); font: 600 11px var(--mono); letter-spacing: 0; }
+.playback .play-main:hover:not(:disabled), .playback .run-button:hover:not(:disabled) { background: var(--rtos-cyan); color: white; filter: brightness(.9); }
+.playback button:active:not(:disabled) { transform: translateY(1px); }
+.playback-select { cursor: pointer; }
+.config-trigger-btn:hover { background: var(--rtos-bg); }
+@media (min-width: 901px) and (max-width: 1200px) {
+  .rtos-header { grid-template-columns: 200px minmax(0, 1fr) auto; gap: 12px; padding-inline: 16px; }
+  .playback { grid-template-columns: auto minmax(80px, 1fr) auto; }
+  .playback-meta { grid-column: 1 / 3; }
+  .playback .run-button { grid-column: 3; grid-row: 2 / 4; }
+}
+@media (max-width: 900px) {
+  .rtos-header { grid-template-columns: 1fr auto; }
+  .rtos-workbench { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(280px, 46vh) auto auto; }
+  .trace-pane { padding: 10px; grid-template-rows: 240px minmax(320px, auto) auto; }
+  .playback { position: relative; padding: 12px; gap: 8px; }
+  .event-caption { order: -1; width: 100%; padding-top: 0; }
+  .playback .run-button { width: auto; flex: 1; }
+  .tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tab-body { padding: 12px; }
+  .console-panel { grid-template-columns: minmax(0, 1fr); }
+  .warning-box { max-width: none; }
+}
 @media (max-width: 360px) {
   .rtos-header { padding: 12px; gap: 10px; }
   .rtos-brand { gap: 8px; }
