@@ -18,14 +18,14 @@ test("published lessons are not presented as learner completion", async ({
   page,
 }) => {
   await page.goto("/");
-  await expect(page.getByRole("progressbar", { name: /Day 58 学习阶段/ })).toHaveAttribute(
+  await expect(page.getByRole("progressbar", { name: /Day \d+ 学习阶段/ })).toHaveAttribute(
     "aria-valuenow",
     "0",
   );
   await expect(page.locator(".guide-current-meta")).toContainText("已完成 0 / 8 阶段");
   await page.goto("/?view=lessons");
   await expect(page.locator(".course-state.is-complete")).toHaveCount(0);
-  await expect(page.locator(".sidebar-progress-pill")).toContainText("已发布 · Day 58");
+  await expect(page.locator(".sidebar-progress-pill")).toContainText(/已发布 · Day \d+/);
 });
 
 test("primary navigation moves focus into the destination", async ({ page }) => {

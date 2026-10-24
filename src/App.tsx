@@ -202,7 +202,7 @@ export default function App() {
     <Shell
       view={view}
       setView={setView}
-      currentDay={currentLearningDay}
+      publishedDay={repoCompletedDay}
       onPreloadSearch={preloadCodeSearch}
     >
       {page}

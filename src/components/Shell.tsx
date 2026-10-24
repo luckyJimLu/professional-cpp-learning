@@ -75,13 +75,13 @@ function NavIcon({ id }: { id: string }) {
 export function Shell({
   view,
   setView,
-  currentDay,
+  publishedDay,
   onPreloadSearch,
   children,
 }: {
   view: View;
   setView: (view: View) => void;
-  currentDay: number;
+  publishedDay: number;
   onPreloadSearch?: () => void;
   children: ReactNode;
 }) {
@@ -373,7 +373,7 @@ export function Shell({
               >
                 <span className="sidebar-progress-dot" aria-hidden="true" />
                 <span className="sidebar-progress-text">
-                  已发布 · Day {Math.min(currentDay, 58)}
+                  已发布 · Day {publishedDay}
                 </span>
               </button>
 
