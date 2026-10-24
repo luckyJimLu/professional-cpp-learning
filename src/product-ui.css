@@ -532,15 +532,15 @@
     padding-top: 24px;
   }
   .shell-context {
-    gap: 10px;
+    flex: 0 0 auto;
+    gap: 0;
+    margin-left: auto;
   }
-  .shell-current-page {
-    padding: 0;
-    border: 0;
-    font-size: 12px;
-    max-width: 72px;
+  .docs-header .shell-current-page {
+    display: none;
   }
   .shell-search-action {
+    flex: 0 0 44px;
     min-height: 44px;
     min-width: 44px;
     padding: 10px;

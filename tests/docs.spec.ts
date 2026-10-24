@@ -37,6 +37,18 @@ test("mobile guide and lesson remain within viewport", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
     "从 C 出发",
   );
+  await expect(page.locator(".shell-current-page")).toBeHidden();
+  await expect(
+    page.getByRole("button", { name: "搜索代码与课程" }),
+  ).toBeVisible();
+  const headerBox = await page.locator(".docs-header").boundingBox();
+  const brandBox = await page.locator(".opencode-header-brand").boundingBox();
+  const searchBox = await page
+    .getByRole("button", { name: "搜索代码与课程" })
+    .boundingBox();
+  expect(headerBox?.height).toBe(56);
+  expect(brandBox!.x + brandBox!.width).toBeLessThanOrEqual(searchBox!.x);
+  expect(searchBox!.x + searchBox!.width).toBeLessThanOrEqual(390);
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
