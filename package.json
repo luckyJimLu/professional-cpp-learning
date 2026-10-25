@@ -18,7 +18,14 @@
     "check:migration": "python3 tools/check-migration.py",
     "check:reference-cpp": "cd references/system-design-notes && bash scripts/check-cpp-examples.sh",
     "format:cpp": "python3 tools/format-markdown-cpp.py --all",
-    "format:cpp:check": "python3 tools/format-markdown-cpp.py --all --check"
+    "format:cpp:check": "python3 tools/format-markdown-cpp.py --all --check",
+    "ppt:sync": "cp -r .opencode/skills/slidev-ppt/assets/theme/. slides/",
+    "ppt:install": "npm install --prefix slides --no-audit --no-fund",
+    "ppt:check": "python3 tools/check-slides.py",
+    "ppt:check:strict": "python3 tools/check-slides.py --strict",
+    "ppt:build": "npm --prefix slides run build",
+    "ppt:export": "npm --prefix slides run export",
+    "ppt:all": "npm run ppt:sync && npm run ppt:check && npm run ppt:build"
   },
   "dependencies": {
     "@codemirror/commands": "^6.11.1",
