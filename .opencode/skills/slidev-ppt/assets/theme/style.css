@@ -1,0 +1,167 @@
+/* ==========================================================================
+   Professional C++ —— Slidev 系列统一主题（style.css）
+   修改系列风格只改这里：所有课程共享同一份 token 与类名词汇表。
+   ========================================================================== */
+
+:root {
+  --pc-bg: #0f172a;          /* 深海军蓝背景 */
+  --pc-surface: #1e293b;     /* 卡片/层底色 */
+  --pc-border: #334155;      /* 细边框 */
+  --pc-text: #e2e8f0;        /* 主文字 */
+  --pc-muted: #94a3b8;       /* 次要文字 */
+  --pc-accent: #38bdf8;      /* 强调：关键词 / 标题下划线 */
+  --pc-good: #22c55e;        /* 正面 / 推荐 */
+  --pc-bad: #ef4444;         /* 反面 / 警告 */
+  --pc-quote: #f59e0b;       /* 金句专用 */
+  --pc-violet: #a78bfa;      /* 辅助：跨层 / 惯用法标注 */
+  --pc-radius: 10px;
+  --pc-font-sans: 'Noto Sans CJK SC', 'Source Han Sans SC', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+  --pc-font-mono: 'JetBrains Mono', 'Noto Sans Mono CJK SC', 'Sarasa Mono SC', 'Fira Code', monospace;
+}
+
+/* ---------- 画布与排版 ---------- */
+.slidev-layout {
+  background: var(--pc-bg);
+  color: var(--pc-text);
+  font-family: var(--pc-font-sans);
+  padding: 3.2rem 3.5rem 2.6rem;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.slidev-layout h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 2px solid var(--pc-accent);
+  display: inline-block;
+}
+
+.slidev-layout h2 { font-size: 1.35rem; font-weight: 600; color: var(--pc-accent); }
+.slidev-layout h3 { font-size: 1.05rem; font-weight: 600; color: var(--pc-text); }
+.slidev-layout strong { color: var(--pc-accent); font-weight: 600; }
+.slidev-layout em { color: var(--pc-muted); }
+.slidev-layout ul { margin-top: 0.4rem; padding-left: 1.4rem; }
+.slidev-layout li { margin: 0.35rem 0; }
+.slidev-layout li::marker { color: var(--pc-accent); }
+
+.slidev-layout code:not(pre code) {
+  font-family: var(--pc-font-mono);
+  font-size: 0.88em;
+  color: var(--pc-accent);
+  background: rgba(56, 189, 248, 0.1);
+  padding: 0.05em 0.35em;
+  border-radius: 4px;
+}
+
+.slidev-layout pre.slidev-code {
+  font-family: var(--pc-font-mono);
+  background: #0b1222 !important;
+  border: 1px solid var(--pc-border);
+  border-radius: var(--pc-radius);
+  font-size: 0.82rem;
+}
+
+/* ---------- 封面 / 章节 ---------- */
+.slidev-layout.cover,
+.slidev-layout.section {
+  background:
+    radial-gradient(circle at 85% 15%, rgba(56, 189, 248, 0.12), transparent 45%),
+    var(--pc-bg);
+}
+.slidev-layout.cover h1 { font-size: 2.6rem; border-bottom-width: 3px; }
+.pc-kicker {
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--pc-accent);
+  margin-bottom: 0.8rem;
+}
+.pc-subtitle { font-size: 1.15rem; color: var(--pc-muted); margin-top: 0.6rem; }
+
+/* ---------- 通用语义色 ---------- */
+.pc-accent { color: var(--pc-accent); }
+.pc-good   { color: var(--pc-good); }
+.pc-bad    { color: var(--pc-bad); }
+.pc-muted  { color: var(--pc-muted); }
+.pc-quote-c{ color: var(--pc-quote); }
+
+/* ---------- 卡片 ---------- */
+.pc-card {
+  background: var(--pc-surface);
+  border: 1px solid var(--pc-border);
+  border-radius: var(--pc-radius);
+  padding: 0.9rem 1.1rem;
+}
+.pc-card h3 { margin: 0 0 0.3rem; }
+.pc-card p  { margin: 0; color: var(--pc-muted); font-size: 0.9rem; }
+.pc-card.good { border-left: 4px solid var(--pc-good); }
+.pc-card.bad  { border-left: 4px solid var(--pc-bad); }
+.pc-card.info { border-left: 4px solid var(--pc-accent); }
+
+/* ---------- 分层模型（金字塔 / 层次图） ---------- */
+.pc-layers { position: relative; display: flex; flex-direction: column; gap: 0.6rem; }
+.pc-layer {
+  background: var(--pc-surface);
+  border: 1px solid var(--pc-border);
+  border-left: 4px solid var(--pc-accent);
+  border-radius: var(--pc-radius);
+  padding: 0.6rem 1rem;
+}
+.pc-layer .pc-layer-title { font-weight: 700; font-size: 1.02rem; }
+.pc-layer .pc-layer-en    { color: var(--pc-muted); font-size: 0.78rem; margin-left: 0.4rem; }
+.pc-layer .pc-layer-desc  { color: var(--pc-muted); font-size: 0.82rem; margin-top: 0.15rem; }
+.pc-layer .pc-tags        { margin-top: 0.35rem; display: flex; flex-wrap: wrap; gap: 0.3rem; }
+
+/* 纵向轴线：Design Level ↓ Code Level */
+.pc-axis {
+  display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+  font-size: 0.72rem; color: var(--pc-muted); letter-spacing: 0.05em;
+  writing-mode: horizontal-tb;
+}
+.pc-axis .pc-axis-line {
+  flex: 1; width: 2px; margin: 0.4rem 0;
+  background: linear-gradient(var(--pc-accent), var(--pc-good));
+  position: relative;
+}
+.pc-axis .pc-axis-line::after {
+  content: ''; position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%);
+  border: 6px solid transparent; border-top-color: var(--pc-good);
+}
+
+/* 跨层虚线框（如 Idioms 横跨设计层与实现层） */
+.pc-span {
+  border: 2px dashed var(--pc-violet);
+  border-radius: var(--pc-radius);
+  padding: 0.6rem 0.8rem;
+  color: var(--pc-violet);
+  font-size: 0.82rem;
+  display: flex; flex-direction: column; justify-content: center; gap: 0.4rem;
+}
+.pc-span .pc-span-title { font-weight: 700; font-size: 0.95rem; }
+
+/* ---------- 标签 ---------- */
+.pc-tag {
+  font-family: var(--pc-font-mono);
+  font-size: 0.72rem;
+  padding: 0.08rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid var(--pc-border);
+  color: var(--pc-text);
+  background: rgba(148, 163, 184, 0.08);
+  white-space: nowrap;
+}
+.pc-tag.violet { border-color: var(--pc-violet); color: var(--pc-violet); }
+
+/* ---------- 流程/连锁反应 ---------- */
+.pc-chain { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.pc-chain .pc-arrow { color: var(--pc-muted); }
+
+/* ---------- 页脚衔接条 ---------- */
+.pc-next {
+  position: absolute; left: 3.5rem; bottom: 1rem;
+  font-size: 0.72rem; color: var(--pc-muted);
+}
+.pc-next::before { content: '下一页 → '; color: var(--pc-accent); }
