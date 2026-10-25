@@ -13,9 +13,9 @@
 
 ## 当前进度
 
-- **已发布：Day 1–59**
-- **下一课：Day 60 · Chapter 7 · Memory Management**
-- 当前主线：**Chapter 7 · Memory Management：custom deleters / non-memory resources / RAII teardown boundaries**
+- **已发布：Day 1–60**
+- **下一课：Day 61 · Chapter 7 · Memory Management**
+- 当前主线：**Chapter 7 · Memory Management：shared ownership / weak observers / lifetime cycles**
 - 更新方式：**GitHub Markdown only**
 
 ## 快速入口
@@ -39,11 +39,11 @@
 
 ## 最近课程
 
+- [Day 60 · Shared Ownership · shared_ptr, weak_ptr and Lifetime Cycles](daily/day-060-shared-ptr-weak-ptr-lifetime.md)
 - [Day 59 · Custom Deleters · Non-Memory Resources and RAII Boundaries](daily/day-059-custom-deleters-non-memory-resources.md)
 - [Day 58 · Allocation Failure · Arrays and Resource Boundaries](daily/day-058-allocation-failure-resource-boundaries.md)
 - [Day 57 · Smart Pointers · Ownership Transfer and Borrowing](daily/day-057-smart-pointers-ownership-transfer.md)
 - [Day 56 · Memory Management Foundations · Ownership and RAII](daily/day-056-memory-management-ownership-raii.md)
-- [Day 55 · Chapter 6 Summary and Engineering Exercises](daily/day-055-chapter6-review-exercises.md)
 
 ## 每日课程结构
 
@@ -70,7 +70,7 @@
 .
 ├── README.md
 ├── progress.md
-├── daily/                       # 已发布课程 Day 1–59
+├── daily/                       # 已发布课程 Day 1–60
 ├── weekly/
 ├── patterns/
 ├── frameworks/
