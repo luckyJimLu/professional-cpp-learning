@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 export const NAV = [
   { id: "today", label: "学习指南" },
   { id: "lessons", label: "课程" },
+  { id: "slides", label: "课件" },
   { id: "topics", label: "专题" },
   { id: "lab", label: "实验" },
   { id: "guidelines", label: "编码规范" },
@@ -12,6 +13,8 @@ export const NAV = [
 export const VIEW_ALIASES: Record<string, (typeof NAV)[number]["id"]> = {
   roadmap: "lessons",
   progress: "review",
+  ppt: "slides",
+  slide: "slides",
 };
 
 export type View =
@@ -20,7 +23,8 @@ export type View =
   | "search"
   | "visualizer"
   | "roadmap"
-  | "progress";
+  | "progress"
+  | "slides";
 export function navigate(
   values: Record<string, string | undefined>,
   replace = false,

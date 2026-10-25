@@ -1,0 +1,719 @@
+/* ==========================================================================
+   Professional C++ —— Slidev 课件模块统一视觉样式（slides.css）
+   继承 slides/style.css 工程蓝图 Token 与版式规则，适配主界面容器与演示模式
+   ========================================================================== */
+
+:root {
+  --pc-bg: #0f172a;          /* 深海军蓝背景 */
+  --pc-surface: #1e293b;     /* 卡片/层底色 */
+  --pc-border: #334155;      /* 细边框 */
+  --pc-text: #e2e8f0;        /* 主文字 */
+  --pc-muted: #94a3b8;       /* 次要文字 */
+  --pc-accent: #38bdf8;      /* 强调：关键词 / 标题下划线 */
+  --pc-good: #22c55e;        /* 正面 / 推荐 */
+  --pc-bad: #ef4444;         /* 反面 / 警告 */
+  --pc-quote: #f59e0b;       /* 金句专用 */
+  --pc-violet: #a78bfa;      /* 辅助：跨层 / 惯用法标注 */
+  --pc-radius: 10px;
+  --pc-font-sans: 'IBM Plex Sans', 'Noto Sans SC', system-ui, sans-serif;
+  --pc-font-mono: 'IBM Plex Mono', 'JetBrains Mono', Consolas, monospace;
+}
+
+/* ---------- 课件主页面容器 ---------- */
+.slides-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+}
+
+/* ---------- 工具栏与选项卡 ---------- */
+.slides-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.slides-deck-select-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.slides-deck-select-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.slides-deck-select {
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--canvas);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  cursor: pointer;
+  min-height: 38px;
+}
+
+.slides-view-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--canvas);
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+
+.slides-view-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.slides-view-tab:hover {
+  color: var(--ink);
+  background: rgba(0, 89, 156, 0.06);
+}
+
+.slides-view-tab.is-active {
+  color: var(--blue);
+  background: var(--surface);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* ---------- 幻灯片 16:9 画布容器 ---------- */
+.slide-stage-wrapper {
+  display: flex;
+  flex-direction: column;
+  background: #080d1a;
+  border: 1px solid var(--pc-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+.slide-stage-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px;
+  background: #0b1324;
+  border-bottom: 1px solid var(--pc-border);
+  font-size: 12px;
+  color: var(--pc-muted);
+}
+
+.slide-stage-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.slide-stage-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-family: var(--pc-font-mono);
+  font-weight: 600;
+  color: var(--pc-accent);
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 4px;
+}
+
+.slide-canvas-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--pc-bg);
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- 工程蓝图背景网格 ---------- */
+.slidev-layout {
+  position: relative;
+  min-height: 100%;
+  padding: 2.5rem 3rem 2rem;
+  background-color: var(--pc-bg);
+  background-image:
+    linear-gradient(rgba(56, 189, 248, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.045) 1px, transparent 1px),
+    linear-gradient(rgba(56, 189, 248, 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.022) 1px, transparent 1px);
+  background-size: 96px 96px, 96px 96px, 24px 24px, 24px 24px;
+  color: var(--pc-text);
+  font-family: var(--pc-font-sans);
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+
+.slidev-layout.cover {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-image:
+    radial-gradient(circle at 85% 15%, rgba(56, 189, 248, 0.14), transparent 45%),
+    linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+  background-size: 100% 100%, 96px 96px, 96px 96px;
+  padding: 3.5rem 4rem;
+}
+
+.slidev-layout h1 {
+  font-size: 1.85rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 0 0 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--pc-accent);
+  display: inline-block;
+  color: #ffffff;
+}
+
+.slidev-layout.cover h1 {
+  font-size: 2.4rem;
+  border-bottom-width: 3px;
+}
+
+.slidev-layout h2 { font-size: 1.3rem; font-weight: 600; color: var(--pc-accent); margin: 0.8rem 0 0.4rem; }
+.slidev-layout h3 { font-size: 1.05rem; font-weight: 600; color: var(--pc-text); margin: 0.6rem 0 0.3rem; }
+.slidev-layout strong { color: var(--pc-accent); font-weight: 600; }
+.slidev-layout em { color: var(--pc-muted); font-style: italic; }
+.slidev-layout ul { margin: 0.5rem 0; padding-left: 1.4rem; }
+.slidev-layout li { margin: 0.35rem 0; color: var(--pc-text); }
+.slidev-layout li::marker { color: var(--pc-accent); }
+
+.slide-inline-code {
+  font-family: var(--pc-font-mono);
+  font-size: 0.88em;
+  color: var(--pc-accent);
+  background: rgba(56, 189, 248, 0.1);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+}
+
+.slide-code-wrapper {
+  margin: 0.8rem 0;
+}
+
+.slidev-layout pre.hljs,
+.slidev-layout pre code.hljs {
+  font-family: var(--pc-font-mono);
+  background: #0b1222 !important;
+  border: 1px solid var(--pc-border);
+  border-radius: var(--pc-radius);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  padding: 0.85rem 1rem;
+  color: #e2e8f0;
+  overflow-x: auto;
+}
+
+/* ---------- 封面要素 ---------- */
+.pc-kicker {
+  font-size: 0.82rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pc-accent);
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+
+.pc-subtitle {
+  font-size: 1.15rem;
+  color: var(--pc-muted);
+  margin-top: 0.4rem;
+}
+
+.pc-next {
+  margin-top: 1.2rem;
+  padding-top: 0.6rem;
+  border-top: 1px dashed var(--pc-border);
+  color: var(--pc-muted);
+  font-size: 0.86rem;
+  font-style: italic;
+}
+
+/* ---------- 语义标签与卡片 ---------- */
+.pc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.4rem 0;
+}
+
+.pc-tag {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  font-size: 0.76rem;
+  font-family: var(--pc-font-mono);
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 4px;
+  color: var(--pc-accent);
+}
+
+.pc-card {
+  background: var(--pc-surface);
+  border: 1px solid var(--pc-border);
+  border-radius: var(--pc-radius);
+  padding: 0.85rem 1.1rem;
+  margin: 0.5rem 0;
+}
+
+.pc-card h3 { margin: 0 0 0.3rem; }
+.pc-card p { margin: 0; color: var(--pc-muted); font-size: 0.9rem; }
+.pc-card p.pc-card-lead { color: var(--pc-text); font-size: 0.98rem; line-height: 1.5; }
+.pc-card.good { border-left: 4px solid var(--pc-good); }
+.pc-card.bad  { border-left: 4px solid var(--pc-bad); }
+.pc-card.info { border-left: 4px solid var(--pc-accent); }
+
+/* ---------- 提示框 (Callout) ---------- */
+.pc-callout {
+  border-radius: var(--pc-radius);
+  padding: 0.75rem 1.1rem;
+  border: 1px solid var(--pc-border);
+  background: var(--pc-surface);
+  font-size: 0.92rem;
+  margin: 0.6rem 0;
+}
+
+.pc-callout.info { border-left: 4px solid var(--pc-accent); }
+.pc-callout.good { border-left: 4px solid var(--pc-good); }
+.pc-callout.bad  { border-left: 4px solid var(--pc-bad); }
+
+.pc-callout-title {
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.pc-callout.info .pc-callout-title { color: var(--pc-accent); }
+.pc-callout.good .pc-callout-title { color: var(--pc-good); }
+.pc-callout.bad  .pc-callout-title { color: var(--pc-bad); }
+.pc-callout-body p { margin: 0.2rem 0; color: var(--pc-text); }
+
+/* ---------- 金句框 (Quote) ---------- */
+.pc-quote {
+  margin: 0.6rem 0;
+  padding: 0.85rem 1.2rem;
+  border-left: 4px solid var(--pc-quote);
+  background: rgba(245, 158, 11, 0.08);
+  border-radius: 0 var(--pc-radius) var(--pc-radius) 0;
+}
+
+.pc-quote-en {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--pc-quote);
+  line-height: 1.45;
+}
+
+.pc-quote-zh {
+  margin: 0.35rem 0 0;
+  color: var(--pc-text);
+  font-size: 0.92rem;
+}
+
+.pc-quote-author {
+  margin-top: 0.35rem;
+  text-align: right;
+  color: var(--pc-muted);
+  font-size: 0.82rem;
+}
+
+/* ---------- SVG 蓝图中心容器 ---------- */
+.pc-svg-hero {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.6rem 0;
+}
+
+.pc-svg-hero svg {
+  width: 100%;
+  max-height: 380px;
+  height: auto;
+  display: block;
+}
+
+/* ---------- 表格 ---------- */
+.slide-table-scroll {
+  overflow-x: auto;
+  margin: 0.6rem 0;
+}
+
+.slidev-layout table,
+.slide-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  background: rgba(30, 41, 59, 0.55);
+  border: 1px solid var(--pc-border);
+  border-radius: var(--pc-radius);
+  overflow: hidden;
+}
+
+.slidev-layout thead th,
+.slide-table th {
+  background: var(--pc-surface);
+  color: var(--pc-accent);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 0.9rem;
+  border-bottom: 2px solid var(--pc-accent);
+}
+
+.slidev-layout tbody td,
+.slide-table td {
+  padding: 0.55rem 0.9rem;
+  border-bottom: 1px solid var(--pc-border);
+  color: var(--pc-text);
+}
+
+.slidev-layout tbody tr:last-child td,
+.slide-table tr:last-child td {
+  border-bottom: none;
+}
+
+.slidev-layout tbody tr:nth-child(even),
+.slide-table tr:nth-child(even) {
+  background: rgba(15, 23, 42, 0.4);
+}
+
+/* ---------- UnoCSS 常用辅助类映射 ---------- */
+.slidev-layout .grid { display: grid; }
+.slidev-layout .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.slidev-layout .grid-cols-\[1\.3fr_1fr\] { grid-template-columns: 1.3fr 1fr; }
+.slidev-layout .gap-4 { gap: 1rem; }
+.slidev-layout .gap-6 { gap: 1.5rem; }
+.slidev-layout .gap-8 { gap: 2rem; }
+.slidev-layout .flex { display: flex; }
+.slidev-layout .items-center { align-items: center; }
+.slidev-layout .justify-center { justify-content: center; }
+.slidev-layout .mt-4 { margin-top: 1rem; }
+.slidev-layout .mt-10 { margin-top: 2.5rem; }
+.slidev-layout .mb-3 { margin-bottom: 0.75rem; }
+.slidev-layout .text-sm { font-size: 0.875rem; }
+.slidev-layout .text-xs { font-size: 0.75rem; }
+.slidev-layout .pc-muted { color: var(--pc-muted); }
+.slidev-layout .pc-accent { color: var(--pc-accent); }
+.slidev-layout .pc-good { color: var(--pc-good); }
+.slidev-layout .pc-bad { color: var(--pc-bad); }
+
+@media (max-width: 760px) {
+  .slidev-layout .grid-cols-2,
+  .slidev-layout .grid-cols-\[1\.3fr_1fr\] {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* ---------- 幻灯片控制底栏 ---------- */
+.slide-stage-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 18px;
+  background: #0b1324;
+  border-top: 1px solid var(--pc-border);
+}
+
+.slide-nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slide-ctrl-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 34px;
+  padding: 4px 12px;
+  background: var(--pc-surface);
+  border: 1px solid var(--pc-border);
+  color: var(--pc-text);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.slide-ctrl-btn:hover:not(:disabled) {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: var(--pc-accent);
+  color: #ffffff;
+}
+
+.slide-ctrl-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.slide-ctrl-btn.is-active {
+  background: rgba(56, 189, 248, 0.22);
+  border-color: var(--pc-accent);
+  color: var(--pc-accent);
+}
+
+.slide-counter {
+  font-family: var(--pc-font-mono);
+  font-size: 13px;
+  color: var(--pc-muted);
+  padding: 0 6px;
+}
+
+.slide-jumper-select {
+  background: var(--pc-surface);
+  border: 1px solid var(--pc-border);
+  color: var(--pc-text);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: var(--pc-font-mono);
+}
+
+/* ---------- 演讲者备注抽屉 (Speaker Notes) ---------- */
+.slide-notes-drawer {
+  background: #0d1627;
+  border-top: 1px solid var(--pc-border);
+  padding: 14px 20px;
+  max-height: 240px;
+  overflow-y: auto;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: #cbd5e1;
+}
+
+.slide-notes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--pc-quote);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.slide-notes-content {
+  white-space: pre-wrap;
+  font-family: var(--pc-font-sans);
+}
+
+/* ---------- 缩略图总览网格 ---------- */
+.slides-grid-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.slides-grid-filter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.slides-grid-input {
+  flex: 1;
+  padding: 6px 12px;
+  font-size: 14px;
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--ink);
+}
+
+.slides-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.slide-card-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 150px;
+}
+
+.slide-card-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--blue);
+  box-shadow: 0 6px 16px rgba(0, 89, 156, 0.08);
+}
+
+.slide-card-item.is-current {
+  border-color: var(--blue);
+  background: var(--blue-soft);
+}
+
+.slide-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.slide-card-num {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.slide-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.slide-card-snippet {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ---------- 大纲对照视图 ---------- */
+.slides-syllabus-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.slides-syllabus-card {
+  padding: 18px 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: border-color 0.15s ease;
+}
+
+.slides-syllabus-card.is-active-ppt {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 1px var(--blue);
+}
+
+.slides-syllabus-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+}
+
+.slides-syllabus-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.slides-syllabus-section {
+  margin-top: 10px;
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.slides-syllabus-section-label {
+  font-weight: 600;
+  color: var(--blue);
+  margin-bottom: 4px;
+}
+
+/* ---------- Slidev 运行与导出卡片 ---------- */
+.slides-live-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.slides-card-block {
+  padding: 20px 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.slides-card-block h3 {
+  margin: 0 0 10px;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.slides-terminal-code {
+  display: block;
+  padding: 12px 16px;
+  background: var(--code);
+  color: var(--code-ink);
+  font-family: var(--mono);
+  font-size: 13px;
+  border-radius: 8px;
+  margin: 10px 0;
+  overflow-x: auto;
+}
+
+.slides-iframe-container {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--pc-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #000000;
+}
+
+.slides-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}

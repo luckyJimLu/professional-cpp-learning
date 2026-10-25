@@ -71,6 +71,18 @@ export function LessonsView({
         <small>
           第 {lesson.week} 周 · 约 {calculateReadingStats(lesson.raw).minutes}{" "}
           分钟阅读
+          {lesson.day === 1 && (
+            <span
+              style={{
+                marginLeft: "8px",
+                color: "var(--blue)",
+                fontWeight: 600,
+              }}
+              title="本课包含配套 Slidev 工程蓝图课件"
+            >
+              · 配套课件 ↗
+            </span>
+          )}
         </small>
       </span>
       <span

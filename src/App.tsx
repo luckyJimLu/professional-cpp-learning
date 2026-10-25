@@ -18,6 +18,7 @@ import { LabView } from "./components/views/LabView";
 import { ReviewView } from "./components/views/ReviewView";
 import { GuidelinesView } from "./components/views/GuidelinesView";
 import { VisualizerView } from "./components/views/VisualizerView";
+import { SlidesView } from "./components/views/SlidesView";
 
 const Topics = lazy(() =>
   import("./components/Topics").then((module) => ({ default: module.Topics })),
@@ -97,7 +98,9 @@ export default function App() {
           ? "代码搜索"
           : view === "visualizer"
             ? "内存可视化"
-            : NAV.find((item) => item.id === view)?.label;
+            : view === "slides"
+              ? "课件"
+              : NAV.find((item) => item.id === view)?.label;
     document.title = `${title ?? "学习文档"} · Professional C++`;
   }, [view, selectedLesson]);
 
@@ -127,6 +130,9 @@ export default function App() {
           currentDay={currentLearningDay}
         />
       );
+      break;
+    case "slides":
+      page = <SlidesView />;
       break;
     case "search":
       page = (

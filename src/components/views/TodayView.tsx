@@ -193,6 +193,28 @@ export function TodayView({
             </strong>
             <span>运行源码，观察输出与内存变化</span>
           </a>
+          <a href="?view=slides">
+            <span className="pathway-icon" aria-hidden="true">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                <line x1="8" y1="21" x2="16" y2="21" />
+                <line x1="12" y1="17" x2="12" y2="21" />
+              </svg>
+            </span>
+            <strong>
+              浏览配套课件 <span aria-hidden="true">→</span>
+            </strong>
+            <span>Slidev 蓝图幻灯片、大纲对照与演讲要点</span>
+          </a>
           <a href={`${import.meta.env.BASE_URL}rtos.html`}>
             <span className="pathway-icon" aria-hidden="true">
               <svg
