@@ -178,17 +178,29 @@ User: "What architecture is shown in detailed-architecture.excalidraw.json?"
 Agent: Let me read that file... [reads 22k tokens into main context]
 ```
 
-**✅ GOOD (Subagent Delegation):**
+**✅ GOOD (Subagent Delegation or Local CLI Digest):**
 ```
-User: "What architecture is shown in detailed-architecture.excalidraw.json?"
-Agent: I'll use a subagent to extract the architecture details.
+User: "What architecture is shown in slides/public/diagrams/ownership-sketch.excalidraw?"
+Agent: I'll extract the compact topology digest without reading raw JSON into main context.
 
-[Dispatches Task tool with general-purpose subagent]
-Task: Extract and explain components in .ryanquinn3/ticketing/detailed-architecture.excalidraw.json
+# Option A: Run the bundled extractor script (~200 tokens output)
+python3 .opencode/skills/diagram-design/scripts/excalidraw_extract.py slides/public/diagrams/ownership-sketch.excalidraw
 
-[Receives ~500 token summary with component list and relationships]
-[Responds to user with architecture explanation, main context preserved]
+# Option B: Dispatch subagent for creation/modification
+Task: Extract or update components in slides/public/diagrams/ownership-sketch.excalidraw
 ```
+
+## Slidev PPT Integration & Dark Blueprint Styling
+
+When creating or converting `.excalidraw` diagrams for `slidev-ppt` (`slides/lesson-0X.md`):
+1. **Slidev Dark Blueprint Palette**:
+   - `appState.viewBackgroundColor`: `"#0f172a"` (`--pc-bg`)
+   - Default box `backgroundColor`: `"#1e293b"` (`--pc-surface`), `strokeColor`: `"#38bdf8"` (`--pc-accent`) or `"#334155"` (`--pc-border`)
+   - Positive/Recommended `strokeColor`: `"#22c55e"` (`--pc-good`); Anti-pattern `strokeColor`: `"#ef4444"` (`--pc-bad`)
+   - Text `strokeColor`: `"#e2e8f0"` (`--pc-text`)
+2. **Converting Sketch to Publication Slide SVG**:
+   - To upgrade an Excalidraw whiteboard sketch into a crisp Slidev blueprint SVG, run `python3 .opencode/skills/diagram-design/scripts/excalidraw_extract.py <file.excalidraw>` and redraw it using `diagram-design` (`slide-16x9` + `professional-cpp-dark`).
+3. **100% Outline Grounding**: Include only components and relationships from the course outline's `重点内容` and `呈现方式`; never leak `演讲要点` oral stories onto diagram nodes.
 
 ## Why "Straightforward JSON" Doesn't Matter
 

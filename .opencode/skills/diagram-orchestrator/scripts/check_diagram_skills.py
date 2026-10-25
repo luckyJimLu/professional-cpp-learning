@@ -10,12 +10,14 @@ from pathlib import Path
 
 
 EXPECTED = (
+    "slidev-ppt",
+    "diagram-orchestrator",
     "diagram-design",
-    "draw-io",
-    "excalidraw",
     "mermaid-diagrams",
     "plantuml-skill",
-    "diagram-orchestrator",
+    "draw-io",
+    "excalidraw",
+    "ppt-chinese-fonts",
 )
 
 

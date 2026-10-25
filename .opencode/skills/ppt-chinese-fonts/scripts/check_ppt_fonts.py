@@ -51,6 +51,15 @@ CANDIDATES = {
     ],
 }
 
+MONO_CANDIDATES = [
+    "JetBrains Mono",
+    "Noto Sans Mono CJK SC",
+    "Sarasa Mono SC",
+    "Fira Code",
+    "Source Han Mono SC",
+    "DejaVu Sans Mono",
+]
+
 
 def normalize(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", name.casefold())
@@ -121,6 +130,7 @@ def filename_hints() -> set[str]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--locale", choices=sorted(CANDIDATES), default="zh-CN")
+    parser.add_argument("--check-mono", action="store_true", help="also check C++ code & CJK monospace font stack for slidev-ppt")
     parser.add_argument("--json", action="store_true", help="emit machine-readable JSON")
     parser.add_argument("--all", action="store_true", help="show every discovered font family")
     args = parser.parse_args()
@@ -138,11 +148,20 @@ def main() -> int:
         for candidate in candidates
     ]
     selected = next((item["installed_as"] for item in matches if item["installed_as"]), None)
-    payload = {
+
+    mono_matches = [
+        {"requested": candidate, "installed_as": by_normalized.get(normalize(candidate))}
+        for candidate in MONO_CANDIDATES
+    ]
+    selected_mono = next((item["installed_as"] for item in mono_matches if item["installed_as"]), None)
+
+    payload: dict[str, object] = {
         "locale": args.locale,
         "selected": selected,
+        "selected_mono": selected_mono,
         "source": source,
         "candidates": matches,
+        "mono_candidates": mono_matches,
         "discovered_count": len(discovered),
     }
 
@@ -153,14 +172,19 @@ def main() -> int:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
     else:
         print(f"Locale: {args.locale}")
-        print(f"Selected: {selected or 'none of the preferred families is installed'}")
+        print(f"Selected Sans-Serif: {selected or 'none of the preferred families is installed'}")
         print(f"Discovery: {source} ({len(discovered)} families)")
         for item in matches:
             status = item["installed_as"] or "not found"
             print(f"- {item['requested']}: {status}")
+        if args.check_mono:
+            print(f"\nSelected Monospace (--pc-font-mono): {selected_mono or 'none found'}")
+            for item in mono_matches:
+                status = item["installed_as"] or "not found"
+                print(f"- {item['requested']}: {status}")
         if args.all:
             print("\nAll discovered families:")
-            for family in payload["all_families"]:
+            for family in payload["all_families"]:  # type: ignore[union-attr]
                 print(f"- {family}")
 
     return 0 if selected else 1

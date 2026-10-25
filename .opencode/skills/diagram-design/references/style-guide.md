@@ -78,6 +78,25 @@ A self-contained palette for the terminal-window primitive (see [primitive-termi
 | `terminal-border` | `#2b2b2b` | Window border, hairlines |
 | `terminal-ink` | `#f5f5f5` | Primary text, primary stroke (same white-smoke as default `ink`) |
 | `terminal-muted` | `#9a9a9a` | Secondary text, sublabels, ring stroke |
+
+### Slidev Dark Blueprint skin (`professional-cpp-dark`, auto-active for `slidev-ppt`)
+
+When generating diagrams for the repository's Slidev C++ presentations (`slides/*.md` or `slides/public/diagrams/*.svg`), use these exact tokens so every SVG diagram matches `slidev-ppt/assets/theme/style.css` 100%:
+
+| Role | CSS Variable | Hex | Purpose in C++ Slidev Diagrams |
+|---|---|---|---|
+| `paper` | `var(--pc-bg)` | `#0f172a` | Slide background (use `transparent` root on embedded `<svg>` so the Slidev blueprint grid shows through) |
+| `paper-2` | `var(--pc-surface)` | `#1e293b` | Node box, memory cell, callout box fill |
+| `rule-solid` | `var(--pc-border)` | `#334155` | Default box border, memory cell divider, dimension line |
+| `ink` | `var(--pc-text)` | `#e2e8f0` | Primary Chinese/English labels, class names |
+| `muted` | `var(--pc-muted)` | `#94a3b8` | Sublabels, default connector arrows |
+| `accent` | `var(--pc-accent)` | `#38bdf8` | Focal tier fill (`rgba(56,189,248,0.22)`), primary mechanism border, pointer leaders |
+| `good` | `var(--pc-good)` | `#22c55e` | Contiguous memory (`make_shared`, `std::variant`), zero-overhead path, `weak_ptr` cycle breaker |
+| `bad` | `var(--pc-bad)` | `#ef4444` | Fragmented heap allocation, vtable pointer-chasing bottleneck, cyclic leak |
+| `violet` | `var(--pc-violet)` | `#a78bfa` | Cross-layer spans (`Idioms`), CRTP Mixin / template meta-programming |
+| `quote` | `var(--pc-quote)` | `#f59e0b` | Key insight badge or benchmark highlight |
+| `font-sans` | `var(--pc-font-sans)` | `'Noto Sans CJK SC', sans-serif` | All diagram titles, node titles, Chinese annotations |
+| `font-mono` | `var(--pc-font-mono)` | `'JetBrains Mono', 'Noto Sans Mono CJK SC', monospace` | C++ types (`std::unique_ptr<T>`), memory addresses, benchmark numbers |
 | `terminal-soft` | `#5c5c5c` | Tertiary — inactive dots, spokes |
 | `terminal-accent` | `#ff5a36` | The one accent — focal station, prompt sign, active dot |
 | `terminal-accent-tint` | `rgba(255,90,54,0.12)` | Fill for accent-bordered boxes |

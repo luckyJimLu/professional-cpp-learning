@@ -19,9 +19,15 @@
   --pc-font-mono: 'JetBrains Mono', 'Noto Sans Mono CJK SC', 'Sarasa Mono SC', 'Fira Code', monospace;
 }
 
-/* ---------- 画布与排版 ---------- */
+/* ---------- 画布与排版（工程蓝图网格底纹） ---------- */
 .slidev-layout {
-  background: var(--pc-bg);
+  background-color: var(--pc-bg);
+  background-image:
+    linear-gradient(rgba(56, 189, 248, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.045) 1px, transparent 1px),
+    linear-gradient(rgba(56, 189, 248, 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.022) 1px, transparent 1px);
+  background-size: 96px 96px, 96px 96px, 24px 24px, 24px 24px;
   color: var(--pc-text);
   font-family: var(--pc-font-sans);
   padding: 3.2rem 3.5rem 2.6rem;
@@ -67,9 +73,14 @@
 /* ---------- 封面 / 章节 ---------- */
 .slidev-layout.cover,
 .slidev-layout.section {
-  background:
-    radial-gradient(circle at 85% 15%, rgba(56, 189, 248, 0.12), transparent 45%),
-    var(--pc-bg);
+  background-color: var(--pc-bg);
+  background-image:
+    radial-gradient(circle at 85% 15%, rgba(56, 189, 248, 0.14), transparent 45%),
+    linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(56, 189, 248, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.025) 1px, transparent 1px);
+  background-size: 100% 100%, 96px 96px, 96px 96px, 24px 24px, 24px 24px;
 }
 .slidev-layout.cover h1 { font-size: 2.6rem; border-bottom-width: 3px; }
 .pc-kicker {
@@ -97,9 +108,121 @@
 }
 .pc-card h3 { margin: 0 0 0.3rem; }
 .pc-card p  { margin: 0; color: var(--pc-muted); font-size: 0.9rem; }
+.pc-card p.pc-card-lead { color: var(--pc-text); font-size: 1rem; }
+.pc-card p.pc-card-meta { color: var(--pc-muted); font-size: 0.76rem; margin-bottom: 0.35rem; }
 .pc-card.good { border-left: 4px solid var(--pc-good); }
 .pc-card.bad  { border-left: 4px solid var(--pc-bad); }
 .pc-card.info { border-left: 4px solid var(--pc-accent); }
+
+/* ---------- 表格（对比矩阵 / 架构权衡表） ---------- */
+.slidev-layout table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+  font-size: 0.88rem;
+  background: rgba(30, 41, 59, 0.45);
+  border: 1px solid var(--pc-border);
+  border-radius: var(--pc-radius);
+  overflow: hidden;
+}
+.slidev-layout thead th {
+  background: var(--pc-surface);
+  color: var(--pc-accent);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.55rem 0.85rem;
+  border-bottom: 2px solid var(--pc-accent);
+}
+.slidev-layout tbody td {
+  padding: 0.5rem 0.85rem;
+  border-bottom: 1px solid var(--pc-border);
+  color: var(--pc-text);
+}
+.slidev-layout tbody tr:last-child td { border-bottom: none; }
+.slidev-layout tbody tr:nth-child(even) { background: rgba(15, 23, 42, 0.35); }
+
+/* ---------- 性能基准横向条形图（Benchmark Bars） ---------- */
+.pc-bars { display: flex; flex-direction: column; gap: 0.55rem; }
+.pc-bar-row { display: flex; align-items: center; gap: 0.65rem; }
+.pc-bar-label {
+  width: 7.5rem;
+  flex-shrink: 0;
+  font-family: var(--pc-font-mono);
+  font-size: 0.75rem;
+  color: var(--pc-text);
+}
+.pc-bar-track {
+  flex: 1;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--pc-border);
+  border-radius: 6px;
+  padding: 0.15rem;
+}
+.pc-bar-fill {
+  height: 1.45rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0 0.55rem;
+  font-family: var(--pc-font-mono);
+  font-size: 0.75rem;
+  color: var(--pc-text);
+  white-space: nowrap;
+  background: rgba(56, 189, 248, 0.28);
+  border-left: 3px solid var(--pc-accent);
+}
+.pc-bar-fill.good { background: rgba(34, 197, 94, 0.25); border-left-color: var(--pc-good); }
+.pc-bar-fill.bad  { background: rgba(239, 68, 68, 0.28); border-left-color: var(--pc-bad); }
+.pc-bar-fill.info { background: rgba(56, 189, 248, 0.28); border-left-color: var(--pc-accent); }
+
+/* ---------- 图示与外部 SVG/PNG 容器 ---------- */
+.pc-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-height: 340px;
+  margin-top: 0.4rem;
+  padding: 0.65rem 1rem;
+  background: rgba(30, 41, 59, 0.45);
+  border: 1px solid var(--pc-border);
+  border-radius: var(--pc-radius);
+}
+.pc-diagram img,
+.pc-diagram svg {
+  max-height: 300px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+.pc-svg-hero {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0.25rem;
+}
+.pc-svg-hero svg {
+  width: 100%;
+  max-height: 350px;
+  height: auto;
+  display: block;
+}
+.pc-diagram-caption {
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--pc-muted);
+}
+.slidev-layout .mermaid {
+  display: flex;
+  justify-content: center;
+  max-height: 320px;
+  overflow: hidden;
+}
+.slidev-layout .mermaid svg {
+  max-height: 310px !important;
+  height: auto !important;
+}
 
 /* ---------- 分层模型（金字塔 / 层次图） ---------- */
 .pc-layers { position: relative; display: flex; flex-direction: column; gap: 0.6rem; }
@@ -109,6 +232,11 @@
   border-left: 4px solid var(--pc-accent);
   border-radius: var(--pc-radius);
   padding: 0.6rem 1rem;
+}
+.pc-layer.focal {
+  background: rgba(56, 189, 248, 0.14);
+  border-color: var(--pc-accent);
+  border-left: 4px solid var(--pc-accent);
 }
 .pc-layer .pc-layer-title { font-weight: 700; font-size: 1.02rem; }
 .pc-layer .pc-layer-en    { color: var(--pc-muted); font-size: 0.78rem; margin-left: 0.4rem; }

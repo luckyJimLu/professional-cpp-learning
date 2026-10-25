@@ -144,6 +144,16 @@ For in-depth guidance on specific diagram types, see:
 - **[references/c4-diagrams.md](references/c4-diagrams.md)** - System context, container, component diagrams, boundaries
 - **[references/architecture-diagrams.md](references/architecture-diagrams.md)** - Cloud services, infrastructure, CI/CD deployments
 - **[references/advanced-features.md](references/advanced-features.md)** - Themes, styling, configuration, layout options
+- **[references/slidev-cpp-presets.md](references/slidev-cpp-presets.md)** - **Mandatory preset when generating Mermaid diagrams for `slidev-ppt` (`slides/lesson-0X.md`)**: Dark Blueprint theme header, C++ template `<T>` escaping rules, 16:9 `LR` layout constraints, and ready-to-use C++ ownership/dependency patterns.
+
+## Slidev PPT Integration Rules (When Serving `slidev-ppt`)
+
+When embedding Mermaid inside `slides/lesson-0X.md`:
+
+1. **Mandatory Dark Blueprint Init Header**: Always include the `%%{init: {'theme': 'base', 'themeVariables': {'background': 'transparent', 'primaryColor': '#1e293b', 'primaryTextColor': '#e2e8f0', 'primaryBorderColor': '#38bdf8', 'lineColor': '#94a3b8', 'secondaryColor': '#0f172a', 'tertiaryColor': '#1e293b', 'fontFamily': 'Noto Sans CJK SC, JetBrains Mono, sans-serif', 'fontSize': '14px'}}}%%` block and semantic `classDef good/bad/info/violet` definitions from [`references/slidev-cpp-presets.md`](references/slidev-cpp-presets.md).
+2. **16:9 Canvas Fit**: Prefer `flowchart LR` over tall `flowchart TD` (keep vertical ranks ≤ 3 and total nodes ≤ 8) so the diagram fits inside Slidev's `310px` content height budget without clipping.
+3. **Escape C++ Template Angle Brackets**: Never write raw `<T>` inside Mermaid node labels in Slidev Markdown (Vue/MDC will parse `<T>` as an HTML component tag). Always wrap labels in quotes and use `&lt;T&gt;` (e.g. `N1["std::shared_ptr&lt;ListNode&gt;"]`).
+4. **100% Outline Fidelity**: Only include classes, functions, and relationships explicitly present in the outline's `重点内容` and `呈现方式`; never invent extra nodes or promote speaker-note anecdotes into diagram nodes.
 
 ## Best Practices
 

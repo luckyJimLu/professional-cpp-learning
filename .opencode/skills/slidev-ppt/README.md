@@ -1,51 +1,49 @@
-# slidev-ppt —— 安装与使用
+# slidev-ppt —— 核心中枢技能（Core Hub Skill）安装与使用
 
-把 C++ 课程演讲大纲转换为 **Slidev 交互式幻灯片**（`lesson-0X.md`），全系列共享同一套主题，保证风格一致、简洁、清晰。
+将 C++ 课程演讲大纲转换为 **零幻觉、工程蓝图风格的 Slidev 交互式幻灯片**（`slides/lesson-0X.md`）。本技能是 `.opencode/skills/` 的中心枢纽，协同调度 `diagram-orchestrator`（及 `diagram-design`、`plantuml-skill`、`mermaid-diagrams`、`draw-io`、`excalidraw`）与 `ppt-chinese-fonts`。
 
-```
+```text
 slidev-ppt/
-├── SKILL.md                     # 技能入口（触发描述、工作流程、输出格式、自检清单）
+├── SKILL.md                     # 核心入口（三栏严格映射契约、子技能调度协议、工作流）
+├── agents/openai.yaml           # Agent 元数据配置
+├── scripts/
+│   └── check_slides.py          # 自动化结构与大纲防幻觉/防越界校验器
 ├── references/
-│   ├── style-guide.md           # 视觉 / 语言 / 交互规范
-│   ├── components.md            # 允许使用的组件、pc-* 类名、7 种页面版式片段
-│   └── diagram-and-fonts.md     # 图示路由、思源黑体与跨平台回退规则
-├── assets/theme/                # 复制到 deck 根目录即可生效
-│   ├── style.css                # 设计 token（改风格只改这里）
+│   ├── style-guide.md           # 视觉 / 语言 / 交互 / 防幻觉规范
+│   ├── components.md            # 允许使用的组件、pc-* 类名、几何 SVG 蓝图与 9 种页面版式
+│   └── diagram-and-fonts.md     # 5 级图表路由矩阵、跨工具 Token 映射表与思源黑体规范
+├── assets/theme/                # 复制到 slides/ 根目录即可生效
+│   ├── style.css                # 设计 token、工程蓝图网格底纹、表格与 Benchmark 条形图样式
 │   ├── global-top.vue           # 自动页眉「第 X 课 · 短标题」+ 页脚「PPT N · 页码」
 │   └── components/{Quote,Callout}.vue
 └── examples/
-    └── lesson-01.md             # 第 1 课 PPT 1 标准输出（5 页，含 v-click 与演讲者备注）
+    └── lesson-01.md             # 第 1 课 PPT 1 标准输出（含 SVG 几何三层金字塔与严格三栏分离）
 ```
+
+## 快速运行与校验
 
 仓库中的 [`slides/`](../../slides) 已是配置好的 deck，可直接运行：
 
 ```bash
+# 1. 同步最新主题到 slides/
+cp -r .opencode/skills/slidev-ppt/assets/theme/. slides/
+
+# 2. 运行幻灯片结构与大纲防幻觉校验（检查栏目越界、点击同步、伪造 std:: 等）
+python3 .opencode/skills/slidev-ppt/scripts/check_slides.py slides/lesson-01.md \
+  --outline PPT/设计模式大纲.md --lesson 1
+
+# 3. 检查本机思源黑体与代码等宽字体
+python3 .opencode/skills/ppt-chinese-fonts/scripts/check_ppt_fonts.py --check-mono
+
+# 4. 启动交互演示 / 构建 / 导出
 cd slides
-npm install
 npm run dev        # http://localhost:3030，→ 逐步点击，P 打开演讲者视图
 npm run build      # 构建静态站点到 slides/dist/lesson-01
 npm run export     # 导出 PDF
 ```
 
-## 方式 A：Gemini CLI（Agent Skills）
+## 维护与防幻觉建议
 
-```bash
-mkdir -p ~/.gemini/skills && cp -r skills/slidev-ppt ~/.gemini/skills/   # 用户级
-# 或项目级：mkdir -p .gemini/skills && cp -r skills/slidev-ppt .gemini/skills/
-# 或软链接：gemini skills link ./skills/slidev-ppt
-gemini skills list
-```
-
-在会话中粘贴大纲：「把下面第 2 课的大纲生成 Slidev 幻灯片……PPT 1: ……」，把输出的 md 保存为 `slides/lesson-02.md`，运行 `npx slidev lesson-02.md`。
-
-## 方式 B：Gemini 网页 / App（Gem）
-
-1. 新建 Gem，名称：`C++ 课程 Slidev 幻灯片生成器`。
-2. 说明（Instructions）：粘贴 `SKILL.md` 正文（去掉顶部 `---` 元数据）。
-3. 知识（Knowledge）：上传分发包中的扁平文件（`style-guide.md`、`components.md`、`diagram-and-fonts.md`、`lesson-01.md`、`style.css`、`global-top.vue`、`Quote.vue`、`Callout.vue`）。
-
-## 维护建议
-
-- 改配色 / 字号：只改 `assets/theme/style.css`，并同步到 `slides/`。
-- 新增可复用视觉元素：先在 `style.css` 加 `pc-*` 类并写进 `components.md`，再在大纲中使用——不要让模型临场发明样式。
-- 生成后可用 `npx slidev export lesson-0X.md --format png` 截图逐页检查。
+- **严守大纲三栏边界**：`重点内容` 与 `呈现方式` 决定幻灯片画面；`演讲要点`（痛点故事、口头比喻、面试追问）100% 仅写入 `<!-- ... -->` 演讲者备注，严禁升格为独立幻灯片或画面卡片。
+- **形状即语义**：金字塔、内存块布局、vptr 跳转、罗盘图必须使用 `.pc-svg-hero` 真实几何 `<svg>` 或 `diagram-design` / `plantuml-skill` 生成的 SVG，禁止退化为三个等宽矩形 `<div>`。
+- **每次修改必跑校验**：修改完 `slides/lesson-0X.md` 后务必执行 `check_slides.py`，确保 0 errors。

@@ -14,9 +14,19 @@ Forty-five visual types. Semantic patterns describe behavior; type references de
 
 ---
 
-## 0. First-time setup — style guide gate
+## 0. First-time setup & Slidev Dark Blueprint Preset (`slidev-ppt` Integration)
 
-**Before generating your first diagram in a new project, verify the style guide has been customized.**
+**When invoked from `slidev-ppt` or `diagram-orchestrator` for C++ course slides (`slides/lesson-0X.md`), bypass the interactive style-guide gate automatically** and use the built-in **Slidev Dark Blueprint Preset (`professional-cpp-dark`)**:
+
+- **Canvas / Viewport**: `viewBox="0 0 900 335"` (full-width hero `<div class="pc-svg-hero">`) or `viewBox="0 0 440 290"` (half-column `<div class="pc-diagram">`).
+- **Tokens**: `paper: #0f172a` (`var(--pc-bg)`), `paper-2: #1e293b` (`var(--pc-surface)`), `ink: #e2e8f0` (`var(--pc-text)`), `muted: #94a3b8` (`var(--pc-muted)`), `rule-solid: #334155` (`var(--pc-border)`), `accent: #38bdf8` (`var(--pc-accent)`), `good: #22c55e` (`var(--pc-good)`), `bad: #ef4444` (`var(--pc-bad)`), `violet: #a78bfa` (`var(--pc-violet)`), `quote: #f59e0b` (`var(--pc-quote)`).
+- **Fonts**: `'Noto Sans CJK SC', sans-serif` for titles/labels, `'JetBrains Mono', 'Noto Sans Mono CJK SC', monospace` for C++ types/code (no remote Google Fonts `@import`).
+- **True Geometry & Blueprint Aesthetics**:
+  - **Pyramids (`type-pyramid.md`)**: Draw real `<polygon>` triangles/trapezoids (narrow apex, focal cyan middle tier, wide base), left-side dimension lines + curved upward focal arrow, right-side pointer callout boxes + cross-layer dashed brackets. Never substitute 3 equal-width rectangles for a pyramid.
+  - **Memory & Pointer Layouts**: Draw explicit Stack vs Heap regions, contiguous vs split Control Block + Object `T` memory cells, `vptr → vtable → code` indirection arrows, and CPU cache line boundaries (`64B`).
+  - **100% Outline Grounding**: Every node, C++ identifier, and metric must come strictly from the course outline's `重点内容` and `呈现方式`; never promote `演讲要点` oral stories onto diagram nodes or invent `std::` prefixes on domain types.
+
+**For standalone non-Slidev projects, verify the style guide has been customized:**
 
 Do not silently ship default-skinned diagrams into a branded project.
 

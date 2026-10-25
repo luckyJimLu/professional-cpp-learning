@@ -75,6 +75,44 @@ skinparam LegendFontColor #334155
 Keep titles short and factual. Omit the title when a surrounding document
 already supplies an equivalent heading.
 
+## Slidev Dark Blueprint profile (for `slidev-ppt`)
+
+When generating PlantUML diagrams for `slides/lesson-0X.md` (such as Visitor double-dispatch cycles, Bridge/Pimpl compilation firewalls, DIP interface ownership inversion, or Type Erasure `ShapeConcept`/`ShapeModel<T>` hierarchies), **always use this dark blueprint header instead of the light palette** so it blends seamlessly onto Slidev's `#0F172A` canvas:
+
+```plantuml
+!theme plain
+skinparam backgroundColor transparent
+skinparam shadowing false
+skinparam roundCorner 10
+skinparam defaultFontName "Noto Sans CJK SC"
+skinparam defaultFontSize 13
+skinparam defaultFontColor #E2E8F0
+skinparam ArrowColor #94A3B8
+skinparam ArrowFontColor #E2E8F0
+skinparam ArrowFontSize 12
+skinparam ArrowThickness 1.4
+skinparam ClassBackgroundColor #1E293B
+skinparam ClassBorderColor #38BDF8
+skinparam ClassHeaderBackgroundColor #0F172A
+skinparam ClassFontColor #E2E8F0
+skinparam ClassAttributeFontColor #94A3B8
+skinparam ClassAttributeFontName "JetBrains Mono"
+skinparam PackageBackgroundColor #0F172A
+skinparam PackageBorderColor #334155
+skinparam PackageFontColor #38BDF8
+skinparam NoteBackgroundColor #1E293B
+skinparam NoteBorderColor #F59E0B
+skinparam NoteFontColor #E2E8F0
+skinparam rectangle {
+  BackgroundColor<<good>> #1E293B
+  BorderColor<<good>> #22C55E
+  BackgroundColor<<bad>> #1E293B
+  BorderColor<<bad>> #EF4444
+  BackgroundColor<<violet>> #1E293B
+  BorderColor<<violet>> #A78BFA
+}
+```
+
 ## Structural diagrams
 
 Add this profile for component, architecture, and deployment diagrams:

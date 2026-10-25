@@ -26,7 +26,7 @@ Do not silently treat SC, TC, and HK as interchangeable. Their punctuation place
 ## Workflow
 
 1. Inspect the deck or template before changing typography. Identify theme fonts, slide-master fonts, run-level overrides, languages, and any established brand rules.
-2. Check local availability with `python3 scripts/check_ppt_fonts.py --locale zh-CN`, changing the locale as needed. Do not claim a font is installed based only on its filename or an assumed system default.
+2. Check local availability with `python3 .opencode/skills/ppt-chinese-fonts/scripts/check_ppt_fonts.py --locale zh-CN --check-mono`, changing the locale as needed. When serving `slidev-ppt`, `--check-mono` validates both `--pc-font-sans` (`Noto Sans CJK SC`, `Source Han Sans SC`, etc.) and `--pc-font-mono` (`JetBrains Mono`, `Noto Sans Mono CJK SC`, `Sarasa Mono SC`, `Fira Code`). Do not claim a font is installed based only on its filename or an assumed system default.
 3. Use Noto Sans CJK unless the request or communication goal justifies an alternative. Read [`references/font-options.md`](references/font-options.md) only when choosing a different style, locale fallback, or commercial-use-safe alternative.
 4. Apply fonts at the theme or slide-master level when the tooling supports it. Keep Latin and East Asian theme slots aligned unless the design intentionally uses a separate Latin face.
 5. Remove local text-run overrides only when they conflict with the intended hierarchy. Preserve deliberate emphasis, mathematical notation, emoji, symbols, and brand marks.

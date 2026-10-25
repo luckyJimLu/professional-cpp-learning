@@ -21,6 +21,7 @@ description: Create, render, inspect, refine, and restyle PlantUML diagrams as e
   been checked.
 - Apply a restrained, consistent visual system to new diagrams. Preserve an
   established repository or document style when one exists.
+- **When serving `slidev-ppt` (`slides/lesson-0X.md`)**: Always use the **Slidev Dark Blueprint Profile** defined in [`references/style-guide.md`](references/style-guide.md#slidev-dark-blueprint-profile-for-slidev-ppt) (`backgroundColor transparent`, surface `#1E293B`, border `#38BDF8`/`#334155`, text `#E2E8F0`, `Noto Sans CJK SC`), save both `.puml` and rendered `.svg` under `slides/public/diagrams/`, and include only classes/interfaces/relationships grounded in the course outline's `重点内容` and `呈现方式` (never invent `std::` on user classes or leak `演讲要点` oral stories onto diagram nodes).
 
 ## Route the request
 

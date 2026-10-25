@@ -4,12 +4,14 @@ This registry is the source map for the project-local skills under `.opencode/sk
 
 | Skill ID | Upstream repository and path | Installed revision | Role |
 |---|---|---|---|
-| `mermaid-diagrams` | `softaworks/agent-toolkit` → `skills/mermaid-diagrams` | `3027f20f3181758385a1bb8c022d4041dfb4de84` | Default Markdown and diagram-as-code workflow |
-| `draw-io` | `softaworks/agent-toolkit` → `skills/draw-io` | `3027f20f3181758385a1bb8c022d4041dfb4de84` | Editable draw.io XML and exports |
-| `excalidraw` | `softaworks/agent-toolkit` → `skills/excalidraw` | `3027f20f3181758385a1bb8c022d4041dfb4de84` | Whiteboard-style Excalidraw artifacts |
-| `diagram-design` | `cathrynlavery/diagram-design` → `skills/diagram-design` | `0b9b10cab3dbf695642fa1a6c4b4f60df9083689` | Polished HTML/SVG/PNG editorial diagrams |
-| `plantuml-skill` | `DoubleMice/plantuml-skill` → repository root | `1973811bd60981c2c1330fac16073b509b876457` | PlantUML authoring and secure local rendering |
-| `diagram-orchestrator` | Project-local | local | Routing, inventory, and lifecycle coordination |
+| `slidev-ppt` | Project-local (Core Hub) | local | Central Slidev PPT generator, 3-zone outline fidelity & multi-skill coordinator |
+| `diagram-orchestrator` | Project-local | local | Routing, inventory, and lifecycle coordination for all diagram sub-skills |
+| `diagram-design` | `cathrynlavery/diagram-design` → `skills/diagram-design` | `0b9b10cab3dbf695642fa1a6c4b4f60df9083689` | Polished HTML/SVG/PNG editorial diagrams (Pyramids, Memory layouts, Delta, Radar) |
+| `mermaid-diagrams` | `softaworks/agent-toolkit` → `skills/mermaid-diagrams` | `3027f20f3181758385a1bb8c022d4041dfb4de84` | Default Markdown and Slidev Dark inline diagram-as-code workflow |
+| `plantuml-skill` | `DoubleMice/plantuml-skill` → repository root | `1973811bd60981c2c1330fac16073b509b876457` | Rigorous C++ UML authoring and secure local rendering |
+| `draw-io` | `softaworks/agent-toolkit` → `skills/draw-io` | `3027f20f3181758385a1bb8c022d4041dfb4de84` | Editable draw.io XML and dark-theme transparent exports |
+| `excalidraw` | `softaworks/agent-toolkit` → `skills/excalidraw` | `3027f20f3181758385a1bb8c022d4041dfb4de84` | Whiteboard-style Excalidraw artifacts with context-isolated extraction |
+| `ppt-chinese-fonts` | Project-local (`yuleshow/chinese-fonts` reference) | local | Noto Sans CJK SC/TC/HK & monospace code font verification |
 
 Installed on 2026-10-25.
 

@@ -1,86 +1,73 @@
-# OpenCode Skills 目录索引
+# OpenCode Skills 目录索引（以 `slidev-ppt` 为核心中枢的演示文稿工程体系）
 
-本目录包含了为本项目定制的 OpenCode 专家技能（Skills），涵盖**架构图表绘制、UML 建模、演示文稿排版与交互式 Slidev 课件生成**等全套技术支撑能力。
-
----
-
-## 技能概览一览表
-
-| 技能名称 (Directory) | 主要定位与职责 | 支持格式 / 产物 | 推荐使用场景 |
-| :--- | :--- | :--- | :--- |
-| [**`diagram-orchestrator`**](./diagram-orchestrator) | **图表总调度器**<br>根据图表需求智能路由到最适合的专用绘图技能 | 路由分发 / 格式转换 | 处理任何不确定具体绘图工具的图表请求时的统一入口 |
-| [**`mermaid-diagrams`**](./mermaid-diagrams) | **Markdown 原生图表**<br>适合 Git 版本控制的轻量级流程图与结构图 | Mermaid (`.mmd` / fenced block) | 课程文档、Git 变更流、标准 UML 类图、时序图、C4 架构视图 |
-| [**`plantuml-skill`**](./plantuml-skill) | **严谨工业级 UML 建模**<br>精准描述类继承、复杂时序与系统组件 | `.puml` 源码、SVG、PNG | 从 C++ 源码逆向建模、复杂设计模式类图、接口与时序交互 |
-| [**`draw-io`**](./draw-io) | **交互式矢量图绘制**<br>支持精确布局与 AWS/系统云架构图标 | `.drawio` (XML)、PNG | 需手动微调版面、云原生架构拓扑、商业汇报架构图 |
-| [**`excalidraw`**](./excalidraw) | **手绘与白板风格绘图**<br>轻松自由的原型与头脑风暴草图 | `.excalidraw` (JSON) | 早期架构头脑风暴、算法白板草图、非正式技术讨论草案 |
-| [**`diagram-design`**](./diagram-design) | **品牌级 / 出版级图表系统**<br>支持 45 种高阶图表类型与定制风格 | 独立 HTML (内联 SVG)、PNG | 技术博客插图、演进差量图（Delta）、数据流、雷达图、桑基图 |
-| [**`ppt-chinese-fonts`**](./ppt-chinese-fonts) | **演示文稿中文字体规范**<br>建立统一跨平台的思源黑体字体栈 | 字体规范、字体检测脚本 | PPT / Slidev 中文排版、解决跨平台文字替换与字形缺失 |
-| [**`slidev-ppt`**](./slidev-ppt) | **C++ 系列课程交互式幻灯片**<br>自动将课程大纲转为 Slidev 课件 | Slidev Markdown (`slides.md`) | 制作现代 C++ 课件、带代码高亮与动态图表的互动演示 |
+本目录构建了一套**以 [`slidev-ppt`](./slidev-ppt) 为核心枢纽（Core Hub）、其余 7 个专业技能为辅助支撑（Auxiliary Spokes）**的演示文稿（PPT）与架构可视化生成体系。核心目标是将课程大纲转化为**零幻觉、100% 忠于原文、逻辑严密、形状即语义、全链路视觉高度统一**的工程蓝图级交互式 Slidev 课件。
 
 ---
 
-## 核心工作流与推荐路由策略
+## 核心中枢与辅助子技能一览表（Hub-and-Spoke 架构）
 
-在进行架构设计与课程课件制作时，推荐遵循以下分工模式：
+| 层级 | 技能名称 (Directory) | 主要定位与职责 | 支持格式 / 产物 | 在 PPT 生成中的协同角色 |
+| :--- | :--- | :--- | :--- | :--- |
+| **核心中枢**<br>(Core Hub) | [**`slidev-ppt`**](./slidev-ppt) | **交互式 PPT 生成与总控中枢**<br>解析课程大纲、执行三栏严格映射契约、生成 Slidev 课件并运行防幻觉校验 | `slides/lesson-0X.md`<br>`check_slides.py` 报告 | **主入口**：统管页面拆分、工程蓝图网格主题、组件排版、演讲者备注与子技能调度 |
+| **图表路由**<br>(Router) | [**`diagram-orchestrator`**](./diagram-orchestrator) | **图表总调度器**<br>根据大纲 `呈现方式` 的视觉结构特征，智能路由至最佳绘图子技能 | 路由决策 / 技能健康检查 | 确保「形状即语义」（如金字塔用几何梯形、内存用连续/分离槽位、复杂类图用 UML） |
+| **出版级蓝图**<br>(Tier 3) | [**`diagram-design`**](./diagram-design) | **出版级 SVG 蓝图设计系统**<br>支持 45 种专业图型（几何金字塔、内存块布局、架构演进 Delta、罗盘图） | 内联 `.pc-svg-hero` `<svg>`<br>或独立 HTML/SVG | 内置 `professional-cpp-dark` 蓝图预设，绘制高表现力几何模型、带引线标注框与跃迁弧线 |
+| **轻量流图**<br>(Tier 2) | [**`mermaid-diagrams`**](./mermaid-diagrams) | **Markdown 原生流图与时序图**<br>轻量级控制流、`#include` 传染树、`weak_ptr` 破环图、知识链路图 | Mermaid 代码块<br>(`slidev-cpp-presets.md`) | 内置 Slidev Dark 主题头与 C++ 模板 `<T>` 转义规范，直接内嵌于 `slides.md` |
+| **严谨 UML**<br>(Tier 4) | [**`plantuml-skill`**](./plantuml-skill) | **工业级 C++ UML 建模**<br>精确表达 GoF 类继承、双重分发、编译防火墙（Pimpl）、DIP 所有权反转 | `.puml` 源码 + 本地渲染 `.svg`/`.png` | 内置 Slidev Dark Blueprint `skinparam`，生成放到 `slides/public/diagrams/` 的精确 UML |
+| **矢量拓扑**<br>(Tier 5) | [**`draw-io`**](./draw-io) | **可拖拽编辑矢量图**<br>支持精确坐标微调与系统架构图标 | `.drawio` (XML) + 透明底 `.svg`/`.png` | 提供思源黑体 + JetBrains Mono 及 `--pc-*` 暗色样式模板，支持人工后续微调 |
+| **白板草图**<br>(Tier 5) | [**`excalidraw`**](./excalidraw) | **手绘白板推演与上下文隔离**<br>处理高 Token 消耗的 `.excalidraw` JSON | `.excalidraw` + CLI 摘要提取 | 通过子代理隔离或 `excalidraw_extract.py` 提取拓扑，可转为 `diagram-design` 蓝图 |
+| **字体保障**<br>(Typography) | [**`ppt-chinese-fonts`**](./ppt-chinese-fonts) | **中文字体与代码等宽字体规范**<br>建立思源黑体 + JetBrains Mono 标准字体栈 | `check_ppt_fonts.py --check-mono` | 保障中文标点、字重层级与 C++ 代码中文注释对齐，杜绝跨平台缺字与远程字体依赖 |
+
+---
+
+## 核心协同工作流与路由拓扑
 
 ```mermaid
 flowchart TD
-    REQ[用户需求: 图表 / 幻灯片 / 架构设计] --> ROUTE{需求类型}
-    
-    ROUTE -->|图表绘制需求| ORCH[diagram-orchestrator]
-    ROUTE -->|幻灯片与课件制作| SLIDE[slidev-ppt]
-    ROUTE -->|中文字体检查与排版| FONT[ppt-chinese-fonts]
+    OUTLINE["课程大纲 (PPT/设计模式大纲.md)<br/>重点内容 · 呈现方式 · 演讲要点"] --> HUB["核心中枢: slidev-ppt<br/>(三栏严格隔离 · 工程蓝图网格主题)"]
 
-    ORCH -->|Git 文档内嵌 / 简单流程| MERMAID[mermaid-diagrams]
-    ORCH -->|精确实体模型 / 源码类图| PLANT[plantuml-skill]
-    ORCH -->|矢量拓扑 / 云架构图| DRAWIO[draw-io]
-    ORCH -->|草图 / 白板原型| EXCALI[excalidraw]
-    ORCH -->|出版级展示图 / 复杂全景| DESIGN[diagram-design]
+    HUB -->|1. 字体栈核验 (--check-mono)| FONT["ppt-chinese-fonts<br/>Noto Sans CJK SC + JetBrains Mono"]
+    HUB -->|2. 视觉呈现路由| ORCH["diagram-orchestrator<br/>(五级图表路由矩阵)"]
 
-    SLIDE -->|集成思源黑体字体规范| FONT
-    SLIDE -->|生成图表素材| ORCH
+    ORCH -->|Tier 1: 矩阵表 / Benchmark 条形图| NATIVE["Slidev 原生组件<br/>table · pc-bars · pc-card"]
+    ORCH -->|Tier 2: 轻量依赖流 / 破环图 / 导图| MERMAID["mermaid-diagrams<br/>(Slidev Dark Preset + &lt;T&gt; 转义)"]
+    ORCH -->|Tier 3: 几何金字塔 / 内存块 / 罗盘 / Delta| DESIGN["diagram-design<br/>(pc-svg-hero 几何蓝图 + 引线标注)"]
+    ORCH -->|Tier 4: 复杂 C++ 类图 / DIP / Visitor| PLANT["plantuml-skill<br/>(Slidev Dark skinparam -> SVG)"]
+    ORCH -->|Tier 5: 手调矢量 / 白板草图| VEC["draw-io / excalidraw"]
+
+    NATIVE & MERMAID & DESIGN & PLANT & VEC --> DECK["生成课件: slides/lesson-0X.md"]
+    DECK -->|3. 自动化结构与防幻觉检验| CHECK["slidev-ppt/scripts/check_slides.py<br/>(零越界 · 零改写 · 点击同步 · 0 Errors)"]
 ```
 
 ---
 
-## 详细技能介绍
+## 三大工程质量支柱
 
-### 1. `diagram-orchestrator`（绘图调度中心）
-- **功能**：作为项目内所有图表任务的唯一入口（Single Entry Point）。负责评估输入需求，在 Mermaid、PlantUML、draw.io、Excalidraw 和 Diagram Design 之间做最优决策。
-- **调用规则**：若用户未指定绘图工具且用于 Markdown 文档，优先推荐 `mermaid-diagrams`；若涉及复杂面向对象架构建模，推荐 `plantuml-skill`。
+### 1. 防幻觉与大纲三栏严格映射契约（Zero Hallucination & Strict Grounding）
+针对大模型生成 PPT 时常见的“把口头故事升格成独立页面”、“同义词擅自改写（如把‘晚上 CI’改成‘夜间 CI’）”、“给自定义类型乱加 `std::`（如 `std::Widget*`）”等问题，`slidev-ppt` 强制执行：
+- **`重点内容` + `呈现方式` → 幻灯片画面（Slide Canvas）**：100% 兑现大纲指定的图表、表格、对比代码、Benchmark 数值与金句，零遗漏、零篡改。
+- **`演讲要点` → 仅限页底演讲者备注（`<!-- ... -->`）**：开场痛点故事、口头比喻（如“电钻和锯子 vs 建筑蓝图”）、面试追问 **100% 放入备注**，严禁越界升格为独立幻灯片或画面卡片。
+- **自动化拦截（`check_slides.py`）**：自动比对 `slides/lesson-0X.md` 与 `PPT/设计模式大纲.md`，一旦发现 `演讲要点` 词句泄漏到画面、出现大纲外改写词、伪造 `std::` 前缀或点击数失步，立即报错阻断。
 
-### 2. `mermaid-diagrams`（Mermaid 图表系统）
-- **功能**：提供高质量 Mermaid 代码块，涵盖 Flowchart、Sequence、Class Diagram、State Diagram、Entity Relationship（ERD）、Architecture Diagram 与 C4 架构模型。
-- **规范**：遵循简洁命名、清晰流向、严格转义的工程规范。
+### 2. 形状即语义与工程蓝图视觉升级（Shape Encodes Meaning）
+对比 NotebookLM 等高质量视觉演示，本体系摒弃“用三个等宽 `<div>` 矩形冒充金字塔”的平庸做法：
+- **工程蓝图网格底纹**：在 `style.css` 中内置 `24px / 96px` 双层工程蓝图坐标网格底纹。
+- **真实几何模型（`.pc-svg-hero`）**：金字塔使用真实 `<polygon>` 三角形与梯形（配合主战场层级高亮、左侧跃迁弧形箭头、右侧带指向引线的标注框与跨层虚线括号）；内存布局绘制真实的分离堆块 vs 单块连续内存槽位与指针箭头；性能对比使用按真实比例缩放的 `.pc-bars` 横向条形图。
 
-### 3. `plantuml-skill`（PlantUML 专业建模）
-- **功能**：生成可维护的 `.puml` 纯文本模型定义，并支持本地渲染为 PNG/SVG。
-- **特性**：内置 C++ 设计模式标准模板、安全渲染建议与排版样式指南，不依赖不可信外部公共服务。
-
-### 4. `draw-io`（draw.io 矢量图设计）
-- **功能**：直接编辑 `.drawio` XML 源文件，支持 AWS 架构图标库和中英文字体样式注入。
-- **规范**：仅维护 `.drawio` 源文件，配合构建脚本或预提交钩子生成 `.drawio.png`。
-
-### 5. `excalidraw`（Excalidraw 虚拟白板）
-- **功能**：生成和更新 `.excalidraw` 结构化 JSON 数据。
-- **特点**：对于大体积 JSON 文件，支持隔离委托以保护主上下文窗口。
-
-### 6. `diagram-design`（出版级 HTML/SVG 编辑设计系统）
-- **功能**：包含 45 种专业视觉类型，生成自包含样式和内联 SVG 的独立 HTML 页面，色彩系统遵循品牌标准规范。
-- **适用**：复杂系统架构全景、生命周期演进图、技术雷达图、数据湖全景等高阶演示材料。
-
-### 7. `ppt-chinese-fonts`（PPT 中文字体系统）
-- **功能**：建立以**思源黑体（Noto Sans CJK / Source Han Sans）**为基准的中文字体标准栈。
-- **覆盖**：区分简体中文（SC）、繁体中文（TC / HK）、日文（JP）与韩文（KR），提供等宽代码字体建议与检测工具。
-
-### 8. `slidev-ppt`（Slidev 交互课件生成器）
-- **功能**：将 C++ 教学大纲转化为可直接通过 `npm run dev` 运行的交互式 Slidev 幻灯片。
-- **技术栈**：深度整合暗色工程主题、Vue3 自定义组件（Callout、Quote 等）、演讲者备注（Notes）以及代码块逐步运行高亮。
+### 3. 全链路跨工具视觉 Token 统一（Unified Visual Tokens）
+所有子技能共享同一套 `--pc-*` 暗色工程蓝图色板（背景 `#0F172A`、卡片 `#1E293B`、边框 `#334155`、主文 `#E2E8F0`、青蓝强调 `#38BDF8`、翠绿正向 `#22C55E`、珊瑚红警告 `#EF4444`、琥珀金句 `#F59E0B`、紫罗兰横切 `#A78BFA`）与思源黑体字体栈。
 
 ---
 
-## 目录维护规范
+## 常用校验与维护命令
 
-1. **版本控制**：所有 skill 目录内的文档、配置、资源模板及代码示例均受 Git 追踪管理。
-2. **依赖隔离**：`.opencode/node_modules/` 与构建缓存受 `.gitignore` 规则忽略，不提交二进制依赖。
-3. **独立分发**：每个技能目录内均包含自包含的 `SKILL.md`，可作为 OpenCode 标准插件独立安装或迁移。
+```bash
+# 1. 检查所有 8 个 skills 的目录与元数据健康度
+python3 .opencode/skills/diagram-orchestrator/scripts/check_diagram_skills.py
+
+# 2. 检查本机思源黑体与 C++ 代码等宽字体
+python3 .opencode/skills/ppt-chinese-fonts/scripts/check_ppt_fonts.py --check-mono
+
+# 3. 校验生成的 Slidev 幻灯片（结构 + 大纲防幻觉溯源）
+python3 .opencode/skills/slidev-ppt/scripts/check_slides.py slides/lesson-01.md \
+  --outline PPT/设计模式大纲.md --lesson 1
+```

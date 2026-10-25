@@ -1,0 +1,4 @@
+interface:
+  display_name: "Slidev C++ PPT Hub"
+  short_description: "Generate zero-hallucination Slidev presentations with blueprint visuals"
+  default_prompt: "Use $slidev-ppt as the core hub to convert this C++ course outline into an interactive Slidev deck, strictly obeying the 3-zone outline mapping contract and coordinating diagram/font sub-skills."
