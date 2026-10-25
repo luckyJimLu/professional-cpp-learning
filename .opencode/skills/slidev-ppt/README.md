@@ -7,7 +7,9 @@ slidev-ppt/
 ├── SKILL.md                     # 核心入口（三栏严格映射契约、子技能调度协议、工作流）
 ├── agents/openai.yaml           # Agent 元数据配置
 ├── scripts/
-│   └── check_slides.py          # 自动化结构与大纲防幻觉/防越界校验器
+│   ├── check_slides.py          # 自动化结构与大纲防幻觉/防越界校验器（CLI 冻结）
+│   ├── test_check_slides.py     # 结构/泄漏/std/点击/课号 回归测试（stdlib unittest）
+│   └── leak_markers.json        # 各课专属泄漏标记（数据驱动，新增一课无需改代码）
 ├── references/
 │   ├── style-guide.md           # 视觉 / 语言 / 交互 / 防幻觉规范
 │   ├── components.md            # 允许使用的组件、pc-* 类名、几何 SVG 蓝图与 9 种页面版式
@@ -29,8 +31,13 @@ slidev-ppt/
 cp -r .opencode/skills/slidev-ppt/assets/theme/. slides/
 
 # 2. 运行幻灯片结构与大纲防幻觉校验（检查栏目越界、点击同步、伪造 std:: 等）
+#    接口：check_slides.py DECK [--outline P] [--lesson N] [--public-dir P]
+#                             [--allow-partial] [--allow-unknown-classes] [--strict] [--json]
 python3 .opencode/skills/slidev-ppt/scripts/check_slides.py slides/lesson-01.md \
   --outline PPT/设计模式大纲.md --lesson 1
+
+# 2b. 回归测试（守护第 1 课基准课件 + 泄漏/std/点击/课号 用例）
+python3 -m unittest discover -s .opencode/skills/slidev-ppt/scripts -p 'test_*.py'
 
 # 3. 检查本机思源黑体与代码等宽字体
 python3 .opencode/skills/ppt-chinese-fonts/scripts/check_ppt_fonts.py --check-mono
@@ -47,3 +54,5 @@ npm run export     # 导出 PDF
 - **严守大纲三栏边界**：`重点内容` 与 `呈现方式` 决定幻灯片画面；`演讲要点`（痛点故事、口头比喻、面试追问）100% 仅写入 `<!-- ... -->` 演讲者备注，严禁升格为独立幻灯片或画面卡片。
 - **形状即语义**：金字塔、内存块布局、vptr 跳转、罗盘图必须使用 `.pc-svg-hero` 真实几何 `<svg>` 或 `diagram-design` / `plantuml-skill` 生成的 SVG，禁止退化为三个等宽矩形 `<div>`。
 - **每次修改必跑校验**：修改完 `slides/lesson-0X.md` 后务必执行 `check_slides.py`，确保 0 errors。
+- **新增一课专属故事**：把该课 `演讲要点` 中独特的引号原话追加到 `scripts/leak_markers.json`（数据驱动，无需改 Python），校验器会据此拦截其泄漏上屏。
+- **改动技能后跑回归 + 构建**：先 `python3 -m unittest discover -s .opencode/skills/slidev-ppt/scripts -p 'test_*.py'`，再 `cd slides && npm run build`（须 exit 0）。

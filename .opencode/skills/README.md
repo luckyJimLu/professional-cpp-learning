@@ -67,7 +67,10 @@ python3 .opencode/skills/diagram-orchestrator/scripts/check_diagram_skills.py
 # 2. 检查本机思源黑体与 C++ 代码等宽字体
 python3 .opencode/skills/ppt-chinese-fonts/scripts/check_ppt_fonts.py --check-mono
 
-# 3. 校验生成的 Slidev 幻灯片（结构 + 大纲防幻觉溯源）
+# 3. 校验生成的 Slidev 幻灯片（结构 + 大纲防幻觉溯源；CLI 冻结）
 python3 .opencode/skills/slidev-ppt/scripts/check_slides.py slides/lesson-01.md \
   --outline PPT/设计模式大纲.md --lesson 1
+
+# 4. 技能回归测试（守护基准课件 + 泄漏/std/点击/课号 用例）
+python3 -m unittest discover -s .opencode/skills/slidev-ppt/scripts -p 'test_*.py'
 ```
