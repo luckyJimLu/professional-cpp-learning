@@ -40,6 +40,9 @@ jobs:
       - name: Verify migrated content
         run: npm run check:migration
 
+      - name: Check Slidev course decks
+        run: npm run ppt:check
+
       - name: Build web application
         env:
           GITHUB_PAGES: "true"

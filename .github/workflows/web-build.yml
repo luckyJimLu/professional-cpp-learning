@@ -31,6 +31,9 @@ jobs:
       - name: Verify migrated content
         run: npm run check:migration
 
+      - name: Check Slidev course decks
+        run: npm run ppt:check
+
       - name: Check migrated C++ examples
         run: |
           sudo apt-get update
