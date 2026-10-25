@@ -283,6 +283,8 @@
 }
 .pc-tag.violet { border-color: var(--pc-violet); color: var(--pc-violet); }
 
+.pc-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+
 /* ---------- 流程/连锁反应 ---------- */
 .pc-chain { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
 .pc-chain .pc-arrow { color: var(--pc-muted); }
@@ -293,3 +295,34 @@
   font-size: 0.72rem; color: var(--pc-muted);
 }
 .pc-next::before { content: '下一页 → '; color: var(--pc-accent); }
+
+/* ---------- 打印 / PDF 导出（保留暗色底与工程蓝图网格） ---------- */
+@media print {
+  .slidev-layout,
+  .slidev-layout.cover,
+  .slidev-layout.section {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .slidev-layout { box-shadow: none; }
+  pre.slidev-code,
+  .pc-card,
+  .pc-diagram,
+  .pc-svg-hero,
+  .pc-layers,
+  .pc-bars,
+  .slidev-layout table {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+
+/* ---------- 无障碍：尊重「减少动态效果」偏好 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .slidev-layout,
+  .slidev-layout * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
