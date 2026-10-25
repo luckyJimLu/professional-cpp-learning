@@ -128,6 +128,18 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
+  min-width: 0;
+  flex: 1;
+}
+
+.slide-stage-header { gap: 12px; }
+.slide-stage-header-actions,
+.slide-stage-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .slide-stage-tag {
@@ -157,6 +169,8 @@
 .slidev-layout {
   position: relative;
   min-height: 100%;
+  box-sizing: border-box;
+  flex-shrink: 0;
   padding: 2.5rem 3rem 2rem;
   background-color: var(--pc-bg);
   background-image:
@@ -453,6 +467,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  flex: 1;
+  min-width: 0;
+  flex-wrap: wrap;
 }
 
 .slide-ctrl-btn {
@@ -460,6 +477,8 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
+  flex-shrink: 0;
+  white-space: nowrap;
   min-height: 34px;
   padding: 4px 12px;
   background: var(--pc-surface);
@@ -490,6 +509,8 @@
 }
 
 .slide-counter {
+  flex-shrink: 0;
+  white-space: nowrap;
   font-family: var(--pc-font-mono);
   font-size: 13px;
   color: var(--pc-muted);
@@ -497,6 +518,9 @@
 }
 
 .slide-jumper-select {
+  flex: 1 1 180px;
+  min-width: 0;
+  max-width: 100%;
   background: var(--pc-surface);
   border: 1px solid var(--pc-border);
   color: var(--pc-text);
@@ -504,6 +528,73 @@
   border-radius: 6px;
   font-size: 13px;
   font-family: var(--pc-font-mono);
+}
+
+/* Fullscreen owns its viewport; only the canvas and notes scroll locally. */
+.slide-stage-wrapper:fullscreen,
+.slide-stage-wrapper.is-fullscreen {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  box-sizing: border-box;
+  border: 0;
+  border-radius: 0;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+.slide-stage-wrapper:fullscreen .slide-canvas-viewport,
+.slide-stage-wrapper.is-fullscreen .slide-canvas-viewport {
+  flex: 1 1 0;
+  min-height: 0;
+  aspect-ratio: auto;
+}
+
+.slide-stage-header,
+.slide-stage-footer { flex-shrink: 0; }
+
+.slide-stage-wrapper:fullscreen .slide-notes-drawer,
+.slide-stage-wrapper.is-fullscreen .slide-notes-drawer {
+  flex: 0 1 auto;
+  min-height: 0;
+  max-height: 25%;
+}
+
+.slide-ctrl-btn:focus-visible,
+.slide-jumper-select:focus-visible {
+  outline: 2px solid var(--pc-accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+  .slide-stage-header,
+  .slide-stage-footer { padding: 8px; gap: 8px; }
+  .slide-stage-header { align-items: flex-start; }
+  .slide-stage-meta { gap: 4px; }
+  .slide-stage-tag { max-width: 100%; overflow-wrap: anywhere; }
+  .slide-stage-header-actions { flex-wrap: wrap; justify-content: flex-end; max-width: 115px; }
+  .slide-stage-meta .slide-stage-tag:nth-child(2) { display: none; }
+  .slide-stage-footer .slide-nav-controls { flex-basis: 100%; }
+  .slide-ctrl-btn,
+  .slide-jumper-select { min-height: 44px; }
+  .slidev-layout { padding: 1.25rem; }
+  .slidev-layout.cover { padding: 1.5rem; }
+  .slidev-layout.cover h1 { font-size: clamp(1.6rem, 5vw, 2.4rem); }
+}
+
+/* Keep the stage usable on phones rotated into a short landscape viewport. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .slide-stage-wrapper:fullscreen .slide-stage-header,
+  .slide-stage-wrapper.is-fullscreen .slide-stage-header { padding: 4px 8px; }
+  .slide-stage-wrapper:fullscreen .slide-stage-meta .slide-stage-tag:not(:first-child),
+  .slide-stage-wrapper.is-fullscreen .slide-stage-meta .slide-stage-tag:not(:first-child) { display: none; }
+  .slide-stage-footer { flex-wrap: nowrap; padding: 4px 8px; }
+  .slide-stage-footer .slide-nav-controls { flex-basis: auto; flex-wrap: nowrap; }
+  .slide-jumper-select { flex-basis: 0; width: 0; }
+  .slidev-layout,
+  .slidev-layout.cover { padding: 1rem 1.5rem; }
 }
 
 /* ---------- 演讲者备注抽屉 (Speaker Notes) ---------- */
@@ -716,4 +807,9 @@
   width: 100%;
   height: 100%;
   border: none;
+}
+
+/* The document's reserved scrollbar gutter must not narrow the fullscreen top layer. */
+:root:has(.slide-stage-wrapper:fullscreen) {
+  scrollbar-gutter: auto;
 }

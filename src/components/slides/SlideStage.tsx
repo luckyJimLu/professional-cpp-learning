@@ -54,7 +54,7 @@ export function SlideStage({
 
   useEffect(() => {
     const handleFullscreenChange = () => {
-      setIsFullscreen(Boolean(document.fullscreenElement));
+      setIsFullscreen(document.fullscreenElement === containerRef.current);
     };
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     return () =>
@@ -126,7 +126,7 @@ export function SlideStage({
             </span>
           )}
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <div className="slide-stage-header-actions">
           <span className="slide-counter">
             {String(currentSlideIndex).padStart(2, "0")} /{" "}
             {String(deck.totalSlides).padStart(2, "0")}
@@ -211,7 +211,7 @@ export function SlideStage({
           </select>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <div className="slide-stage-footer-actions">
           <button
             type="button"
             className={`slide-ctrl-btn ${showNotes ? "is-active" : ""}`}
