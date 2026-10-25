@@ -103,3 +103,20 @@ npm run build
 ```
 
 课程与专题正文以仓库 Markdown 为内容源，Web UI 负责导航、阅读、实验及复盘。
+
+## 课件（Slidev PPT）
+
+课程大纲 `PPT/设计模式大纲.md` 由 [`.opencode/skills/slidev-ppt`](.opencode/skills/slidev-ppt) 技能生成工程蓝图风格的交互式课件（`slides/lesson-0X.md`）。课件生成已集成到本仓库的脚本与 CI 中。
+
+```bash
+npm run ppt:sync       # 同步技能主题（style.css / global-top.vue / components）到 slides/
+npm run ppt:install    # 首次安装 slides/ 依赖
+npm run ppt:check      # 校验全部 slides/lesson-*.md（三栏防幻觉 + 结构/词表/资源）+ 技能回归测试
+npm run ppt:build      # 构建静态站点到 slides/dist/
+npm run ppt:export     # 导出 PDF
+npm run ppt:all        # sync -> check -> build
+```
+
+- 校验器 CLI：`python3 .opencode/skills/slidev-ppt/scripts/check_slides.py DECK --outline PPT/设计模式大纲.md --lesson N`（`--strict` 将 warning 视为 error）。
+- 技能体系说明：[`.opencode/skills/README.md`](.opencode/skills/README.md)。
+- CI：`.github/workflows/web-build.yml` 与 `deploy.yml` 在构建前执行 `npm run ppt:check`。
