@@ -42,6 +42,7 @@
 - 左上角页眉「第 X 课 · 短标题」（来自 headmatter `lesson`），右下角「PPT N · 页码」（来自 frontmatter `ppt`）——均由 `global-top.vue` 自动渲染，**不要手写**。
 - 正文要点 ≤ 5 条，每条 ≤ 25 字；页面留白 ≥ 30%。
 - 图示：扁平线框、圆角卡片、分层图、受控高度（`≤ 310px`）的 Mermaid 或外部 SVG；不用照片、不用 3D、不用 emoji 装饰（`<Callout>` 组件内置的功能性图标除外）。
+- 打印 / PDF 导出：暗色底与工程蓝图网格由 `style.css` 的 `@media print` 保留，代码块 / 卡片 / 图表自动 `break-inside: avoid`；页面内**不得**手写打印样式。
 
 ## 语言
 

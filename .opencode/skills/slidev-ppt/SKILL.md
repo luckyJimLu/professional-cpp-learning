@@ -89,7 +89,22 @@ python3 .opencode/skills/slidev-ppt/scripts/check_slides.py slides/lesson-0X.md 
   --outline PPT/设计模式大纲.md --lesson X
 ```
 
-若脚本报告任何错误（如栏目越界泄漏 `[LEAK]`、`std::` 误加、点击数不匹配、缺失 `pc-next` 等），必须在输出前修复至 0 错误！
+**校验器 CLI（冻结接口）**
+
+| 参数 | 说明 |
+| :--- | :--- |
+| `DECK` | 必填，Slidev 文件路径（如 `slides/lesson-01.md`） |
+| `--outline PATH` | 课程大纲路径（启用三栏防幻觉溯源，推荐必填） |
+| `--lesson N` | 大纲课号；同时校验 headmatter `lesson` 是否含 `第 N 课` |
+| `--public-dir PATH` | `/...` 图片资源根目录（默认 `<deck 所在目录>/public`） |
+| `--allow-partial` | 允许 PPT 单元部分覆盖（用于示例片段） |
+| `--allow-unknown-classes` | 未知 `pc-*` 类降级为 warning |
+| `--strict` | 将 warning 提升为 error（发布前建议开启） |
+| `--json` | 输出 JSON 报告 |
+
+**自动拦截项（必须 0 error 方可交付）**：Headmatter 完整性；`ppt: N` 存在；页底备注存在；点击数 ≤ 5 且与 `[click]` 数量严格相等；`pc-next` 存在且内容非空；无内联十六进制色；仅使用 `assets/theme/style.css` 中已定义的 `pc-*` 类名；`/diagrams/*.svg|png` 资源真实存在；无伪造 `std::` 前缀（依据大纲动态判定域类型）；`演讲要点` 中的引号原话未泄漏到画面；PPT 单元覆盖完整；headmatter `lesson` 与 `--lesson` 一致。
+
+若脚本报告任何错误（如栏目越界泄漏 `[Field-Boundary Leak]`、`std::` 误加、点击数不匹配、缺失 `pc-next`、未知 `pc-*` 类、缺失图表资源等），必须在输出前修复至 0 错误！
 
 在对话中汇报时，严格包含以下结构：
 
@@ -130,6 +145,26 @@ npm run build      # 构建静态站点
 npm run export     # 导出 PDF
 ```
 
+## 新增一课（lesson-0X）操作手册
+
+1. **确认大纲三栏结构**：`PPT/设计模式大纲.md` 中目标课以 `## 📌 第 N 课：…` 起始，单元以 `### PPT N: <标题>` 起始，且每单元含 `* **重点内容**：`、`* **呈现方式**：`、`* **演讲要点**：` 三栏（缺一则 `check_slides.py` 无法溯源）。
+2. **同步主题**：`cp -r .opencode/skills/slidev-ppt/assets/theme/. slides/`（保持 `style.css` / `global-top.vue` / `components/` 与技能一致）。
+3. **生成课件**：按 Step 1–3 产出 `slides/lesson-0X.md`（headmatter 的 `lesson` 必须写 `第 N 课 · <短标题>`）。
+4. **补充本课专属泄漏标记**：若本课 `演讲要点` 含独特故事/比喻引号原话，追加到 `scripts/leak_markers.json`（数据驱动，无需改代码）。
+5. **校验**：运行 Step 4 命令，`--lesson N` 必须与文件内容一致，直至 0 error。
+6. **运行/导出**：在 `slides/package.json` 为新课追加脚本（`slidev lesson-0X.md`），再 `npm run dev` / `npm run build` / `npm run export`。
+
+## 安全再生成循环（防止改坏）
+
+1. **改前基线**：确认 `python3 .opencode/skills/slidev-ppt/scripts/check_slides.py <deck> --outline PPT/设计模式大纲.md --lesson N` 当前为 PASSED。
+2. **改后复检**：重跑同一条命令；任何新增 error 必须在继续前修复。
+3. **回归护栏**：`python3 -m unittest discover -s .opencode/skills/slidev-ppt/scripts -p 'test_*.py'`（`test_real_lesson_01_still_passes` 守护第 1 课基准课件）。
+4. **视觉护栏**：`cd slides && npm run build` 必须 exit 0（CSS / 组件改动的最低验证）。
+
+## 变更记录
+
+- **v1.1**：`check_slides.py` 泛化防幻觉能力——移除写死的第 1 课故事列表与单条 `夜间 CI` 检查，改为「引号原话 + 外部 `leak_markers.json`」数据驱动；新增 headmatter `lesson` 与 `--lesson` 一致性校验、按大纲动态判定伪造 `std::` 前缀、`pc-*` 词表校验、`/diagrams/` 资源存在性校验、`pc-next` 非空校验、末页预告提示与 `--public-dir` / `--strict` / `--allow-unknown-classes` 参数；新增 `scripts/test_check_slides.py` 回归测试。`style.css` 增补独立 `.pc-tags` 规则、`@media print`（暗色底/网格保留、避免分页截断）与 `prefers-reduced-motion`。
+
 ## 质量自检清单（输出前逐项检查）
 
 - [ ] **零越界**：`演讲要点` 中的痛点故事、比喻、面试题是否 **100% 仅存在于 `<!-- -->` 备注中**，绝未升格为独立页面或画面卡片？
@@ -137,7 +172,10 @@ npm run export     # 导出 PDF
 - [ ] **100% 兑现呈现方式**：大纲 `呈现方式` 要求的表格、条形图、左右对比代码、金句是否全部在画面兑现，无遗漏？
 - [ ] **代码保真**：大纲代码是否原样保留，没有任何 `std::Widget` 等伪造的 `std::` 前缀？
 - [ ] **规范 Headmatter**：包含 `theme`、`title`、`lesson`、`lang: zh-CN`、`colorSchema: dark`、`canvasWidth: 980`、`transition: fade`？
-- [ ] **合法词汇表**：只使用了 `components.md` 列出的组件与 `pc-*` 类名，无内联十六进制颜色？
+- [ ] **合法词汇表**：只使用了 `components.md` 列出、且 `style.css` 已定义的 `pc-*` 类名，无内联十六进制颜色？
+- [ ] **课号一致**：headmatter `lesson` 含 `第 X 课`，且与 `--lesson X` 完全一致？
+- [ ] **图表资产存在**：`/diagrams/*.svg|png` 引用均在 `slides/public/diagrams/` 下真实存在？
+- [ ] **衔接钩子非空**：每页 `pc-next` 均带启下句，末页含下节课预告（`预告` / `下一课` / `下节`）？
 - [ ] **点击同步**：每页点击 ≤ 5 次，且备注中的 `[click]` 数量与页面实际点击步数完全一致？
 - [ ] **Markdown 空行**：所有 HTML 块（`<div>`、`<Callout>`）与内部 Markdown 之间均留有空行？
 - [ ] **自动化验证**：`check_slides.py` 运行结果为 0 errors？

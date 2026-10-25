@@ -51,6 +51,7 @@ ppt: N
 | `pc-axis` + `pc-axis-line` | 纵向轴线（如 Design Level ↓ Code Level） |
 | `pc-span` + `pc-span-title` | 跨层虚线框（紫色，横切关注点） |
 | `pc-tag` (+ `violet`) | 等宽小标签：C++ 标识符、设计模式名、数据来源角标 |
+| `pc-tags` | 标签组容器（自动换行 flex）；可在 `pc-layer` 之内或之外的任意版式中独立使用 |
 | `pc-chain` + `pc-arrow` | 横向知识链路 / 阶段演进链（仅用于 `重点内容`/`呈现方式` 中的知识主线） |
 | `pc-bars` / `pc-bar-row` / `pc-bar-label` / `pc-bar-track` / `pc-bar-fill` (+ `good`/`bad`/`info`) | Benchmark 实测性能横向对比条形图 |
 | `pc-svg-hero` | 全宽工程蓝图内联 `<svg>` 容器（支持 `<g v-click>` 分步揭示与 `var(--pc-*)` CSS 变量，用于几何金字塔、内存块布局、vptr 跳转图、架构罗盘） |
@@ -251,3 +252,5 @@ ppt: N
 - HTML 标签与其内部 Markdown 之间必须留空行，否则 Markdown 不会被解析。
 - 备注写在每页最后的 `<!-- ... -->` 中；它必须是该页的最后一个块。
 - `v-click="N"` 可让多个元素在同一次点击出现；注意 `<v-clicks>` 含 $K$ 个列表项时会消耗 $K$ 次点击，其后的显式 `v-click="M"` 编号必须从前序累计点击数 $+1$ 开始，并与备注中的 `[click]` 一一对应。
+- `pc-*` 类名只能使用 `assets/theme/style.css` 与上表已定义的词汇；`check_slides.py` 会把未知 `pc-*` 类判为 error（`--allow-unknown-classes` 可降级）。
+- 打印 / PDF 导出的暗色底、工程蓝图网格与「避免分页截断」已由 `style.css` 的 `@media print` 统一处理，页面内**无需**手写任何打印样式。
