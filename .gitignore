@@ -1,5 +1,7 @@
 node_modules/
 dist/
+__pycache__/
+.omo/
 .DS_Store
 *.local
 build/
