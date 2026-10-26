@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 60**。下一课从 **Day 61** 继续。
+当前仓库课程已发布到 **Day 61**。下一课从 **Day 62** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -10,20 +10,21 @@
 | 58 | Allocation Failure · Arrays and Resource Boundaries | 已发布 | [day-058](daily/day-058-allocation-failure-resource-boundaries.md) |
 | 59 | Custom Deleters · Non-Memory Resources and RAII Boundaries | 已发布 | [day-059](daily/day-059-custom-deleters-non-memory-resources.md) |
 | 60 | Shared Ownership · shared_ptr, weak_ptr and Lifetime Cycles | 已发布 | [day-060](daily/day-060-shared-ptr-weak-ptr-lifetime.md) |
+| 61 | enable_shared_from_this · Async Callback Lifetime and Teardown | 已发布 | [day-061](daily/day-061-enable-shared-from-this-callback-lifetime.md) |
 
 > Day 1–55 的完整逐日记录仍保存在 `daily/` 与 Git 历史中；本表从 Day 56 起保持最近课程摘要，避免进度文件重复承担完整目录职责。
 
 ## 最新发布详情
 
-- **日期**：2026-10-25
+- **日期**：2026-10-26
 - **章节**：Chapter 7 · Memory Management
-- **主题**：Shared Ownership · `shared_ptr`, `weak_ptr` and Lifetime Cycles
-- **关键知识点**：control block、strong/weak reference、shared lifetime、ownership cycle、`weak_ptr::lock()`、final destruction context
-- **设计模式 / 稳定边界**：Observer lifetime + explicit DI；先定义 ownership graph，再决定 shared ownership；同步嵌套 lifetime 优先 borrow
-- **Lab**：[examples/day-060/main.cpp](examples/day-060/main.cpp)
-- **Runnable Exercise**：[examples/day-060/exercise-01.cpp](examples/day-060/exercise-01.cpp)
-- **上一课**：[Day 59 · Custom Deleters · Non-Memory Resources and RAII Boundaries](daily/day-059-custom-deleters-non-memory-resources.md)
-- **下一课**：继续 Chapter 7，深入 `enable_shared_from_this`、异步 callback lifetime 与 shared ownership 高级陷阱
+- **主题**：`enable_shared_from_this` · Async Callback Lifetime and Teardown
+- **关键知识点**：`enable_shared_from_this`、`shared_from_this()`、`weak_from_this()`、callback lifetime extension、weak capture、stop/unsubscribe/join teardown
+- **设计模式 / 稳定边界**：Observer lifetime + explicit DI；callback 不应无意成为 owner；weak observer 不能替代 deterministic teardown
+- **Lab**：[examples/day-061/main.cpp](examples/day-061/main.cpp)
+- **Runnable Exercise**：[examples/day-061/exercise-01.cpp](examples/day-061/exercise-01.cpp)
+- **上一课**：[Day 60 · Shared Ownership · shared_ptr, weak_ptr and Lifetime Cycles](daily/day-060-shared-ptr-weak-ptr-lifetime.md)
+- **下一课**：继续 Chapter 7，进入 smart pointer aliasing / cast / ownership API 细节与资源边界审计
 
 ## 规则
 
