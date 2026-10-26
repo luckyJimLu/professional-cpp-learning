@@ -120,3 +120,15 @@ npm run ppt:all        # sync -> check -> build
 - 校验器 CLI：`python3 .opencode/skills/slidev-ppt/scripts/check_slides.py DECK --outline PPT/设计模式大纲.md --lesson N`（`--strict` 将 warning 视为 error）。
 - 技能体系说明：[`.opencode/skills/README.md`](.opencode/skills/README.md)。
 - CI：`.github/workflows/web-build.yml` 与 `deploy.yml` 在构建前执行 `npm run ppt:check`。
+
+### 第 2 课：SOLID 与 GoF 的 Modern C++ 重构
+
+- [43 页课件](slides/lesson-02.md)：覆盖大纲 12 个 PPT 单元，含原始代码、完整演讲者备注、依赖对照图与性能表。
+- [页面溯源、术语与大纲歧义说明](slides/lesson-02-traceability.md)。主站「课件」选择器自动发现第 2 课。
+
+```bash
+npm --prefix slides run dev:02       # 交互预览第 2 课
+npm --prefix slides run build:02     # 构建至 slides/dist/lesson-02
+npm --prefix slides run export:02    # 导出第 2 课 PDF
+npm --prefix slides run build:all    # 构建第 1、2 课
+```

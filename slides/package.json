@@ -4,8 +4,13 @@
   "type": "module",
   "scripts": {
     "dev": "slidev lesson-01.md --open",
-    "build": "slidev build lesson-01.md --out dist/lesson-01",
-    "export": "slidev export lesson-01.md --output dist/lesson-01.pdf"
+    "build": "npm run build:01 && npm run build:02",
+    "export": "slidev export lesson-01.md --output dist/lesson-01.pdf",
+    "dev:02": "slidev lesson-02.md --open",
+    "build:02": "slidev build lesson-02.md --out dist/lesson-02",
+    "export:02": "slidev export lesson-02.md --output dist/lesson-02.pdf",
+    "build:all": "npm run build",
+    "build:01": "slidev build lesson-01.md --out dist/lesson-01"
   },
   "dependencies": {
     "@slidev/cli": "^53.0.0",
