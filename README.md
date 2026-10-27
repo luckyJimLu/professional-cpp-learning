@@ -13,9 +13,9 @@
 
 ## 当前进度
 
-- **已发布：Day 1–61**
-- **下一课：Day 62 · Chapter 7 · Memory Management**
-- 当前主线：**Chapter 7 · Memory Management：shared ownership / callback lifetime / deterministic teardown**
+- **已发布：Day 1–62**
+- **下一课：Day 63 · Chapter 7 · Memory Management**
+- 当前主线：**Chapter 7 · Memory Management：smart pointer ownership API / resource boundary / bounded allocation**
 - 更新方式：**GitHub Markdown only**
 
 ## 快速入口
@@ -39,11 +39,11 @@
 
 ## 最近课程
 
+- [Day 62 · Smart Pointer Aliasing, Casts and Ownership API Boundaries](daily/day-062-smart-pointer-aliasing-casts-ownership-api.md)
 - [Day 61 · enable_shared_from_this · Async Callback Lifetime and Teardown](daily/day-061-enable-shared-from-this-callback-lifetime.md)
 - [Day 60 · Shared Ownership · shared_ptr, weak_ptr and Lifetime Cycles](daily/day-060-shared-ptr-weak-ptr-lifetime.md)
 - [Day 59 · Custom Deleters · Non-Memory Resources and RAII Boundaries](daily/day-059-custom-deleters-non-memory-resources.md)
 - [Day 58 · Allocation Failure · Arrays and Resource Boundaries](daily/day-058-allocation-failure-resource-boundaries.md)
-- [Day 57 · Smart Pointers · Ownership Transfer and Borrowing](daily/day-057-smart-pointers-ownership-transfer.md)
 
 ## 每日课程结构
 
@@ -70,7 +70,7 @@
 .
 ├── README.md
 ├── progress.md
-├── daily/                       # 已发布课程 Day 1–61
+├── daily/                       # 已发布课程 Day 1–62
 ├── weekly/
 ├── patterns/
 ├── frameworks/
