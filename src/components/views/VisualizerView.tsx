@@ -42,10 +42,17 @@ export function VisualizerView() {
   }, [traceSession.loadTrace]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "16px", width: "100%", minHeight: isEmbed ? "100vh" : "85vh" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "16px",
+        width: "100%",
+        minHeight: isEmbed ? "100vh" : "85vh",
+      }}
+    >
       {!isEmbed && (
         <PageHeader
-          eyebrow="内存拓扑"
           title="C++ 对象生命周期可视化"
           description="逐步回放 C++ 对象在栈与堆上的生命周期，观察智能指针所有权转移、作用域销毁与悬挂指针。"
         />
@@ -66,4 +73,3 @@ export function VisualizerView() {
     </div>
   );
 }
-

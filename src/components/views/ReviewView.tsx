@@ -30,7 +30,6 @@ export function ReviewView({
   return (
     <div className="review-page">
       <PageHeader
-        eyebrow="回顾 · 练习 · 再验证"
         title="复盘"
         description="从待复习的知识点开始，回到对应课程和实验，再检查是否能独立解释与实现。"
       />

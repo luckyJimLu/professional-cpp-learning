@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
+import { Icon } from "../common/Icon";
 import type { SlideDeck } from "../../lib/slides";
 
 export function SlideGrid({
@@ -11,6 +12,11 @@ export function SlideGrid({
   onSelectSlide: (index: number) => void;
 }) {
   const [query, setQuery] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const clearQuery = () => {
+    setQuery("");
+    inputRef.current?.focus();
+  };
 
   const filteredSlides = useMemo(() => {
     if (!query.trim()) return deck.slides;
@@ -26,8 +32,12 @@ export function SlideGrid({
   return (
     <div className="slides-grid-wrapper">
       <div className="slides-grid-filter">
-        <span style={{ fontSize: "14px", color: "var(--muted)" }}>🔍 筛选：</span>
+        <label htmlFor="slide-filter" className="slides-filter-label">
+          <Icon id="search" /> 筛选课件
+        </label>
         <input
+          ref={inputRef}
+          id="slide-filter"
           type="search"
           className="slides-grid-input"
           placeholder="按标题或内容搜索幻灯片..."
@@ -35,27 +45,40 @@ export function SlideGrid({
           onChange={(e) => setQuery(e.target.value)}
           aria-label="筛选幻灯片"
         />
-        <span style={{ fontSize: "13px", color: "var(--muted)" }}>
+        {query && (
+          <button
+            type="button"
+            className="ghost-button"
+            onClick={clearQuery}
+            aria-label="清除课件筛选"
+          >
+            <Icon id="close" /> 清除
+          </button>
+        )}
+        <span className="slides-filter-count" aria-live="polite">
           显示 {filteredSlides.length} / {deck.totalSlides} 页
         </span>
       </div>
 
+      {filteredSlides.length === 0 && (
+        <div className="slides-grid-empty" role="status">
+          <h3>没有匹配的幻灯片</h3>
+          <p>换个关键词，或清除筛选查看全部课件。</p>
+          <button type="button" className="ghost-button" onClick={clearQuery}>
+            清除筛选
+          </button>
+        </div>
+      )}
       <div className="slides-grid">
         {filteredSlides.map((slide) => {
           const isCurrent = slide.index === currentSlideIndex;
           return (
-            <div
+            <button
+              type="button"
               key={slide.index}
               className={`slide-card-item ${isCurrent ? "is-current" : ""}`}
               onClick={() => onSelectSlide(slide.index)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  onSelectSlide(slide.index);
-                }
-              }}
+              aria-current={isCurrent ? "page" : undefined}
             >
               <div className="slide-card-top">
                 <span className="slide-card-num">
@@ -68,10 +91,7 @@ export function SlideGrid({
                     </span>
                   )}
                   {slide.layout && slide.layout !== "default" && (
-                    <span
-                      className="slide-stage-tag"
-                      style={{ opacity: 0.7 }}
-                    >
+                    <span className="slide-stage-tag" style={{ opacity: 0.7 }}>
                       {slide.layout}
                     </span>
                   )}
@@ -97,10 +117,10 @@ export function SlideGrid({
                   color: "var(--muted)",
                 }}
               >
-                <span>{slide.notes ? "🎙️ 含讲义备注" : ""}</span>
+                <span>{slide.notes ? "含讲义备注" : ""}</span>
                 <span style={{ color: "var(--blue)" }}>进入演示 →</span>
               </div>
-            </div>
+            </button>
           );
         })}
       </div>

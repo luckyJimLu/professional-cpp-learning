@@ -61,15 +61,7 @@ export function LabView({
   const instructionsRef = useRef<HTMLDetailsElement>(null);
 
   useEffect(() => {
-    const desktop = window.matchMedia("(min-width: 980px)");
-    const syncDisclosure = () => {
-      if (instructionsRef.current) {
-        instructionsRef.current.open = desktop.matches;
-      }
-    };
-    syncDisclosure();
-    desktop.addEventListener("change", syncDisclosure);
-    return () => desktop.removeEventListener("change", syncDisclosure);
+    if (instructionsRef.current) instructionsRef.current.open = false;
   }, [lesson.day]);
   const initialCode = (() => {
     try {
@@ -143,7 +135,6 @@ export function LabView({
   return (
     <div className="lab-page-container">
       <PageHeader
-        eyebrow="运行 · 观察 · 验证"
         title="实验"
         description="从当前课例开始。先查看任务与自测清单，再运行代码，结合输出或轨迹验证理解。"
       />

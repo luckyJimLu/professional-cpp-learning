@@ -9,7 +9,11 @@
  */
 
 import { useMemo } from "react";
-import { taskColor, type RtosSnapshot, type TimelineSegment } from "../types.ts";
+import {
+  taskColor,
+  type RtosSnapshot,
+  type TimelineSegment,
+} from "../types.ts";
 
 export function TaskTimeline({
   segments,
@@ -31,17 +35,22 @@ export function TaskTimeline({
     return map;
   }, [snapshot]);
 
-  const rows = useMemo(() => [...new Set(segments.map((s) => s.task))], [segments]);
+  const rows = useMemo(
+    () => [...new Set(segments.map((s) => s.task))],
+    [segments],
+  );
   const max = Math.max(1, ...segments.map((s) => s.end));
   const width = 920;
   const left = 104;
   const rowH = 34;
 
   return (
-    <section className="rtos-panel timeline-panel" aria-labelledby="timeline-title">
+    <section
+      className="rtos-panel timeline-panel"
+      aria-labelledby="timeline-title"
+    >
       <div className="panel-heading">
         <div>
-          <span className="panel-kicker">SCHEDULER TRACE</span>
           <h2 id="timeline-title">任务时间轴</h2>
         </div>
         <div className="timeline-legend">
@@ -78,7 +87,14 @@ export function TaskTimeline({
                 patternTransform="rotate(45 0 0)"
                 patternUnits="userSpaceOnUse"
               >
-                <line x1="0" y1="0" x2="0" y2="6" stroke="rgba(255,255,255,0.55)" strokeWidth="2.5" />
+                <line
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="6"
+                  stroke="rgba(255,255,255,0.55)"
+                  strokeWidth="2.5"
+                />
               </pattern>
             </defs>
 
@@ -87,9 +103,24 @@ export function TaskTimeline({
             ).map((t) => {
               const x = left + (t / max) * (width - left - 20);
               return (
-                <g key={t} onClick={() => onTick(t)} style={{ cursor: "pointer" }}>
-                  <line x1={x} y1="24" x2={x} y2={rows.length * rowH + 24} className="timeline-grid" />
-                  <text x={x} y={rows.length * rowH + 42} textAnchor="middle" className="timeline-tick">
+                <g
+                  key={t}
+                  onClick={() => onTick(t)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <line
+                    x1={x}
+                    y1="24"
+                    x2={x}
+                    y2={rows.length * rowH + 24}
+                    className="timeline-grid"
+                  />
+                  <text
+                    x={x}
+                    y={rows.length * rowH + 42}
+                    textAnchor="middle"
+                    className="timeline-tick"
+                  >
                     {t}
                   </text>
                 </g>
@@ -103,7 +134,13 @@ export function TaskTimeline({
                   <text x="8" y={i * rowH + 44} className="timeline-label">
                     {label}
                   </text>
-                  <line x1={left} y1={i * rowH + 39} x2={width - 20} y2={i * rowH + 39} className="timeline-rail" />
+                  <line
+                    x1={left}
+                    y1={i * rowH + 39}
+                    x2={width - 20}
+                    y2={i * rowH + 39}
+                    className="timeline-rail"
+                  />
                 </g>
               );
             })}
@@ -111,11 +148,18 @@ export function TaskTimeline({
             {segments.map((s, i) => {
               const row = rows.indexOf(s.task);
               const x = left + (s.start / max) * (width - left - 20);
-              const segW = Math.max(4, ((s.end - s.start) / max) * (width - left - 20));
+              const segW = Math.max(
+                4,
+                ((s.end - s.start) / max) * (width - left - 20),
+              );
               const y = row * rowH + 29;
               const isIdle = s.task === "idle";
               const isIsr = s.state === "isr";
-              const fill = isIsr ? "#ef4444" : isIdle ? "#94a3b8" : taskColor(row);
+              const fill = isIsr
+                ? "#ef4444"
+                : isIdle
+                  ? "#94a3b8"
+                  : taskColor(row);
               const label = taskNameMap.get(s.task) ?? s.task;
               return (
                 <g key={i}>
@@ -151,8 +195,14 @@ export function TaskTimeline({
 
             {snapshot && (
               <line
-                x1={left + (Math.min(max, snapshot.tick) / max) * (width - left - 20)}
-                x2={left + (Math.min(max, snapshot.tick) / max) * (width - left - 20)}
+                x1={
+                  left +
+                  (Math.min(max, snapshot.tick) / max) * (width - left - 20)
+                }
+                x2={
+                  left +
+                  (Math.min(max, snapshot.tick) / max) * (width - left - 20)
+                }
                 y1="18"
                 y2={rows.length * rowH + 25}
                 className="timeline-cursor"

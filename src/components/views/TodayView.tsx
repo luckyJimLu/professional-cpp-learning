@@ -8,10 +8,7 @@ import {
 } from "../../lib/course";
 import { CompileRail } from "../common/CompileRail";
 
-const STAGE_DESCRIPTIONS: Record<
-  StepKey,
-  { budget: number; desc: string }
-> = {
+const STAGE_DESCRIPTIONS: Record<StepKey, { budget: number; desc: string }> = {
   read: {
     budget: 5,
     desc: "定位本章工程背景与核心问题，明确要解决的系统边界。",
@@ -78,7 +75,6 @@ export function TodayView({
     <div className="docs-layout today-layout">
       <article className="guide-document">
         <header className="guide-title" id="introduction">
-          <p className="page-eyebrow">Professional C++ · 工程化学习</p>
           <h1>从 C 出发，写出专业的 C++</h1>
           <p className="guide-lead">
             面向具备 C
@@ -93,6 +89,9 @@ export function TodayView({
             aria-label="当前课程"
           >
             <div className="guide-current-main">
+              <h2>
+                Day {target.day} · {target.title}
+              </h2>
               <div className="guide-current-top">
                 <span className="page-eyebrow">
                   {recent
@@ -105,14 +104,11 @@ export function TodayView({
                   课程 {target.day} / {lessons.length} 节 · 第 {target.week} 周
                 </span>
               </div>
-              <h2>
-                Day {target.day} · {target.title}
-              </h2>
               <p className="guide-current-meta">
                 第 {target.week} 周
                 {target.chapter ? ` · 第 ${target.chapter} 章` : ""}
-                {target.chapterTitle ? ` (${target.chapterTitle})` : ""} ·{" "}
-                预计 {target.duration} 分钟 · 已完成 {completedSteps} /{" "}
+                {target.chapterTitle ? ` (${target.chapterTitle})` : ""} · 预计{" "}
+                {target.duration} 分钟 · 已完成 {completedSteps} /{" "}
                 {STEP_DEFS.length} 阶段
               </p>
               <div
@@ -243,7 +239,9 @@ export function TodayView({
         <section id="learning-method" className="guide-section">
           <div className="guide-section-header">
             <h2>每天一小时 · 学习闭环</h2>
-            <span className="guide-section-badge">8 阶段 · 60 分钟标准节奏</span>
+            <span className="guide-section-badge">
+              8 阶段 · 60 分钟标准节奏
+            </span>
           </div>
           <p>
             通过八个阶段完成一次扎实的学习：阅读、回忆、理解、重构、规范、实验、避坑与自测。点击任一阶段可查看任务说明，或直接进入对应章节。

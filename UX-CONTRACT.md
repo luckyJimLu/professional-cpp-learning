@@ -174,7 +174,7 @@ course position use labels such as “已发布” or “课程”, never “当
 | Navigation | `src/lib/navigation.ts`, `Shell.tsx` | URL query state, reload and browser back/forward, Ctrl/Cmd+K opens search |
 | Reading | `Topics.tsx`, `Markdown.tsx`, `topics.ts` | Classified bilingual repository documents, shared asset resolution |
 | Search | `CodeSearch.tsx`, `search.ts` | Local literal case-insensitive search, C/C++ files and fenced code; 30 matches per page |
-| Scrollbar | `src/workspace.css` | Global token baseline and forced-colors fallback |
+| Scrollbar | `src/styles.css` | Global token baseline and forced-colors fallback |
 
 Search stores query, type, page and preview location in the URL. Local search updates immediately, suspends commits during IME composition, and clear restores input focus. Empty query and no matches have distinct guidance. Code previews show original file line numbers, escaped text and highlighted matches. Viewing search results does not mark lessons complete. PDF reference files are downloadable; source files and diagram assets remain usable after static deployment.
 
@@ -205,7 +205,7 @@ shows the latest published lesson when the next lesson is unavailable.
 
 ## 14. Shared UI refinement
 
-- `PageHeader.tsx` renders the provided eyebrow, page title and description consistently. `src/product-ui.css` owns cross-page structural styling; existing semantic tokens remain in `styles.css`.
+- `PageHeader.tsx` renders the page title and description consistently without a decorative eyebrow. `src/product-ui.css` owns cross-page structural styling; existing semantic tokens remain in `styles.css`.
 - The guide's primary learning action is visible on desktop and phone; its destination is an existing published course when the planned course is unavailable.
 - Courses persist `courseQuery` and `courseTab` in URL query state. IME composition does not commit partial queries. Clearing returns focus to the course input. Current-week disclosure starts open; full article titles may wrap.
 - Review cards and queued knowledge points link back to actual courses. Repository progress is identified as a baseline, not an assessment. Removing a review item means removing it from the list, not claiming mastery.
@@ -225,3 +225,14 @@ shows the latest published lesson when the next lesson is unavailable.
 - Search entries retain source paths and line numbers while displaying content titles. One authored clear action cancels pending query commits and restores input focus.
 - `App.tsx` stores only a valid last-visited lesson ID under `professional-cpp:last-lesson`. Reading does not mark completion. Missing/unavailable storage falls back to the published learning plan/latest course.
 - Review tasks come before baseline summaries in DOM order. The guidelines chapter index reads the shared renderer's actual heading IDs.
+
+## 16. Impeccable UI refinement
+
+- Product facts live in PRODUCT.md; visual ownership and values live in DESIGN.md and the canonical runtime tokens. Existing routes, lesson Markdown, progress storage and compiler/simulator protocols remain authoritative.
+- `common/Icon.tsx` is the shared SVG icon owner; action labels remain visible Chinese text. Native select popups and details/summary behavior remain platform owned.
+- Slide tabs reuse `keyboardTabs.ts`: ArrowLeft/Right and Home/End move and activate tabs. The stage's page shortcuts do not intercept tab navigation, composition or editable content. Each selected tab identifies the active tabpanel.
+- Slide cards are native buttons. Clearing a thumbnail filter restores focus to its input; no matches exposes an explicit recovery action. Selected-course command examples target that course, including courses 2 and 3.
+- Slide selectors and view tabs fit 320px phones without page-level sideways scrolling. Fullscreen, speaker notes and navigation controls remain usable after orientation changes.
+- Lab instructions begin collapsed on a new lesson; opening them preserves the same task, checklist, hints and reset actions. Code, compiler feedback and playback retain their canonical session owners.
+- The shared scrollbar baseline now loads through styles.css for both main and RTOS entrypoints. Workbenches map their existing dark/local surface colors without duplicating interaction behavior.
+- No automatic design hooks, global skills, data migrations or deployment are introduced by this refinement.

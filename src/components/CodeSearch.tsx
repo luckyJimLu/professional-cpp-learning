@@ -111,7 +111,6 @@ export function CodeSearch() {
   return (
     <div className="search-page-container">
       <PageHeader
-        eyebrow="课程源码 · 专题示例 · 工程实践"
         title="代码搜索"
         description="查找函数、类型或关键字，查看原文件行号，或将示例带入实验工作区。"
       />

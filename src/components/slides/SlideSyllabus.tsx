@@ -15,7 +15,8 @@ export function SlideSyllabus({
     return (
       <div className="slides-card-block">
         <p style={{ color: "var(--muted)" }}>
-          大纲文件中未找到与当前课次（第 {deck.lessonNumber} 课）完全匹配的条目。
+          大纲文件中未找到与当前课次（第 {deck.lessonNumber}{" "}
+          课）完全匹配的条目。
         </p>
       </div>
     );
@@ -28,11 +29,10 @@ export function SlideSyllabus({
   return (
     <div className="slides-syllabus-list">
       <div className="slides-card-block">
-        <h3>
-          📖 {syllabus.title} · 授课大纲对照
-        </h3>
+        <h3>📖 {syllabus.title} · 授课大纲对照</h3>
         <p style={{ color: "var(--muted)", margin: 0, fontSize: "14px" }}>
-          基于《Modern C++ 软件设计与架构精品课程规划与讲义指南》，保障课件重点内容、图表版式与演讲深度严格贴合大纲规范。
+          基于《Modern C++
+          软件设计与架构精品课程规划与讲义指南》，保障课件重点内容、图表版式与演讲深度严格贴合大纲规范。
         </p>
       </div>
 
@@ -83,7 +83,7 @@ export function SlideSyllabus({
 
             {unit.notes && (
               <div className="slides-syllabus-section">
-                <div className="slides-syllabus-section-label">🎙️ 演讲要点</div>
+                <div className="slides-syllabus-section-label">演讲要点</div>
                 <div
                   style={{
                     whiteSpace: "pre-line",

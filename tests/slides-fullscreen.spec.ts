@@ -4,7 +4,7 @@ test("课件全屏适配竖屏、横屏与旋转", async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 800 });
   await page.goto("/?view=slides");
   const stage = page.locator(".slide-stage-wrapper");
-  await stage.getByRole("button", { name: "⛶ 全屏", exact: true }).click();
+  await stage.getByRole("button", { name: "全屏", exact: true }).click();
   await expect(stage).toHaveClass(/is-fullscreen/);
 
   for (const viewport of [
@@ -15,13 +15,22 @@ test("课件全屏适配竖屏、横屏与旋转", async ({ page }) => {
     { width: 1440, height: 900 },
   ]) {
     await page.setViewportSize(viewport);
-    await expect.poll(async () => stage.evaluate((el) => ({
-      width: el.clientWidth, height: el.clientHeight,
-    }))).toEqual(viewport);
-    expect(await stage.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
+    await expect
+      .poll(async () =>
+        stage.evaluate((el) => ({
+          width: el.clientWidth,
+          height: el.clientHeight,
+        })),
+      )
+      .toEqual(viewport);
+    expect(await stage.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(
+      true,
+    );
     const canvas = stage.locator(".slide-canvas-viewport");
     expect((await canvas.boundingBox())!.height).toBeGreaterThan(100);
-    for (const control of await stage.locator(".slide-stage-footer button, select").all()) {
+    for (const control of await stage
+      .locator(".slide-stage-footer button, select")
+      .all()) {
       const box = (await control.boundingBox())!;
       expect(box.x).toBeGreaterThanOrEqual(0);
       expect(box.x + box.width).toBeLessThanOrEqual(viewport.width + 1);

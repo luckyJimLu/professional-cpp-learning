@@ -1,4 +1,4 @@
-# OpenCode Skills 目录索引（以 `slidev-ppt` 为核心中枢的演示文稿工程体系）
+# OpenCode Skills 目录索引 · 课件、图示与 UI 设计
 
 本目录构建了一套**以 [`slidev-ppt`](./slidev-ppt) 为核心枢纽（Core Hub）、其余 7 个专业技能为辅助支撑（Auxiliary Spokes）**的演示文稿（PPT）与架构可视化生成体系。核心目标是将课程大纲转化为**零幻觉、100% 忠于原文、逻辑严密、形状即语义、全链路视觉高度统一**的工程蓝图级交互式 Slidev 课件。
 
@@ -74,3 +74,12 @@ python3 .opencode/skills/slidev-ppt/scripts/check_slides.py slides/lesson-01.md 
 # 4. 技能回归测试（守护基准课件 + 泄漏/std/点击/课号 用例）
 python3 -m unittest discover -s .opencode/skills/slidev-ppt/scripts -p 'test_*.py'
 ```
+
+## UI 设计 · Impeccable
+
+[Impeccable](./impeccable/SKILL.md) 为工程学习平台提供 Read / Operate 场景下的布局、排版、响应式、审查与收尾指导。双工具分发同时位于 `.agents/skills/impeccable`；现有课件中枢与图示技能保持独立。
+
+- 来源：`pbakaus/impeccable`，4.8.0，固定提交 `414603bf14c7a344edb466bb1f85690c77ce8b7d`。
+- 只安装技能并按需检测，不安装自动钩子或修改全局技能。
+- 产品事实见 `PRODUCT.md`，视觉约定见 `DESIGN.md`，行为约定见 `UX-CONTRACT.md`。
+- [安装、调用和更新说明](../../docs/design/impeccable.md)。

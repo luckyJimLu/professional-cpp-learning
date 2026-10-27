@@ -292,8 +292,8 @@ export function RtosWorkbench({ scenario }: { scenario: RtosScenario }) {
       <section className="code-pane">
         <div className="code-pane-heading">
           <div>
-            <span className="panel-kicker">C++ SUBSET</span>
             <h2>任务代码</h2>
+            <span className="code-language-badge">C++ 子集</span>
           </div>
           <span
             className={session.stale ? "draft-badge is-stale" : "draft-badge"}

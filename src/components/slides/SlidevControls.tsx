@@ -2,15 +2,25 @@ import { useState } from "react";
 import type { SlideDeck } from "../../lib/slides";
 
 export function SlidevControls({ deck }: { deck: SlideDeck }) {
+  const suffix =
+    deck.lessonNumber === 1
+      ? ""
+      : `:${String(deck.lessonNumber).padStart(2, "0")}`;
+  const devCommand = `npm --prefix slides run dev${suffix}`;
+  const buildCommand = `npm --prefix slides run build${suffix}`;
+  const exportCommand = `npm --prefix slides run export${suffix}`;
   const [slidevUrl, setSlidevUrl] = useState("http://localhost:3030");
   const [showIframe, setShowIframe] = useState(false);
 
   return (
     <div className="slides-live-panel">
       <div className="slides-card-block">
-        <h3>⚡ Slidev 官方运行时与工程命令</h3>
-        <p style={{ color: "var(--muted)", fontSize: "14px", lineHeight: "1.6" }}>
-          本课程课件基于 <strong>Slidev</strong> 驱动，支持演讲者双屏模式、自由画板批注与热重载。
+        <h3>Slidev 官方运行时与工程命令</h3>
+        <p
+          style={{ color: "var(--muted)", fontSize: "14px", lineHeight: "1.6" }}
+        >
+          本课程课件基于 <strong>Slidev</strong>{" "}
+          驱动，支持演讲者双屏模式、自由画板批注与热重载。
           你可以随时在终端中启动 Slidev 独立服务，或在此页中直接嵌入预览：
         </p>
 
@@ -18,7 +28,7 @@ export function SlidevControls({ deck }: { deck: SlideDeck }) {
           <strong style={{ fontSize: "13px", color: "var(--blue)" }}>
             1. 启动 Slidev 本地交互服务器（支持双屏演讲与自由涂鸦）
           </strong>
-          <code className="slides-terminal-code">npm --prefix slides run dev</code>
+          <code className="slides-terminal-code">{devCommand}</code>
         </div>
 
         <div style={{ marginTop: "14px" }}>
@@ -33,7 +43,7 @@ export function SlidevControls({ deck }: { deck: SlideDeck }) {
             3. 构建静态站点与导出高清 PDF 讲义
           </strong>
           <code className="slides-terminal-code">
-            npm run ppt:build &amp;&amp; npm run ppt:export
+            {buildCommand} &amp;&amp; {exportCommand}
           </code>
         </div>
       </div>
@@ -50,13 +60,13 @@ export function SlidevControls({ deck }: { deck: SlideDeck }) {
           }}
         >
           <div>
-            <h3 style={{ margin: "0 0 4px" }}>🖥️ Slidev 实时嵌入视窗</h3>
+            <h3 style={{ margin: "0 0 4px" }}>Slidev 实时嵌入视窗</h3>
             <span style={{ fontSize: "13px", color: "var(--muted)" }}>
-              启动 <code>npm --prefix slides run dev</code> 后，即可在下方实时联动调试
+              启动 <code>{devCommand}</code> 后，即可在下方实时联动调试
             </span>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <div className="slides-live-actions">
             <input
               type="url"
               value={slidevUrl}

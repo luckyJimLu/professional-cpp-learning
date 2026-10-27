@@ -78,7 +78,6 @@ export function Topics() {
   return (
     <div className="topics-page-view topics-catalog">
       <header className="page-header topics-page-header">
-        <p className="page-eyebrow topic-eyebrow">阅读 · 源码 · 工程实践</p>
         <h1>专题知识库</h1>
         <p className="page-description">
           先选一个专题，沿着目录深入。随时回到上次阅读的位置。
@@ -146,10 +145,6 @@ export function Topics() {
               key={title}
               data-domain={articles[0].group}
             >
-              <div className="topic-collection-meta">
-                <span className="topic-domain-badge">{articles[0].group}</span>
-                <span className="topic-count-badge">{articles.length} 篇</span>
-              </div>
               <h2>
                 <a
                   href={topicUrl(
@@ -163,6 +158,10 @@ export function Topics() {
                   </span>
                 </a>
               </h2>
+              <div className="topic-collection-meta">
+                <span className="topic-domain-badge">{articles[0].group}</span>
+                <span className="topic-count-badge">{articles.length} 篇</span>
+              </div>
               <p>{topicSummary(articles[0])}</p>
               <details className="topic-collection-directory">
                 <summary>

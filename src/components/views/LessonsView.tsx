@@ -96,7 +96,6 @@ export function LessonsView({
   return (
     <div className="course-page">
       <PageHeader
-        eyebrow="章节里程碑与课程目录"
         title="课程"
         description="按周逐步进阶，或按标题、天数与章节查找。每一课都从理解走向可运行的实验。"
       />
@@ -242,8 +241,7 @@ export function LessonsView({
                   <span>
                     <span className="course-week-heading-row">
                       <strong>
-                        第 {week.week} 周
-                        {zhTheme ? ` · ${zhTheme}` : ""}
+                        第 {week.week} 周{zhTheme ? ` · ${zhTheme}` : ""}
                       </strong>
                       {isCurrentWeek && (
                         <span className="week-badge is-current">进行中</span>

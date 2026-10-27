@@ -2,8 +2,6 @@
   --z-backdrop: 500;
   --z-dialog: 600;
   color-scheme: light;
-  font-family: "IBM Plex Sans", "Noto Sans SC", Inter, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
   color: #15191f;
   background: #f6f7f9;
   font-synthesis: none;
@@ -20,25 +18,40 @@
   --amber: #b35c00;
   --code: #10151c;
   --code-ink: #dbe7f3;
-  --sidebar: 200px;
   --radius: 12px;
-  --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   --page-padding: 28px;
-  --font-h1: clamp(30px, 4vw, 42px);
-  --font-h2: 24px;
   --font-body: 16px;
   --font-aux: 13px;
-  --line-height-base: 1.7;
+  font-family: "IBM Plex Sans", "Noto Sans CJK SC", "Noto Sans SC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", "Noto Sans Mono CJK SC", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --sidebar: 220px;
+  --header-height: 56px;
+  --content-max: 1120px;
+  --reading-max: 760px;
+  --radius-control: 8px;
+  --control-height: 36px;
+  --touch-target: 44px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --font-h1: 32px;
+  --font-h2: 24px;
+  --line-height-base: 1.75;
+  --scroll-thumb: #a5afb9;
+  --scroll-track: var(--canvas);
+  --scroll-hover: var(--muted);
+  --scroll-active: var(--blue);
 }
 
 @media (max-width: 760px) {
   :root {
     --page-padding: 16px;
-    --font-h1: clamp(28px, 6vw, 32px);
-    --font-h2: 22px;
     --font-body: 16px;
     --font-aux: 13px;
-    --line-height-base: 1.6;
   }
 }
 
@@ -55,10 +68,13 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background: var(--canvas);
+  line-height: var(--line-height-base);
 }
 
 button,
-input {
+input,
+select,
+textarea {
   font: inherit;
 }
 
@@ -693,7 +709,7 @@ summary:focus-visible {
 .markdown blockquote {
   margin: 18px 0;
   padding: 10px 16px;
-  border-left: 3px solid var(--blue);
+  border-left: 1px solid var(--blue);
   color: #4f5d6c;
   background: #f4f8fb;
 }
@@ -989,7 +1005,7 @@ summary:focus-visible {
 .hint {
   margin-top: 15px;
   padding: 12px;
-  border-left: 3px solid var(--amber);
+  border-left: 1px solid var(--amber);
   color: #6f4d22;
   background: #fff8ec;
   font-size: 13px;
@@ -1162,6 +1178,9 @@ summary:focus-visible {
 @media (max-width: 760px) {
   :root {
     --sidebar: 0px;
+    --font-h1: 28px;
+    --font-h2: 22px;
+    --line-height-base: 1.75;
   }
 
   .sidebar {
@@ -1824,4 +1843,40 @@ summary:focus-visible {
   color: var(--code-ink);
   overflow-x: auto;
   font: 12px/1.65 var(--mono);
+}
+.ui-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+::selection {
+  background: var(--blue-soft);
+  color: var(--ink);
+}
+input, textarea {
+  caret-color: var(--blue);
+}
+/* Shared native scrollbar baseline for the handbook and both workbenches. */
+* {
+  scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+  scrollbar-width: thin;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: var(--scroll-track);
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+  border: 2px solid var(--scroll-track);
+  border-radius: 8px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--scroll-hover);
+}
+*::-webkit-scrollbar-thumb:active {
+  background: var(--scroll-active);
 }

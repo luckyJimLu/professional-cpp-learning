@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { SlideDeck, SyllabusPptUnit } from "../../lib/slides";
+import { Icon } from "../common/Icon";
 import { SlideRenderer } from "./SlideRenderer";
 
 export function SlideStage({
@@ -19,9 +20,9 @@ export function SlideStage({
   const viewportRef = useRef<HTMLDivElement>(null);
   const [showNotes, setShowNotes] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [fullscreenError, setFullscreenError] = useState("");
 
-  const currentSlide =
-    deck.slides[currentSlideIndex - 1] ?? deck.slides[0];
+  const currentSlide = deck.slides[currentSlideIndex - 1] ?? deck.slides[0];
 
   const hasPrev = currentSlideIndex > 1;
   const hasNext = currentSlideIndex < deck.totalSlides;
@@ -40,15 +41,20 @@ export function SlideStage({
     }
   };
 
-  const toggleFullscreen = () => {
-    if (!containerRef.current) return;
-    if (!document.fullscreenElement) {
-      containerRef.current
-        .requestFullscreen()
-        .then(() => setIsFullscreen(true))
-        .catch(() => {});
-    } else {
-      document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {});
+  const toggleFullscreen = async () => {
+    const container = containerRef.current;
+    if (!container) return;
+    setFullscreenError("");
+    try {
+      if (document.fullscreenElement === container) {
+        await document.exitFullscreen();
+      } else if (typeof container.requestFullscreen === "function") {
+        await container.requestFullscreen();
+      } else {
+        setFullscreenError("当前浏览器不支持全屏，请横向查看课件。");
+      }
+    } catch {
+      setFullscreenError("无法切换全屏。请重试，或横向查看课件。");
     }
   };
 
@@ -64,6 +70,13 @@ export function SlideStage({
   // Keyboard navigation shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        e.defaultPrevented ||
+        e.isComposing ||
+        (e.target instanceof HTMLElement &&
+          (e.target.isContentEditable || e.target.closest('[role="tablist"]')))
+      )
+        return;
       // Don't intercept when user is typing in inputs or selects
       if (
         e.target instanceof HTMLInputElement ||
@@ -111,9 +124,7 @@ export function SlideStage({
       {/* 幻灯片顶部元信息 */}
       <div className="slide-stage-header">
         <div className="slide-stage-meta">
-          <span className="slide-stage-tag">
-            {deck.lessonTitle}
-          </span>
+          <span className="slide-stage-tag">{deck.lessonTitle}</span>
           {currentSlide.pptNumber !== undefined && (
             <span className="slide-stage-tag" title={activePptUnit?.title}>
               PPT {currentSlide.pptNumber}
@@ -137,7 +148,7 @@ export function SlideStage({
             onClick={onOpenGrid}
             title="全部幻灯片缩略总览"
           >
-            🗂️ 缩略图
+            <Icon id="grid" /> 缩略图
           </button>
         </div>
       </div>
@@ -149,16 +160,19 @@ export function SlideStage({
 
       {/* 演讲者备注抽屉 (P) */}
       {showNotes && (
-        <div className="slide-notes-drawer" role="region" aria-label="演讲者备注">
+        <div
+          className="slide-notes-drawer"
+          role="region"
+          aria-label="演讲者备注"
+        >
           <div className="slide-notes-header">
-            <span>🎙️ 演讲者备注 & 教学提示 (Speaker Notes)</span>
+            <span>演讲者备注与教学提示</span>
             <button
               type="button"
-              className="slide-ctrl-btn"
-              style={{ minHeight: "24px", padding: "2px 8px", fontSize: "11px" }}
+              className="slide-ctrl-btn slide-notes-close"
               onClick={() => setShowNotes(false)}
             >
-              收起 ✕
+              <Icon id="close" /> 收起
             </button>
           </div>
           <div className="slide-notes-content">
@@ -183,7 +197,7 @@ export function SlideStage({
             disabled={!hasPrev}
             title="上一页 (← 或 PageUp)"
           >
-            ◀ 上一页
+            <Icon id="left" /> 上一页
           </button>
           <button
             type="button"
@@ -192,7 +206,7 @@ export function SlideStage({
             disabled={!hasNext}
             title="下一页 (→ 或 空格)"
           >
-            下一页 ▶
+            下一页 <Icon id="right" />
           </button>
           <span className="slide-counter">
             {currentSlideIndex} / {deck.totalSlides}
@@ -211,14 +225,20 @@ export function SlideStage({
           </select>
         </div>
 
+        {fullscreenError && (
+          <p role="status" className="slide-fullscreen-error">
+            {fullscreenError}
+          </p>
+        )}
         <div className="slide-stage-footer-actions">
           <button
             type="button"
             className={`slide-ctrl-btn ${showNotes ? "is-active" : ""}`}
             onClick={() => setShowNotes((prev) => !prev)}
             title="查看演讲者备注 (快捷键 P)"
+            aria-pressed={showNotes}
           >
-            🎙️ 备注 {currentSlide.notes ? "●" : ""}
+            <Icon id="notes" /> 备注 {currentSlide.notes ? "●" : ""}
           </button>
           <button
             type="button"
@@ -226,7 +246,8 @@ export function SlideStage({
             onClick={toggleFullscreen}
             title="全屏演示 (快捷键 F)"
           >
-            {isFullscreen ? "🗗 退出全屏" : "⛶ 全屏"}
+            <Icon id={isFullscreen ? "collapse" : "expand"} />
+            {isFullscreen ? "退出全屏" : "全屏"}
           </button>
         </div>
       </div>

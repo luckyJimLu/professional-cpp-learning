@@ -4,12 +4,13 @@
   margin-inline: auto;
 }
 .page-header {
-  margin-bottom: 28px;
+  margin-bottom: var(--space-8);
 }
 .page-header h1 {
-  margin: 6px 0 12px;
-  font-size: clamp(28px, 3vw, 36px);
   letter-spacing: -0.025em;
+  font-size: var(--font-h1);
+  line-height: 1.35;
+  margin: 0 0 var(--space-3);
 }
 .page-header .page-eyebrow,
 .page-eyebrow {
@@ -21,11 +22,11 @@
   line-height: 1.6;
 }
 .page-header .page-description {
-  max-width: 720px;
   margin-bottom: 0;
   color: var(--muted);
+  max-width: var(--reading-max);
   font-size: 16px;
-  line-height: 1.8;
+  line-height: 1.75;
 }
 .shell-context {
   display: flex;
@@ -73,10 +74,10 @@
   max-width: 860px;
 }
 .guide-title h1 {
-  font-size: clamp(30px, 3.5vw, 44px);
-  line-height: 1.3;
-  margin: 10px 0 20px;
-  letter-spacing: -0.03em;
+  font-size: var(--font-h1);
+  line-height: 1.35;
+  letter-spacing: -0.025em;
+  margin: 0 0 var(--space-4);
 }
 .guide-hero-cta {
   display: flex;
@@ -96,13 +97,12 @@
   gap: 24px;
   padding: 20px 24px;
   border: 1px solid var(--line);
-  border-left: 3px solid var(--blue);
-  border-radius: 8px;
   margin: 24px 0;
   background: var(--surface);
+  border-radius: var(--radius);
 }
 .guide-current-lesson h2 {
-  font-size: 21px;
+  overflow-wrap: anywhere;
   margin: 8px 0;
 }
 .guide-current-lesson p {
@@ -116,24 +116,28 @@
 }
 .guide-pathways {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  margin: 28px 0 36px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 var(--space-6);
+  margin: 0 0 var(--space-8);
 }
 .guide-pathways a {
   display: grid;
-  gap: 10px;
-  padding: 20px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
   text-decoration: none;
   color: var(--ink);
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 4px 12px;
+  padding: var(--space-4) 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  align-content: start;
 }
 .guide-pathways strong {
   display: flex;
   justify-content: space-between;
   gap: 8px;
-  font-size: 17px;
+  grid-column: 2;
+  font-size: 16px;
 }
 .guide-pathways strong span {
   color: var(--blue);
@@ -197,7 +201,7 @@
 }
 .course-weeks {
   display: grid;
-  gap: 14px;
+  gap: var(--space-4);
 }
 .course-week {
   border: 1px solid var(--line);
@@ -209,8 +213,6 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  min-height: 76px;
-  padding: 16px 20px;
   cursor: pointer;
   list-style: none;
 }
@@ -252,10 +254,10 @@
   grid-template-columns: 84px minmax(0, 1fr) 28px;
   gap: 16px;
   align-items: center;
-  padding: 16px 20px;
   border-bottom: 1px solid var(--line);
   color: var(--ink);
   text-decoration: none;
+  padding: var(--space-4) var(--space-6);
 }
 .course-row:last-child {
   border-bottom: 0;
@@ -273,10 +275,10 @@
   min-width: 0;
 }
 .course-row strong {
-  font-size: 15px;
   line-height: 1.65;
   white-space: normal;
   overflow-wrap: anywhere;
+  font-size: 16px;
 }
 .course-row small {
   color: var(--muted);
@@ -360,7 +362,6 @@
   gap: 16px;
 }
 .review-checkpoint {
-  padding: 22px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   color: var(--ink);
@@ -368,6 +369,8 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  padding: var(--space-6);
+  box-shadow: none;
 }
 .review-checkpoint > .mono {
   color: var(--blue);
@@ -376,7 +379,7 @@
 .review-checkpoint h3 {
   margin: 0;
   font-size: 18px;
-  line-height: 1.6;
+  line-height: 1.55;
 }
 .review-checkpoint p {
   flex: 1;
@@ -406,9 +409,10 @@
   justify-content: space-between;
   align-items: center;
   gap: 16px;
-  padding: 20px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  padding: var(--space-4) 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
 }
 .review-point-list > div > div {
   display: grid;
@@ -424,8 +428,10 @@
   font-size: 14px;
 }
 .reading-page .document-card {
-  max-width: 860px;
-  padding: 28px 36px;
+  max-width: var(--reading-max);
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 .markdown-table-scroll {
   max-width: 100%;
@@ -552,11 +558,11 @@
     margin-bottom: 24px;
   }
   .page-header h1 {
-    font-size: 28px;
+    font-size: var(--font-h1);
     line-height: 1.4;
   }
   .page-header .page-description {
-    font-size: 15px;
+    font-size: 16px;
   }
   .guide-hero-cta {
     display: flex;
@@ -576,8 +582,8 @@
     gap: 16px;
   }
   .guide-current-lesson h2 {
-    font-size: 19px;
-    line-height: 1.6;
+    font-size: 20px;
+    line-height: 1.5;
   }
   .guide-pathways {
     margin-block: 24px;
@@ -694,9 +700,6 @@
     ) {
     min-height: 44px;
   }
-  .lab-shell-runtime .lab-task {
-    padding: 18px;
-  }
   .lab-instructions summary span {
     display: none;
   }
@@ -730,11 +733,12 @@
 .course-week-theme { color: var(--ink); font-size: 14px; line-height: 1.6; }
 .course-week { scroll-margin-top: calc(var(--header-height) + 16px); }
 .course-locate { justify-self: start; min-height: 44px; display: inline-flex; align-items: center; }
-.course-week > summary { padding: 14px 18px; }
+.course-week > summary { min-height: 80px; padding: var(--space-4) var(--space-6); font-size: 16px; }
 .result-source-path { display: block; color: var(--muted); font: 12px/1.6 var(--mono); overflow-wrap: anywhere; margin: 5px 0 12px; }
 .search-page-container input[type="search"]::-webkit-search-cancel-button,
 .course-search input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
-.topic-collection { padding: 20px; }
+.topic-collection {
+  padding: var(--space-6); }
 .topic-collection > p { margin-bottom: 16px; }
 .review-overview { margin-top: 24px; }
 .lab-task h2 { font-size: 22px; }
@@ -742,8 +746,9 @@
   .lab-page-container > .page-header { margin-bottom: 12px; }
   .lab-page-container > .page-header .page-description,
   .lab-page-container > .page-header .page-eyebrow { display: none; }
-  .lab-page-container > .page-header h1 { margin: 0; font-size: 24px; }
-  .lab-shell-runtime .lab-task { padding: 12px; }
+  .lab-page-container > .page-header h1 { margin: 0; }
+  .lab-shell-runtime .lab-task {
+    padding: 0 0 var(--space-3); }
   .lab-task > div:first-child { margin-bottom: 0; }
   .lab-task h2 { font-size: 18px; }
   .lab-instructions { margin: 8px 0 0; border-bottom: 0; }
@@ -759,7 +764,8 @@
   .lesson-rail-sticky .compile-rail.lesson-toc { padding: 6px; gap: 4px; }
   .lesson-rail-sticky .rail-step { min-height: 48px; }
   .lesson-rail-sticky .rail-label { margin-bottom: 2px; }
-  .topic-collection { padding: 16px; }
+  .topic-collection {
+    padding: var(--space-4); }
 }
 .reading-index { margin: 16px 0; border: 1px solid var(--line); border-radius: 8px; padding: 0 16px; }
 .reading-index summary { min-height: 44px; padding: 10px 0; cursor: pointer; }
@@ -773,7 +779,7 @@
   .lab-page-container .code-workbench { gap: 6px; }
 }
 @media (max-width: 760px) {
-  .lab-page-container > .page-header h1 { line-height: 1.3; }
+  .lab-page-container > .page-header h1 { line-height: 1.3; font-size: 28px; }
 }
 .search-result > strong { font-family: inherit; font-size: 16px; font-weight: 650; line-height: 1.6; }
 .guidelines-page .reading-index { max-width: 860px; }
@@ -781,11 +787,6 @@
 /* ==========================================================================
    Unified Layout, Contrast & Component Refinements
    ========================================================================== */
-
-:root {
-  --content-max: 1120px;
-  --muted: #52606d;
-}
 
 /* 1. Unified Page Container Width */
 .content > :is(
@@ -940,9 +941,9 @@
 @media (min-width: 1100px) {
   .today-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 250px;
-    gap: 32px;
     align-items: start;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    gap: var(--space-8);
   }
 }
 
@@ -961,10 +962,11 @@
 }
 
 .today-aside-card {
-  padding: 18px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface);
+  padding: 0 0 var(--space-6);
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
 }
 
 .today-aside-nav {
@@ -1020,12 +1022,11 @@
 .guide-current-lesson {
   display: block;
   padding: 24px;
-  border: 1px solid var(--line-strong);
-  border-left: 4px solid var(--blue);
   border-radius: var(--radius);
-  margin: 20px 0 28px;
-  background: var(--surface);
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+  border: 1px solid var(--line-strong);
+  background: var(--canvas);
+  box-shadow: none;
+  margin: var(--space-6) 0 var(--space-8);
 }
 
 .guide-current-main {
@@ -1056,9 +1057,9 @@
 }
 
 .guide-current-lesson h2 {
-  font-size: clamp(1.25rem, 2vw, 1.5rem);
-  line-height: 1.35;
   margin: 2px 0;
+  font-size: 22px;
+  line-height: 1.5;
 }
 
 .guide-current-meta {
@@ -1080,11 +1081,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: var(--blue-soft);
   color: var(--blue);
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border-radius: 0;
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  margin-top: 2px;
 }
 
 .guide-section-header {
@@ -1237,12 +1241,8 @@
 
 .course-week.is-current-week {
   border-color: var(--blue);
-  border-left: 4px solid var(--blue);
-  box-shadow: 0 2px 10px rgba(0, 89, 156, 0.06);
-}
-
-.course-week.is-week-complete {
-  border-left: 3px solid var(--green);
+  border: 1px solid var(--blue);
+  box-shadow: none;
 }
 
 .course-week-heading-row {
@@ -1286,29 +1286,12 @@
 .topic-domain-badge {
   display: inline-flex;
   align-items: center;
-  padding: 3px 10px;
-  border-radius: 999px;
-  font-size: 0.75rem;
   font-weight: 600;
-  background: var(--blue-soft);
-  color: var(--blue);
-}
-
-.topic-collection[data-domain="嵌入式系统"] .topic-domain-badge {
-  background: #eaf6ef;
-  color: #18794e;
-}
-
-.topic-collection[data-domain="网络与异步"] .topic-domain-badge,
-.topic-collection[data-domain="Boost.Asio"] .topic-domain-badge {
-  background: #eef2ff;
-  color: #3730a3;
-}
-
-.topic-collection[data-domain="设计模式"] .topic-domain-badge,
-.topic-collection[data-domain="C++ 系统架构"] .topic-domain-badge {
-  background: #fef3c7;
-  color: #92400e;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .topic-count-badge {
@@ -1359,9 +1342,9 @@
 @media (min-width: 1100px) {
   .guidelines-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 260px;
-    gap: 28px;
     align-items: start;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    gap: var(--space-8);
   }
 
   .guidelines-document {
@@ -1385,10 +1368,10 @@
 .guidelines-page .reading-index {
   max-width: none;
   margin: 0;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 0 16px;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
 }
 
 .guidelines-page .reading-index summary {
@@ -1440,21 +1423,23 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 16px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface);
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  padding: var(--space-4) 0;
+  background: transparent;
 }
 
 .guidelines-related-card a {
   display: grid;
   gap: 2px;
-  padding: 10px 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
   color: var(--ink);
   text-decoration: none;
   transition: border-color 0.15s ease, background 0.15s ease;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  padding: 12px 0;
 }
 
 .guidelines-related-card a:hover {
@@ -1485,12 +1470,12 @@
 }
 
 .guidelines-document .markdown ul li {
-  padding: 10px 14px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--canvas);
-  font-size: 0.9375rem;
-  line-height: 1.65;
+  padding: 4px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: 16px;
+  line-height: 1.8;
 }
 
 .guidelines-document .markdown ul li::marker {
@@ -1510,4 +1495,33 @@
     width: 100%;
     justify-content: center;
   }
+  .guide-title h1 {
+    font-size: var(--font-h1);
+    margin: 0 0 var(--space-4);
+  }
+}
+
+.course-resume {
+  background: var(--canvas);
+  border: 1px solid var(--line);
+}
+
+.guide-pathways a > span:last-child {
+  grid-column: 2;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.lab-shell-runtime .lab-task {
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  padding: 0 0 var(--space-4);
+}
+
+.lab-task-header .page-eyebrow {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  letter-spacing: 0;
 }

@@ -8,7 +8,7 @@ test("desktop guide offers a direct next action and learning pathways", async ({
   await expect(page.locator(".guide-hero-cta .primary-button")).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "学习入口" }).getByRole("link"),
-  ).toHaveCount(3);
+  ).toHaveCount(4);
   await page.locator(".guide-hero-cta .primary-button").click();
   await expect(page).toHaveURL(/view=lesson/);
   await expect(page.locator(".lesson-document h1")).toBeVisible();
@@ -208,6 +208,7 @@ for (const width of [320, 768, 1440]) {
     for (const [route, selector] of [
       ["/", ".guide-title"],
       ["/?view=lessons", ".course-page"],
+      ["/?view=lesson&day=61", ".lesson-document"],
       ["/?view=guidelines", ".reading-page"],
       ["/?view=review", ".review-page"],
       ["/?view=search", ".search-clean-form"],

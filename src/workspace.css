@@ -1,32 +1,4 @@
 /* Workspace: shared navigation, reading rail and source explorer. */
-:root {
-  --scroll-thumb: #a5afb9;
-  --scroll-track: #f6f7f9;
-  --scroll-hover: #66717e;
-  --scroll-active: #00599c;
-}
-* {
-  scrollbar-color: var(--scroll-thumb) var(--scroll-track);
-  scrollbar-width: thin;
-}
-*::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-*::-webkit-scrollbar-track {
-  background: var(--scroll-track);
-}
-*::-webkit-scrollbar-thumb {
-  background: var(--scroll-thumb);
-  border: 2px solid var(--scroll-track);
-  border-radius: 8px;
-}
-*::-webkit-scrollbar-thumb:hover {
-  background: var(--scroll-hover);
-}
-*::-webkit-scrollbar-thumb:active {
-  background: var(--scroll-active);
-}
 html {
   scrollbar-gutter: stable;
 }

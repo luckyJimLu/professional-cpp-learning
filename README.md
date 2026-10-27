@@ -132,3 +132,15 @@ npm --prefix slides run build:02     # 构建至 slides/dist/lesson-02
 npm --prefix slides run export:02    # 导出第 2 课 PDF
 npm --prefix slides run build:all    # 构建第 1、2 课
 ```
+
+### 第 3 课：架构解耦与值语义多态
+
+- [44 页课件](slides/lesson-03.md)：覆盖物理依赖、Pimpl／Bridge、DIP、外部多态、Prototype、Type Erasure、SBO 与 Concepts。
+- [页面溯源、术语与技术边界](slides/lesson-03-traceability.md)。主站「课件」选择器自动发现第 3 课；这是全课程终章。
+
+```bash
+npm --prefix slides run dev:03       # 交互预览
+npm --prefix slides run build:03     # 构建至 slides/dist/lesson-03
+npm --prefix slides run export:03    # 导出第 3 课 PDF
+npm run ppt:build                   # 构建全部三课
+```
