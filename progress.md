@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 61**。下一课从 **Day 62** 继续。
+当前仓库课程已发布到 **Day 62**。下一课从 **Day 63** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -11,20 +11,21 @@
 | 59 | Custom Deleters · Non-Memory Resources and RAII Boundaries | 已发布 | [day-059](daily/day-059-custom-deleters-non-memory-resources.md) |
 | 60 | Shared Ownership · shared_ptr, weak_ptr and Lifetime Cycles | 已发布 | [day-060](daily/day-060-shared-ptr-weak-ptr-lifetime.md) |
 | 61 | enable_shared_from_this · Async Callback Lifetime and Teardown | 已发布 | [day-061](daily/day-061-enable-shared-from-this-callback-lifetime.md) |
+| 62 | Smart Pointer Aliasing, Casts and Ownership API Boundaries | 已发布 | [day-062](daily/day-062-smart-pointer-aliasing-casts-ownership-api.md) |
 
 > Day 1–55 的完整逐日记录仍保存在 `daily/` 与 Git 历史中；本表从 Day 56 起保持最近课程摘要，避免进度文件重复承担完整目录职责。
 
 ## 最新发布详情
 
-- **日期**：2026-10-26
+- **日期**：2026-10-27
 - **章节**：Chapter 7 · Memory Management
-- **主题**：`enable_shared_from_this` · Async Callback Lifetime and Teardown
-- **关键知识点**：`enable_shared_from_this`、`shared_from_this()`、`weak_from_this()`、callback lifetime extension、weak capture、stop/unsubscribe/join teardown
-- **设计模式 / 稳定边界**：Observer lifetime + explicit DI；callback 不应无意成为 owner；weak observer 不能替代 deterministic teardown
-- **Lab**：[examples/day-061/main.cpp](examples/day-061/main.cpp)
-- **Runnable Exercise**：[examples/day-061/exercise-01.cpp](examples/day-061/exercise-01.cpp)
-- **上一课**：[Day 60 · Shared Ownership · shared_ptr, weak_ptr and Lifetime Cycles](daily/day-060-shared-ptr-weak-ptr-lifetime.md)
-- **下一课**：继续 Chapter 7，进入 smart pointer aliasing / cast / ownership API 细节与资源边界审计
+- **主题**：Smart Pointer Aliasing, Casts and Ownership API Boundaries
+- **关键知识点**：aliasing `shared_ptr`、stored pointer vs control-block owner、`dynamic_pointer_cast`、ownership API、runtime/static polymorphism 边界
+- **设计模式 / 稳定边界**：Adapter + explicit DI；重复 downcast 触发 stable capability 审计；polymorphism 与 shared ownership 分离设计
+- **Lab**：[examples/day-062/main.cpp](examples/day-062/main.cpp)
+- **Runnable Exercise**：[examples/day-062/exercise-01.cpp](examples/day-062/exercise-01.cpp)
+- **上一课**：[Day 61 · enable_shared_from_this · Async Callback Lifetime and Teardown](daily/day-061-enable-shared-from-this-callback-lifetime.md)
+- **下一课**：继续 Chapter 7，进入内存资源策略、分配控制与 Embedded bounded allocation / allocator boundary 工程审计
 
 ## 规则
 
