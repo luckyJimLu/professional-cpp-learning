@@ -104,6 +104,9 @@ npm run build
 
 课程与专题正文以仓库 Markdown 为内容源，Web UI 负责导航、阅读、实验及复盘。
 
+GitHub Pages 必须选择 **GitHub Actions** 作为发布来源，由 Vite 构建并部署 `dist/`。
+配置与故障排查见 [GitHub Pages 部署说明](docs/github-pages.md)。
+
 ## 课件（Slidev PPT）
 
 课程大纲 `PPT/设计模式大纲.md` 由 [`.opencode/skills/slidev-ppt`](.opencode/skills/slidev-ppt) 技能生成工程蓝图风格的交互式课件（`slides/lesson-0X.md`）。课件生成已集成到本仓库的脚本与 CI 中。
