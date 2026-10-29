@@ -336,3 +336,105 @@ test("C++ attachment topics are searchable with corrected version boundaries", a
   await page.getByRole("button", { name: "清除搜索，查看全册" }).click();
   await expect(page.locator("#booklet-keyword-index")).toBeVisible();
 });
+
+for (const viewport of [
+  { width: 320, height: 780 },
+  { width: 390, height: 844 },
+  { width: 800, height: 360 },
+  { width: 1440, height: 1000 },
+]) {
+  test(`booklet tools stay reachable while reading at ${viewport.width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize(viewport);
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/?view=booklets&book=cpp");
+    const first = await page.locator(".booklet-entry").first().boundingBox();
+    if (viewport.width <= 390) expect(first!.y).toBeLessThan(600);
+    await page
+      .locator("#booklet-category-streams")
+      .evaluate((node) =>
+        node.scrollIntoView({ block: "start", behavior: "instant" }),
+      );
+    const toolbar = page.locator(".booklet-toolbar");
+    await expect(toolbar).toBeInViewport();
+    await expect(
+      page.getByRole("searchbox", { name: /^快速查找/ }),
+    ).toBeInViewport();
+    const languages = page.getByRole("navigation", { name: "小册子语言" });
+    await expect(
+      languages.getByRole("link", { name: "C++", exact: true }),
+    ).toBeInViewport();
+    const tools = (await toolbar.boundingBox())!;
+    const chapter = (await page
+      .locator("#booklet-category-streams")
+      .boundingBox())!;
+    expect(chapter.y).toBeGreaterThanOrEqual(tools.y + tools.height - 1);
+    if (viewport.height < 480) expect(tools.height).toBeLessThan(80);
+    if (viewport.width < 1100) {
+      const select = page.getByLabel("章节导航", { exact: true });
+      await expect(select).toBeInViewport();
+      await select.click();
+      await page.screenshot({
+        path: `/workspace/artifacts/booklets-ux/native-chapters-${viewport.width}.png`,
+      });
+      await select.press("Escape");
+      await expect(select).toBeFocused();
+    }
+    await page.getByRole("button", { name: "返回册首", exact: true }).click();
+    await expect(page.locator("#booklet-top")).toBeFocused();
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+  });
+}
+
+test("search index, Enter, Escape and return action preserve the booklet flow", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/?view=booklets&book=cpp&category=streams");
+  const search = page.getByRole("searchbox", { name: /^快速查找/ });
+  await search.fill("constexpr");
+  const index = page.getByRole("navigation", { name: "搜索结果索引" });
+  await expect(index).toBeVisible();
+  const result = index
+    .getByRole("link")
+    .filter({ hasText: "if constexpr [C++17]" });
+  const id = new URL((await result.getAttribute("href"))!).searchParams.get(
+    "entry",
+  );
+  await result.click();
+  const heading = page.locator(`#booklet-${id} h3`);
+  await expect(heading).toBeFocused();
+  const tools = (await page.locator(".booklet-toolbar").boundingBox())!;
+  expect((await heading.boundingBox())!.y).toBeGreaterThanOrEqual(
+    tools.y + tools.height,
+  );
+  await expect(heading.locator(".booklet-standard")).toHaveText("C++17");
+  await page.getByRole("button", { name: "返回搜索结果", exact: true }).click();
+  await expect(page).not.toHaveURL(/entry=/);
+  await expect(page.locator(".booklet-result-count")).toBeFocused();
+  await expect(index).toBeInViewport();
+  await search.focus();
+  await search.press("Enter");
+  await expect(page.locator(".booklet-result-count")).toBeFocused();
+  await search.focus();
+  await search.press("Escape");
+  await expect(search).toBeFocused();
+  await expect(search).toHaveValue("");
+  await expect(page).not.toHaveURL(/bq=/);
+  await search.fill("   ");
+  await expect(page.getByLabel("章节导航", { exact: true })).not.toHaveValue(
+    "search",
+  );
+  await expect(index).toHaveCount(0);
+  await search.fill("unknown-booklet-term-321");
+  await expect(
+    page.getByRole("heading", { name: "没有找到匹配条目" }),
+  ).toBeInViewport();
+  await page.getByRole("button", { name: "清除搜索，查看全册" }).click();
+  await expect(search).toBeFocused();
+});

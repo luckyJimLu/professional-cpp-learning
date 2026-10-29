@@ -123,6 +123,18 @@ export function Icon({ id }: { id: string }) {
           <path d="m14 6-6 6 6 6" />
         </svg>
       );
+    case "download":
+      return (
+        <svg {...common}>
+          <path d="M12 3v12m-4-4 4 4 4-4M5 16v4h14v-4" />
+        </svg>
+      );
+    case "up":
+      return (
+        <svg {...common}>
+          <path d="m6 10 6-6 6 6M12 4v16" />
+        </svg>
+      );
     case "right":
       return (
         <svg {...common}>

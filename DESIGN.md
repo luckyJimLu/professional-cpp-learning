@@ -157,14 +157,26 @@ verification; technical charts, editor internals and document-source content are
 
 ## 小册子 · C / C++ quick reference
 
-The booklet is an Operate/Read reference surface, preserving the handbook palette and shared
-PageHeader, Markdown and CodeBlock owners. `src/booklets.css` owns only its scoped layout,
-consuming runtime tokens from styles.css. A 200px category directory sits beside a flat,
-separator-based entry list on wide screens; below 1100px it becomes a sticky native chapter select below the shared header.
-The full booklet is a continuous single page; navigation scrolls to chapters and highlights the
-reading position. Only keyword search temporarily narrows results. Search uses the shared search-box treatment with a clear button and visible focus.
-No entry-card grid, second palette or new typography system is introduced. Code and tables
-own their overflow; phone controls retain 44px touch targets. Content is Chinese-first C17,
-with literal identifiers, standard distinctions and source attribution retained.
+The booklet is an Operate/Read reference surface, preserving the light handbook palette,
+shared PageHeader, Markdown, CodeBlock and SVG Icon owners. `src/booklets.css` consumes the
+existing runtime tokens; no additional palette, font stack or shadow treatment is introduced.
 
-Booklet language navigation uses real links with `aria-current="page"`, the shared ghost-button treatment and 44px touch targets. C and C++ retain separate content, search scope and URL identities; no additional theme or layout system is introduced.
+The compact heading states the selected language, standard range and factual chapter/entry
+counts. The Markdown download remains visibly labeled on phones. The page is bounded by
+`--reading-max` plus the 200px directory and 32px gap; prose therefore stays at most 760px.
+
+One sticky toolbar owns language links, local search and the return action. Below 1100px it
+also owns the native chapter select; on short landscape screens these controls form one row.
+A ResizeObserver measures its actual height into the scoped `--booklet-toolbar-height`, so
+chapter/entry scroll offsets and the desktop directory reserve the real toolbar geometry.
+The global Shell header remains above it. Native selects retain platform-owned popup behavior.
+
+The complete booklet remains one continuous page. Search temporarily narrows entries and
+provides a bounded link index for multiple matches; entries still render in full below it.
+C++ directories group topic chapters and version chapters. Active desktop directory items
+stay visible within that directory's own scroll area. Only code, tables and bounded directories
+own local overflow; the document keeps its natural height.
+
+Entry titles separate factual C++ standard labels from the topic name. Language links use
+real URLs and `aria-current="page"`; controls preserve 44px touch targets, clear focus rings
+and Chinese labels. No card grid, decorative counters or motion is added.

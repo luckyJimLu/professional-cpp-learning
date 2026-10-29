@@ -253,3 +253,12 @@ shows the latest published lesson when the next lesson is unavailable.
 - Verification: `npm run check:booklets`, `tests/booklets.spec.ts`; compile C examples with a C compiler using C17, independent of C++ labs and hardware claims.
 
 - Booklet language links select `book=c` or `book=cpp`; selection clears `bq`, `category` and `entry`, returns to the booklet heading and keeps modified-click/new-tab behavior. Back/forward restores each URL state. Search and downloads always use the selected booklet. C++ entries explicitly identify the standard version of modern features.
+
+## 小册子 continuous lookup flow
+
+- Source: the user's approved single-page, separate C/C++ booklets. All entries stay on one page; no completion or mastery state is introduced.
+- `BookletsView.tsx` owns one sticky lookup toolbar; `booklets.css` measures its height for heading offsets. Search and language navigation remain reachable while reading; short landscape keeps one control row. Select/Listbox stays native and OS-owned.
+- A multi-match query shows a bounded “搜索结果索引” with real entry URLs, followed by full entries. Selecting a result focuses its heading below sticky UI. “返回搜索结果” clears the entry URL state and focuses the result summary. Enter from search focuses that summary; Escape clears only outside IME composition and returns search focus. The X button and empty-state recovery share the same reset behavior.
+- Search remains local, literal, NFKC-normalized, case-insensitive and AND-based. Whitespace alone is not an active search. Language switching still clears the previous booklet query/location; modified clicks and browser history remain native.
+- C++ chapter navigation groups topic chapters and standard-version chapters without filtering the book. Desktop scroll-follow keeps the active directory link inside its bounded scroll region. The return action outside search restores the booklet heading.
+- Verification: `tests/booklets.spec.ts` covers persistent tools, narrow/short landscape, focus clearance, keyboard search/reset, result navigation and existing IME/download/error/history paths. Screenshots and static audit live in `/workspace/artifacts/booklets-ux/` for the implementation session.

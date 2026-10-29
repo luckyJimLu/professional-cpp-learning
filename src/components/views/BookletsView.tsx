@@ -32,7 +32,57 @@ export function BookletsView() {
   const [draft, setDraft] = useState(query);
   const inputRef = useRef<HTMLInputElement>(null);
   const composing = useRef(false);
-  useEffect(() => setDraft(query), [query]);
+  const toolbarRef = useRef<HTMLDivElement>(null);
+  const directoryRef = useRef<HTMLElement>(null);
+  const resultsRef = useRef<HTMLParagraphElement>(null);
+  const topicSections = booklet.sections.filter(
+    (section) => !section.id.startsWith("cpp-"),
+  );
+  const standardSections = booklet.sections.filter((section) =>
+    section.id.startsWith("cpp-"),
+  );
+  useEffect(() => {
+    const toolbar = toolbarRef.current;
+    const page = toolbar?.closest<HTMLElement>(".booklets-page");
+    if (!toolbar || !page) return;
+    const update = () =>
+      page.style.setProperty(
+        "--booklet-toolbar-height",
+        `${toolbar.getBoundingClientRect().height}px`,
+      );
+    const observer = new ResizeObserver(update);
+    observer.observe(toolbar);
+    update();
+    return () => observer.disconnect();
+  }, []);
+  useEffect(() => {
+    if (requestedEntry) return;
+    const frame = requestAnimationFrame(() => {
+      if (query.trim())
+        resultsRef.current?.scrollIntoView({
+          block: "start",
+          behavior: "instant",
+        });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [query, booklet, requestedEntry]);
+  useEffect(() => {
+    const directory = directoryRef.current;
+    const current = directory?.querySelector<HTMLElement>(
+      '[aria-current="location"]',
+    );
+    if (!directory || !current || query.trim()) return;
+    const container = directory.getBoundingClientRect();
+    const item = current.getBoundingClientRect();
+    if (item.top < container.top)
+      directory.scrollTop += item.top - container.top;
+    else if (item.bottom > container.bottom)
+      directory.scrollTop += item.bottom - container.bottom;
+  }, [activeSection, booklet, query]);
+  useEffect(() => {
+    composing.current = false;
+    setDraft(query);
+  }, [query, booklet]);
   const matches = useMemo(
     () => searchBooklet(query, booklet),
     [query, booklet],
@@ -68,12 +118,12 @@ export function BookletsView() {
     requestAnimationFrame(() => jumpToSection(value));
   };
   useEffect(() => {
-    if (query || requestedEntry || category === "all") return;
+    if (query.trim() || requestedEntry || category === "all") return;
     const frame = requestAnimationFrame(() => jumpToSection(category));
     return () => cancelAnimationFrame(frame);
   }, [category, query, requestedEntry, booklet]);
   useEffect(() => {
-    if (query) return;
+    if (query.trim()) return;
     let frame = 0;
     const update = () => {
       frame = 0;
@@ -138,7 +188,23 @@ export function BookletsView() {
     setDraft("");
     composing.current = false;
     navigate({ bq: undefined, category: undefined, entry: undefined }, true);
-    inputRef.current?.focus();
+    inputRef.current?.focus({ preventScroll: true });
+    requestAnimationFrame(() =>
+      resultsRef.current?.scrollIntoView({
+        block: "start",
+        behavior: "instant",
+      }),
+    );
+  };
+  const entryTitle = (entry: BookletEntry) => {
+    const parts = entry.title.match(/^(.*?)\s+\[(C\+\+[^\]]+)\]$/);
+    return parts ? (
+      <>
+        {parts[1]} <span className="booklet-standard">{parts[2]}</span>
+      </>
+    ) : (
+      entry.title
+    );
   };
   const renderEntry = (entry: BookletEntry) => (
     <article
@@ -161,7 +227,7 @@ export function BookletsView() {
             navigate({ entry: entry.id });
           }}
         >
-          {entry.title}
+          {entryTitle(entry)}
           <Icon id="link" />
         </a>
       </h3>
@@ -175,52 +241,16 @@ export function BookletsView() {
     <div className="booklets-page">
       <PageHeader
         title="小册子"
-        description="常用语法、标准库与边界提醒。按关键字查找，随用随查。"
+        description="选语言，查关键字，或沿目录阅读。"
       />
-      <nav className="booklet-language" aria-label="小册子语言">
-        {booklets.map((book) => (
-          <a
-            key={book.id}
-            className="ghost-button"
-            href={bookletHref({
-              book: book.id,
-              bq: undefined,
-              category: undefined,
-              entry: undefined,
-            })}
-            aria-current={booklet.id === book.id ? "page" : undefined}
-            onClick={(event) => {
-              if (
-                event.ctrlKey ||
-                event.metaKey ||
-                event.shiftKey ||
-                event.altKey
-              )
-                return;
-              event.preventDefault();
-              composing.current = false;
-              setDraft("");
-              setActiveSection("all");
-              navigate({
-                book: book.id,
-                bq: undefined,
-                category: undefined,
-                entry: undefined,
-              });
-              requestAnimationFrame(() => jumpToSection("all"));
-            }}
-          >
-            {book.id === "c" ? "C 语言" : "C++"}
-          </a>
-        ))}
-      </nav>
       <div className="booklet-heading">
         <div>
           <h2 id="booklet-top" tabIndex={-1}>
             {booklet.title}
           </h2>
           <p>
-            {booklet.standard} · 中文说明 · {bookletEntries.length} 个速查条目
+            {booklet.standard} · {booklet.sections.length} 章 ·{" "}
+            {bookletEntries.length} 个条目
           </p>
         </div>
         <a
@@ -231,104 +261,236 @@ export function BookletsView() {
         >
           <span className="booklet-download-label">下载 Markdown</span>
           <span className="booklet-download-short">下载</span>{" "}
-          <Icon id="right" />
+          <Icon id="download" />
         </a>
       </div>
       {params.get("book") &&
         !booklets.some((book) => book.id === params.get("book")) && (
           <p role="status">未找到指定小册子，已打开 C 语言速查。</p>
         )}
-      <form
-        className="booklet-search"
-        role="search"
-        noValidate
-        onSubmit={(event) => {
-          event.preventDefault();
-          if (!composing.current) setQuery(draft);
-        }}
-      >
-        <label htmlFor="booklet-query">
-          快速查找{" "}
-          <span>
-            按 <kbd>/</kbd> 聚焦
-          </span>
-        </label>
-        <div className="search-clean-box">
-          <Icon id="search" />
-          <input
-            id="booklet-query"
-            ref={inputRef}
-            type="search"
-            autoComplete="off"
-            spellCheck={false}
-            placeholder={
-              booklet.id === "c"
-                ? "例如 malloc、字符串、%zu"
-                : "例如 unique_ptr、C++20、生命周期"
-            }
-            value={draft}
-            onCompositionStart={() => {
-              composing.current = true;
-            }}
-            onCompositionEnd={(event) => {
-              composing.current = false;
-              setQuery(event.currentTarget.value);
-            }}
-            onChange={(event) => {
-              setDraft(event.target.value);
-              if (!composing.current) setQuery(event.target.value);
-            }}
-          />
-          {draft && (
-            <button
-              type="button"
-              className="search-clean-clear-btn"
-              aria-label="清除小册子搜索"
-              onClick={() => {
+      <div className="booklet-toolbar" ref={toolbarRef}>
+        <nav className="booklet-language" aria-label="小册子语言">
+          {booklets.map((book) => (
+            <a
+              key={book.id}
+              className="ghost-button"
+              href={bookletHref({
+                book: book.id,
+                bq: undefined,
+                category: undefined,
+                entry: undefined,
+              })}
+              aria-current={booklet.id === book.id ? "page" : undefined}
+              onClick={(event) => {
+                if (
+                  event.ctrlKey ||
+                  event.metaKey ||
+                  event.shiftKey ||
+                  event.altKey
+                )
+                  return;
+                event.preventDefault();
                 composing.current = false;
-                setQuery("");
-                inputRef.current?.focus();
+                setDraft("");
+                setActiveSection("all");
+                navigate({
+                  book: book.id,
+                  bq: undefined,
+                  category: undefined,
+                  entry: undefined,
+                });
+                requestAnimationFrame(() => jumpToSection("all"));
               }}
             >
-              <Icon id="close" />
-            </button>
-          )}
+              {book.id === "c" ? "C 语言" : "C++"}
+            </a>
+          ))}
+        </nav>
+        <form
+          className="booklet-search"
+          role="search"
+          noValidate
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (!composing.current) {
+              setQuery(draft);
+              requestAnimationFrame(() => {
+                resultsRef.current?.scrollIntoView({
+                  block: "start",
+                  behavior: "instant",
+                });
+                resultsRef.current?.focus({ preventScroll: true });
+              });
+            }
+          }}
+        >
+          <label htmlFor="booklet-query">
+            快速查找{" "}
+            <span>
+              按 <kbd>/</kbd> 聚焦
+            </span>
+          </label>
+          <div className="search-clean-box">
+            <Icon id="search" />
+            <input
+              id="booklet-query"
+              ref={inputRef}
+              type="search"
+              autoComplete="off"
+              spellCheck={false}
+              aria-describedby="booklet-search-help"
+              onKeyDown={(event) => {
+                if (event.key === "Escape" && !composing.current) {
+                  event.preventDefault();
+                  reset();
+                }
+              }}
+              placeholder={
+                booklet.id === "c"
+                  ? "例如 malloc、字符串、%zu"
+                  : "例如 unique_ptr、C++20、生命周期"
+              }
+              value={draft}
+              onCompositionStart={() => {
+                composing.current = true;
+              }}
+              onCompositionEnd={(event) => {
+                composing.current = false;
+                setQuery(event.currentTarget.value);
+              }}
+              onChange={(event) => {
+                setDraft(event.target.value);
+                if (!composing.current) setQuery(event.target.value);
+              }}
+            />
+            {draft && (
+              <button
+                type="button"
+                className="search-clean-clear-btn"
+                aria-label="清除小册子搜索"
+                onClick={reset}
+              >
+                <Icon id="close" />
+              </button>
+            )}
+          </div>
+        </form>
+        <div className="booklet-mobile-category">
+          <label htmlFor="booklet-category">章节导航</label>
+          <select
+            id="booklet-category"
+            value={query.trim() ? "search" : activeSection}
+            onChange={(event) => {
+              if (event.target.value !== "search")
+                setCategory(event.target.value);
+            }}
+          >
+            <option value="all">册首与搜索</option>
+            {query.trim() && (
+              <option value="search" disabled>
+                搜索结果
+              </option>
+            )}
+            {standardSections.length ? (
+              <>
+                <optgroup label="按主题">
+                  {topicSections.map((section) => (
+                    <option key={section.id} value={section.id}>
+                      {section.title}
+                    </option>
+                  ))}
+                </optgroup>
+                <optgroup label="按标准">
+                  {standardSections.map((section) => (
+                    <option key={section.id} value={section.id}>
+                      {section.title}
+                    </option>
+                  ))}
+                </optgroup>
+              </>
+            ) : (
+              booklet.sections.map((section) => (
+                <option key={section.id} value={section.id}>
+                  {section.title}
+                </option>
+              ))
+            )}
+          </select>
         </div>
-        <p className="booklet-search-help">
-          匹配标题、关键词和示例；多词用空格分开，优先显示直接匹配。
-        </p>
-      </form>
+        <button
+          type="button"
+          className="ghost-button booklet-return"
+          aria-label={query.trim() ? "返回搜索结果" : "返回册首"}
+          title={query.trim() ? "返回搜索结果" : "返回册首"}
+          onClick={() => {
+            if (query.trim()) {
+              navigate({ entry: undefined }, true);
+              resultsRef.current?.scrollIntoView({
+                block: "start",
+                behavior: "instant",
+              });
+              resultsRef.current?.focus({ preventScroll: true });
+            } else setCategory("all");
+          }}
+        >
+          <Icon id="up" />
+          <span>{query.trim() ? "结果" : "册首"}</span>
+        </button>
+      </div>
+      <p className="booklet-search-help" id="booklet-search-help">
+        仅搜索当前册；多词用空格分开。按 Enter 查看结果，Esc 清除。
+      </p>
       <div className="booklet-quick" aria-label="常用关键字">
         {(booklet.id === "c"
           ? ["printf", "指针", "malloc", "字符串", "%zu"]
           : ["unique_ptr", "string_view", "C++17", "C++20", "生命周期"]
         ).map((term) => (
-          <button type="button" key={term} onClick={() => setQuery(term)}>
+          <button
+            type="button"
+            key={term}
+            onClick={() => {
+              setQuery(term);
+              inputRef.current?.focus({ preventScroll: true });
+            }}
+          >
             {term}
           </button>
         ))}
       </div>
       <div className="booklet-layout">
-        <aside className="booklet-directory">
+        <aside className="booklet-directory" ref={directoryRef}>
+          <h2 className="booklet-directory-title">
+            目录 <span>{booklet.sections.length} 章</span>
+          </h2>
           <nav aria-label="小册子目录">
-            {[{ id: "all", title: "册首与搜索" }, ...booklet.sections].map(
-              (item) => {
-                const count =
-                  item.id === "all"
-                    ? bookletEntries.length
-                    : booklet.sections.find(
-                        (section) => section.id === item.id,
-                      )!.entries.length;
-                return (
+            {[
+              { id: "all", title: "册首与搜索" },
+              ...topicSections,
+              ...standardSections,
+            ].map((item) => {
+              const count =
+                item.id === "all"
+                  ? bookletEntries.length
+                  : booklet.sections.find((section) => section.id === item.id)!
+                      .entries.length;
+              return (
+                <div key={item.id}>
+                  {standardSections.length > 0 &&
+                    item.id === topicSections[0]?.id && (
+                      <p className="booklet-directory-group">按主题</p>
+                    )}
+                  {standardSections.length > 0 &&
+                    item.id === standardSections[0]?.id && (
+                      <p className="booklet-directory-group">按标准</p>
+                    )}
                   <a
-                    key={item.id}
                     href={bookletHref({
                       category: item.id === "all" ? undefined : item.id,
                       entry: undefined,
                       bq: undefined,
                     })}
                     aria-current={
-                      !query && activeSection === item.id
+                      !query.trim() && activeSection === item.id
                         ? "location"
                         : undefined
                     }
@@ -347,40 +509,53 @@ export function BookletsView() {
                     <span>{item.title}</span>
                     <span>{count}</span>
                   </a>
-                );
-              },
-            )}
+                </div>
+              );
+            })}
           </nav>
         </aside>
         <div className="booklet-content">
-          <div className="booklet-mobile-category">
-            <label htmlFor="booklet-category">章节导航</label>
-            <select
-              id="booklet-category"
-              value={query ? "search" : activeSection}
-              onChange={(event) => {
-                if (event.target.value !== "search")
-                  setCategory(event.target.value);
-              }}
-            >
-              <option value="all">册首与搜索</option>
-              {query && (
-                <option value="search" disabled>
-                  搜索结果
-                </option>
-              )}
-              {booklet.sections.map((section) => (
-                <option key={section.id} value={section.id}>
-                  {section.title}
-                </option>
-              ))}
-            </select>
-          </div>
-          <p className="booklet-result-count" role="status">
+          <p
+            className="booklet-result-count"
+            role="status"
+            ref={resultsRef}
+            tabIndex={-1}
+          >
             {query.trim() ? `“${query.trim()}” · ` : ""}
             {visible.length} 个条目
-            {query.trim() ? " · 搜索结果" : " · 全册同页，目录可定位章节"}
+            {query.trim()
+              ? ` · 仅${booklet.id === "c" ? "C 语言" : "C++"}册 · 搜索结果`
+              : " · 全册同页，目录可定位章节"}
           </p>
+          {query.trim() && visible.length > 1 && (
+            <nav className="booklet-search-index" aria-label="搜索结果索引">
+              <p>跳到匹配条目</p>
+              <ul>
+                {visible.map((entry) => (
+                  <li key={entry.id}>
+                    <a
+                      href={bookletHref({ entry: entry.id })}
+                      onClick={(event) => {
+                        if (
+                          event.ctrlKey ||
+                          event.metaKey ||
+                          event.shiftKey ||
+                          event.altKey
+                        )
+                          return;
+                        event.preventDefault();
+                        navigate({ entry: entry.id });
+                      }}
+                    >
+                      <span>{entry.title}</span>
+                      <small>{entry.categoryTitle}</small>
+                      <Icon id="right" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
           {requestedEntry && !visibleIds.has(requestedEntry) && (
             <p className="booklet-notice">
               该条目不存在或未匹配当前搜索。
