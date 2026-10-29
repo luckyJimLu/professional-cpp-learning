@@ -134,9 +134,10 @@ test("mobile lab reaches its workspace without expanding instructions", async ({
     .getByRole("button", { name: "运行代码", exact: true })
     .boundingBox();
   expect(bounds!.y).toBeLessThan(844);
-  await page.locator(".lab-instructions summary").click();
-  await expect(page.locator(".lab-instructions .checklist")).toBeVisible();
-  await page.locator(".lab-instructions summary").click();
+  await page.locator(".lab-instructions > summary").click();
+  await expect(page.locator(".lab-instructions-body")).toBeVisible();
+  await expect(page.locator(".lab-instructions-body")).toContainText("本课小改动");
+  await page.locator(".lab-instructions > summary").click();
   expect((await page.locator(".cm-content").boundingBox())!.y).toBeLessThan(
     420,
   );

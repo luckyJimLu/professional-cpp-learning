@@ -15,6 +15,7 @@
     "test:e2e": "playwright test",
     "check:examples": "python3 tools/check-examples.py",
     "check:course": "python3 tools/check-course.py",
+    "check:booklets": "python3 tools/check-booklets.py",
     "check:migration": "python3 tools/check-migration.py",
     "check:reference-cpp": "cd references/system-design-notes && bash scripts/check-cpp-examples.sh",
     "format:cpp": "python3 tools/format-markdown-cpp.py --all",

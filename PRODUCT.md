@@ -23,6 +23,7 @@ Desktop browsers support long-form reading and side-by-side code inspection. Pho
 - Markdown is the course, topic and slide source of truth. Existing URLs, browser history and local records must remain compatible.
 - Native selects and disclosures retain their platform keyboard behavior. Navigation drawers and search remain keyboard accessible.
 - The Clang/WASM compiler is optional and failure must not claim success or silently become an exact trace. Approximate trace evidence is labeled.
+- Booklets provide a Chinese C17 quick reference with local keyword search and downloadable Markdown/C examples; C fragments are separate from C++ Lab execution.
 - RTOS is a teaching simulator; viewing or playing a trace does not prove course completion.
 - Source edits and UI work must preserve the three existing Slidev course decks and their speaker notes.
 

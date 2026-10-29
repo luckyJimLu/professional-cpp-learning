@@ -20,6 +20,12 @@ import { GuidelinesView } from "./components/views/GuidelinesView";
 import { VisualizerView } from "./components/views/VisualizerView";
 import { SlidesView } from "./components/views/SlidesView";
 
+const BookletsView = lazy(() =>
+  import("./components/views/BookletsView").then((module) => ({
+    default: module.BookletsView,
+  })),
+);
+
 const Topics = lazy(() =>
   import("./components/Topics").then((module) => ({ default: module.Topics })),
 );
@@ -129,6 +135,13 @@ export default function App() {
           isDayComplete={progress.isDayComplete}
           currentDay={currentLearningDay}
         />
+      );
+      break;
+    case "booklets":
+      page = (
+        <DeferredContent key="booklets" label="小册子">
+          <BookletsView />
+        </DeferredContent>
       );
       break;
     case "slides":

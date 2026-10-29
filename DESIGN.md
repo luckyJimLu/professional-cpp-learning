@@ -154,3 +154,15 @@ Impeccable is pinned to 4.8.0; see docs/design/impeccable.md. Detection is manua
 telemetry are disabled. Preserve the existing loading component contract rather than adopting
 a conflicting generic skeleton recommendation. Detector findings require visual and behavioral
 verification; technical charts, editor internals and document-source content are not marketing.
+
+## 小册子 · C quick reference
+
+The booklet is an Operate/Read reference surface, preserving the handbook palette and shared
+PageHeader, Markdown and CodeBlock owners. `src/booklets.css` owns only its scoped layout,
+consuming runtime tokens from styles.css. A 200px category directory sits beside a flat,
+separator-based entry list on wide screens; below 1100px it becomes a sticky native chapter select below the shared header.
+The full booklet is a continuous single page; navigation scrolls to chapters and highlights the
+reading position. Only keyword search temporarily narrows results. Search uses the shared search-box treatment with a clear button and visible focus.
+No entry-card grid, second palette or new typography system is introduced. Code and tables
+own their overflow; phone controls retain 44px touch targets. Content is Chinese-first C17,
+with literal identifiers, standard distinctions and source attribution retained.

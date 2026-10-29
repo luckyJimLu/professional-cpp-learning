@@ -242,3 +242,12 @@ shows the latest published lesson when the next lesson is unavailable.
 - Lab instructions begin collapsed on a new lesson; opening them preserves the same task, checklist, hints and reset actions. Code, compiler feedback and playback retain their canonical session owners.
 - The shared scrollbar baseline now loads through styles.css for both main and RTOS entrypoints. Workbenches map their existing dark/local surface colors without duplicating interaction behavior.
 - No automatic design hooks, global skills, data migrations or deployment are introduced by this refinement.
+
+## 小册子 quick reference
+
+- Shell/NAV own the `booklets` route on desktop and mobile. Existing global Ctrl/Cmd+K stays code search; `/` focuses the local booklet search outside editable controls.
+- `booklets/c.md` is the C17 content source; `booklets.ts` owns stable categories/entries, keyword parsing and local literal search. C examples are not silently sent to the C++ Lab.
+- `book`, `bq`, `category` and `entry` are URL state. Matching ignores case, normalizes full-width characters and requires all whitespace-separated terms. IME text commits after composition. Clear removes the query immediately, restores the complete booklet and returns focus to the input. `category` denotes a chapter location, never a category filter.
+- The complete booklet renders in one page. Desktop directory links and the sticky native mobile chapter select scroll to headings without removing other chapters, and the active location follows scrolling without creating history entries. Navigating a chapter from search restores the complete booklet first. Wide-screen directory links preserve modified clicks. Entry headings have real shareable URLs and receive focus on explicit entry navigation. Unknown entries show recovery; unknown book IDs explain the C fallback.
+- Shared Markdown/CodeBlock owns rendering, syntax highlighting and clipboard success/failure. Markdown and host C reference source downloads use built asset URLs, including Pages prefixes. DeferredContent owns loading/error/reload states.
+- Verification: `npm run check:booklets`, `tests/booklets.spec.ts`; compile C examples with a C compiler using C17, independent of C++ labs and hardware claims.

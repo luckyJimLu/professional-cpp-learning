@@ -64,6 +64,19 @@ export function Icon({ id }: { id: string }) {
           <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
         </svg>
       );
+    case "booklets":
+      return (
+        <svg {...common}>
+          <path d="M4 4h12a3 3 0 0 1 3 3v14H7a3 3 0 0 1-3-3V4Z" />
+          <path d="M4 17h15M8 7h7M8 11h5" />
+        </svg>
+      );
+    case "link":
+      return (
+        <svg {...common}>
+          <path d="m10 13 4-4M8 15l-1 1a3 3 0 0 1-4-4l4-4a3 3 0 0 1 4 0M13 9l1-1a3 3 0 0 1 4 4l-4 4a3 3 0 0 1-4 0" />
+        </svg>
+      );
     case "search":
       return (
         <svg {...common}>

@@ -20,6 +20,8 @@
 
 ## 快速入口
 
+- [C 语言速查小册子与关键字查找](booklets/README.md)（网页主导航「小册子」）
+
 - [新手起步：编辑、编译、运行与学习方法](docs/beginner-start.md)
 - [Day 1–64 逐课导航与前置知识](docs/beginner-course-map.md)
 

@@ -47,6 +47,9 @@ jobs:
       - name: Check course content
         run: npm run check:course
 
+      - name: Check C booklet examples
+        run: npm run check:booklets
+
       - name: Verify migrated content
         run: npm run check:migration
 

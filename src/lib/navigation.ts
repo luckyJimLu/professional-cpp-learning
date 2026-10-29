@@ -5,6 +5,7 @@ export const NAV = [
   { id: "lessons", label: "课程" },
   { id: "slides", label: "课件" },
   { id: "topics", label: "专题" },
+  { id: "booklets", label: "小册子" },
   { id: "lab", label: "实验" },
   { id: "guidelines", label: "编码规范" },
   { id: "review", label: "复盘" },
