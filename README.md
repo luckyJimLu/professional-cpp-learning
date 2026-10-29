@@ -13,9 +13,9 @@
 
 ## 当前进度
 
-- **已发布：Day 1–63**
-- **下一课：Day 64 · Chapter 7 · Memory Management**
-- 当前主线：**Chapter 7 · Memory Management：ownership / resource policy / bounded allocation**
+- **已发布：Day 1–64**
+- **下一课：Day 65 · Chapter 7 · Memory Management**
+- 当前主线：**Chapter 7 · Memory Management：ownership / resource policy / bounded allocation / object lifetime**
 - 更新方式：**GitHub Markdown only**
 
 ## 快速入口
@@ -39,11 +39,11 @@
 
 ## 最近课程
 
+- [Day 64 · Object Lifetime, Placement Construction and Fixed Storage Reuse](daily/day-064-object-lifetime-placement-construction-fixed-pool.md)
 - [Day 63 · PMR, Bounded Allocation and Memory-Resource Policy](daily/day-063-pmr-bounded-allocation-resource-policy.md)
 - [Day 62 · Smart Pointer Aliasing, Casts and Ownership API Boundaries](daily/day-062-smart-pointer-aliasing-casts-ownership-api.md)
 - [Day 61 · enable_shared_from_this · Async Callback Lifetime and Teardown](daily/day-061-enable-shared-from-this-callback-lifetime.md)
 - [Day 60 · Shared Ownership · shared_ptr, weak_ptr and Lifetime Cycles](daily/day-060-shared-ptr-weak-ptr-lifetime.md)
-- [Day 59 · Custom Deleters · Non-Memory Resources and RAII Boundaries](daily/day-059-custom-deleters-non-memory-resources.md)
 
 ## 每日课程结构
 
@@ -70,7 +70,7 @@
 .
 ├── README.md
 ├── progress.md
-├── daily/                       # 已发布课程 Day 1–63
+├── daily/                       # 已发布课程 Day 1–64
 ├── weekly/
 ├── patterns/
 ├── frameworks/
@@ -145,5 +145,6 @@ npm --prefix slides run build:all    # 构建第 1、2 课
 npm --prefix slides run dev:03       # 交互预览
 npm --prefix slides run build:03     # 构建至 slides/dist/lesson-03
 npm --prefix slides run export:03    # 导出第 3 课 PDF
-npm run ppt:build                   # 构建全部三课
+npm --prefix slides run build:all    # 构建第 1、2、3 课
+npm run ppt:build                    # 构建全部三课
 ```
