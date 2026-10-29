@@ -25,6 +25,14 @@ next: 53
 
 ## ① 今日章节与建议阅读范围（5 分钟）
 
+### 新手起步：先知道今天在解决什么
+
+先看大多数用户需要什么，再看少数用户需要控制什么。两个入口应复用同一验证与发送逻辑，不能各维护一套错误规则。
+
+**前置检查：** 先能解释 [Day 48](day-048-design-usable-interfaces.md)、[Day 50](day-050-easy-to-use-interfaces.md)、[Day 51](day-051-general-purpose-interfaces.md) 的核心例子；不必先掌握整本教材。
+
+**本课最低完成目标：** 能按下面的步骤说明示例如何得到结果，并独立完成一项小修改；高级模式与平台性能分析可第二遍再读。新增导读和拓展练习不计入原有约 60 分钟安排，可分两次完成。
+
 阅读 Chapter 6 的 **Reconciling Generality and Ease of Use**。
 
 重点观察两个方向：
@@ -50,7 +58,21 @@ next: 53
 2. 固定 firmware 中，为什么 template/value policy 有时比 runtime Strategy 更合适？
 3. 一个“通用 API”如果允许无界 retry，会给 WCET 分析带来什么问题？
 
-## ③ 核心概念（10 分钟）
+## ③ 核心概念与场景对照（23 分钟，含进阶选读）
+
+### 先用白话建立概念
+
+- **分层 API**：简单入口与高级入口共享核心。
+- **默认委托**：简单入口采用明确默认配置。
+
+### 跟着本课实验走一遍
+
+1. 从简单入口进入默认选项。
+2. 跟踪到共同实现。
+3. 从高级入口进入同一实现。
+4. 比较相同配置的结果。
+
+先尝试口头预测，再到第⑥节运行。下面原有概念、图示与接口对照用于解释这些步骤，短代码片段不一定能单独编译；完整程序以本课 `main.cpp` 为准。
 
 ### Generality 和 ease-of-use 的冲突
 
@@ -98,37 +120,7 @@ SendWith(options) ───┘
 - easy API 不能偷偷做 heap allocation；
 - 两个入口必须具有一致的线程安全和错误语义。
 
-## ④ C 写法 vs Modern C++（7 分钟）
-
-### C：flags 驱动的万能入口
-
-```c
-int modem_send(modem_t* modem,
-               const uint8_t* data,
-               size_t len,
-               uint32_t timeout_ms,
-               unsigned retries,
-               unsigned flags);
-```
-
-调用者需要知道 flag 位、单位、组合合法性和默认策略。
-
-### Modern C++：common case + typed advanced options
-
-```cpp
-struct SendOptions {
-  std::chrono::milliseconds timeout{500};
-  std::uint8_t max_attempts{1};
-  Priority priority{Priority::kNormal};
-};
-
-Status Send(std::span<const std::byte> payload);
-Status SendWith(std::span<const std::byte> payload, SendOptions options);
-```
-
-类型系统承担单位和状态表达；common case 不要求调用者理解全部高级配置。
-
-## ⑤ 设计模式映射（8 分钟）
+### 进阶选读：模式映射
 
 ### 变化轴
 
@@ -177,7 +169,7 @@ SendOptions is a value
 
 没有共享所有权，因此不需要 `shared_ptr`。销毁顺序必须保证 transport 晚于 Sender 销毁。
 
-## ⑥ Embedded / System Design 场景（5 分钟）
+### 进阶选读：嵌入式与系统场景
 
 Modem middleware 可以给 application 两层入口：
 
@@ -207,7 +199,37 @@ UART Adapter
 - 如果跨 task，queue delay 是否计入 deadline 必须定义；
 - tracing 不能改变实时路径的正确性。
 
-## ⑦ 今日编码规范（7 分钟）
+## ④ C 写法 vs Modern C++（7 分钟）
+
+### C：flags 驱动的万能入口
+
+```c
+int modem_send(modem_t* modem,
+               const uint8_t* data,
+               size_t len,
+               uint32_t timeout_ms,
+               unsigned retries,
+               unsigned flags);
+```
+
+调用者需要知道 flag 位、单位、组合合法性和默认策略。
+
+### Modern C++：common case + typed advanced options
+
+```cpp
+struct SendOptions {
+  std::chrono::milliseconds timeout{500};
+  std::uint8_t max_attempts{1};
+  Priority priority{Priority::kNormal};
+};
+
+Status Send(std::span<const std::byte> payload);
+Status SendWith(std::span<const std::byte> payload, SendOptions options);
+```
+
+类型系统承担单位和状态表达；common case 不要求调用者理解全部高级配置。
+
+## ⑤ 今日编码规范（7 分钟）
 
 ### MUST：common case 使用安全、有界默认值
 
@@ -250,7 +272,22 @@ SendWith(data, options);
 
 这些规则延续规范的“读者优先、显式表达意图、避免惊讶、可静态检查就不要运行期猜测”。
 
-## ⑧ 可编译 Lab / 练习（8 分钟）
+## ⑥ 可编译 Lab / 练习（8 分钟）
+
+### 第一次做：先运行，再只改一件事
+
+1. 在仓库根目录打开 [`examples/day-052/main.cpp`](../examples/day-052/main.cpp)，先读 `main()`，圈出输入、调用与结果检查。
+2. 运行原版，把实际输出和退出状态记下来，再与本节预期对照。无输出也可能成功，必须结合退出码与断言判断。
+3. 修改前先写预期；若失败，先读第一条编译错误或失败断言，再回到对应概念，不同时重写多个函数。
+
+**本课小改动：** 对简单调用和显式默认配置调用做等价测试；不应出现相同空输入在两个入口得到不同处理。
+
+<details>
+<summary>练习提示：卡住时再展开</summary>
+
+把上面的执行步骤当作检查点；保留原版作为对照。若练习故意让编译或断言失败，请只在实验副本操作，解释失败后还原，不把负例混入日常通过用例。不要执行越界、悬空解引用或重复释放来“观察效果”。
+
+</details>
 
 实验：`examples/day-052/main.cpp`。
 
@@ -290,13 +327,30 @@ bool Send(void* transport, void* data, int length, int timeout, int retries, boo
 
 然后回答：这里需要 Strategy 吗？如果 retry 只是次数配置，答案通常是“不需要”。
 
-## ⑨ 3 个常见坑（3 分钟）
+## ⑦ 3 个常见坑（3 分钟）
 
 1. **两个接口，两套实现**：common/advanced path 行为逐渐不一致。
 2. **安全默认值是假象**：简单 API 内部使用无限 timeout、heap 或不可预测 retry。
 3. **为了 Pattern 分层**：只有一个简单 operation，却引入 Facade + Factory + Strategy + Manager，增加 lifetime 与测试成本。
 
-## ⑩ 检查题（2 分钟）
+## ⑧ 检查题（2 分钟）
+
+### 分层自测：从解释到判断
+
+1. **理解：** 不看代码，用三句话复述本课示例的输入、关键步骤和结果。
+2. **应用：** 说明第⑥节小改动的预期，以及实际结果是否符合预期。
+3. **辨析：** 两个入口名字不同，可以有相反的默认行为而不说明吗？
+
+<details>
+<summary>辨析题参考答案与通过依据</summary>
+
+不可以；差异必须明确且有使用场景支持，否则调用者难以预测结果。
+
+能运行只是第一步。只有能解释本课具体步骤、完成小改动，并说清一个不适用条件，才算完成本次自测；不清楚时回看第③节，不以阅读次数当作掌握证据。
+
+</details>
+
+### 原课检查题
 
 ### Q1
 
@@ -324,8 +378,14 @@ bool Send(void* transport, void* data, int length, int timeout, int retries, boo
 - buffer capacity 与 overflow policy；
 - 哪些 Pattern 属于 overengineering。
 
-## 今日结论
+### 对照现有资料库
 
+- [模式选型工作坊](<../patterns/engineering-workshop.md>)。
+- [复用契约章末评审](<../docs/chapter-06-review.md>)。
+
+先完成本课小实验，再查对照资料；专题中的线程、网络、板端或模式不是本课默认前置。以上为本项目已有讲解和工程对照，不冒充标准条文，也不表示所有示例已在目标板验证。
+
+### 今日结论
 > **通用性与易用性不是二选一：让 common case 最短，让 advanced case 显式且有界，并让两者共享同一个稳定 mechanism。**
 
 下一课 Day 53 继续 Chapter 6，沿教材顺序进入 **Designing a Successful Abstraction**。

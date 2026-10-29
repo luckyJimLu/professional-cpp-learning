@@ -23,6 +23,14 @@ next: 56
 
 ## ① 今日章节与建议阅读范围（5 分钟）
 
+### 新手起步：先知道今天在解决什么
+
+先复述契约，再选机制，最后用实验验证。复用设计若没有错误路径与资源证据，只是完成了图纸而非完整工程结论。
+
+**前置检查：** 先能解释 [Day 41](day-041-reuse-contracts-components.md)、[Day 44](day-044-separate-unrelated-concepts.md)、[Day 48](day-048-design-usable-interfaces.md)、[Day 53](day-053-designing-successful-abstraction.md)、[Day 54](day-054-solid-principles.md) 的核心例子；不必先掌握整本教材。
+
+**本课最低完成目标：** 能按下面的步骤说明示例如何得到结果，并独立完成一项小修改；高级模式与平台性能分析可第二遍再读。新增导读和拓展练习不计入原有约 60 分钟安排，可分两次完成。
+
 回读 Chapter 6 的 Summary / Exercises，并快速回顾本章已经学习的关键主题：abstraction、代码复用、genericity、extensibility、usable interface、successful abstraction 与 SOLID。
 
 今天阅读时只追踪一个问题：**一个组件为什么值得被复用，它的稳定边界究竟是什么？**
@@ -33,7 +41,22 @@ next: 56
 2. DIP 与 ownership 为什么是两个独立问题？required non-owning dependency 应怎样表达？
 3. Fake transport 如果不遵守 production timeout/error contract，会破坏哪条原则，又会制造什么测试风险？
 
-## ③ 核心概念（10 分钟）
+## ③ 核心概念与场景对照（24 分钟，含进阶选读）
+
+### 先用白话建立概念
+
+- **章末验收**：基于证据判断学习目标。
+- **资源预算**：容量、时间与生命周期的约束。
+
+### 跟着本课实验走一遍
+
+1. 列真实变化。
+2. 画稳定边界。
+3. 找 owner 和 borrow。
+4. 运行正常与失败用例。
+5. 检查重试及容量上界。
+
+先尝试口头预测，再到第⑥节运行。下面原有概念、图示与接口对照用于解释这些步骤，短代码片段不一定能单独编译；完整程序以本课 `main.cpp` 为准。
 
 Chapter 6 可以压缩成一条工程链：
 
@@ -52,6 +75,33 @@ Chapter 6 可以压缩成一条工程链：
 
 机制选择要服从变化发生的时间：编译期固定变化优先考虑普通 composition、template/concept；运行期确实需要替换且 contract 稳定时才考虑 virtual interface。两者都要审计 flash、RAM、WCET、测试性和生命周期。
 
+### 进阶选读：模式映射
+
+### 变化轴与稳定边界
+
+以 Modem command sender 为例：UART、USB、socket transport 可能变化；“发送一个有界 command，并在 timeout 内得到明确状态”是稳定语义。
+
+- **Adapter**：当 HAL/POSIX/第三方 API 形状确实不同，用 Adapter 把差异停在 transport 边界。
+- **Dependency Injection**：required transport 在 composition root 显式注入，调用者不通过 service locator 偷取依赖。
+- **Composition**：retry、metrics、logging 若是独立能力，优先组合，不把所有职责塞进一个继承树。
+- **不使用 Factory**：若启动时只有一个明确 transport，直接构造最透明。
+- **不使用 Strategy**：若 retry policy 没有真实替换需求，不提前制造算法层。
+
+Ownership 设计先于 pointer：composition root owns transport，`CommandSender` 只 borrow `ITransport&`，owner 必须晚于 borrower 销毁。若 callback 被异步保存，则必须进一步规定 unsubscribe、销毁顺序和执行线程；本日同步 Lab 不引入 callback，避免虚构复杂度。
+
+### 进阶选读：嵌入式与系统场景
+
+在 RTOS Modem middleware 中，可复用边界应明确：
+
+- ISR 不进入 blocking transport；只投递有界事件。
+- task-context API 显式 timeout，不允许无限等待。
+- command/payload 有最大长度；实时路径不做无界增长。
+- transport owner 在 middleware borrower 之后销毁。
+- Fake 与真实 transport 保持相同 error/timeout contract。
+- runtime registration 若确实需要，固定容量并限制在初始化阶段。
+
+这使 HAL 替换、host test 与目标板运行共享同一个业务 contract，同时仍可审计内存和 WCET。
+
 ## ④ C 写法 vs Modern C++（7 分钟）
 
 传统 C 风格接口常把多个 contract 拆成彼此独立的 primitive：
@@ -69,40 +119,12 @@ int modem_send(void* handle,
 Modern C++ 更适合让 contract 进入类型：
 
 ```cpp
-Status Send(std::span<const std::byte> command,
-            std::chrono::milliseconds timeout);
+Status Send(std::span<const std::byte> command, std::chrono::milliseconds timeout);
 ```
 
 这里没有因为“现代 C++”就增加 Factory/Builder。`span` 和 `chrono` 已经消除了真实错误空间；保持小接口比堆 Pattern 更重要。
 
-## ⑤ 设计模式映射（8 分钟）
-
-### 变化轴与稳定边界
-
-以 Modem command sender 为例：UART、USB、socket transport 可能变化；“发送一个有界 command，并在 timeout 内得到明确状态”是稳定语义。
-
-- **Adapter**：当 HAL/POSIX/第三方 API 形状确实不同，用 Adapter 把差异停在 transport 边界。
-- **Dependency Injection**：required transport 在 composition root 显式注入，调用者不通过 service locator 偷取依赖。
-- **Composition**：retry、metrics、logging 若是独立能力，优先组合，不把所有职责塞进一个继承树。
-- **不使用 Factory**：若启动时只有一个明确 transport，直接构造最透明。
-- **不使用 Strategy**：若 retry policy 没有真实替换需求，不提前制造算法层。
-
-Ownership 设计先于 pointer：composition root owns transport，`CommandSender` 只 borrow `ITransport&`，owner 必须晚于 borrower 销毁。若 callback 被异步保存，则必须进一步规定 unsubscribe、销毁顺序和执行线程；本日同步 Lab 不引入 callback，避免虚构复杂度。
-
-## ⑥ Embedded / System Design 场景（6 分钟）
-
-在 RTOS Modem middleware 中，可复用边界应明确：
-
-- ISR 不进入 blocking transport；只投递有界事件。
-- task-context API 显式 timeout，不允许无限等待。
-- command/payload 有最大长度；实时路径不做无界增长。
-- transport owner 在 middleware borrower 之后销毁。
-- Fake 与真实 transport 保持相同 error/timeout contract。
-- runtime registration 若确实需要，固定容量并限制在初始化阶段。
-
-这使 HAL 替换、host test 与目标板运行共享同一个业务 contract，同时仍可审计内存和 WCET。
-
-## ⑦ 今日编码规范（7 分钟）
+## ⑤ 今日编码规范（7 分钟）
 
 ### MUST：资源与时间上界属于公共 contract
 
@@ -115,8 +137,7 @@ bool Send(const void* data, int length, int timeout);
 推荐：
 
 ```cpp
-Status Send(std::span<const std::byte> data,
-            std::chrono::milliseconds timeout);
+Status Send(std::span<const std::byte> data, std::chrono::milliseconds timeout);
 ```
 
 ### MUST：required dependency 显式注入并明确 borrow
@@ -128,7 +149,22 @@ Status Send(std::span<const std::byte> data,
 
 如果普通 value semantics / composition 已经解决问题，不增加 Factory、Strategy 或多层 virtual hierarchy。
 
-## ⑧ 可编译 Lab / 练习（8 分钟）
+## ⑥ 可编译 Lab / 练习（8 分钟）
+
+### 第一次做：先运行，再只改一件事
+
+1. 在仓库根目录打开 [`examples/day-055/main.cpp`](../examples/day-055/main.cpp)，先读 `main()`，圈出输入、调用与结果检查。
+2. 运行原版，把实际输出和退出状态记下来，再与本节预期对照。无输出也可能成功，必须结合退出码与断言判断。
+3. 修改前先写预期；若失败，先读第一条编译错误或失败断言，再回到对应概念，不同时重写多个函数。
+
+**本课小改动：** 给本章实验增加一张验收表，逐项填写对应断言或输出；没有证据的条目标为未验证。
+
+<details>
+<summary>练习提示：卡住时再展开</summary>
+
+把上面的执行步骤当作检查点；保留原版作为对照。若练习故意让编译或断言失败，请只在实验副本操作，解释失败后还原，不把负例混入日常通过用例。不要执行越界、悬空解引用或重复释放来“观察效果”。
+
+</details>
 
 ### 主 Lab：有界 CommandSender
 
@@ -163,13 +199,30 @@ Starter 已可独立编译运行，但故意保留工程违规：裸 pointer + l
 5. 若引入 transport dependency，明确 owner/borrow/lifetime；
 6. 重构后保持可观察业务行为，并补 empty/max/max+1/timeout 边界测试。
 
-## ⑨ 3 个常见坑（2 分钟）
+## ⑦ 3 个常见坑（2 分钟）
 
 1. **把“可复用”理解成“万能”**：参数、模式、插件点越堆越多，contract 反而越不稳定。
 2. **先选 Pattern 再找问题**：Factory/Strategy/Observer 没有真实变化轴时只增加 lifetime 与测试负担。
 3. **抽象掉关键成本**：隐藏 allocation、retry、blocking 或 callback thread context，使实时预算不可审计。
 
-## ⑩ 检查题（2 分钟）
+## ⑧ 检查题（2 分钟）
+
+### 分层自测：从解释到判断
+
+1. **理解：** 不看代码，用三句话复述本课示例的输入、关键步骤和结果。
+2. **应用：** 说明第⑥节小改动的预期，以及实际结果是否符合预期。
+3. **辨析：** 测试通过能证明满足真实硬件 WCET 吗？
+
+<details>
+<summary>辨析题参考答案与通过依据</summary>
+
+不能；主机测试验证部分逻辑，最坏执行时间还需要目标平台与调度环境下的证据。
+
+能运行只是第一步。只有能解释本课具体步骤、完成小改动，并说清一个不适用条件，才算完成本次自测；不清楚时回看第③节，不以阅读次数当作掌握证据。
+
+</details>
+
+### 原课检查题
 
 ### Q1
 为什么 `std::span + std::chrono` 不只是语法现代化，而是在缩小 API 的非法状态空间？
@@ -180,8 +233,14 @@ Starter 已可独立编译运行，但故意保留工程违规：裸 pointer + l
 ### Q3 · 设计题
 一个 Embedded Linux / RTOS 共用的 Modem middleware 需要替换 transport，但 retry 固定、日志可选、callback 由上层注册。请决定哪些地方保持简单、哪些使用 composition/Adapter/DI，以及是否需要 Observer/Strategy。必须说明变化轴、稳定边界、owner/borrow、callback unsubscribe/teardown、线程上下文、timeout、容量和 WCET 上界。
 
-## 今日结论
+### 对照现有资料库
 
+- [模式选型工作坊](<../patterns/engineering-workshop.md>)。
+- [复用契约章末评审](<../docs/chapter-06-review.md>)。
+
+先完成本课小实验，再查对照资料；专题中的线程、网络、板端或模式不是本课默认前置。以上为本项目已有讲解和工程对照，不冒充标准条文，也不表示所有示例已在目标板验证。
+
+### 今日结论
 > **Chapter 6 的核心不是“多做抽象”，而是把真实变化隔离在最小稳定边界内，同时让 lifetime、资源与实时成本保持可见。**
 
 下一课按教材顺序进入 **Chapter 7 · Memory Management**。

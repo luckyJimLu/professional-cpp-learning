@@ -24,6 +24,14 @@ next: 55
 
 ## ① 今日章节与建议阅读范围（5 分钟）
 
+### 新手起步：先知道今天在解决什么
+
+先用一个发送模块学习五条原则，不必背缩写后立即造类。每条原则都应回答一种实际修改为何不应影响无关模块。
+
+**前置检查：** 先能解释 [Day 24](day-024-coupling-cohesion-dependencies.md)、[Day 32](day-032-inheritance-is-a-hierarchies-mixins.md)、[Day 42](day-042-use-abstraction-for-reuse.md)、[Day 47](day-047-design-for-extensibility.md)、[Day 53](day-053-designing-successful-abstraction.md) 的核心例子；不必先掌握整本教材。
+
+**本课最低完成目标：** 能按下面的步骤说明示例如何得到结果，并独立完成一项小修改；高级模式与平台性能分析可第二遍再读。新增导读和拓展练习不计入原有约 60 分钟安排，可分两次完成。
+
 阅读 Chapter 6 中 **The SOLID Principles**。重点理解 SRP、OCP、LSP、ISP、DIP 如何帮助建立可复用、可替换且可测试的边界，而不是背诵五个缩写。
 
 建议带着一个问题阅读：**当 Modem middleware 发生需求变化时，哪一种变化应该被哪个边界吸收？**
@@ -34,7 +42,21 @@ next: 55
 2. required non-owning dependency 为什么优先用引用表达？
 3. 固件编译期已经固定 transport 时，template/concept 为什么可能比 virtual interface 更合适？
 
-## ③ 核心概念（12 分钟）
+## ③ 核心概念与场景对照（26 分钟，含进阶选读）
+
+### 先用白话建立概念
+
+- **SOLID**：关于职责与依赖边界的五条设计原则。
+- **替换契约**：不同实现维持的共同语义。
+
+### 跟着本课实验走一遍
+
+1. 找职责分离对应 SRP。
+2. 找扩展点对应 OCP。
+3. 比较 fake 失败语义对应 LSP。
+4. 核对小接口 ISP 与依赖方向 DIP。
+
+先尝试口头预测，再到第⑥节运行。下面原有概念、图示与接口对照用于解释这些步骤，短代码片段不一定能单独编译；完整程序以本课 `main.cpp` 为准。
 
 SOLID 可以统一理解为：**让不同原因导致的变化，不要穿透同一个不稳定边界。**
 
@@ -48,28 +70,7 @@ SOLID 可以统一理解为：**让不同原因导致的变化，不要穿透同
 
 SOLID 不等于 virtual。运行期替换需要 virtual interface 时，要审计 vtable/间接调用、lifetime 与 teardown；固件配置固定时，template/concept 或普通 composition 可能更简单，但需检查模板实例化导致的 flash 增长。
 
-## ④ C 写法 vs Modern C++（7 分钟）
-
-传统写法容易把平台依赖直接传播到业务层：
-
-```c
-int modem_send(void* uart, const uint8_t* data, size_t len, uint32_t timeout_ms);
-```
-
-Modern C++ 可以让高层依赖业务 contract：
-
-```cpp
-class ITransport {
-public:
-    virtual ~ITransport() = default;
-    virtual Status Write(std::span<const std::byte> data,
-                         std::chrono::milliseconds timeout) = 0;
-};
-```
-
-这不是为了“面向对象”，而是因为 transport 确实是运行期/测试期变化轴。若没有这个变化需求，直接 composition 可能更好。
-
-## ⑤ 设计模式映射（8 分钟）
+### 进阶选读：模式映射
 
 ### 变化轴
 
@@ -103,7 +104,7 @@ ISP 则提醒我们不要创建一个 `IModemEverything`，把 Send、Reset、Di
 
 composition root 拥有具体 transport；`PacketSender` 只 borrow。owner 必须晚于 borrower 销毁。不要为了 DIP 使用 `shared_ptr`；依赖倒置与共享所有权是两个问题。
 
-## ⑥ Embedded / System Design 场景（6 分钟）
+### 进阶选读：嵌入式与系统场景
 
 以 RTOS Modem middleware 为例：
 
@@ -116,7 +117,27 @@ composition root 拥有具体 transport；`PacketSender` 只 borrow。owner 必�
 
 SOLID 在 Embedded 中的目标不是层数更多，而是让内存、WCET、线程上下文、ownership 和替换成本更可审计。
 
-## ⑦ 今日编码规范（7 分钟）
+## ④ C 写法 vs Modern C++（7 分钟）
+
+传统写法容易把平台依赖直接传播到业务层：
+
+```c
+int modem_send(void* uart, const uint8_t* data, size_t len, uint32_t timeout_ms);
+```
+
+Modern C++ 可以让高层依赖业务 contract：
+
+```cpp
+class ITransport {
+public:
+  virtual ~ITransport() = default;
+  virtual Status Write(std::span<const std::byte> data, std::chrono::milliseconds timeout) = 0;
+};
+```
+
+这不是为了“面向对象”，而是因为 transport 确实是运行期/测试期变化轴。若没有这个变化需求，直接 composition 可能更好。
+
+## ⑤ 今日编码规范（7 分钟）
 
 ### MUST：required dependency 显式注入，不用隐藏全局/service locator
 
@@ -124,7 +145,7 @@ SOLID 在 Embedded 中的目标不是层数更多，而是让内存、WCET、线
 
 ```cpp
 Status Send(Packet packet) {
-    return GlobalServices::GetTransport().Write(packet);
+  return GlobalServices::GetTransport().Write(packet);
 }
 ```
 
@@ -143,7 +164,22 @@ explicit PacketSender(ITransport& transport) : transport_(transport) {}
 
 若实现只在编译期变化，可评估 template/concept；但必须检查 flash size、编译时间和 WCET，不假设模板天然零成本。
 
-## ⑧ 可编译 Lab / 练习（8 分钟）
+## ⑥ 可编译 Lab / 练习（8 分钟）
+
+### 第一次做：先运行，再只改一件事
+
+1. 在仓库根目录打开 [`examples/day-054/main.cpp`](../examples/day-054/main.cpp)，先读 `main()`，圈出输入、调用与结果检查。
+2. 运行原版，把实际输出和退出状态记下来，再与本节预期对照。无输出也可能成功，必须结合退出码与断言判断。
+3. 修改前先写预期；若失败，先读第一条编译错误或失败断言，再回到对应概念，不同时重写多个函数。
+
+**本课小改动：** 选其中一条原则，写出违反前的具体改动成本，再提出最小修复；不要一次重写整套架构。
+
+<details>
+<summary>练习提示：卡住时再展开</summary>
+
+把上面的执行步骤当作检查点；保留原版作为对照。若练习故意让编译或断言失败，请只在实验副本操作，解释失败后还原，不把负例混入日常通过用例。不要执行越界、悬空解引用或重复释放来“观察效果”。
+
+</details>
 
 ### 主 Lab：DIP + 小接口 + 显式 borrow
 
@@ -178,13 +214,30 @@ Starter **可直接编译运行**，但 `ModemService` 同时承担发送、信�
 
 不要把五条 SOLID 各造一个 class；目标是减少变化传播，而不是增加类型数量。
 
-## ⑨ 3 个常见坑（3 分钟）
+## ⑦ 3 个常见坑（3 分钟）
 
 1. **SOLID = virtual everywhere**：把编译期固定关系也做成动态多态，增加 flash、间接调用与 lifetime 复杂度。
 2. **DIP = shared_ptr/interface**：依赖抽象并不意味着共享 ownership；borrow 仍应清晰。
 3. **ISP 过度拆分**：每个方法一个 interface，导致组装和导航成本超过变化隔离收益。
 
-## ⑩ 检查题（4 分钟）
+## ⑧ 检查题（4 分钟）
+
+### 分层自测：从解释到判断
+
+1. **理解：** 不看代码，用三句话复述本课示例的输入、关键步骤和结果。
+2. **应用：** 说明第⑥节小改动的预期，以及实际结果是否符合预期。
+3. **辨析：** SOLID 是否要求所有类都继承接口？
+
+<details>
+<summary>辨析题参考答案与通过依据</summary>
+
+不要求；普通函数、值对象、组合和模板也可以形成清晰边界，机制服从需求。
+
+能运行只是第一步。只有能解释本课具体步骤、完成小改动，并说清一个不适用条件，才算完成本次自测；不清楚时回看第③节，不以阅读次数当作掌握证据。
+
+</details>
+
+### 原课检查题
 
 ### Q1
 为什么 LSP 在 Embedded Fake/Mock 中同样重要？如果 Fake 永不 timeout，会造成什么测试风险？
@@ -195,8 +248,14 @@ Starter **可直接编译运行**，但 `ModemService` 同时承担发送、信�
 ### Q3 · 设计题
 一个 RTOS Modem 模块同时提供 send、signal query、reset、diagnostics，并有 application、factory test、diagnostics task 三类 caller。判断应保持简单、使用 composition，还是引入 Adapter/Facade/Strategy 等 Pattern。说明变化轴、稳定边界、SRP/ISP/DIP、owner/borrow/teardown、timeout、ISR/task context 与内存/WCET 上界。
 
-## 今日结论
+### 对照现有资料库
 
+- [模式选型工作坊](<../patterns/engineering-workshop.md>)。
+- [复用契约章末评审](<../docs/chapter-06-review.md>)。
+
+先完成本课小实验，再查对照资料；专题中的线程、网络、板端或模式不是本课默认前置。以上为本项目已有讲解和工程对照，不冒充标准条文，也不表示所有示例已在目标板验证。
+
+### 今日结论
 > **SOLID 的价值不是增加抽象层，而是让真实变化停在正确边界；在 Embedded 中，这个边界还必须同时守住 lifetime、memory 与 WCET。**
 
 下一课继续 Chapter 6 后续内容，严格按教材顺序推进。

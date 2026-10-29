@@ -706,6 +706,25 @@ summary:focus-visible {
   margin: 12px 0;
 }
 
+.markdown details {
+  margin: 16px 0;
+}
+.markdown summary {
+  min-height: var(--touch-target);
+  padding: 8px 0;
+  color: var(--blue);
+  font-weight: 600;
+  cursor: pointer;
+}
+.markdown summary:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.markdown summary:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 4px;
+}
+
 .markdown blockquote {
   margin: 18px 0;
   padding: 10px 16px;

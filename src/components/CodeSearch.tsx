@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { codeEntries, searchCode, type CodeEntry } from "../lib/search";
 import { navigate, useLocationParams } from "../lib/navigation";
 import { PageHeader } from "./common/PageHeader";
+import { Icon } from "./common/Icon";
 
 function Highlight({ text, query }: { text: string; query: string }) {
   const trimmed = query.trim();
@@ -22,7 +23,12 @@ export function CodeSearch() {
   const query = params.get("q") ?? "";
   const [draft, setDraft] = useState(query);
   const [previousQuery, setPreviousQuery] = useState(query);
-  const [copied, setCopied] = useState(false);
+  const [copyFeedback, setCopyFeedback] = useState<{
+    id: string;
+    status: "copied" | "error";
+  } | null>(null);
+  const previewTitleRef = useRef<HTMLHeadingElement>(null);
+  const selectedResultRef = useRef<HTMLButtonElement | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const composingRef = useRef(false);
   const debounceTimerRef = useRef<number | null>(null);
@@ -51,6 +57,15 @@ export function CodeSearch() {
 
   const selected = codeEntries.find((entry) => entry.id === params.get("code"));
   const matchLine = Number(params.get("line")) || selected?.line || 1;
+
+  useEffect(() => {
+    if (selected && selectedResultRef.current) {
+      previewTitleRef.current?.focus({ preventScroll: true });
+      if (window.matchMedia("(max-width: 1100px)").matches) {
+        previewTitleRef.current?.scrollIntoView({ block: "nearest" });
+      }
+    }
+  }, [selected, matchLine]);
 
   const updateQuery = (value: string) => {
     navigate(
@@ -83,13 +98,12 @@ export function CodeSearch() {
     };
   }, []);
 
-  const handleCopyCode = async (codeToCopy: string) => {
+  const handleCopyCode = async (entry: CodeEntry) => {
     try {
-      await navigator.clipboard.writeText(codeToCopy);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      await navigator.clipboard.writeText(entry.code);
+      setCopyFeedback({ id: entry.id, status: "copied" });
     } catch {
-      // ignore
+      setCopyFeedback({ id: entry.id, status: "error" });
     }
   };
 
@@ -198,7 +212,10 @@ export function CodeSearch() {
         </div>
       </form>
 
-      <div className="visually-hidden" role="status">
+      <div
+        className={query.trim() ? "search-result-summary" : "visually-hidden"}
+        role="status"
+      >
         {query.trim()
           ? `${results.length} 处匹配 · 第 ${page} / ${totalPages} 页`
           : "已索引全站课程与代码"}
@@ -246,6 +263,110 @@ export function CodeSearch() {
       )}
 
       <div className={`search-layout ${selected ? "has-selection" : ""}`}>
+        {selected && (
+          <section className="source-viewer" aria-label="代码预览">
+            <header>
+              <div className="source-heading">
+                <h2 ref={previewTitleRef} tabIndex={-1}>
+                  {selected.title}
+                </h2>
+                <span className="source-viewer-kind">
+                  {selected.kind === "file" ? "源码文件" : "文档代码块"} · L
+                  {matchLine}
+                </span>
+              </div>
+              <div className="source-header-actions">
+                <button
+                  className="ghost-button"
+                  onClick={() => handleCopyCode(selected)}
+                  title="复制代码内容"
+                >
+                  {copyFeedback?.id === selected.id &&
+                  copyFeedback.status === "copied"
+                    ? "已复制"
+                    : "复制代码"}
+                </button>
+                <button
+                  className="ghost-button"
+                  onClick={() => {
+                    navigate({ code: undefined, line: undefined });
+                    selectedResultRef.current?.focus({ preventScroll: true });
+                  }}
+                >
+                  <Icon id="close" /> 关闭预览
+                </button>
+              </div>
+            </header>
+            <p className="source-path">{selected.path}</p>
+            {copyFeedback?.id === selected.id && (
+              <p className="source-copy-status" role="status">
+                {copyFeedback.status === "copied"
+                  ? "代码已复制"
+                  : "复制失败，请在下方代码区选择并手动复制。"}
+              </p>
+            )}
+
+            <div className="source-action-links">
+              <button
+                className="action-pill primary"
+                onClick={() => handleRunInLab(selected)}
+              >
+                <Icon id="lab" /> 在 Lab 中运行
+              </button>
+
+              {selected.path.endsWith(".md") &&
+                (selected.category === "topics" ||
+                  selected.category === "patterns") && (
+                  <button
+                    className="action-pill"
+                    onClick={() =>
+                      navigate({ view: "topics", topic: selected.path })
+                    }
+                  >
+                    阅读所在文档 <Icon id="right" />
+                  </button>
+                )}
+              {selected.path.startsWith("daily/") && (
+                <button
+                  className="action-pill"
+                  onClick={() =>
+                    navigate({
+                      view: "lesson",
+                      day: String(
+                        Number(selected.path.match(/day-(\d+)/)?.[1]),
+                      ),
+                    })
+                  }
+                >
+                  阅读所在课程 <Icon id="right" />
+                </button>
+              )}
+            </div>
+
+            <pre
+              tabIndex={0}
+              aria-label="源代码，可横向滚动"
+              key={`${selected.id}:${matchLine}`}
+              ref={(node) => {
+                const active = node?.querySelector<HTMLElement>(".is-match");
+                if (node && active)
+                  node.scrollTop = Math.max(0, active.offsetTop - 100);
+              }}
+            >
+              {selected.lines.map((line, i) => (
+                <span
+                  key={i}
+                  className={`source-line ${selected.line + i === matchLine ? "is-match" : ""}`}
+                >
+                  <span>{selected.line + i}</span>
+                  <code>
+                    <Highlight text={line} query={query.trim()} />
+                  </code>
+                </span>
+              ))}
+            </pre>
+          </section>
+        )}
         <div className="search-results">
           {pagedResults.map(({ entry, lineIndex }) => (
             <button
@@ -255,12 +376,14 @@ export function CodeSearch() {
                 selected?.id === entry.id &&
                 matchLine === entry.line + lineIndex
               }
-              onClick={() =>
+              onClick={(event) => {
+                selectedResultRef.current = event.currentTarget;
+                setCopyFeedback(null);
                 navigate({
                   code: entry.id,
                   line: String(entry.line + lineIndex),
-                })
-              }
+                });
+              }}
             >
               <div className="result-header">
                 <span className="result-meta">
@@ -296,94 +419,6 @@ export function CodeSearch() {
             </button>
           ))}
         </div>
-
-        {selected && (
-          <section className="source-viewer" aria-label="代码预览">
-            <header>
-              <div>
-                <strong>{selected.path.split("/").pop()}</strong>
-                <span className="source-viewer-kind">
-                  {selected.kind === "file" ? "源码文件" : "文档代码块"}
-                </span>
-              </div>
-              <div className="source-header-actions">
-                <button
-                  className="ghost-button"
-                  onClick={() => handleCopyCode(selected.code)}
-                  title="复制代码内容"
-                >
-                  {copied ? "已复制！" : "复制代码"}
-                </button>
-                <button
-                  className="ghost-button"
-                  onClick={() => navigate({ code: undefined, line: undefined })}
-                >
-                  关闭预览
-                </button>
-              </div>
-            </header>
-            <p className="source-path">{selected.path}</p>
-
-            <div className="source-action-links">
-              <button
-                className="action-pill primary"
-                onClick={() => handleRunInLab(selected)}
-              >
-                在在线 Lab 中运行 ▶
-              </button>
-
-              {selected.path.endsWith(".md") &&
-                (selected.category === "topics" ||
-                  selected.category === "patterns") && (
-                  <button
-                    className="action-pill"
-                    onClick={() =>
-                      navigate({ view: "topics", topic: selected.path })
-                    }
-                  >
-                    阅读所在文档 →
-                  </button>
-                )}
-              {selected.path.startsWith("daily/") && (
-                <button
-                  className="action-pill"
-                  onClick={() =>
-                    navigate({
-                      view: "lesson",
-                      day: String(
-                        Number(selected.path.match(/day-(\d+)/)?.[1]),
-                      ),
-                    })
-                  }
-                >
-                  阅读所在课程 →
-                </button>
-              )}
-            </div>
-
-            <pre
-              tabIndex={0}
-              key={`${selected.id}:${matchLine}`}
-              ref={(node) => {
-                const active = node?.querySelector<HTMLElement>(".is-match");
-                if (node && active)
-                  node.scrollTop = Math.max(0, active.offsetTop - 100);
-              }}
-            >
-              {selected.lines.map((line, i) => (
-                <span
-                  key={i}
-                  className={`source-line ${selected.line + i === matchLine ? "is-match" : ""}`}
-                >
-                  <span>{selected.line + i}</span>
-                  <code>
-                    <Highlight text={line} query={query.trim()} />
-                  </code>
-                </span>
-              ))}
-            </pre>
-          </section>
-        )}
       </div>
 
       {results.length > pageSize && (

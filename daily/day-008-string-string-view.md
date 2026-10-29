@@ -26,6 +26,14 @@ std::string 与 std::string_view：所有权、借用与零拷贝文本接口
 
 ## ① 今日阅读范围 · 5 分钟
 
+### 新手起步：先知道今天在解决什么
+
+先问结果是否要保存，再决定使用拥有型字符串还是视图。视图复制的是位置和长度，底层字符不会因此多活一会儿。
+
+**前置检查：** 先能解释 [Day 4](day-004-references-parameter-passing.md)、[Day 5](day-005-pointers-nullptr-bounds.md) 的核心例子；不必先掌握整本教材。
+
+**本课最低完成目标：** 能按下面的步骤说明示例如何得到结果，并独立完成一项小修改；高级模式与平台性能分析可第二遍再读。新增导读和拓展练习不计入原有约 60 分钟安排，可分两次完成。
+
 阅读 Chapter 2 开头及 std::string / std::string_view 相关部分。带着三个问题：谁拥有字符内存？是否需要复制？view 的生命周期由谁保证？
 
 ## ② 昨日复习 · 5 分钟
@@ -37,6 +45,20 @@ std::string 与 std::string_view：所有权、借用与零拷贝文本接口
 - 为什么 static_cast 的显式不等于转换一定安全？
 
 ## ③ 核心概念 · 15 分钟
+
+### 先用白话建立概念
+
+- **string**：拥有字符存储的字符串。
+- **string_view**：只读借用字符范围。
+
+### 跟着本课实验走一遍
+
+1. 找到 CSQ 响应文本。
+2. 识别前缀和分隔符。
+3. 解析 RSSI、BER。
+4. 对照正常与非法响应的断言。
+
+先尝试口头预测，再到第⑥节运行。下面原有概念、图示与接口对照用于解释这些步骤，短代码片段不一定能单独编译；完整程序以本课 `main.cpp` 为准。
 
 std::string 是拥有者
 
@@ -60,9 +82,7 @@ bool IsOkResponse(std::string_view response) {
 ```cpp
 std::string_view Bad() {
   std::string text{"OK"};
-```
-return text; // text 销毁后 view 悬空
-```cpp
+  return text;  // text 销毁后 view 悬空
 }
 ```
 view 的生命周期不能超过它观察的数据。
@@ -105,6 +125,22 @@ Status ParseResponse(std::string_view response, StorageMode storage_mode);
 若函数只解析、不保存，进一步简化为 Status ParseResponse(std::string_view response);
 
 ## ⑥ 20 分钟实验：Modem AT Response Parser
+
+### 第一次做：先运行，再只改一件事
+
+1. 在仓库根目录打开 [`examples/day-008/main.cpp`](../examples/day-008/main.cpp)，先读 `main()`，圈出输入、调用与结果检查。
+2. 运行原版，把实际输出和退出状态记下来，再与本节预期对照。无输出也可能成功，必须结合退出码与断言判断。
+3. 修改前先写预期；若失败，先读第一条编译错误或失败断言，再回到对应概念，不同时重写多个函数。
+
+**本课小改动：** 增加一个缺少数值的响应，预期返回无结果；再说明解析出的数值为何不依赖原字符串继续存在。
+
+<details>
+<summary>练习提示：卡住时再展开</summary>
+
+把上面的执行步骤当作检查点；保留原版作为对照。若练习故意让编译或断言失败，请只在实验副本操作，解释失败后还原，不把负例混入日常通过用例。不要执行越界、悬空解引用或重复释放来“观察效果”。
+
+</details>
+
 目标：解析 +CSQ: <rssi>,<ber>，不为输入创建动态副本。
 
 完整源码：[main.cpp](../examples/day-008/main.cpp)。
@@ -178,6 +214,23 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-008/main.cpp -
 
 ## ⑧ 检查题 · 5 分钟
 
+### 分层自测：从解释到判断
+
+1. **理解：** 不看代码，用三句话复述本课示例的输入、关键步骤和结果。
+2. **应用：** 说明第⑥节小改动的预期，以及实际结果是否符合预期。
+3. **辨析：** 从函数返回局部 `string` 的视图安全吗？
+
+<details>
+<summary>辨析题参考答案与通过依据</summary>
+
+不安全；局部字符串销毁后视图失效。需要独立保存时返回拥有型结果。
+
+能运行只是第一步。只有能解释本课具体步骤、完成小改动，并说清一个不适用条件，才算完成本次自测；不清楚时回看第③节，不以阅读次数当作掌握证据。
+
+</details>
+
+### 原课检查题
+
 Q1：同步日志函数只读 tag 且不保存，char* / std::string 按值 / std::string_view / void* 中哪个最合适？
 
 Q2：为什么不能返回观察局部 std::string 的 std::string_view？请用“所有权 + 生命周期”解释。
@@ -199,3 +252,10 @@ C++23 / 编译器提示
 核心能力在 C++17/20 已可用；std::string_view::starts_with 需要 C++20。旧嵌入式 GCC/libstdc++ 若不支持，可用 substr(0, prefix.size()) == prefix 替代。
 
 明日 Day 9：继续 Chapter 2，深入字符串构造、搜索、拼接、格式化与嵌入式动态分配成本。
+
+### 对照现有资料库
+
+- [实验环境与工具链边界](<../docs/lab-environments.md>)。
+- [类型、借用与错误处理规范](<../guidelines/embedded-cpp-guideline-notes.md>)。
+
+先完成本课小实验，再查对照资料；专题中的线程、网络、板端或模式不是本课默认前置。以上为本项目已有讲解和工程对照，不冒充标准条文，也不表示所有示例已在目标板验证。

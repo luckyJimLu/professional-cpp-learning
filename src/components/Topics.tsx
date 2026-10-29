@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import {
   topics,
   referenceBooks,
-  resolveTopicLink,
   topicSeries,
   topicSummary,
   seriesTopics,
@@ -10,6 +9,10 @@ import {
 } from "../lib/topics";
 import { navigate, useLocationParams } from "../lib/navigation";
 import { Markdown } from "./Markdown";
+import {
+  resolveContentHref,
+  resolveContentNavigation,
+} from "../lib/contentNavigation";
 
 const kLastRead = "professional-cpp:topic:last-read";
 const positionKey = (path: string) => `professional-cpp:topic:position:${path}`;
@@ -367,23 +370,11 @@ function TopicReader({
             <Markdown
               normalizeDocumentHeadings
               sourcePath={selected.path}
-              resolveHref={(href) => {
-                const target =
-                  href.startsWith("#") && !href.startsWith("#/chapter/")
-                    ? undefined
-                    : resolveTopicLink(selected.path, href);
-                return target
-                  ? topicUrl(target.path)
-                  : href.startsWith("#/chapter/")
-                    ? `https://luckyJimLu.github.io/system-design-notes/${href}`
-                    : href;
-              }}
+              resolveHref={(href) => resolveContentHref(selected.path, href)}
               onNavigate={(href) => {
-                if (href.startsWith("#") && !href.startsWith("#/chapter/"))
-                  return false;
-                const target = resolveTopicLink(selected.path, href);
+                const target = resolveContentNavigation(selected.path, href);
                 if (!target) return false;
-                select(target.path);
+                navigate(target);
                 return true;
               }}
             >

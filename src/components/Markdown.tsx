@@ -2,6 +2,7 @@ import { isValidElement, type ReactNode } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { Root } from "mdast";
+import { answerDisclosures } from "../lib/markdownDisclosures";
 
 // Legacy topic documents sometimes use multiple h1 sections. Keep one title
 // and normalize later sections in the Markdown AST, leaving fenced code intact.
@@ -27,7 +28,12 @@ function documentHeadings() {
         sectionShift = 1;
       }
       node.depth = Math.min(6, node.depth + sectionShift) as
-        1 | 2 | 3 | 4 | 5 | 6;
+        | 1
+        | 2
+        | 3
+        | 4
+        | 5
+        | 6;
     }
   };
 }
@@ -122,10 +128,10 @@ export function Markdown({
       <ReactMarkdown
         remarkPlugins={
           embedDocument
-            ? [remarkGfm, embeddedHeadings]
+            ? [remarkGfm, answerDisclosures, embeddedHeadings]
             : normalizeDocumentHeadings
-              ? [remarkGfm, documentHeadings]
-              : [remarkGfm]
+              ? [remarkGfm, answerDisclosures, documentHeadings]
+              : [remarkGfm, answerDisclosures]
         }
         components={{
           ...components,

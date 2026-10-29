@@ -26,6 +26,14 @@ Composition：用对象组合分配职责
 
 ## ① 今日章节与建议阅读范围（5分钟）
 
+### 新手起步：先知道今天在解决什么
+
+先画对象关系，再画销毁顺序。一个对象需要另一个对象提供服务，不等于它应决定对方的生命周期。
+
+**前置检查：** 先能解释 [Day 4](day-004-references-parameter-passing.md)、[Day 19](day-019-requirements-architecture-boundaries.md)、[Day 28](day-028-class-invariants-minimal-interface.md)、[Day 29](day-029-constructors-initialization-valid-state.md) 的核心例子；不必先掌握整本教材。
+
+**本课最低完成目标：** 能按下面的步骤说明示例如何得到结果，并独立完成一项小修改；高级模式与平台性能分析可第二遍再读。新增导读和拓展练习不计入原有约 60 分钟安排，可分两次完成。
+
 继续 Chapter 5 · Designing with Classes。围绕类之间的关系、职责分配、对象作为成员，以及接口如何表达协作关系阅读。重点问：对象是否真正拥有另一个对象？只是借用服务吗？生命周期是否天然绑定？
 
 ## ② 昨日复习 3 问（5分钟）
@@ -39,6 +47,20 @@ Composition：用对象组合分配职责
 参考：constructor 建立对象自身不变量；explicit 防止意外转换；硬件启动属于运行期可恢复操作，应通过 Start/Open 等显式 API 返回统一 Status。
 
 ## ③ 核心概念讲解（15分钟）
+
+### 先用白话建立概念
+
+- **组合**：对象通过成员或协作者完成任务。
+- **借用依赖**：使用但不负责销毁的协作者。
+
+### 跟着本课实验走一遍
+
+1. 外部创建 transport。
+2. Modem 保存引用。
+3. 发送正常命令。
+4. 空命令或无效超时沿错误路径返回。
+
+先尝试口头预测，再到第⑥节运行。下面原有概念、图示与接口对照用于解释这些步骤，短代码片段不一定能单独编译；完整程序以本课 `main.cpp` 为准。
 
 ### 3.1 从“类”转向“对象关系”
 
@@ -97,30 +119,19 @@ int modem_send(const uint8_t* data, size_t size) {
 C++
 ```cpp
 class ITransport {
-```
 public:
-```cpp
-virtual ~ITransport() = default;
-```
-virtual Status Write(std::span<const std::uint8_t> data,
-```cpp
-std::chrono::milliseconds timeout) = 0;
-}
-;
+  virtual ~ITransport() = default;
+  virtual Status Write(std::span<const std::uint8_t> data, std::chrono::milliseconds timeout) = 0;
+};
 
 class ModemSession {
-```
 public:
-```cpp
-explicit ModemSession(ITransport& transport) : transport_(transport) {}
-```
-private:
-ITransport& transport_; // borrowed
-```cpp
-}
-;
-```
+  explicit ModemSession(ITransport& transport) : transport_(transport) {}
 
+private:
+  ITransport& transport_;  // borrowed
+};
+```
 ## ⑤ 今日编码规范（10分钟）
 
 MUST：非拥有访问用引用/裸指针，并明确生命周期；SHOULD：接口尽量小；MUST：实时路径避免动态分配。
@@ -130,16 +141,12 @@ MUST：非拥有访问用引用/裸指针，并明确生命周期；SHOULD：接
 C++
 ```cpp
 class Modem {
-```
 public:
-```cpp
-Modem(std::shared_ptr<Uart> uart) : uart_(std::move(uart)) {}
-```
+  Modem(std::shared_ptr<Uart> uart) : uart_(std::move(uart)) {}
+
 private:
-```cpp
-std::shared_ptr<Uart> uart_;
-}
-;
+  std::shared_ptr<Uart> uart_;
+};
 ```
 
 若 Modem 根本不参与 UART 所有权，shared_ptr 制造了虚假生命周期语义。
@@ -149,19 +156,31 @@ std::shared_ptr<Uart> uart_;
 C++
 ```cpp
 class Modem {
-```
 public:
-```cpp
-explicit Modem(Uart& uart) : uart_(uart) {}
-```
+  explicit Modem(Uart& uart) : uart_(uart) {}
+
 private:
-```cpp
-Uart& uart_;
-}
-;
+  Uart& uart_;
+};
 ```
 
 ## ⑥ 可编译小实验（20分钟）
+
+### 第一次做：先运行，再只改一件事
+
+1. 在仓库根目录打开 [`examples/day-030/main.cpp`](../examples/day-030/main.cpp)，先读 `main()`，圈出输入、调用与结果检查。
+2. 运行原版，把实际输出和退出状态记下来，再与本节预期对照。无输出也可能成功，必须结合退出码与断言判断。
+3. 修改前先写预期；若失败，先读第一条编译错误或失败断言，再回到对应概念，不同时重写多个函数。
+
+**本课小改动：** 在纸上排列创建与销毁顺序，保证 Modem 的借用不越过 transport 生命周期；不通过制造悬空访问验证。
+
+<details>
+<summary>练习提示：卡住时再展开</summary>
+
+把上面的执行步骤当作检查点；保留原版作为对照。若练习故意让编译或断言失败，请只在实验副本操作，解释失败后还原，不把负例混入日常通过用例。不要执行越界、悬空解引用或重复释放来“观察效果”。
+
+</details>
+
 实现可替换 Transport 的 ModemSession：发送路径无 heap、依赖为 borrowing、timeout 强类型化。
 
 C++
@@ -253,6 +272,23 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-030/main.cpp -
 
 ## ⑧ 2 道检查题（5分钟）
 
+### 分层自测：从解释到判断
+
+1. **理解：** 不看代码，用三句话复述本课示例的输入、关键步骤和结果。
+2. **应用：** 说明第⑥节小改动的预期，以及实际结果是否符合预期。
+3. **辨析：** 组合是否意味着必须使用 shared_ptr？
+
+<details>
+<summary>辨析题参考答案与通过依据</summary>
+
+不是；值成员、引用、unique_ptr 等都可能参与组合，选型依据是实际所有权。
+
+能运行只是第一步。只有能解释本课具体步骤、完成小改动，并说清一个不适用条件，才算完成本次自测；不清楚时回看第③节，不以阅读次数当作掌握证据。
+
+</details>
+
+### 原课检查题
+
 Q1：为什么 ITransport& 比 ITransport* 更适合“transport 必须存在”的契约？
 
 Q2：若对象独占运行期创建的 transport 且负责销毁，成员应优先引用、unique_ptr 还是 shared_ptr？
@@ -262,3 +298,10 @@ Q2：若对象独占运行期创建的 transport 且负责销毁，成员应优�
 C++23 支持提示：今天使用的 span、chrono、array、enum class 并不依赖最新 C++23 库特性；嵌入式工具链仍应确认标准库配置。
 
 Day 31：继续 Chapter 5，学习对象所有权、生命周期与资源管理边界。
+
+### 对照现有资料库
+
+- [拥有、借用与对象协作](<../patterns/ownership-and-smart-pointers.md>)。
+- [模式选型：先看无模式基线](<../patterns/engineering-workshop.md>)。
+
+先完成本课小实验，再查对照资料；专题中的线程、网络、板端或模式不是本课默认前置。以上为本项目已有讲解和工程对照，不冒充标准条文，也不表示所有示例已在目标板验证。

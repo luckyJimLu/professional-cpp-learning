@@ -24,6 +24,14 @@ next: 27
 
 ## ① 今日章节与建议阅读范围（5分钟）
 
+### 新手起步：先知道今天在解决什么
+
+先判断变化发生在编译时还是运行时，再选择参数、组合、模板或虚接口。不要只比较语法长短。
+
+**前置检查：** 先能解释 [Day 19](day-019-requirements-architecture-boundaries.md)、[Day 22](day-022-abstraction-stable-interface.md)、[Day 25](day-025-design-doc-contract-prototype.md) 的核心例子；不必先掌握整本教材。
+
+**本课最低完成目标：** 能按下面的步骤说明示例如何得到结果，并独立完成一项小修改；高级模式与平台性能分析可第二遍再读。新增导读和拓展练习不计入原有约 60 分钟安排，可分两次完成。
+
 继续阅读 Chapter 4 · Designing Professional C++ Programs 中关于设计、抽象、复用和设计决策的内容。重点问：哪些需求最可能变化？哪些接口应保持稳定？一次设计决策带来了什么成本？
 
 ## ② 昨日复习 3 问（5分钟）
@@ -35,6 +43,20 @@ next: 27
 - Decision / Evidence / Consequence 分别解决什么问题？
 
 ## ③ 核心概念讲解（15分钟）
+
+### 先用白话建立概念
+
+- **变化轴**：可能独立变化的一类需求。
+- **取舍**：收益与代价的共同选择。
+
+### 跟着本课实验走一遍
+
+1. 找到 transport 注入位置。
+2. 追踪发送到具体实现。
+3. 检查发送长度和状态。
+4. 列出替换实现需要改的文件。
+
+先尝试口头预测，再到第⑥节运行。下面原有概念、图示与接口对照用于解释这些步骤，短代码片段不一定能单独编译；完整程序以本课 `main.cpp` 为准。
 
 稳定边界不等于抽象越多越好。 抽象的价值是隔离真正可能变化的东西。嵌入式系统常见变化轴包括 UART/USB/SPI transport、RTOS/裸机、modem vendor、板级 MMIO、日志后端与 timeout 策略。
 
@@ -66,18 +88,13 @@ public:
 
 ```cpp
 class ModemSession {
-```
 public:
-```cpp
-explicit ModemSession(ITransport& transport) : transport_{transport} {}
-```
-private:
-ITransport& transport_; // borrowed, non-owning
-```cpp
-}
-;
-```
+  explicit ModemSession(ITransport& transport) : transport_{transport} {}
 
+private:
+  ITransport& transport_;  // borrowed, non-owning
+};
+```
 ## ⑤ 今日编码规范（10分钟）
 
 - MUST：平台差异集中隔离，BSP/MMIO/RTOS/vendor API 不泄漏到业务层。
@@ -109,25 +126,34 @@ struct SendOptions {
 
 ```cpp
 class ModemSession {
-```
 public:
-```cpp
-explicit ModemSession(ITransport& transport) : transport_{transport} {}
-```
-Status Send(std::span<const std::byte> data,
-```cpp
-const SendOptions& options);
-```
+  explicit ModemSession(ITransport& transport) : transport_{transport} {}
+  Status Send(std::span<const std::byte> data, const SendOptions& options);
+
 private:
-```cpp
-ITransport& transport_;
-}
-;
+  ITransport& transport_;
+};
 ```
 
 嵌入式注意：抽象不能掩盖无界等待或 heap allocation。硬实时路径必须能审计最坏执行时间和内存行为。
 
 ## ⑥ 可编译的小实验 / 代码练习（20分钟）
+
+### 第一次做：先运行，再只改一件事
+
+1. 在仓库根目录打开 [`examples/day-026/main.cpp`](../examples/day-026/main.cpp)，先读 `main()`，圈出输入、调用与结果检查。
+2. 运行原版，把实际输出和退出状态记下来，再与本节预期对照。无输出也可能成功，必须结合退出码与断言判断。
+3. 修改前先写预期；若失败，先读第一条编译错误或失败断言，再回到对应概念，不同时重写多个函数。
+
+**本课小改动：** 为 UART 与 fake 写下相同契约，再比较两者的阻塞与错误路径；结果相同不代表资源成本相同。
+
+<details>
+<summary>练习提示：卡住时再展开</summary>
+
+把上面的执行步骤当作检查点；保留原版作为对照。若练习故意让编译或断言失败，请只在实验副本操作，解释失败后还原，不把负例混入日常通过用例。不要执行越界、悬空解引用或重复释放来“观察效果”。
+
+</details>
+
 实现可在 UART 与 Fake transport 之间替换的发送层，发送路径不动态分配。
 
 完整源码：[main.cpp](../examples/day-026/main.cpp)。
@@ -219,9 +245,33 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-026/main.cpp -
 
 ## ⑧ 2 道检查题（5分钟）
 
+### 分层自测：从解释到判断
+
+1. **理解：** 不看代码，用三句话复述本课示例的输入、关键步骤和结果。
+2. **应用：** 说明第⑥节小改动的预期，以及实际结果是否符合预期。
+3. **辨析：** 虚接口是不是永远比模板更灵活？
+
+<details>
+<summary>辨析题参考答案与通过依据</summary>
+
+它便于运行期替换，但也有间接调用与生命周期成本；模板适合某些编译期配置，需看需求。
+
+能运行只是第一步。只有能解释本课具体步骤、完成小改动，并说清一个不适用条件，才算完成本次自测；不清楚时回看第③节，不以阅读次数当作掌握证据。
+
+</details>
+
+### 原课检查题
+
 - 为什么把 UART/MMIO 类型直接暴露给 ModemSession 会扩大硬件变化的影响范围？
 
 - ITransport 虚接口与模板静态注入都可工作时，你会收集哪些证据再决定？
 
 今日完成标准：能够指出系统中的一个变化轴，建立稳定边界，并明确说明该抽象的成本，而不只是说“这样更面向对象”。
 下一节 Day 27：Chapter 4 收束——从需求、抽象、复用到可演进设计，为 Chapter 5 Designing with Classes 建立过渡。
+
+### 对照现有资料库
+
+- [需求与约束贯穿实验](<../docs/engineering-learning-path.md>)。
+- [系统架构资料：进阶对照](<../references/system-design-notes/content/33. Cpp System Architecture/index.zh.md>)。
+
+先完成本课小实验，再查对照资料；专题中的线程、网络、板端或模式不是本课默认前置。以上为本项目已有讲解和工程对照，不冒充标准条文，也不表示所有示例已在目标板验证。

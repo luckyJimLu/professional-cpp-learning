@@ -8,6 +8,11 @@ import {
 import { calculateReadingStats } from "../../lib/readingTime";
 import { CompileRail } from "../common/CompileRail";
 import { Markdown } from "../Markdown";
+import { navigate as navigateRoute } from "../../lib/navigation";
+import {
+  resolveContentHref,
+  resolveContentNavigation,
+} from "../../lib/contentNavigation";
 
 function cx(...values: Array<string | false | undefined>) {
   return values.filter(Boolean).join(" ");
@@ -175,7 +180,18 @@ export function LessonView({
                   </button>
                 </div>
               </div>
-              <Markdown>{section.body}</Markdown>
+              <Markdown
+                sourcePath={lesson.path}
+                resolveHref={(href) => resolveContentHref(lesson.path, href)}
+                onNavigate={(href) => {
+                  const target = resolveContentNavigation(lesson.path, href);
+                  if (!target) return false;
+                  navigateRoute(target);
+                  return true;
+                }}
+              >
+                {section.body}
+              </Markdown>
             </section>
           );
         })}

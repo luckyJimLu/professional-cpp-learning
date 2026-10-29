@@ -3,11 +3,11 @@ summary: 从教材章节到工程专题、可运行实验和评审，按前置�
 ---
 # 内容总索引与覆盖矩阵
 
-本项目面向已有 C / Embedded 基础的开发者。主线仍按《Professional C++, Sixth Edition》章节推进；专题、模拟器和综合实验不占用新的 Day 编号。
+本项目提供现代 C++ 入门主线与 C / Embedded 进阶路径。主线仍按《Professional C++, Sixth Edition》章节推进；专题、模拟器和综合实验不占用新的 Day 编号。
 
 ## 如何开始
 
-1. 首次学习：从 [学习路线](learning-plan.md) 与 Day 1 开始；当前主线已完成 Chapter 6，下一章是 Chapter 7。
+1. 首次学习：从[新手入门手册](beginner-start.md)与 [Day 1–64 前置导航](beginner-course-map.md)开始；当前主线已发布至 Day 64，正在 Chapter 7。
 2. 做实验前：阅读 [实验环境矩阵](lab-environments.md)，确认浏览器、主机、模拟器和板端的边界。
 3. 学过接口与复用：完成 [Chapter 6 章末评审](chapter-06-review.md)。
 4. 串联模块：进入 [Modem 数据通道贯穿实验](engineering-learning-path.md)。
@@ -17,7 +17,7 @@ summary: 从教材章节到工程专题、可运行实验和评审，按前置�
 
 | 模块 | 前置知识 | 推荐顺序及现有入口 | 本轮交付／学习证据 | 后续缺口 |
 | --- | --- | --- | --- | --- |
-| 每日课程 | C 基础、函数和结构体 | Ch1–3 → Ch4–6 → Ch7；以已发布课程为准 | 运行主 Lab、解释边界、完成章末评审 | Ch7 以后仍随教材逐课发布，不预设完成日期 |
+| 每日课程 | 可从编译运行起步，按课补齐函数与类型基础 | Ch1–3 → Ch4–6 → Ch7；以已发布课程为准 | 运行主 Lab、解释边界、完成章末评审 | Ch7 以后仍随教材逐课发布，不预设完成日期 |
 | 历史练习 | 对应 Day 的概念与主 Lab | [迁移清单](historical-exercises.md) | 优先补齐借用、容量、契约、所有权四组；独立题型区分运行示范与修改练习 | 清单中的历史 starter 尚未全部落地 |
 | 设计模式 | value semantics、composition、小接口 | [分类索引](../patterns/book-examples.md) → [选型工作坊](../patterns/engineering-workshop.md) | 33 个 C++17 程序；比较无模式方案、变化轴和成本 | 多模式综合场景按真实需求补充 |
 | Asio | 生命周期、回调、错误处理；协程需 C++20 | [模块首页](../frameworks/asio/README.md) → 生命周期 → Handler → Runner → [异步契约实验](../frameworks/asio/ASYNC_WORKSHOP.md) | Echo 主机烟测；超时、取消、背压、关闭的实验步骤和判断标准 | 故障注入扩展的实际运行结果须逐项补记录 |

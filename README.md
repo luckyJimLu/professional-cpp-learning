@@ -2,7 +2,7 @@
 
 基于 **Marc Gregoire · Professional C++, Sixth Edition（C++23）** 的每日工程化学习仓库。
 
-面向已有 **C / Embedded** 基础的学习者：
+面向现代 C++ 入门学习者，保留 C / Embedded 工程进阶路径。零基础先看[新手入门手册](docs/beginner-start.md)，已有 C 基础可按前置导航查缺补漏：
 
 > C 思维 → Modern C++ → Professional C++ → Embedded / Systems Engineering
 
@@ -19,6 +19,9 @@
 - 更新方式：**GitHub Markdown only**
 
 ## 快速入口
+
+- [新手起步：编辑、编译、运行与学习方法](docs/beginner-start.md)
+- [Day 1–64 逐课导航与前置知识](docs/beginner-course-map.md)
 
 - [完整学习进度](progress.md)
 - [章节里程碑与 16 周顺序参考](docs/learning-plan.md)

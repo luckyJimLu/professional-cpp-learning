@@ -23,6 +23,14 @@ next: 63
 
 ## ① 今日章节与建议阅读范围（5 分钟）
 
+### 新手起步：先知道今天在解决什么
+
+把“保存的地址”与“负责保持谁存活”画成两条线。alias 可以指向成员，却仍共享完整 owner 的生命周期，不是成员被单独复制了。
+
+**前置检查：** 先能解释 [Day 4](day-004-references-parameter-passing.md)、[Day 33](day-033-polymorphism-virtual-interfaces.md)、[Day 60](day-060-shared-ptr-weak-ptr-lifetime.md)、[Day 61](day-061-enable-shared-from-this-callback-lifetime.md) 的核心例子；不必先掌握整本教材。
+
+**本课最低完成目标：** 能按下面的步骤说明示例如何得到结果，并独立完成一项小修改；高级模式与平台性能分析可第二遍再读。新增导读和拓展练习不计入原有约 60 分钟安排，可分两次完成。
+
 继续 Chapter 7 smart pointer 高级用法，重点阅读 `shared_ptr` 的 aliasing constructor，以及 `static_pointer_cast`、`dynamic_pointer_cast`、`const_pointer_cast`、`reinterpret_pointer_cast` 等 shared pointer cast API。
 
 阅读时区分两件事：**stored pointer 指向谁**，以及 **control block 拥有谁**。Aliasing `shared_ptr` 可以指向 owner 对象的 subobject，但仍通过同一 control block 延长完整 owner lifetime。
@@ -33,7 +41,22 @@ next: 63
 2. 为什么 weak capture 仍不能替代 unsubscribe / cancel / join？
 3. 从裸 `this` 构造 `shared_ptr<T>(this)` 为什么可能产生第二 control block？
 
-## ③ 核心概念（10 分钟）
+## ③ 核心概念与场景对照（25 分钟，含进阶选读）
+
+### 先用白话建立概念
+
+- **别名共享指针**：共享 owner 但观察不同地址。
+- **类型转换**：改变观察对象的类型方式。
+
+### 跟着本课实验走一遍
+
+1. 建立完整 owner。
+2. 创建成员 alias。
+3. 比较访问地址。
+4. 释放原 owner 变量。
+5. alias 仍保持整体所有权。
+
+先尝试口头预测，再到第⑥节运行。下面原有概念、图示与接口对照用于解释这些步骤，短代码片段不一定能单独编译；完整程序以本课 `main.cpp` 为准。
 
 Aliasing constructor 的关键语义：
 
@@ -50,6 +73,32 @@ shared_ptr<Owner> owner ----> control block ----> Owner lifetime
 Pointer casts 同样要分清：cast 改变“如何观察对象”，通常不应成为修补架构边界的工具。大量 `dynamic_pointer_cast<Concrete>()` 往往说明抽象接口缺少真正需要的 capability，或者调用者知道了不该知道的具体类型。
 
 运行期方面，`dynamic_pointer_cast` 依赖 RTTI/type check；shared ownership 仍承担 control block/refcount 成本。Embedded 构建可能禁用 RTTI，实时路径也应审计 atomic refcount、cache traffic 与析构线程。
+
+### 进阶选读：模式映射
+
+今天真正相关的是 **Adapter + explicit Dependency Injection**，而不是为了 cast 再增加 Factory。
+
+- **需求变化**：底层 UART/SPI/USB transport 不同，具体 capability 不完全相同。
+- **变化轴**：硬件实现、transport-specific operation、runtime replacement 是否真的需要。
+- **稳定边界**：上层 Modem/Protocol 只依赖它真正需要的最小能力。
+- **C++ 机制**：小接口、reference borrow；确需 runtime replacement 时使用 virtual interface；编译期固定实现比较 template/concept。
+- **ownership**：接口类型与 ownership 是两个维度。`shared_ptr<Driver>` 不应只是为了获得 polymorphism；owner 唯一时仍可 `unique_ptr<Driver>`，required dependency 可直接 `Driver&`。
+
+如果只有一个固定 UART driver，最简单的 composition/reference 可能比 Strategy/Factory/Adapter 全套模式更正确。Pattern 必须服务真实变化轴。
+
+### 进阶选读：嵌入式与系统场景
+
+考虑 Modem middleware 同时支持 UART 与 USB transport。Protocol 层只需要：
+
+```text
+Send(bytes, timeout)
+Receive(buffer, timeout)
+Cancel()
+```
+
+若 Protocol 层为了清 FIFO 不断 downcast 到 `UartDriver`，说明 HAL/transport boundary 泄漏。可以把 FIFO reset 留在 UART adapter 的 recovery policy 中，或者设计明确的 recovery capability，而不是让上层认识具体 driver。
+
+Aliasing `shared_ptr` 也要谨慎用于 DMA descriptor/sub-buffer：alias 虽只指向 descriptor/member，却会延长整个 owning arena/session 的 lifetime。若 arena teardown 受 RTOS task、DMA completion 或 IRQ 约束，这种隐藏延长必须在设计图中显式说明。
 
 ## ④ C 写法 vs Modern C++（7 分钟）
 
@@ -68,40 +117,14 @@ Modern C++ 可以用 polymorphic interface 表达稳定 capability：
 
 ```cpp
 struct Driver {
-    virtual ~Driver() = default;
-    virtual void Poll() = 0;
+  virtual ~Driver() = default;
+  virtual void Poll() = 0;
 };
 ```
 
 但如果业务层随后不断 `dynamic_pointer_cast<UartDriver>`，类型安全只是改善了 cast 本身，并没有改善边界。更好的问题是：`ResetFifo()` 是否属于稳定 Driver contract？是否应由更小的 capability interface、Adapter 或 transport-specific layer 承担？
 
-## ⑤ 设计模式映射（8 分钟）
-
-今天真正相关的是 **Adapter + explicit Dependency Injection**，而不是为了 cast 再增加 Factory。
-
-- **需求变化**：底层 UART/SPI/USB transport 不同，具体 capability 不完全相同。
-- **变化轴**：硬件实现、transport-specific operation、runtime replacement 是否真的需要。
-- **稳定边界**：上层 Modem/Protocol 只依赖它真正需要的最小能力。
-- **C++ 机制**：小接口、reference borrow；确需 runtime replacement 时使用 virtual interface；编译期固定实现比较 template/concept。
-- **ownership**：接口类型与 ownership 是两个维度。`shared_ptr<Driver>` 不应只是为了获得 polymorphism；owner 唯一时仍可 `unique_ptr<Driver>`，required dependency 可直接 `Driver&`。
-
-如果只有一个固定 UART driver，最简单的 composition/reference 可能比 Strategy/Factory/Adapter 全套模式更正确。Pattern 必须服务真实变化轴。
-
-## ⑥ Embedded / System Design 场景（7 分钟）
-
-考虑 Modem middleware 同时支持 UART 与 USB transport。Protocol 层只需要：
-
-```text
-Send(bytes, timeout)
-Receive(buffer, timeout)
-Cancel()
-```
-
-若 Protocol 层为了清 FIFO 不断 downcast 到 `UartDriver`，说明 HAL/transport boundary 泄漏。可以把 FIFO reset 留在 UART adapter 的 recovery policy 中，或者设计明确的 recovery capability，而不是让上层认识具体 driver。
-
-Aliasing `shared_ptr` 也要谨慎用于 DMA descriptor/sub-buffer：alias 虽只指向 descriptor/member，却会延长整个 owning arena/session 的 lifetime。若 arena teardown 受 RTOS task、DMA completion 或 IRQ 约束，这种隐藏延长必须在设计图中显式说明。
-
-## ⑦ 今日编码规范（6 分钟）
+## ⑤ 今日编码规范（6 分钟）
 
 ### MUST：API 必须表达 ownership，而不是只表达 pointer shape
 
@@ -119,7 +142,22 @@ Aliasing `shared_ptr` 也要谨慎用于 DMA descriptor/sub-buffer：alias 虽�
 
 必须说明 alias 为什么需要延长完整 owner lifetime，以及 teardown 是否因此改变。
 
-## ⑧ 可编译 Lab / 练习（7 分钟）
+## ⑥ 可编译 Lab / 练习（7 分钟）
+
+### 第一次做：先运行，再只改一件事
+
+1. 在仓库根目录打开 [`examples/day-062/main.cpp`](../examples/day-062/main.cpp)，先读 `main()`，圈出输入、调用与结果检查。
+2. 运行原版，把实际输出和退出状态记下来，再与本节预期对照。无输出也可能成功，必须结合退出码与断言判断。
+3. 修改前先写预期；若失败，先读第一条编译错误或失败断言，再回到对应概念，不同时重写多个函数。
+
+**本课小改动：** 画出 alias 持有期间哪些大对象仍不能释放；说明仅需临时读取成员时为什么不一定值得共享所有权。
+
+<details>
+<summary>练习提示：卡住时再展开</summary>
+
+把上面的执行步骤当作检查点；保留原版作为对照。若练习故意让编译或断言失败，请只在实验副本操作，解释失败后还原，不把负例混入日常通过用例。不要执行越界、悬空解引用或重复释放来“观察效果”。
+
+</details>
 
 ### 主 Lab：Aliasing `shared_ptr`
 
@@ -151,13 +189,30 @@ Starter 可正常运行，但 `ServiceDriver()` 先接受 `shared_ptr<Driver>`�
 4. 若 firmware 只有 UART 单实现，比较 template/concept/static composition 是否比 runtime polymorphism 更合理；
 5. 保持程序独立可编译运行并让输出可观察。
 
-## ⑨ 3 个常见坑（3 分钟）
+## ⑦ 3 个常见坑（3 分钟）
 
 1. **alias pointer == owner 的误解**：alias 的 stored pointer 与 control-block owner 可以不同，容易隐藏完整对象 lifetime extension。
 2. **用 cast 修接口**：重复 downcast 通常意味着稳定边界错误，而不是缺少一个更方便的 cast helper。
 3. **把 polymorphism 与 shared ownership 绑定**：virtual interface 不要求 `shared_ptr`；ownership 应独立设计。
 
-## ⑩ 检查题（2 分钟）
+## ⑧ 检查题（2 分钟）
+
+### 分层自测：从解释到判断
+
+1. **理解：** 不看代码，用三句话复述本课示例的输入、关键步骤和结果。
+2. **应用：** 说明第⑥节小改动的预期，以及实际结果是否符合预期。
+3. **辨析：** 对 `get()` 结果重新构造 shared_ptr 能共享原控制块吗？
+
+<details>
+<summary>辨析题参考答案与通过依据</summary>
+
+不能；它通常创建独立控制块并可能导致错误释放，应使用正确的别名构造或共享指针转换工具。
+
+能运行只是第一步。只有能解释本课具体步骤、完成小改动，并说清一个不适用条件，才算完成本次自测；不清楚时回看第③节，不以阅读次数当作掌握证据。
+
+</details>
+
+### 原课检查题
 
 ### Q1
 Aliasing `shared_ptr<int>{owner, &owner->member}` 在 `owner.reset()` 后为什么仍能安全访问 member？真正被延长 lifetime 的是什么？
@@ -168,8 +223,15 @@ Aliasing `shared_ptr<int>{owner, &owner->member}` 在 `owner.reset()` 后为什�
 ### Q3 · 设计题
 Modem protocol 同时支持 UART/USB。业务层偶尔需要 transport recovery。选择保持简单、composition、Adapter 或 runtime polymorphism，并解释：真实变化轴、稳定 boundary、recovery capability 放在哪里、谁 owner transport、谁只 borrow、是否需要 RTTI/cast，以及 heap/refcount/WCET/IRQ/teardown 约束。
 
-## 今日结论
+### 对照现有资料库
 
+- [所有权与智能指针](<../patterns/ownership-and-smart-pointers.md>)。
+- [实验环境与能力边界](<../docs/lab-environments.md>)。
+- [异步会话生命周期：进阶阅读](<../frameworks/asio/SESSION_LIFECYCLE.md>)。
+
+先完成本课小实验，再查对照资料；专题中的线程、网络、板端或模式不是本课默认前置。以上为本项目已有讲解和工程对照，不冒充标准条文，也不表示所有示例已在目标板验证。
+
+### 今日结论
 > **高级 pointer API 不能替代架构判断：stored pointer、owner 与 stable capability 必须分别设计；如果 cast 很聪明但 ownership graph 更难解释，通常边界正在变差。**
 
 下一课继续 Chapter 7，进入内存资源策略、分配控制与 Embedded 中 bounded allocation / allocator boundary 的工程审计。

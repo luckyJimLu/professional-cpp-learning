@@ -36,6 +36,14 @@ next: 50
 
 ## ① 今日章节与建议阅读范围（5 分钟）
 
+### 新手起步：先知道今天在解决什么
+
+先区分应用、诊断和驱动维护者的任务。上层能访问硬件寄存器不意味着它应该访问；接口应按目标而不是底层能力大全组织。
+
+**前置检查：** 先能解释 [Day 22](day-022-abstraction-stable-interface.md)、[Day 24](day-024-coupling-cohesion-dependencies.md)、[Day 42](day-042-use-abstraction-for-reuse.md)、[Day 48](day-048-design-usable-interfaces.md) 的核心例子；不必先掌握整本教材。
+
+**本课最低完成目标：** 能按下面的步骤说明示例如何得到结果，并独立完成一项小修改；高级模式与平台性能分析可第二遍再读。新增导读和拓展练习不计入原有约 60 分钟安排，可分两次完成。
+
 继续 Chapter 6 · **Designing for Reuse**，沿 `Design Usable Interfaces` 继续进入：
 
 - **Consider the Audience**
@@ -66,7 +74,21 @@ Implementation 决定隐藏细节
 
 ---
 
-## ③ 核心概念（10 分钟）
+## ③ 核心概念与场景对照（23 分钟，含进阶选读）
+
+### 先用白话建立概念
+
+- **受众**：使用某个接口的角色。
+- **最小能力**：完成目标实际需要的功能集合。
+
+### 跟着本课实验走一遍
+
+1. 找出实验中的业务调用方。
+2. 列出它使用的方法。
+3. 标出不应泄漏的硬件信息。
+4. 检查替身需要实现的能力。
+
+先尝试口头预测，再到第⑥节运行。下面原有概念、图示与接口对照用于解释这些步骤，短代码片段不一定能单独编译；完整程序以本课 `main.cpp` 为准。
 
 ### 1. 不同 audience 不一定应该看到同一套 API
 
@@ -135,59 +157,7 @@ Diagnostics
 
 ---
 
-## ④ C 写法 vs Modern C++（7 分钟）
-
-### 传统 C：一个入口暴露所有细节
-
-```c
-int modem_send(void* uart,
-               const unsigned char* data,
-               unsigned len,
-               unsigned timeout_ms,
-               int diagnostic_mode);
-```
-
-调用者被迫知道：
-
-- transport handle；
-- timeout 单位；
-- diagnostic flag；
-- buffer + length；
-- 返回码约定。
-
-### Modern C++：按 purpose 建立调用边界
-
-```cpp
-class ModemClient final {
-public:
-  explicit ModemClient(ModemCore& modem) : modem_(modem) {}
-
-  Status SendTelemetry(std::span<const std::byte> payload);
-
-private:
-  ModemCore& modem_;
-};
-```
-
-diagnostics 可以有独立 view：
-
-```cpp
-class ModemDiagnostics final {
-public:
-  explicit ModemDiagnostics(ModemCore& modem) : modem_(modem) {}
-
-  [[nodiscard]] std::uint32_t ReadSignalDbm() const;
-
-private:
-  ModemCore& modem_;
-};
-```
-
-两者都不需要看到 UART handle。
-
----
-
-## ⑤ 设计模式映射（8 分钟）
+### 进阶选读：模式映射
 
 ### 变化轴
 
@@ -280,7 +250,7 @@ IModemServiceLocator
 
 ---
 
-## ⑥ Embedded / System Design 场景（5 分钟）
+### 进阶选读：嵌入式与系统场景
 
 以 RTOS Modem 为例：
 
@@ -306,7 +276,59 @@ Embedded 额外检查：
 
 ---
 
-## ⑦ 今日编码规范（7 分钟）
+## ④ C 写法 vs Modern C++（7 分钟）
+
+### 传统 C：一个入口暴露所有细节
+
+```c
+int modem_send(void* uart,
+               const unsigned char* data,
+               unsigned len,
+               unsigned timeout_ms,
+               int diagnostic_mode);
+```
+
+调用者被迫知道：
+
+- transport handle；
+- timeout 单位；
+- diagnostic flag；
+- buffer + length；
+- 返回码约定。
+
+### Modern C++：按 purpose 建立调用边界
+
+```cpp
+class ModemClient final {
+public:
+  explicit ModemClient(ModemCore& modem) : modem_(modem) {}
+
+  Status SendTelemetry(std::span<const std::byte> payload);
+
+private:
+  ModemCore& modem_;
+};
+```
+
+diagnostics 可以有独立 view：
+
+```cpp
+class ModemDiagnostics final {
+public:
+  explicit ModemDiagnostics(ModemCore& modem) : modem_(modem) {}
+
+  [[nodiscard]] std::uint32_t ReadSignalDbm() const;
+
+private:
+  ModemCore& modem_;
+};
+```
+
+两者都不需要看到 UART handle。
+
+---
+
+## ⑤ 今日编码规范（7 分钟）
 
 ### MUST：公开接口按调用者目的表达，不暴露无关平台能力
 
@@ -359,7 +381,22 @@ explicit ModemCore(IByteTransport& transport);
 
 ---
 
-## ⑧ 可编译 Lab / 练习（8 分钟）
+## ⑥ 可编译 Lab / 练习（8 分钟）
+
+### 第一次做：先运行，再只改一件事
+
+1. 在仓库根目录打开 [`examples/day-049/main.cpp`](../examples/day-049/main.cpp)，先读 `main()`，圈出输入、调用与结果检查。
+2. 运行原版，把实际输出和退出状态记下来，再与本节预期对照。无输出也可能成功，必须结合退出码与断言判断。
+3. 修改前先写预期；若失败，先读第一条编译错误或失败断言，再回到对应概念，不同时重写多个函数。
+
+**本课小改动：** 分别为“发送遥测”和“诊断信号”写最小方法清单，说明哪些方法不应该出现在对方接口。
+
+<details>
+<summary>练习提示：卡住时再展开</summary>
+
+把上面的执行步骤当作检查点；保留原版作为对照。若练习故意让编译或断言失败，请只在实验副本操作，解释失败后还原，不把负例混入日常通过用例。不要执行越界、悬空解引用或重复释放来“观察效果”。
+
+</details>
 
 实验：
 
@@ -420,7 +457,7 @@ private:
 
 ---
 
-## ⑨ 3 个常见坑（3 分钟）
+## ⑦ 3 个常见坑（3 分钟）
 
 1. **把“通用”理解为“大接口”**：真正 reusable 的接口通常更小、更稳定，而不是暴露所有能力。
 2. **拆接口但仍共享隐藏全局状态**：表面 ISP，实际依赖仍通过 singleton/service locator 耦合。
@@ -428,7 +465,24 @@ private:
 
 ---
 
-## ⑩ 检查题（2 分钟）
+## ⑧ 检查题（2 分钟）
+
+### 分层自测：从解释到判断
+
+1. **理解：** 不看代码，用三句话复述本课示例的输入、关键步骤和结果。
+2. **应用：** 说明第⑥节小改动的预期，以及实际结果是否符合预期。
+3. **辨析：** 同一个底层对象能为不同受众提供不同接口吗？
+
+<details>
+<summary>辨析题参考答案与通过依据</summary>
+
+可以；能力边界和对象实体不是一回事，关键是依赖、权限与生命周期都明确。
+
+能运行只是第一步。只有能解释本课具体步骤、完成小改动，并说清一个不适用条件，才算完成本次自测；不清楚时回看第③节，不以阅读次数当作掌握证据。
+
+</details>
+
+### 原课检查题
 
 ### Q1
 
@@ -475,8 +529,14 @@ Q3：优先从 **2** 或更简单的 **1** 开始；只有真实出现运行时�
 
 ---
 
-## 今日 Code Review 快检
+### 对照现有资料库
 
+- [模式选型工作坊](<../patterns/engineering-workshop.md>)。
+- [复用契约章末评审](<../docs/chapter-06-review.md>)。
+
+先完成本课小实验，再查对照资料；专题中的线程、网络、板端或模式不是本课默认前置。以上为本项目已有讲解和工程对照，不冒充标准条文，也不表示所有示例已在目标板验证。
+
+### 今日 Code Review 快检
 - [ ] 这个接口的 audience 是谁？
 - [ ] 这个 audience 的 purpose 是什么？
 - [ ] 是否暴露了调用者不需要的能力？
@@ -488,8 +548,7 @@ Q3：优先从 **2** 或更简单的 **1** 开始；只有真实出现运行时�
 - [ ] 是否为了 Pattern 而 Pattern？
 - [ ] runtime path 的 allocation / blocking / WCET 是否有界？
 
-## Week 7
-
+### Week 7
 Day 49 是第 7 周收束日。完成本课后继续：
 
 - [Week 07 Review](../weekly/week-07-review.md)

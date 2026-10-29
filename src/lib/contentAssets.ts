@@ -2,9 +2,9 @@ const assets = import.meta.glob(
   [
     "../../references/**/*.{svg,png,jpg,jpeg,gif,webp,pdf,cpp,hpp,py,sh,puml}",
     "../../frameworks/trace32/**/*.{cmm,cpp}",
-    "../../examples/modem-channel-*.cpp",
+    "../../examples/**/*.{cpp,h,hpp}",
   ],
-  { query: "?url", import: "default", eager: true },
+  { query: "?url&no-inline", import: "default", eager: true },
 ) as Record<string, string>;
 const assetUrls = Object.fromEntries(
   Object.entries(assets).map(([path, url]) => [path.slice(6), url]),

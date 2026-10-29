@@ -1520,8 +1520,7 @@ body {
   scroll-margin-top: 100px;
   line-height: 1.5;
 }
-.library-nav,
-.source-viewer {
+.library-nav {
   top: 96px;
   max-height: calc(100dvh - 116px);
 }
@@ -1793,8 +1792,7 @@ body {
     gap: 12px;
     padding-top: 24px;
   }
-  .library-nav,
-  .source-viewer {
+  .library-nav {
     max-height: none;
   }
   .library-nav {

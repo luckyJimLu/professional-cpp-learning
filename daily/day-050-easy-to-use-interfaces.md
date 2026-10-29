@@ -36,6 +36,14 @@ next: 51
 
 ## ① 今日章节与建议阅读范围（5 分钟）
 
+### 新手起步：先知道今天在解决什么
+
+先让常见用法只做必要选择，再把高级选项放在明确入口。少写代码不应以隐藏阻塞、失败或所有权为代价。
+
+**前置检查：** 先能解释 [Day 28](day-028-class-invariants-minimal-interface.md)、[Day 29](day-029-constructors-initialization-valid-state.md)、[Day 48](day-048-design-usable-interfaces.md)、[Day 49](day-049-consider-audience-purpose.md) 的核心例子；不必先掌握整本教材。
+
+**本课最低完成目标：** 能按下面的步骤说明示例如何得到结果，并独立完成一项小修改；高级模式与平台性能分析可第二遍再读。新增导读和拓展练习不计入原有约 60 分钟安排，可分两次完成。
+
 建议阅读 Chapter 6 中 **Design Interfaces That Are Easy to Use**，重点关注四类问题：
 
 1. **Follow Familiar Ways of Doing Things**：遵循 C++ 使用者熟悉的构造、析构、容器、迭代、错误表达习惯。
@@ -61,7 +69,21 @@ next: 51
 
 ---
 
-## ③ 核心概念（10 分钟）
+## ③ 核心概念与场景对照（23 分钟，含进阶选读）
+
+### 先用白话建立概念
+
+- **安全默认值**：常用场景下明确且合理的默认策略。
+- **RAII**：随对象生命周期进行清理。
+
+### 跟着本课实验走一遍
+
+1. 定位最简单的调用。
+2. 查看默认选项实际值。
+3. 与显式选项调用比较。
+4. 检查离开作用域时的清理。
+
+先尝试口头预测，再到第⑥节运行。下面原有概念、图示与接口对照用于解释这些步骤，短代码片段不一定能单独编译；完整程序以本课 `main.cpp` 为准。
 
 ### 1. 熟悉的 C++ 习惯本身就是 API 资产
 
@@ -139,45 +161,7 @@ fat interface 的问题不仅是函数多，而是：
 
 ---
 
-## ④ C 写法 vs Modern C++（7 分钟）
-
-### C / 旧式接口：调用者维护隐式生命周期
-
-```c
-modem_t modem;
-if (modem_init(&modem, uart) != 0) {
-    return ERROR;
-}
-
-int rc = modem_send(&modem, data, size, 1000);
-modem_deinit(&modem);
-```
-
-任何 early return 都可能遗漏 cleanup。
-
-### Modern C++：RAII + 类型化调用点
-
-```cpp
-Modem modem{transport};
-const Status status = modem.Send(payload, 1s);
-```
-
-资源生命周期由对象负责；payload、timeout、错误语义都进入 contract。
-
-但不要误解：如果底层资源初始化本身可能失败，而项目默认禁异常，就需要显式 factory/result：
-
-```cpp
-const auto result = Modem::Create(transport);
-if (!result) {
-  return result.error();
-}
-```
-
-这比“构造成功但对象内部 invalid”更清楚。
-
----
-
-## ⑤ 设计模式映射（8 分钟）
+### 进阶选读：模式映射
 
 ### 变化轴
 
@@ -263,7 +247,7 @@ ModemFacade → ModemService → ModemManager → ModemFactory → UartAdapter
 
 ---
 
-## ⑥ Embedded / System Design 场景（5 分钟）
+### 进阶选读：嵌入式与系统场景
 
 RTOS 中一个常见反模式是把 modem task 的所有内部能力直接暴露：
 
@@ -306,7 +290,45 @@ Diagnostics Task → 专用 diagnostics interface
 
 ---
 
-## ⑦ 今日编码规范（7 分钟）
+## ④ C 写法 vs Modern C++（7 分钟）
+
+### C / 旧式接口：调用者维护隐式生命周期
+
+```c
+modem_t modem;
+if (modem_init(&modem, uart) != 0) {
+    return ERROR;
+}
+
+int rc = modem_send(&modem, data, size, 1000);
+modem_deinit(&modem);
+```
+
+任何 early return 都可能遗漏 cleanup。
+
+### Modern C++：RAII + 类型化调用点
+
+```cpp
+Modem modem{transport};
+const Status status = modem.Send(payload, 1s);
+```
+
+资源生命周期由对象负责；payload、timeout、错误语义都进入 contract。
+
+但不要误解：如果底层资源初始化本身可能失败，而项目默认禁异常，就需要显式 factory/result：
+
+```cpp
+const auto result = Modem::Create(transport);
+if (!result) {
+  return result.error();
+}
+```
+
+这比“构造成功但对象内部 invalid”更清楚。
+
+---
+
+## ⑤ 今日编码规范（7 分钟）
 
 ### MUST：遵循熟悉的 C++ 生命周期习惯，资源优先 RAII
 
@@ -357,7 +379,22 @@ class ModemFacade {
 
 ---
 
-## ⑧ 可编译 Lab / 练习（8 分钟）
+## ⑥ 可编译 Lab / 练习（8 分钟）
+
+### 第一次做：先运行，再只改一件事
+
+1. 在仓库根目录打开 [`examples/day-050/main.cpp`](../examples/day-050/main.cpp)，先读 `main()`，圈出输入、调用与结果检查。
+2. 运行原版，把实际输出和退出状态记下来，再与本节预期对照。无输出也可能成功，必须结合退出码与断言判断。
+3. 修改前先写预期；若失败，先读第一条编译错误或失败断言，再回到对应概念，不同时重写多个函数。
+
+**本课小改动：** 把默认超时写成可见断言或检查，证明简化调用与显式默认值语义一致。
+
+<details>
+<summary>练习提示：卡住时再展开</summary>
+
+把上面的执行步骤当作检查点；保留原版作为对照。若练习故意让编译或断言失败，请只在实验副本操作，解释失败后还原，不把负例混入日常通过用例。不要执行越界、悬空解引用或重复释放来“观察效果”。
+
+</details>
 
 实验文件：
 
@@ -414,7 +451,7 @@ public:
 
 ---
 
-## ⑨ 3 个常见坑（3 分钟）
+## ⑦ 3 个常见坑（3 分钟）
 
 1. **“简单”变成“隐藏成本”**：Facade 把 blocking、retry、allocation 都藏起来，却不提供 timeout/WCET contract。
 2. **RAII 只做表面包装**：对象内部仍依赖全局 singleton，销毁顺序和 ownership 仍不清楚。
@@ -422,7 +459,24 @@ public:
 
 ---
 
-## ⑩ 检查题（2 分钟）
+## ⑧ 检查题（2 分钟）
+
+### 分层自测：从解释到判断
+
+1. **理解：** 不看代码，用三句话复述本课示例的输入、关键步骤和结果。
+2. **应用：** 说明第⑥节小改动的预期，以及实际结果是否符合预期。
+3. **辨析：** “让错误使用无法编译”可以覆盖所有错误吗？
+
+<details>
+<summary>辨析题参考答案与通过依据</summary>
+
+不能；外部输入、设备超时和资源耗尽仍发生在运行期，需要显式错误路径。
+
+能运行只是第一步。只有能解释本课具体步骤、完成小改动，并说清一个不适用条件，才算完成本次自测；不清楚时回看第③节，不以阅读次数当作掌握证据。
+
+</details>
+
+### 原课检查题
 
 ### Q1
 
@@ -470,8 +524,14 @@ LoadConfig()
 
 ---
 
-## 今日 Code Review 快检
+### 对照现有资料库
 
+- [模式选型工作坊](<../patterns/engineering-workshop.md>)。
+- [复用契约章末评审](<../docs/chapter-06-review.md>)。
+
+先完成本课小实验，再查对照资料；专题中的线程、网络、板端或模式不是本课默认前置。以上为本项目已有讲解和工程对照，不冒充标准条文，也不表示所有示例已在目标板验证。
+
+### 今日 Code Review 快检
 - [ ] API 是否符合常见 C++ idiom？
 - [ ] 是否存在必须手工记忆的 Initialize/Cleanup？
 - [ ] common case 是否一眼可见？

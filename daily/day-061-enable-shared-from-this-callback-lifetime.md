@@ -23,6 +23,14 @@ next: 62
 
 ## ① 今日章节与建议阅读范围（5 分钟）
 
+### 新手起步：先知道今天在解决什么
+
+先有兼容的共享所有权，再谈获取自身引用。不能通过 `shared_ptr(this)` 再造一个独立控制块；异步回调还需区分延长寿命和仅观察。
+
+**前置检查：** 先能解释 [Day 33](day-033-polymorphism-virtual-interfaces.md)、[Day 57](day-057-smart-pointers-ownership-transfer.md)、[Day 60](day-060-shared-ptr-weak-ptr-lifetime.md) 的核心例子；不必先掌握整本教材。
+
+**本课最低完成目标：** 能按下面的步骤说明示例如何得到结果，并独立完成一项小修改；高级模式与平台性能分析可第二遍再读。新增导读和拓展练习不计入原有约 60 分钟安排，可分两次完成。
+
 继续 Chapter 7 的 smart pointer 高级内容，重点阅读 `enable_shared_from_this`、`shared_from_this()` 与 shared ownership 的构造约束。结合 Day 60 的 control block 理解：不能从裸 `this` 随意创建新的 `shared_ptr`，否则会形成独立 control block。
 
 阅读时带着两个问题：callback 是否应该延长 owner lifetime？callback source 在 owner 销毁前是否能够确定地停止或 unsubscribe？
@@ -33,7 +41,22 @@ next: 62
 2. `weak_ptr::lock()` 成功后，为什么得到的是临时 strong owner？
 3. `Service` 与 `Worker` 双向保存 `shared_ptr` 为什么会让析构不发生？
 
-## ③ 核心概念（10 分钟）
+## ③ 核心概念与场景对照（25 分钟，含进阶选读）
+
+### 先用白话建立概念
+
+- **shared_from_this**：复用已有共享所有权。
+- **teardown**：停止活动并释放依赖的过程。
+
+### 跟着本课实验走一遍
+
+1. 创建共享对象。
+2. 注册弱捕获回调。
+3. 执行时 lock。
+4. 对象已销毁则退出。
+5. 关闭流程停止后续活动。
+
+先尝试口头预测，再到第⑥节运行。下面原有概念、图示与接口对照用于解释这些步骤，短代码片段不一定能单独编译；完整程序以本课 `main.cpp` 为准。
 
 `std::enable_shared_from_this<T>` 让一个已经由兼容 `shared_ptr` 管理的对象安全获得共享自身 control block 的 `shared_ptr`。关键不是少写一个参数，而是**复用同一个 ownership control block**。
 
@@ -51,30 +74,7 @@ next: 62
 
 编译期成本主要是类型关系；运行期仍包含 control block、引用计数以及 `lock()`。Embedded 中还必须考虑 callback 执行线程、最后一个 strong owner 的释放线程、allocation 和 WCET。
 
-## ④ C 写法 vs Modern C++（7 分钟）
-
-传统 C/旧式代码常把 `void* context` 或裸 `this` 注册给异步 C API：
-
-```cpp
-RegisterCallback(this);
-```
-
-如果 unregister 与对象析构不同步，callback 可能在对象销毁后触发，形成 use-after-free。
-
-Modern C++ 可以用 `weak_ptr` 表达可失效 callback：
-
-```cpp
-auto weak_self = weak_from_this();
-source.Subscribe([weak_self] {
-    if (auto self = weak_self.lock()) {
-        self->HandleEvent();
-    }
-});
-```
-
-它提升 lifetime 可见性，但并不替代 unsubscribe、cancel、join 或硬件 teardown。对于严格嵌套、同步调用，普通 reference borrow 仍更简单且成本更低。
-
-## ⑤ 设计模式映射（8 分钟）
+### 进阶选读：模式映射
 
 今天最相关的是 **Observer 的 callback lifetime 边界**。
 
@@ -88,7 +88,7 @@ source.Subscribe([weak_self] {
 
 **Pattern 滥用**：为了避免 dangling callback，把所有 lambda 都捕获 `shared_from_this()`。这可能把内存安全问题变成 shutdown 永远推迟的问题。
 
-## ⑥ Embedded / System Design 场景（7 分钟）
+### 进阶选读：嵌入式与系统场景
 
 考虑 Modem RX worker：UART/IPC event source 在 worker thread 上产生事件，`ModemSession` 由 ConnectionManager 管理。
 
@@ -107,14 +107,39 @@ ConnectionManager requests stop
 
 固定 RTOS task graph 中，如果 ConnectionManager 的 lifetime 明确覆盖 RX worker，则 reference + explicit stop/join 往往比 shared ownership 更可预测。
 
-## ⑦ 今日编码规范（6 分钟）
+## ④ C 写法 vs Modern C++（7 分钟）
+
+传统 C/旧式代码常把 `void* context` 或裸 `this` 注册给异步 C API：
+
+```cpp
+RegisterCallback(this);
+```
+
+如果 unregister 与对象析构不同步，callback 可能在对象销毁后触发，形成 use-after-free。
+
+Modern C++ 可以用 `weak_ptr` 表达可失效 callback：
+
+```cpp
+auto weak_self = weak_from_this();
+source.Subscribe([weak_self] {
+  if (auto self = weak_self.lock()) {
+    self->HandleEvent();
+  }
+});
+```
+
+它提升 lifetime 可见性，但并不替代 unsubscribe、cancel、join 或硬件 teardown。对于严格嵌套、同步调用，普通 reference borrow 仍更简单且成本更低。
+
+## ⑤ 今日编码规范（6 分钟）
 
 ### MUST：不得从裸 `this` 构造新的 owning `shared_ptr`
 
 错误：
 
 ```cpp
-std::shared_ptr<Session> Self() { return std::shared_ptr<Session>(this); }
+std::shared_ptr<Session> Self() {
+  return std::shared_ptr<Session>(this);
+}
 ```
 
 推荐：对象确实处于 shared ownership 时使用 `enable_shared_from_this`；否则重新审视是否根本不需要 shared ownership。
@@ -127,7 +152,22 @@ std::shared_ptr<Session> Self() { return std::shared_ptr<Session>(this); }
 
 强捕获 `shared_ptr` 必须是有意的 lifetime extension，并在 Code Review 中说明谁最终释放它。
 
-## ⑧ 可编译 Lab / 练习（7 分钟）
+## ⑥ 可编译 Lab / 练习（7 分钟）
+
+### 第一次做：先运行，再只改一件事
+
+1. 在仓库根目录打开 [`examples/day-061/main.cpp`](../examples/day-061/main.cpp)，先读 `main()`，圈出输入、调用与结果检查。
+2. 运行原版，把实际输出和退出状态记下来，再与本节预期对照。无输出也可能成功，必须结合退出码与断言判断。
+3. 修改前先写预期；若失败，先读第一条编译错误或失败断言，再回到对应概念，不同时重写多个函数。
+
+**本课小改动：** 分别模拟回调早于与晚于 owner 释放的情形，预期晚到回调安全跳过；不要通过悬空 this 试验。
+
+<details>
+<summary>练习提示：卡住时再展开</summary>
+
+把上面的执行步骤当作检查点；保留原版作为对照。若练习故意让编译或断言失败，请只在实验副本操作，解释失败后还原，不把负例混入日常通过用例。不要执行越界、悬空解引用或重复释放来“观察效果”。
+
+</details>
 
 ### 主 Lab：`weak_from_this()` callback
 
@@ -159,13 +199,30 @@ Starter 完全可编译运行，但 EventSource 保存的 lambda 强捕获 `shar
 4. 让输出清楚显示外部 owner 离开后 controller 的销毁时刻；
 5. 说明如果 callback 来自 worker thread，需要怎样处理 in-flight callback 与 join。
 
-## ⑨ 3 个常见坑（3 分钟）
+## ⑦ 3 个常见坑（3 分钟）
 
 1. **`shared_ptr(this)`**：产生第二 control block，最终可能 double delete。
 2. **强捕获 self everywhere**：没有 dangling，但对象被 callback source 隐式拥有，shutdown 不可预测。
 3. **把 weak capture 当完整 teardown**：它只避免访问死亡对象，不能停止事件源、等待线程或保证硬件释放上下文。
 
-## ⑩ 检查题（2 分钟）
+## ⑧ 检查题（2 分钟）
+
+### 分层自测：从解释到判断
+
+1. **理解：** 不看代码，用三句话复述本课示例的输入、关键步骤和结果。
+2. **应用：** 说明第⑥节小改动的预期，以及实际结果是否符合预期。
+3. **辨析：** 有 weak_ptr 是否就不需要停止定时器和注销回调？
+
+<details>
+<summary>辨析题参考答案与通过依据</summary>
+
+仍需要；弱引用解决部分对象访问寿命问题，不自动终止外部活动或保证关闭次序。
+
+能运行只是第一步。只有能解释本课具体步骤、完成小改动，并说清一个不适用条件，才算完成本次自测；不清楚时回看第③节，不以阅读次数当作掌握证据。
+
+</details>
+
+### 原课检查题
 
 ### Q1
 为什么 `enable_shared_from_this` 必须复用已有 control block，而不能简单返回 `shared_ptr<T>(this)`？
@@ -176,8 +233,15 @@ Starter 完全可编译运行，但 EventSource 保存的 lambda 强捕获 `shar
 ### Q3 · 设计题
 设计 ConnectionManager、ModemSession、RX worker、EventSource 的 shutdown。判断哪些关系是 owner、required borrow、weak observer；说明 unsubscribe、in-flight callback、join、transport close 的顺序，并比较 reference/`weak_ptr`/strong `shared_ptr` 对 heap、atomic refcount、WCET 与线程上下文的影响。
 
-## 今日结论
+### 对照现有资料库
 
+- [所有权与智能指针](<../patterns/ownership-and-smart-pointers.md>)。
+- [实验环境与能力边界](<../docs/lab-environments.md>)。
+- [异步会话生命周期：进阶阅读](<../frameworks/asio/SESSION_LIFECYCLE.md>)。
+
+先完成本课小实验，再查对照资料；专题中的线程、网络、板端或模式不是本课默认前置。以上为本项目已有讲解和工程对照，不冒充标准条文，也不表示所有示例已在目标板验证。
+
+### 今日结论
 > **callback 安全不是“捕获一个智能指针”就结束：先决定谁应该延长 lifetime，再设计 stop/unsubscribe/join/teardown；`weak_ptr` 是可失效观察机制，不是生命周期协议。**
 
 下一课继续 Chapter 7，进入 smart pointer 的 aliasing / cast / ownership API 细节与资源边界审计。

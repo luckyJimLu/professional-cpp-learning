@@ -178,6 +178,12 @@ course position use labels such as “已发布” or “课程”, never “当
 
 Search stores query, type, page and preview location in the URL. Local search updates immediately, suspends commits during IME composition, and clear restores input focus. Empty query and no matches have distinct guidance. Code previews show original file line numbers, escaped text and highlighted matches. Viewing search results does not mark lessons complete. PDF reference files are downloadable; source files and diagram assets remain usable after static deployment.
 
+Course and topic Markdown share `src/lib/contentNavigation.ts` for repository-relative document links. Known daily documents open their lesson route; indexed knowledge documents open the topic reader. `contentAssets.ts` owns downloadable source and image URLs, including daily Lab sources. Local anchors, external links and modified clicks retain native link behavior. Markdown source paths are always supplied by the owning reader. Verification: `tests/course-beginner.spec.ts`, `tests/topics.spec.ts`, `tests/content-paths.spec.ts`.
+
+`markdownDisclosures.ts` recognizes only the repository's plain details/summary answer wrappers and emits native disclosure elements; arbitrary raw HTML remains escaped. Summary controls preserve native keyboard behavior and use the shared 44px touch target. Asset URLs are emitted as files rather than inline data URLs so standalone source links can be opened and downloaded. Verification includes disclosure HTML isolation and the course-to-guide-to-Lab-source path.
+
+Search previews use a readable source title, one complete wrapping path and explicit match-line metadata. Header actions occupy their own wrapping row with unbroken labels and 44px mobile touch targets. On narrow layouts, preview content precedes results in both document and visual order. Opening a result focuses its preview heading; closing returns focus to the originating result while preserving query and page. Clipboard success or failure is announced inline; failed copies remain retryable and code remains selectable. The code pane owns horizontal overflow, not the page. Regression owner: `tests/search-preview.spec.ts`.
+
 ## 12. Documentation navigation
 
 `Shell.tsx` owns the sticky site header and grouped desktop/mobile navigation.
