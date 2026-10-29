@@ -246,8 +246,10 @@ shows the latest published lesson when the next lesson is unavailable.
 ## 小册子 quick reference
 
 - Shell/NAV own the `booklets` route on desktop and mobile. Existing global Ctrl/Cmd+K stays code search; `/` focuses the local booklet search outside editable controls.
-- `booklets/c.md` is the C17 content source; `booklets.ts` owns stable categories/entries, keyword parsing and local literal search. C examples are not silently sent to the C++ Lab.
+- `booklets/c.md` is the C17 content source and `booklets/cpp.md` is the separate C++ source; `booklets.ts` owns stable categories/entries, keyword parsing and local literal search. C examples are not silently sent to the C++ Lab.
 - `book`, `bq`, `category` and `entry` are URL state. Matching ignores case, normalizes full-width characters and requires all whitespace-separated terms. IME text commits after composition. Clear removes the query immediately, restores the complete booklet and returns focus to the input. `category` denotes a chapter location, never a category filter.
 - The complete booklet renders in one page. Desktop directory links and the sticky native mobile chapter select scroll to headings without removing other chapters, and the active location follows scrolling without creating history entries. Navigating a chapter from search restores the complete booklet first. Wide-screen directory links preserve modified clicks. Entry headings have real shareable URLs and receive focus on explicit entry navigation. Unknown entries show recovery; unknown book IDs explain the C fallback.
 - Shared Markdown/CodeBlock owns rendering, syntax highlighting and clipboard success/failure. Markdown and host C reference source downloads use built asset URLs, including Pages prefixes. DeferredContent owns loading/error/reload states.
 - Verification: `npm run check:booklets`, `tests/booklets.spec.ts`; compile C examples with a C compiler using C17, independent of C++ labs and hardware claims.
+
+- Booklet language links select `book=c` or `book=cpp`; selection clears `bq`, `category` and `entry`, returns to the booklet heading and keeps modified-click/new-tab behavior. Back/forward restores each URL state. Search and downloads always use the selected booklet. C++ entries explicitly identify the standard version of modern features.

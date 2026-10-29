@@ -1,3 +1,27 @@
+.booklet-language {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+.booklet-language a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 88px;
+  min-height: var(--touch-target);
+  text-decoration: none;
+}
+.booklet-language a[aria-current="page"] {
+  color: var(--blue);
+  border-color: var(--blue);
+  background: var(--blue-soft);
+  font-weight: 600;
+}
+.booklet-language a:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
 .booklets-page {
   --booklet-scroll-offset: calc(var(--header-height) + 24px);
   max-width: var(--content-max);
@@ -187,12 +211,15 @@
   text-decoration: none;
   display: inline-flex;
   align-items: center;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   gap: 8px;
 }
 .booklet-entry h3 a .ui-icon {
   color: var(--muted);
   width: 16px;
   height: 16px;
+  flex-shrink: 0;
 }
 .booklet-entry h3 a:hover {
   color: var(--blue);
@@ -322,6 +349,7 @@
   }
 }
 @media print {
+  .booklet-language,
   .booklet-search,
   .booklet-quick,
   .booklet-directory,

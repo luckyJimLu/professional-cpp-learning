@@ -1,3 +1,4 @@
+import cppSource from "../../booklets/cpp.md?raw";
 import cSource from "../../booklets/c.md?raw";
 
 export interface BookletEntry {
@@ -16,7 +17,7 @@ export interface BookletSection {
 
 function parseSections(source: string): BookletSection[] {
   const headings = [
-    ...source.matchAll(/^## (.+?) <!-- category: ([a-z-]+) -->$/gm),
+    ...source.matchAll(/^## (.+?) <!-- category: ([a-z0-9-]+) -->$/gm),
   ];
   return headings.map((match, index) => {
     const body = source.slice(
@@ -47,7 +48,7 @@ function parseSections(source: string): BookletSection[] {
   });
 }
 
-const downloads = import.meta.glob("../../booklets/**/*.{md,c}", {
+const downloads = import.meta.glob("../../booklets/**/*.{md,c,cpp}", {
   query: "?url&no-inline",
   import: "default",
   eager: true,
@@ -60,11 +61,20 @@ export const cBooklet = {
   downloadUrl: downloads["../../booklets/c.md"],
   exampleUrl: downloads["../../booklets/examples/c17-reference.c"],
 };
+export const cppBooklet = {
+  id: "cpp",
+  title: "C++ 语言速查",
+  standard: "ISO C++98–C++23",
+  sections: parseSections(cppSource),
+  downloadUrl: downloads["../../booklets/cpp.md"],
+  exampleUrl: downloads["../../booklets/examples/cpp20-reference.cpp"],
+};
+export const booklets = [cBooklet, cppBooklet];
 export const bookletEntries = cBooklet.sections.flatMap(
   (section) => section.entries,
 );
 const normalize = (value: string) => value.normalize("NFKC").toLowerCase();
-export function searchBooklet(query: string) {
+export function searchBooklet(query: string, booklet = cBooklet) {
   const terms = normalize(query).trim().split(/\s+/).filter(Boolean);
   const score = (entry: BookletEntry) =>
     terms.reduce(
@@ -78,7 +88,8 @@ export function searchBooklet(query: string) {
     (terms.length && ["keywords", "standard-headers"].includes(entry.id)
       ? 5
       : 0);
-  return bookletEntries
+  return booklet.sections
+    .flatMap((section) => section.entries)
     .filter((entry) => {
       const text = normalize(
         `${entry.title} ${entry.keywords} ${entry.categoryTitle} ${entry.body}`,
@@ -91,7 +102,8 @@ export function searchBooklet(query: string) {
 export function bookletHref(values: Record<string, string | undefined>) {
   const url = new URL(window.location.href);
   url.searchParams.set("view", "booklets");
-  url.searchParams.set("book", "c");
+  if (!booklets.some((book) => book.id === url.searchParams.get("book")))
+    url.searchParams.set("book", "c");
   for (const [key, value] of Object.entries(values)) {
     if (value === undefined) url.searchParams.delete(key);
     else url.searchParams.set(key, value);

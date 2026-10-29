@@ -1,6 +1,11 @@
-# 小册子：C 语言 Cheat Sheet
+# 小册子：C 与 C++ 独立速查
 
-网页入口：主导航 **小册子**，或 `?view=booklets&book=c`。
+网页入口：主导航 **小册子**，使用“C 语言 / C++”切换。
+
+- [C 语言速查](c.md)：`?view=booklets&book=c`，ISO C17。
+- [C++ 语言速查](cpp.md)：`?view=booklets&book=cpp`，基础机制与 C++11/14/17/20/23 新特性，逐条标注标准版本。
+
+两册独立显示、独立搜索、独立章节导航和下载。切换语言会清除搜索及章节/条目定位，浏览器后退可恢复上一册的网址状态；不会把 C++ 标准库条目混入 C 搜索结果。
 
 [C 语言速查正文](c.md) 按 ISO C17 整理为 11 类、77 个条目，覆盖程序结构、类型、输入输出、运算符、控制流、函数、数组字符串、指针与内存、结构体与枚举、文件、预处理和常用标准库。
 
@@ -24,7 +29,13 @@ C17 是默认标准。C23、POSIX、平台扩展及 C++ 的差异单独提醒。
 
 额外强调了：格式说明与参数类型、字符串容量与终止符、整数溢出、数组退化、借用有效期、分配乘积溢出、realloc 失败、释放责任、字符分类的参数范围、文件部分读取，以及 volatile 不提供线程同步。
 
-## C17 自测
+## C++ 内容与校核
+
+[C++ 语言速查](cpp.md) 结合用户提供的《Cpp Comprehensive Cheatsheet.md》，扩充为 **17 章、108 个条目**，覆盖关键字、编译、类型、函数、类、内存、容器算法、流、文件和并发；现代功能逐条标注标准版本。保留原有条目 ID，不破坏已有定位链接。
+
+[覆盖与校核说明](cpp-coverage.md) 记录附件各主题的落点、修正点及验证范围。无需记住版本目录：搜索 explicit、try_emplace、jthread、constinit 等可直接找到主题用法。
+
+## C17 与 C++ 主机自测
 
 在具备 GCC 的主机仓库根目录执行：
 
@@ -45,6 +56,8 @@ gcc -std=c17 -Wall -Wextra -Wconversion -Wpedantic -Werror booklets/examples/c17
 
 ## 维护
 
-内容源为 `booklets/c.md`；`src/lib/booklets.ts` 解析分类、稳定条目 ID、关键词与正文。同一个 Markdown 同时服务网页和下载，不另维护一套复制的页面正文。
+内容源分别为 `booklets/c.md` 与 `booklets/cpp.md`；`src/lib/booklets.ts` 解析分类、稳定条目 ID、关键词与正文。每册的同一个 Markdown 同时服务网页和下载，不另维护一套复制的页面正文。
 
 保留 `<!-- category: id -->`、`<!-- entry: id -->` 标记和每条的 `关键词：` 行，避免破坏分享链接。新增标准或平台接口时标明适用范围，正常与失败路径均可解释，再运行内容检查与 `tests/booklets.spec.ts`。
+
+C++ 完整自测位于 `examples/cpp20-reference.cpp` 和 `examples/cpp23-reference.cpp`；使用 `npm run check:booklets` 在临时目录中运行。需要同时提供 C17 与 C++23 可用的主机编译器，可通过 CC/CXX 指定；局部示例不声称能独立编译。

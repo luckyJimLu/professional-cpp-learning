@@ -228,3 +228,111 @@ test("extended C17 topics can be found directly instead of generic indexes", asy
     );
   }
 });
+
+for (const viewport of [
+  { width: 1440, height: 1000 },
+  { width: 390, height: 844 },
+]) {
+  test(`C and C++ booklets stay separate at ${viewport.width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize(viewport);
+    await page.goto("/?view=booklets&book=c&bq=malloc&category=memory");
+    const languages = page.getByRole("navigation", { name: "小册子语言" });
+    await languages.getByRole("link", { name: "C++", exact: true }).click();
+    await expect(page).toHaveURL(/book=cpp/);
+    expect(new URL(page.url()).searchParams.has("bq")).toBe(false);
+    expect(new URL(page.url()).searchParams.has("category")).toBe(false);
+    await expect(
+      languages.getByRole("link", { name: "C++", exact: true }),
+    ).toHaveAttribute("aria-current", "page");
+    await expect(page.locator("#booklet-top")).toHaveText("C++ 语言速查");
+    const cppCount = [
+      ...readFileSync("booklets/cpp.md", "utf8").matchAll(/<!-- entry:/g),
+    ].length;
+    await expect(page.locator(".booklet-entry")).toHaveCount(cppCount);
+    await expect(page.locator(".booklet-section")).toHaveCount(
+      [...readFileSync("booklets/cpp.md", "utf8").matchAll(/<!-- category:/g)]
+        .length,
+    );
+    const search = page.getByRole("searchbox", { name: /^快速查找/ });
+    await search.fill("std::make_unique");
+    await expect(page.locator(".booklet-entry").first()).toContainText("C++14");
+    const entry = page
+      .locator(".booklet-entry")
+      .first()
+      .getByRole("heading")
+      .getByRole("link");
+    expect(
+      new URL((await entry.getAttribute("href")) as string).searchParams.get(
+        "book",
+      ),
+    ).toBe("cpp");
+    await page.reload();
+    await expect(search).toHaveValue("std::make_unique");
+    await expect(
+      page.getByRole("link", { name: "下载 Markdown", exact: true }),
+    ).toHaveAttribute("download", "cpp-cheatsheet.md");
+    await languages.getByRole("link", { name: "C 语言", exact: true }).click();
+    await expect(page.locator(".booklet-entry")).toHaveCount(totalEntries);
+    await search.fill("unique_ptr");
+    await expect(
+      page.getByRole("heading", { name: "没有找到匹配条目" }),
+    ).toBeVisible();
+    await page.goBack();
+    await expect(page.locator("#booklet-top")).toHaveText("C++ 语言速查");
+    await expect(search).toHaveValue("std::make_unique");
+    await page.getByRole("button", { name: "清除小册子搜索" }).click();
+    if (viewport.width < 1100) {
+      await page.getByLabel("章节导航").selectOption("cpp-20");
+    } else {
+      await page
+        .getByRole("navigation", { name: "小册子目录" })
+        .getByRole("link", { name: /^C\+\+20 新特性/ })
+        .click();
+    }
+    await expect(page.locator("#booklet-category-cpp-20")).toBeFocused();
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    await page.screenshot({
+      path: `/workspace/artifacts/booklets/language-split-${viewport.width}.png`,
+    });
+  });
+}
+
+test("C++ attachment topics are searchable with corrected version boundaries", async ({
+  page,
+}) => {
+  await page.goto("/?view=booklets&book=cpp");
+  const source = page.getByRole("link", { name: "下载 C++20 主机自测源码" });
+  await expect(source).toHaveAttribute("download", "cpp20-reference.cpp");
+  const download = await page.request.get(
+    (await source.getAttribute("href")) as string,
+  );
+  expect(download.ok()).toBe(true);
+  expect(await download.text()).toContain("C++20 booklet checks passed");
+  const search = page.getByRole("searchbox", { name: /^快速查找/ });
+  for (const [query, id, text] of [
+    ["explicit", "explicit", "C++20"],
+    ["constinit", "constant-evaluation", "静态初始化"],
+    ["try_emplace", "map-lookup", "C++17"],
+    ["jthread", "threads-jthread", "协作式"],
+    ["memory_order", "atomics", "不保证无锁"],
+    ["import std", "modules", "C++23"],
+    ["NRVO", "parameter-passing", "仍可选"],
+    ["decltype", "auto-decltype", "悬空引用"],
+    ["close", "file-stream", "关闭失败"],
+  ]) {
+    await search.fill(query);
+    await expect(page.locator(`#booklet-${id}`)).toContainText(text);
+  }
+  await search.fill("no_matching_cpp_topic_888");
+  await expect(
+    page.getByRole("heading", { name: "没有找到匹配条目" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "清除搜索，查看全册" }).click();
+  await expect(page.locator("#booklet-keyword-index")).toBeVisible();
+});

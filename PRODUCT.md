@@ -45,3 +45,5 @@ README.md, UX-CONTRACT.md, DESIGN.md, daily/ Markdown, repository examples, topi
 ## Accessibility & Inclusion
 
 Target WCAG 2.2 AA: native semantics, visible focus, sufficient contrast, keyboard operation, reduced motion and usable narrow layouts. Maintain 44px touch targets on phones and local overflow for code, diagrams and tables.
+
+- 小册子将 C 与 C++ 分册提供；各自独立搜索、导航与下载，C++ 新特性逐条标明 ISO 标准版本。

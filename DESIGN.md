@@ -155,7 +155,7 @@ telemetry are disabled. Preserve the existing loading component contract rather 
 a conflicting generic skeleton recommendation. Detector findings require visual and behavioral
 verification; technical charts, editor internals and document-source content are not marketing.
 
-## 小册子 · C quick reference
+## 小册子 · C / C++ quick reference
 
 The booklet is an Operate/Read reference surface, preserving the handbook palette and shared
 PageHeader, Markdown and CodeBlock owners. `src/booklets.css` owns only its scoped layout,
@@ -166,3 +166,5 @@ reading position. Only keyword search temporarily narrows results. Search uses t
 No entry-card grid, second palette or new typography system is introduced. Code and tables
 own their overflow; phone controls retain 44px touch targets. Content is Chinese-first C17,
 with literal identifiers, standard distinctions and source attribution retained.
+
+Booklet language navigation uses real links with `aria-current="page"`, the shared ghost-button treatment and 44px touch targets. C and C++ retain separate content, search scope and URL identities; no additional theme or layout system is introduced.

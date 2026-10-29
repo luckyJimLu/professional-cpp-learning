@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   cBooklet,
-  bookletEntries,
+  booklets,
   searchBooklet,
   bookletHref,
   type BookletEntry,
@@ -14,9 +14,15 @@ import "../../booklets.css";
 
 export function BookletsView() {
   const params = useLocationParams();
+  const booklet =
+    booklets.find((book) => book.id === params.get("book")) ?? cBooklet;
+  const bookletEntries = useMemo(
+    () => booklet.sections.flatMap((section) => section.entries),
+    [booklet],
+  );
   const query = params.get("bq") ?? "";
   const requestedCategory = params.get("category") ?? "all";
-  const category = cBooklet.sections.some(
+  const category = booklet.sections.some(
     (item) => item.id === requestedCategory,
   )
     ? requestedCategory
@@ -27,7 +33,10 @@ export function BookletsView() {
   const inputRef = useRef<HTMLInputElement>(null);
   const composing = useRef(false);
   useEffect(() => setDraft(query), [query]);
-  const matches = useMemo(() => searchBooklet(query), [query]);
+  const matches = useMemo(
+    () => searchBooklet(query, booklet),
+    [query, booklet],
+  );
   const visible = matches;
   const visibleIds = useMemo(
     () => new Set(visible.map((entry) => entry.id)),
@@ -62,13 +71,13 @@ export function BookletsView() {
     if (query || requestedEntry || category === "all") return;
     const frame = requestAnimationFrame(() => jumpToSection(category));
     return () => cancelAnimationFrame(frame);
-  }, [category, query, requestedEntry]);
+  }, [category, query, requestedEntry, booklet]);
   useEffect(() => {
     if (query) return;
     let frame = 0;
     const update = () => {
       frame = 0;
-      const current = cBooklet.sections
+      const current = booklet.sections
         .filter((section) => {
           const heading = document.getElementById(
             `booklet-category-${section.id}`,
@@ -97,7 +106,7 @@ export function BookletsView() {
       window.removeEventListener("resize", schedule);
       observer.disconnect();
     };
-  }, [query]);
+  }, [query, booklet]);
   useEffect(() => {
     if (!requestedEntry || !visibleIds.has(requestedEntry)) return;
     const frame = requestAnimationFrame(() => {
@@ -106,7 +115,7 @@ export function BookletsView() {
       node?.querySelector<HTMLElement>("h3")?.focus({ preventScroll: true });
     });
     return () => cancelAnimationFrame(frame);
-  }, [requestedEntry, query, category]);
+  }, [requestedEntry, query, category, booklet, visibleIds]);
   useEffect(() => {
     const shortcut = (event: KeyboardEvent) => {
       const node = event.target as HTMLElement | null;
@@ -159,7 +168,7 @@ export function BookletsView() {
       {query.trim() && (
         <p className="booklet-entry-category">{entry.categoryTitle}</p>
       )}
-      <Markdown sourcePath="booklets/c.md">{entry.body}</Markdown>
+      <Markdown sourcePath={`booklets/${booklet.id}.md`}>{entry.body}</Markdown>
     </article>
   );
   return (
@@ -168,17 +177,56 @@ export function BookletsView() {
         title="小册子"
         description="常用语法、标准库与边界提醒。按关键字查找，随用随查。"
       />
+      <nav className="booklet-language" aria-label="小册子语言">
+        {booklets.map((book) => (
+          <a
+            key={book.id}
+            className="ghost-button"
+            href={bookletHref({
+              book: book.id,
+              bq: undefined,
+              category: undefined,
+              entry: undefined,
+            })}
+            aria-current={booklet.id === book.id ? "page" : undefined}
+            onClick={(event) => {
+              if (
+                event.ctrlKey ||
+                event.metaKey ||
+                event.shiftKey ||
+                event.altKey
+              )
+                return;
+              event.preventDefault();
+              composing.current = false;
+              setDraft("");
+              setActiveSection("all");
+              navigate({
+                book: book.id,
+                bq: undefined,
+                category: undefined,
+                entry: undefined,
+              });
+              requestAnimationFrame(() => jumpToSection("all"));
+            }}
+          >
+            {book.id === "c" ? "C 语言" : "C++"}
+          </a>
+        ))}
+      </nav>
       <div className="booklet-heading">
         <div>
           <h2 id="booklet-top" tabIndex={-1}>
-            {cBooklet.title}
+            {booklet.title}
           </h2>
-          <p>ISO C17 · 中文说明 · {bookletEntries.length} 个速查条目</p>
+          <p>
+            {booklet.standard} · 中文说明 · {bookletEntries.length} 个速查条目
+          </p>
         </div>
         <a
           className="ghost-button booklet-download"
-          href={cBooklet.downloadUrl}
-          download="c-cheatsheet.md"
+          href={booklet.downloadUrl}
+          download={`${booklet.id}-cheatsheet.md`}
           aria-label="下载 Markdown"
         >
           <span className="booklet-download-label">下载 Markdown</span>
@@ -186,9 +234,10 @@ export function BookletsView() {
           <Icon id="right" />
         </a>
       </div>
-      {params.get("book") && params.get("book") !== "c" && (
-        <p role="status">未找到指定小册子，已打开 C 语言速查。</p>
-      )}
+      {params.get("book") &&
+        !booklets.some((book) => book.id === params.get("book")) && (
+          <p role="status">未找到指定小册子，已打开 C 语言速查。</p>
+        )}
       <form
         className="booklet-search"
         role="search"
@@ -212,7 +261,11 @@ export function BookletsView() {
             type="search"
             autoComplete="off"
             spellCheck={false}
-            placeholder="例如 malloc、字符串、%zu"
+            placeholder={
+              booklet.id === "c"
+                ? "例如 malloc、字符串、%zu"
+                : "例如 unique_ptr、C++20、生命周期"
+            }
             value={draft}
             onCompositionStart={() => {
               composing.current = true;
@@ -246,7 +299,10 @@ export function BookletsView() {
         </p>
       </form>
       <div className="booklet-quick" aria-label="常用关键字">
-        {["printf", "指针", "malloc", "字符串", "%zu"].map((term) => (
+        {(booklet.id === "c"
+          ? ["printf", "指针", "malloc", "字符串", "%zu"]
+          : ["unique_ptr", "string_view", "C++17", "C++20", "生命周期"]
+        ).map((term) => (
           <button type="button" key={term} onClick={() => setQuery(term)}>
             {term}
           </button>
@@ -255,12 +311,12 @@ export function BookletsView() {
       <div className="booklet-layout">
         <aside className="booklet-directory">
           <nav aria-label="小册子目录">
-            {[{ id: "all", title: "册首与搜索" }, ...cBooklet.sections].map(
+            {[{ id: "all", title: "册首与搜索" }, ...booklet.sections].map(
               (item) => {
                 const count =
                   item.id === "all"
                     ? bookletEntries.length
-                    : cBooklet.sections.find(
+                    : booklet.sections.find(
                         (section) => section.id === item.id,
                       )!.entries.length;
                 return (
@@ -313,7 +369,7 @@ export function BookletsView() {
                   搜索结果
                 </option>
               )}
-              {cBooklet.sections.map((section) => (
+              {booklet.sections.map((section) => (
                 <option key={section.id} value={section.id}>
                   {section.title}
                 </option>
@@ -349,7 +405,7 @@ export function BookletsView() {
               </section>
             ) : null
           ) : (
-            cBooklet.sections.map((section) => {
+            booklet.sections.map((section) => {
               const entries = section.entries.filter((entry) =>
                 visibleIds.has(entry.id),
               );
@@ -369,37 +425,58 @@ export function BookletsView() {
             })
           )}
           <footer className="booklet-footer">
-            <p>
-              <a href={cBooklet.exampleUrl} download="c17-reference.c">
-                下载 C17 自测源码
-              </a>{" "}
-              · 主机编译：<code>gcc -std=c17 c17-reference.c -o c17-check</code>
-              ，再运行生成的程序。
-            </p>
-            <p>
-              局部示例需放入合适的函数，并包含对应头文件。按 C17 查阅，勿与 C++
-              或 POSIX 扩展混用。
-            </p>
-            <p>
-              参考{" "}
-              <a
-                href="https://coddy.tech/cheat-sheets/c"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Coddy C Cheat Sheet
-              </a>{" "}
-              的主题组织，中文说明与示例重新编写。
-              <a
-                href="https://en.cppreference.com/w/c.html"
-                target="_blank"
-                rel="noreferrer"
-              >
-                {" "}
-                C 语言与标准库参考
-              </a>
-              。
-            </p>
+            {booklet.id === "cpp" ? (
+              <p>
+                <a href={booklet.exampleUrl} download="cpp20-reference.cpp">
+                  下载 C++20 主机自测源码
+                </a>
+                。 按条目标注的 ISO C++
+                版本查阅。局部片段需包含相应头文件；库支持还取决于工具链。
+                <a
+                  href="https://en.cppreference.com/w/cpp.html"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  C++ 语言与标准库参考
+                </a>
+                。
+              </p>
+            ) : (
+              <>
+                <p>
+                  <a href={cBooklet.exampleUrl} download="c17-reference.c">
+                    下载 C17 自测源码
+                  </a>{" "}
+                  · 主机编译：
+                  <code>gcc -std=c17 c17-reference.c -o c17-check</code>
+                  ，再运行生成的程序。
+                </p>
+                <p>
+                  局部示例需放入合适的函数，并包含对应头文件。按 C17 查阅，勿与
+                  C++ 或 POSIX 扩展混用。
+                </p>
+                <p>
+                  参考{" "}
+                  <a
+                    href="https://coddy.tech/cheat-sheets/c"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Coddy C Cheat Sheet
+                  </a>{" "}
+                  的主题组织，中文说明与示例重新编写。
+                  <a
+                    href="https://en.cppreference.com/w/c.html"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {" "}
+                    C 语言与标准库参考
+                  </a>
+                  。
+                </p>
+              </>
+            )}
           </footer>
         </div>
       </div>
