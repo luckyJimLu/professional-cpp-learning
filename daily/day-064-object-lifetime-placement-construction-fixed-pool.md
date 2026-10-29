@@ -19,6 +19,27 @@ next: 65
 
 # Day 64 · Object Lifetime / Placement Construction：固定存储不等于对象一直存在
 
+<!-- cpp-standards:start -->
+## 本课涉及的 C++ 标准
+
+以下按正文与配套 `.cpp` 示例中出现的特性标注首次标准化版本，不代表整份程序的最低编译版本。仓库主 Lab 统一使用 C++23。
+
+| 特性 | 首次标准化 | 版本边界 |
+| --- | --- | --- |
+| 列表初始化 | **C++11** | 包括直接列表初始化；窄化检查及 initializer_list 优先规则须单独注意。 |
+| `= default` / `= delete` | **C++11** | 显式默认化与删除函数。 |
+| `nullptr` | **C++11** | 空指针字面量；不要与整数 0 的类型混为一谈。 |
+| `noexcept` | **C++11** | 从 C++17 起异常说明成为函数类型的一部分。 |
+| `alignas` / `alignof` | **C++11** | 对齐要求与查询。 |
+| `std::array` | **C++11** | 固定大小容器。 |
+| 移动语义 / `std::move` / `std::forward` | **C++11** | `std::move` 本身执行类型转换，不直接搬运资源。 |
+| `std::byte` | **C++17** | 字节枚举类型，不是整数算术类型。 |
+| `std::destroy_at` | **C++17** | 从 C++20 起可用于常量求值，并支持数组。 |
+| `std::construct_at` | **C++20** | 不能与 C++98 已有的 placement new 混为同一引入版本。 |
+
+版本差异、旧机制与工具链检查见 [C++ 标准来源速查](../docs/cpp-feature-standards.md)。
+<!-- cpp-standards:end -->
+
 > **主教材主线**：Chapter 7 · Memory Management。承接 Day 63 的 bounded allocation，今天继续讨论动态内存管理中“storage 与 object lifetime 分离”的关键机制，并把它映射到 Embedded 固定容量对象复用。Object Pool 仅作为工程辅线，不改变教材顺序。
 
 ## ① 今日章节与建议阅读范围（5 分钟）

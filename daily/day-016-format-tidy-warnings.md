@@ -20,6 +20,18 @@ next: 17
 ---
 # Day 16 · clang-format、clang-tidy 与编译告警
 
+<!-- cpp-standards:start -->
+## 本课涉及的 C++ 标准
+
+以下按正文与配套 `.cpp` 示例中出现的特性标注首次标准化版本，不代表整份程序的最低编译版本。仓库主 Lab 统一使用 C++23。
+
+| 特性 | 首次标准化 | 版本边界 |
+| --- | --- | --- |
+| `std::optional` / `std::nullopt` | **C++17** | 可选值；不自带错误原因。 |
+
+版本差异、旧机制与工具链检查见 [C++ 标准来源速查](../docs/cpp-feature-standards.md)。
+<!-- cpp-standards:end -->
+
 ## ① 今日阅读范围 · 5 分钟
 
 ### 新手起步：先知道今天在解决什么

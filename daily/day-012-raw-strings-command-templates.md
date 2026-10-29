@@ -18,6 +18,23 @@ next: 13
 ---
 # Day 12 · 原始字符串字面量、文本常量与安全命令模板
 
+<!-- cpp-standards:start -->
+## 本课涉及的 C++ 标准
+
+以下按正文与配套 `.cpp` 示例中出现的特性标注首次标准化版本，不代表整份程序的最低编译版本。仓库主 Lab 统一使用 C++23。
+
+| 特性 | 首次标准化 | 版本边界 |
+| --- | --- | --- |
+| 列表初始化 | **C++11** | 包括直接列表初始化；窄化检查及 initializer_list 优先规则须单独注意。 |
+| 范围 `for` | **C++11** | 带初始化语句的范围 for 从 C++20 起可用。 |
+| `constexpr` | **C++11** | C++14 放宽函数体限制；C++20 继续扩展可用于常量求值的操作。声明不保证每次调用都在编译期执行。 |
+| 原始字符串字面量 | **C++11** | 如 `R"(text)"`；不负责字符编码转换。 |
+| `std::string_view` | **C++17** | 非拥有视图；其 `starts_with` / `ends_with` 是 C++20 新增。 |
+| `string` / `string_view` 的前后缀检查 | **C++20** | `starts_with` / `ends_with`。 |
+
+版本差异、旧机制与工具链检查见 [C++ 标准来源速查](../docs/cpp-feature-standards.md)。
+<!-- cpp-standards:end -->
+
 原始字符串字面量、文本常量与安全命令模板
 
 **Chapter 2 · Working with Strings and String Views

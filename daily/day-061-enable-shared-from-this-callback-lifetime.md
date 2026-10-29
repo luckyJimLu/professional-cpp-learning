@@ -19,6 +19,27 @@ next: 62
 
 # Day 61 · `enable_shared_from_this`：异步 Callback Lifetime 与 Teardown
 
+<!-- cpp-standards:start -->
+## 本课涉及的 C++ 标准
+
+以下按正文与配套 `.cpp` 示例中出现的特性标注首次标准化版本，不代表整份程序的最低编译版本。仓库主 Lab 统一使用 C++23。
+
+| 特性 | 首次标准化 | 版本边界 |
+| --- | --- | --- |
+| 列表初始化 | **C++11** | 包括直接列表初始化；窄化检查及 initializer_list 优先规则须单独注意。 |
+| lambda 表达式 | **C++11** | 泛型 lambda（auto 形参）、初始化捕获从 C++14 起可用；显式模板形参列表从 C++20 起可用。 |
+| `auto` 类型推导 | **C++11** | C++14 才支持普通函数返回类型推导；C++20 才支持 `auto` 形参的简写函数模板。 |
+| `noexcept` | **C++11** | 从 C++17 起异常说明成为函数类型的一部分。 |
+| `[[nodiscard]]` | **C++17** | 带说明字符串的形式从 C++20 起可用。 |
+| 标准智能指针与 `std::make_shared` | **C++11** | `unique_ptr`、`shared_ptr`、`weak_ptr`、`enable_shared_from_this`；不要据此把所有相关辅助函数都标为 C++11。 |
+| `enable_shared_from_this::weak_from_this` | **C++17** | `shared_from_this()` 从 C++11 起已有。 |
+| 移动语义 / `std::move` / `std::forward` | **C++11** | `std::move` 本身执行类型转换，不直接搬运资源。 |
+| `std::function` | **C++11** | 可调用对象包装；可能分配内存。 |
+| `std::string_view` | **C++17** | 非拥有视图；其 `starts_with` / `ends_with` 是 C++20 新增。 |
+
+版本差异、旧机制与工具链检查见 [C++ 标准来源速查](../docs/cpp-feature-standards.md)。
+<!-- cpp-standards:end -->
+
 > **主教材主线**：Chapter 7 · Memory Management。承接 Day 60 的 `shared_ptr` / `weak_ptr`，今天聚焦对象如何安全地产生指向自身的 shared/weak handle，以及异步 callback 为什么必须同时设计 lifetime 与 teardown。
 
 ## ① 今日章节与建议阅读范围（5 分钟）

@@ -19,6 +19,25 @@ next: 61
 
 # Day 60 · Shared Ownership：`shared_ptr`、`weak_ptr` 与 Lifetime Cycles
 
+<!-- cpp-standards:start -->
+## 本课涉及的 C++ 标准
+
+以下按正文与配套 `.cpp` 示例中出现的特性标注首次标准化版本，不代表整份程序的最低编译版本。仓库主 Lab 统一使用 C++23。
+
+| 特性 | 首次标准化 | 版本边界 |
+| --- | --- | --- |
+| 列表初始化 | **C++11** | 包括直接列表初始化；窄化检查及 initializer_list 优先规则须单独注意。 |
+| `auto` 类型推导 | **C++11** | C++14 才支持普通函数返回类型推导；C++20 才支持 `auto` 形参的简写函数模板。 |
+| `noexcept` | **C++11** | 从 C++17 起异常说明成为函数类型的一部分。 |
+| `override` / `final` | **C++11** | 用于虚函数覆盖检查、限制覆盖或继承。 |
+| Concepts / `requires` / `<concepts>` | **C++20** | 语言约束与标准库概念；`std::concepts` 不是标准命名空间。 |
+| 标准智能指针与 `std::make_shared` | **C++11** | `unique_ptr`、`shared_ptr`、`weak_ptr`、`enable_shared_from_this`；不要据此把所有相关辅助函数都标为 C++11。 |
+| 移动语义 / `std::move` / `std::forward` | **C++11** | `std::move` 本身执行类型转换，不直接搬运资源。 |
+| `std::string_view` | **C++17** | 非拥有视图；其 `starts_with` / `ends_with` 是 C++20 新增。 |
+
+版本差异、旧机制与工具链检查见 [C++ 标准来源速查](../docs/cpp-feature-standards.md)。
+<!-- cpp-standards:end -->
+
 > **主教材主线**：Chapter 7 · Memory Management。承接 Day 59 的 move-only resource owner，今天只在“生命周期确实需要共同延长”时引入 shared ownership，并理解 control block、`weak_ptr` 与 ownership cycle。
 
 ## ① 今日章节与建议阅读范围（5 分钟）

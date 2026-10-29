@@ -18,6 +18,27 @@ next: 23
 ---
 # Day 22 · 抽象：稳定接口与隐藏实现
 
+<!-- cpp-standards:start -->
+## 本课涉及的 C++ 标准
+
+以下按正文与配套 `.cpp` 示例中出现的特性标注首次标准化版本，不代表整份程序的最低编译版本。仓库主 Lab 统一使用 C++23。
+
+| 特性 | 首次标准化 | 版本边界 |
+| --- | --- | --- |
+| 列表初始化 | **C++11** | 包括直接列表初始化；窄化检查及 initializer_list 优先规则须单独注意。 |
+| `= default` / `= delete` | **C++11** | 显式默认化与删除函数。 |
+| `enum class` | **C++11** | 有作用域枚举。 |
+| `override` / `final` | **C++11** | 用于虚函数覆盖检查、限制覆盖或继承。 |
+| `[[nodiscard]]` | **C++17** | 带说明字符串的形式从 C++20 起可用。 |
+| `std::chrono` | **C++11** | 如 duration、time_point、steady_clock；不是所有 chrono 后增 API 都属于 C++11。 |
+| chrono 时长字面量 | **C++14** | 如 `100ms`；需要相应头文件与 `std::chrono_literals`。 |
+| `std::string_view` | **C++17** | 非拥有视图；其 `starts_with` / `ends_with` 是 C++20 新增。 |
+| `std::byte` | **C++17** | 字节枚举类型，不是整数算术类型。 |
+| `std::span` | **C++20** | 连续序列的非拥有视图；不自动延长底层对象生命周期。 |
+
+版本差异、旧机制与工具链检查见 [C++ 标准来源速查](../docs/cpp-feature-standards.md)。
+<!-- cpp-standards:end -->
+
 **Chapter 4 · 抽象：稳定接口与隐藏实现**
 
 今天继续 Designing Professional C++ Programs。主教材把 abstraction 与 reuse 作为有效 C++ 设计的两条基本主线。今天只聚焦 abstraction，并用嵌入式 Modem/Transport 例子练习如何把硬件实现细节藏在稳定接口之后。

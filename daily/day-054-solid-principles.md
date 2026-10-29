@@ -19,6 +19,28 @@ next: 55
 
 # Day 54 · The SOLID Principles
 
+<!-- cpp-standards:start -->
+## 本课涉及的 C++ 标准
+
+以下按正文与配套 `.cpp` 示例中出现的特性标注首次标准化版本，不代表整份程序的最低编译版本。仓库主 Lab 统一使用 C++23。
+
+| 特性 | 首次标准化 | 版本边界 |
+| --- | --- | --- |
+| 列表初始化 | **C++11** | 包括直接列表初始化；窄化检查及 initializer_list 优先规则须单独注意。 |
+| lambda 表达式 | **C++11** | 泛型 lambda（auto 形参）、初始化捕获从 C++14 起可用；显式模板形参列表从 C++20 起可用。 |
+| `= default` / `= delete` | **C++11** | 显式默认化与删除函数。 |
+| `constexpr` | **C++11** | C++14 放宽函数体限制；C++20 继续扩展可用于常量求值的操作。声明不保证每次调用都在编译期执行。 |
+| `enum class` | **C++11** | 有作用域枚举。 |
+| `auto` 类型推导 | **C++11** | C++14 才支持普通函数返回类型推导；C++20 才支持 `auto` 形参的简写函数模板。 |
+| `override` / `final` | **C++11** | 用于虚函数覆盖检查、限制覆盖或继承。 |
+| Concepts / `requires` / `<concepts>` | **C++20** | 语言约束与标准库概念；`std::concepts` 不是标准命名空间。 |
+| `std::chrono` | **C++11** | 如 duration、time_point、steady_clock；不是所有 chrono 后增 API 都属于 C++11。 |
+| `std::byte` | **C++17** | 字节枚举类型，不是整数算术类型。 |
+| `std::span` | **C++20** | 连续序列的非拥有视图；不自动延长底层对象生命周期。 |
+
+版本差异、旧机制与工具链检查见 [C++ 标准来源速查](../docs/cpp-feature-standards.md)。
+<!-- cpp-standards:end -->
+
 > **主教材主线**：Chapter 6 · Designing for Reuse → **The SOLID Principles**。  
 > **辅线说明**：SOLID 是设计判断工具；Adapter / Dependency Injection 仅用于说明真实变化轴，不把 Pattern 当目标。
 

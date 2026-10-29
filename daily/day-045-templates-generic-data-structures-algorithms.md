@@ -26,6 +26,26 @@ next: 46
 
 # Day 45 · Use Templates for Generic Data Structures and Algorithms
 
+<!-- cpp-standards:start -->
+## 本课涉及的 C++ 标准
+
+以下按正文与配套 `.cpp` 示例中出现的特性标注首次标准化版本，不代表整份程序的最低编译版本。仓库主 Lab 统一使用 C++23。
+
+| 特性 | 首次标准化 | 版本边界 |
+| --- | --- | --- |
+| 列表初始化 | **C++11** | 包括直接列表初始化；窄化检查及 initializer_list 优先规则须单独注意。 |
+| `constexpr` | **C++11** | C++14 放宽函数体限制；C++20 继续扩展可用于常量求值的操作。声明不保证每次调用都在编译期执行。 |
+| `static_assert` | **C++11** | 省略诊断字符串的单参数形式从 C++17 起可用。 |
+| `nullptr` | **C++11** | 空指针字面量；不要与整数 0 的类型混为一谈。 |
+| `enum class` | **C++11** | 有作用域枚举。 |
+| `[[nodiscard]]` | **C++17** | 带说明字符串的形式从 C++20 起可用。 |
+| Concepts / `requires` / `<concepts>` | **C++20** | 语言约束与标准库概念；`std::concepts` 不是标准命名空间。 |
+| `std::array` | **C++11** | 固定大小容器。 |
+| 移动语义 / `std::move` / `std::forward` | **C++11** | `std::move` 本身执行类型转换，不直接搬运资源。 |
+
+版本差异、旧机制与工具链检查见 [C++ 标准来源速查](../docs/cpp-feature-standards.md)。
+<!-- cpp-standards:end -->
+
 ## ① 今日章节与建议阅读范围（5 分钟）
 
 ### 新手起步：先知道今天在解决什么

@@ -19,6 +19,23 @@ next: 63
 
 # Day 62 · Smart Pointer Aliasing / Cast / Ownership API：不要让 Pointer 技巧掩盖边界
 
+<!-- cpp-standards:start -->
+## 本课涉及的 C++ 标准
+
+以下按正文与配套 `.cpp` 示例中出现的特性标注首次标准化版本，不代表整份程序的最低编译版本。仓库主 Lab 统一使用 C++23。
+
+| 特性 | 首次标准化 | 版本边界 |
+| --- | --- | --- |
+| 列表初始化 | **C++11** | 包括直接列表初始化；窄化检查及 initializer_list 优先规则须单独注意。 |
+| `= default` / `= delete` | **C++11** | 显式默认化与删除函数。 |
+| `auto` 类型推导 | **C++11** | C++14 才支持普通函数返回类型推导；C++20 才支持 `auto` 形参的简写函数模板。 |
+| `override` / `final` | **C++11** | 用于虚函数覆盖检查、限制覆盖或继承。 |
+| 标准智能指针与 `std::make_shared` | **C++11** | `unique_ptr`、`shared_ptr`、`weak_ptr`、`enable_shared_from_this`；不要据此把所有相关辅助函数都标为 C++11。 |
+| `enable_shared_from_this::weak_from_this` | **C++17** | `shared_from_this()` 从 C++11 起已有。 |
+
+版本差异、旧机制与工具链检查见 [C++ 标准来源速查](../docs/cpp-feature-standards.md)。
+<!-- cpp-standards:end -->
+
 > **主教材主线**：Chapter 7 · Memory Management。承接 Day 61 的 callback lifetime，今天继续 smart pointer 高级 API：aliasing constructor、pointer cast 与 ownership API 审计。重点不是记 API，而是判断这些机制是否正在掩盖错误的稳定边界。
 
 ## ① 今日章节与建议阅读范围（5 分钟）

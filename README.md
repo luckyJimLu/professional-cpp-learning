@@ -20,6 +20,7 @@
 
 ## 快速入口
 
+- [C++ 新特性与标准来源速查](docs/cpp-feature-standards.md)（各课课首标注版本）
 - [C 语言速查小册子与关键字查找](booklets/README.md)（网页主导航「小册子」）
 
 - [新手起步：编辑、编译、运行与学习方法](docs/beginner-start.md)

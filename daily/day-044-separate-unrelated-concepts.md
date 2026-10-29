@@ -20,6 +20,28 @@ guidelines:
 
 # Day 44 · Avoid Combining Unrelated or Logically Separate Concepts：不要把无关职责绑在一起
 
+<!-- cpp-standards:start -->
+## 本课涉及的 C++ 标准
+
+以下按正文与配套 `.cpp` 示例中出现的特性标注首次标准化版本，不代表整份程序的最低编译版本。仓库主 Lab 统一使用 C++23。
+
+| 特性 | 首次标准化 | 版本边界 |
+| --- | --- | --- |
+| 列表初始化 | **C++11** | 包括直接列表初始化；窄化检查及 initializer_list 优先规则须单独注意。 |
+| `= default` / `= delete` | **C++11** | 显式默认化与删除函数。 |
+| `constexpr` | **C++11** | C++14 放宽函数体限制；C++20 继续扩展可用于常量求值的操作。声明不保证每次调用都在编译期执行。 |
+| `enum class` | **C++11** | 有作用域枚举。 |
+| `override` / `final` | **C++11** | 用于虚函数覆盖检查、限制覆盖或继承。 |
+| `[[nodiscard]]` | **C++17** | 带说明字符串的形式从 C++20 起可用。 |
+| `<cstdint>` 固定宽度整数 | **C++11** | 精确宽度类型仅在实现提供对应整数类型时存在。 |
+| `std::array` | **C++11** | 固定大小容器。 |
+| `std::chrono` | **C++11** | 如 duration、time_point、steady_clock；不是所有 chrono 后增 API 都属于 C++11。 |
+| chrono 时长字面量 | **C++14** | 如 `100ms`；需要相应头文件与 `std::chrono_literals`。 |
+| `std::span` | **C++20** | 连续序列的非拥有视图；不自动延长底层对象生命周期。 |
+
+版本差异、旧机制与工具链检查见 [C++ 标准来源速查](../docs/cpp-feature-standards.md)。
+<!-- cpp-standards:end -->
+
 ## ① 今日章节与建议阅读范围（5 分钟）
 
 ### 新手起步：先知道今天在解决什么

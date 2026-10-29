@@ -18,6 +18,25 @@ next: 10
 ---
 # Day 09 · std::string 的构造、修改、搜索与数值转换
 
+<!-- cpp-standards:start -->
+## 本课涉及的 C++ 标准
+
+以下按正文与配套 `.cpp` 示例中出现的特性标注首次标准化版本，不代表整份程序的最低编译版本。仓库主 Lab 统一使用 C++23。
+
+| 特性 | 首次标准化 | 版本边界 |
+| --- | --- | --- |
+| 列表初始化 | **C++11** | 包括直接列表初始化；窄化检查及 initializer_list 优先规则须单独注意。 |
+| `constexpr` | **C++11** | C++14 放宽函数体限制；C++20 继续扩展可用于常量求值的操作。声明不保证每次调用都在编译期执行。 |
+| `enum class` | **C++11** | 有作用域枚举。 |
+| 结构化绑定 | **C++17** | 如 `auto [a, b] = value;`。 |
+| `auto` 类型推导 | **C++11** | C++14 才支持普通函数返回类型推导；C++20 才支持 `auto` 形参的简写函数模板。 |
+| `std::string_view` | **C++17** | 非拥有视图；其 `starts_with` / `ends_with` 是 C++20 新增。 |
+| `std::optional` / `std::nullopt` | **C++17** | 可选值；不自带错误原因。 |
+| `std::from_chars` / `std::to_chars` | **C++17** | 整数及浮点重载均在 C++17 标准化；旧标准库的浮点支持可能滞后。 |
+
+版本差异、旧机制与工具链检查见 [C++ 标准来源速查](../docs/cpp-feature-standards.md)。
+<!-- cpp-standards:end -->
+
 **Chapter 2 · Working with Strings and String Views
 主题：std::string 的构造、修改、搜索与数值转换
 今日目标：在 Day 8 的所有权/借用基础上，掌握拥有型文本操作，并把 C 字符数组习惯迁移为边界更清楚的现代 C++。
