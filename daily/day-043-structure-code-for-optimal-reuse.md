@@ -4,7 +4,7 @@ week: 7
 part: II
 chapter: 6
 chapter_title: Designing for Reuse
-title: Structure Your Code for Optimal Reuse
+title: "为高效复用组织代码结构"
 status: published
 date: 2026-10-09
 duration: 60
@@ -18,7 +18,7 @@ guidelines:
   - explicit-contract
 ---
 
-# Day 43 · Structure Your Code for Optimal Reuse：按职责与依赖方向组织代码
+# Day 43 · 为高效复用组织代码结构
 
 <!-- cpp-standards:start -->
 ## 本课涉及的 C++ 标准

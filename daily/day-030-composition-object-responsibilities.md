@@ -95,7 +95,7 @@ Application → ModemSession → ITransport → UartTransport → HAL
 
 ModemSession 负责 modem 会话策略；Transport 负责字节传输；HAL 负责硬件细节。
 
-### 3.2 Composition：has-a
+### 3.2 组合（Composition）：has-a
 
 当生命周期天然绑定时，可直接把子对象作为成员。没有裸 new/delete，生命周期由语言管理。
 

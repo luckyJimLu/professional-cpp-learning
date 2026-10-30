@@ -8,7 +8,7 @@
 
 ## 1. 核心概念：回调是异步结果的交付终点
 
-Asio 的每个异步操作（`async_xxx`）发起后**立即返回**，真正的 I/O 等待与数据搬运由运行时完成。**Completion Handler（完成处理器）**——用户提供的可调用对象——是操作结果（错误码 + 字节数等）的唯一交付终点（ARCHITECTURE.md §2.1 角色表）。
+Asio 的每个异步操作（`async_xxx`）发起后**立即返回**，真正的 I/O 等待与数据搬运由运行时完成。**Completion Handler（完成处理器）**即用户提供的可调用对象，是操作结果（错误码 + 字节数等）的唯一交付终点（ARCHITECTURE.md §2.1 角色表）。
 
 ### 1.1 Handler 的三种形态
 
@@ -18,7 +18,7 @@ Asio 的每个异步操作（`async_xxx`）发起后**立即返回**，真正的
 | Lambda（推荐） | `[this, self](error_code ec, size_t n){...}` | `example/cpp11/chat/chat_client.cpp:56` 起 | 续接逻辑就地定义，配合 `shared_from_this` 管生命周期 |
 | 仿函数 / 自定义类 | 定义了 `operator()` 的可调用对象 | 库内要求即 `async_result.hpp:313`：`completion_handler_type == CompletionToken` | 唯一契约是"可用 `handler(ec, args...)` 调用" |
 
-> **陷阱提示**：`std::bind` 会**忽略多余实参**。`example/cpp11/timeouts/async_tcp_client.cpp:107` 将无参的 `check_deadline()` 绑定为 `deadline_.async_wait` 的处理器——完成签名是 `void(error_code)`，多出的实参被 bind 丢弃，这正是它能工作的原因。
+> **陷阱提示**：`std::bind` 会**忽略多余实参**。`example/cpp11/timeouts/async_tcp_client.cpp:107` 将无参的 `check_deadline()` 绑定为 `deadline_.async_wait` 的处理器，完成签名是 `void(error_code)`，多出的实参被 bind 丢弃，这正是它能工作的原因。
 
 ### 1.2 从用户调用到回调执行：角色总览
 
@@ -68,7 +68,7 @@ flowchart TD
 
 以 `sock.async_read_some(buffer, handler)` 为例（最常见的流式读），Handler 从用户栈走到堆上操作对象的完整路径：
 
-**第 1 步 —— 发起函数包装签名并转调 `async_initiate`**
+**第 1 步：发起函数包装签名并转调 `async_initiate`**
 
 `include/boost/asio/basic_stream_socket.hpp:1070-1085`：
 
@@ -85,16 +85,16 @@ auto async_read_some(const MutableBufferSequence& buffers, ReadToken&& token)
 
 完成签名 `void(error_code, std::size_t)` 在此处首次定型（:1043-1044 文档）。
 
-**第 2 步 —— `async_result` 定制点：裸回调即 Handler**
+**第 2 步：`async_result` 定制点，裸回调即 Handler**
 
 `include/boost/asio/async_result.hpp:308-340`（默认特化 `completion_handler_async_result`）：
 
-- :313 `typedef CompletionToken completion_handler_type;` —— **默认情况下传入的回调本身就是 handler 类型**，无任何包装；
-- :327-333 `initiate()` 直接执行 `initiation(token, args...)` —— 把回调原样转发给下一层。
+- :313 `typedef CompletionToken completion_handler_type;`：**默认情况下传入的回调本身就是 handler 类型**，无任何包装；
+- :327-333 `initiate()` 直接执行 `initiation(token, args...)`，把回调原样转发给下一层。
 
 对应的 legacy 路径（`async_completion`，:459-491）：显式推导 handler 类型（:467-469）并构造 handler 对象（:476-482）；现代入口 `async_initiate` 在 :671-687，legacy 回退在 :720-733。
 
-**第 3 步 —— 服务层：分配操作对象并存储 Handler**
+**第 3 步：服务层分配操作对象并存储 Handler**
 
 `include/boost/asio/detail/reactive_socket_service_base.hpp:395-434`：
 
@@ -108,7 +108,7 @@ reactive_socket_recv_op<MutableBufferSequence, Handler, io_executor>* op =
 // :424-432 start_op(impl.socket_, impl.state_, op, ...) → :433 所有权转移给 reactor
 ```
 
-**第 4 步 —— 结论**
+**第 4 步：结论**
 
 | 阶段 | Handler 状态 | 源码 |
 |---|---|---|
@@ -151,12 +151,12 @@ sequenceDiagram
 
 1. **发起**：应用线程调用 `async_read_some`，Handler 被存入堆上操作对象（§3）。
 2. **挂起**：`epoll_reactor::start_op`（`epoll_reactor.ipp:259-349`）先**投机 perform**（:288，数据已就绪可立即完成，省去 epoll 往返）；未完成则 `epoll_ctl(MOD)` 注册 EPOLLIN（:313/:343），操作入 per-descriptor 队列并 `work_started()`（:347-348，保证 `io_context.run()` 不退出）。
-3. **等待**：`scheduler::do_run_one`（`scheduler.ipp:460-509`）发现队列头是 `task_operation_`，执行 `task_->run()`（:473-489）——即 `epoll_reactor::run`（`epoll_reactor.ipp:505-529`），`epoll_wait`（:529）阻塞等待内核事件。
+3. **等待**：`scheduler::do_run_one`（`scheduler.ipp:460-509`）发现队列头是 `task_operation_`，执行 `task_->run()`（:473-489，即 `epoll_reactor::run`，`epoll_reactor.ipp:505-529`），`epoll_wait`（:529）阻塞等待内核事件。
 4. **事件到达**：就绪描述符状态由 `descriptor_state::set_ready_events` 记录（`epoll_reactor.hpp:75`，事件掩码存入 `task_result_`），相关操作推入完成队列（`epoll_reactor.ipp:596-605`）。
-5. **执行 I/O**：`descriptor_state::perform_io`（`epoll_reactor.ipp:784-821`）逐个执行操作：`op->perform()`（:800）——对读操作即 `reactive_socket_recv_op::do_perform`（`reactive_socket_recv_op.hpp:52-108`），调用 `socket_ops::non_blocking_recv*`（:64-68/:82-85）产出 `o->ec_` 与 `o->bytes_transferred_`；EOF 时 bytes==0 → `done_and_exhausted`（:97-102）。
+5. **执行 I/O**：`descriptor_state::perform_io`（`epoll_reactor.ipp:784-821`）逐个执行操作：`op->perform()`（:800，对读操作即 `reactive_socket_recv_op::do_perform`，`reactive_socket_recv_op.hpp:52-108`），调用 `socket_ops::non_blocking_recv*`（:64-68/:82-85）产出 `o->ec_` 与 `o->bytes_transferred_`；EOF 时 bytes==0 → `done_and_exhausted`（:97-102）。
 6. **返回完成操作**：首个完成的操作由 `perform_io` 直接返回（:816-820），经 `task_result_` 交给 scheduler（`scheduler.ipp:493`）。
 7. **派发**：`scheduler::do_run_one` 调用 `o->complete(this, ec, task_result)`（:504-505，源码注释 "Complete the operation. May throw an exception. Deletes the object."）→ `scheduler_operation.hpp:38-42` 转调函数指针 `func_(owner, this, ec, bytes)`（**非虚函数**，:31-33）→ `reactive_socket_recv_op::do_complete`（:138-175）。
-8. **Upcall**：`do_complete` 物化完成签名——`binder2<Handler, error_code, size_t> handler(o->handler_, o->ec_, o->bytes_transferred_)`（:162-163）；先 `p.reset()` 释放 op 内存（:165），再 `w.complete(...)`（:172）调用用户 Handler。`executor_op::do_complete`（`executor_op.hpp:45-74`）同构：:63 handler 移栈、:64 释放、:66-73 upcall。
+8. **Upcall**：`do_complete` 物化完成签名（`binder2<Handler, error_code, size_t> handler(o->handler_, o->ec_, o->bytes_transferred_)`，:162-163）；先 `p.reset()` 释放 op 内存（:165），再 `w.complete(...)`（:172）调用用户 Handler。`executor_op::do_complete`（`executor_op.hpp:45-74`）同构：:63 handler 移栈、:64 释放、:66-73 upcall。
 
 关键机制表：
 
@@ -184,7 +184,7 @@ sequenceDiagram
 ### 5.2 特殊值判定
 
 - **EOF**：`bytes_transferred == 0` 且 `!ec` → 对端关闭。库内以 `done_and_exhausted` 标记（`reactive_socket_recv_op.hpp:97-102`；枚举 `{not_done, done, done_and_exhausted}` 见 `reactor_op.hpp:28/:39/:43`）。应用层过滤示例：`async_client.cpp:170`。
-- **取消**：`ec == operation_aborted`——`close()` / cancel 使挂起操作以此完成（`epoll_reactor.hpp:144-146` cancel_ops 文档 "operation_aborted"）。应用层过滤示例：`connection.cpp:64/:85`。
+- **取消**：`ec == operation_aborted` 表示 `close()` / cancel 使挂起操作以此完成（`epoll_reactor.hpp:144-146` cancel_ops 文档 "operation_aborted"）。应用层过滤示例：`connection.cpp:64/:85`。
 - **read_until 的 bytes 含分隔符**：`read_until.hpp:123` 明确。
 - **超时**：定时器 `async_wait` 被取消时以 `operation_aborted` 完成（`async_tcp_client.cpp:266` 用 `socket_.close()` 触发整链取消）。
 
@@ -248,7 +248,7 @@ flowchart TD
 
 要点：
 
-- **indeterminate 回环**：HTTP 头未读完时回到 `do_read`——状态机的"等待更多输入"分支，是回调链里少见的显式回环；
+- **indeterminate 回环**：HTTP 头未读完时回到 `do_read`（状态机的"等待更多输入"分支，是回调链里少见的显式回环）；
 - 错误与取消分流：`ec != operation_aborted` 才 stop（:64-67），服务器主动 shutdown 触发的取消不视为错误（同 SESSION_LIFECYCLE.md §3.2）；
 - 解析器内部状态枚举：`request_parser.hpp:68-90`。
 
@@ -256,9 +256,9 @@ flowchart TD
 
 `example/cpp11/chat/chat_client.cpp`（167 行，纯 lambda 链）
 
-- `do_connect()`（:53-63）：`async_connect` + 就地 lambda `[this](ec, tcp::endpoint){ if (!ec) do_read_header(); }` —— **续接逻辑内联在发起处**；
+- `do_connect()`（:53-63）：`async_connect` + 就地 lambda `[this](ec, tcp::endpoint){ if (!ec) do_read_header(); }`，续接逻辑内联在发起处；
 - 读链：`do_read_header`（:65-80，`async_read_until("\r\n")`）→ `do_read_body`（:82-99，`async_read_until("\r\n\r\n")`）→ 输出消息 → 回到 `do_read_header` 形成读回环；
-- 写侧：`write()`（:33-45）将消息 post 入写队列，`do_write`（:101-121）逐条 `async_write`，队列非空则续写下一条 —— **"每 socket 单写"惯用法**（与 chat_server 的 `write_in_progress` 同源，SESSION_LIFECYCLE.md §3.3）；
+- 写侧：`write()`（:33-45）将消息 post 入写队列，`do_write`（:101-121）逐条 `async_write`，队列非空则续写下一条（"每 socket 单写"惯用法，与 chat_server 的 `write_in_progress` 同源，SESSION_LIFECYCLE.md §3.3）；
 - 任一跳出错：`socket_.close()` → 全链以 `operation_aborted` 退场。
 
 ### 6.4 timeouts/async_tcp_client.cpp：actor 模式与 actor 分叉
@@ -290,7 +290,7 @@ flowchart TD
 要点：
 
 - **actor 分叉**：连接成功后 connection actor 分裂为读、写两个并发 actor（:180 `start_read` + :183 `start_write`），共享同一 socket；
-- **取消即状态机控制流**：deadline actor 到时 `socket_.close()`（:266），挂起的读/写/连接以 `operation_aborted` 完成，对应 handler 据此换端点或收场——定时器不参与业务分支，而是通过取消驱动其他 actor；
+- **取消即状态机控制流**：deadline actor 到时 `socket_.close()`（:266），挂起的读/写/连接以 `operation_aborted` 完成，对应 handler 据此换端点或收场，定时器不参与业务分支，而是通过取消驱动其他 actor；
 - `handle_connect` 中超时/错误都回到 `start_connect` 尝试下一端点（:153-159/:162-172）；
 - `main`：同步 resolve（:301）、`io_context.run()`（:303）。
 
@@ -315,7 +315,7 @@ flowchart TD
 | 续接方式 | 手动调用下一跳 async 操作 | `co_await` 隐式挂起/恢复 |
 | 生命周期 | 需 `shared_from_this` + 按值捕获（SESSION_LIFECYCLE.md §2） | 协程帧由 `co_spawn` / 库持有 |
 | 错误处理 | 每跳检查 `ec` | try/catch + co_return |
-| 完成机制 | 用户 handler 是交付终点 | `use_awaitable` 的完成处理器内部持有协程恢复点——**机制同构，由库代管** |
+| 完成机制 | 用户 handler 是交付终点 | `use_awaitable` 的完成处理器内部持有协程恢复点（机制同构，由库代管） |
 
 回调模式仍是协程的基础：`use_awaitable_t` 等完成令牌特化（`async_result.hpp`，见 ARCHITECTURE.md §2.4）只是把"恢复协程"作为 `completion_handler_type` 注入 §4 的同一条通知路径。
 

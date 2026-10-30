@@ -1,7 +1,6 @@
 # 每日课程模板（Day Template）
 
-所有 `daily/day-XXX-*.md` 都必须遵循本模板。目标：任何一天拿起来，
-结构、篇幅、语气都一致；网站渲染、CI 检查都依赖 frontmatter 字段。
+所有 `daily/day-XXX-*.md` 必须遵循本模板。确保每篇课程在结构、篇幅与语气上保持一致；网站渲染和 CI 检查均依赖 frontmatter 字段。
 
 ---
 

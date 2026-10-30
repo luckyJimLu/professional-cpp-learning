@@ -1,4 +1,4 @@
-# Week 05 Review · Day 29–35
+# 第 05 周复盘 · Day 29–35
 
 本周主线：**Chapter 5 · Designing with Classes**。
 
@@ -7,38 +7,38 @@
 ## 本周知识链
 
 ```text
-Day 29  constructor / valid state
+Day 29  构造函数 / 有效状态
    ↓
-Day 30  composition / responsibility
+Day 30  组合 / 职责
    ↓
-Day 31  ownership / lifetime
+Day 31  所有权 / 生命周期
    ↓
-Day 32  is-a / inheritance boundary
+Day 32  is-a / 继承边界
    ↓
-Day 33  polymorphism / virtual interface
+Day 33  多态 / 虚接口
    ↓
-Day 34  override / final / virtual destructor
+Day 34  override / final / 虚析构函数
    ↓
-Day 35  object slicing / dynamic type
+Day 35  对象切片 / 动态类型
 ```
 
 ---
 
-## 1. Constructor 与有效状态
+## 1. 构造函数与有效状态
 
-对象构造完成后，应立即满足自己的 invariant。
+对象构造完成后，应立即满足自身的类不变性。
 
-不要把“半初始化对象”留给调用者继续修补。
+切勿将半初始化对象留给调用者补救。
 
 重点检查：
 
-- 单参数 constructor 是否 `explicit`；
-- 是否把可失败、阻塞的硬件启动过程错误塞进 constructor；
-- 是否把运行期错误通过统一 `Status` 返回。
+- 单参数构造函数是否标记为 `explicit`；
+- 是否把可失败、阻塞的硬件启动过程误放入构造函数；
+- 是否通过统一的 `Status` 返回运行期错误。
 
 ---
 
-## 2. Composition 优先于错误继承
+## 2. 组合优先于错误继承
 
 判断两个类关系时，先问：
 
@@ -49,7 +49,7 @@ uses-a?
 owns-a?
 ```
 
-如果只是“使用 UART”，不要因为复用代码就写：
+如果只是“使用 UART”，不要为了复用代码而误用继承：
 
 ```cpp
 class Modem : public UartDriver {};
@@ -69,20 +69,20 @@ private:
 
 ---
 
-## 3. Ownership / Borrowing / Lifetime
+## 3. 所有权 / 借用 / 生命周期
 
 本周最重要的工程判断之一：
 
-- `T&`：required non-owning borrow；
-- `T*`：通常是 nullable / optional borrow；
-- `std::unique_ptr<T>`：exclusive ownership；
-- `std::shared_ptr<T>`：shared ownership，必须有真实业务理由。
+- `T&`：必要的非所有权借用（required non-owning borrow）；
+- `T*`：通常为可选借用（nullable / optional borrow）；
+- `std::unique_ptr<T>`：独占所有权（exclusive ownership）；
+- `std::shared_ptr<T>`：共享所有权（shared ownership），必须有明确的业务理由。
 
-**不要因为“多态”就自动选择 shared_ptr。**
+**不要仅因多态需求就自动选择 `shared_ptr`。**
 
 ---
 
-## 4. Inheritance 必须表达 is-a
+## 4. 继承必须表达 is-a
 
 合理：
 
@@ -104,39 +104,39 @@ UartDriver
 
 ---
 
-## 5. Polymorphism 的收益与成本
+## 5. 多态的收益与成本
 
-运行时多态适合：
+运行时多态适用于：
 
-- 平台实现需要运行时替换；
-- host test / fake implementation；
-- 稳定接口隔离平台细节；
-- 上层不应知道具体 Driver 类型。
+- 平台实现需要在运行时替换；
+- 主机测试（host test）与伪实现（fake implementation）；
+- 用稳定接口隔离平台细节；
+- 上层无需感知具体驱动（Driver）类型。
 
-需要评估：
+评估项：
 
-- vptr / vtable；
-- indirect call；
-- inline 机会；
-- deadline / jitter；
-- hierarchy 维护成本。
+- 虚表与虚表指针（vptr / vtable）；
+- 间接调用开销；
+- 内联优化机会；
+- 截止时间与抖动（deadline / jitter）；
+- 继承层级的维护成本。
 
-性能判断必须基于测量，而不是“嵌入式不能用 virtual”这种绝对结论。
-
----
-
-## 6. override / final / virtual destructor
-
-团队规则建议：
-
-- virtual override 显式写 `override`；
-- 多态基类定义明确析构策略；
-- 没有继续扩展需求的具体叶子类可使用 `final`；
-- 不要让签名漂移静默发生。
+性能判断应基于真实测量，而非“嵌入式环境禁用虚函数”等绝对化结论。
 
 ---
 
-## 7. Object Slicing
+## 6. override / final / 虚析构函数
+
+团队规范建议：
+
+- 虚函数重写显式标注 `override`；
+- 多态基类明确定义析构策略；
+- 无进一步扩展需求的叶子类标注 `final`；
+- 避免函数签名漂移静默发生。
+
+---
+
+## 7. 对象切片
 
 高风险接口：
 
@@ -144,9 +144,9 @@ UartDriver
 void Process(ITransport transport);
 ```
 
-如果传入 derived object，会复制 base subobject，dynamic type 丢失。
+传入派生类对象时，会复制基类子对象（base subobject），导致动态类型丢失。
 
-多态对象通常应通过：
+多态对象通常应通过以下方式维持动态类型语义：
 
 ```cpp
 ITransport& ITransport*
@@ -156,7 +156,7 @@ ITransport& ITransport*
 
 ---
 
-# Mini Project · Modem Transport Boundary
+# 小型项目 · Modem 传输边界
 
 设计目标：
 
@@ -185,7 +185,7 @@ ITransport
 
 ---
 
-# Code Review 检查
+# 代码评审检查
 
 ## 头文件依赖
 
@@ -223,13 +223,13 @@ ITransport
 - [ ] 同一层未混用 bool / -1 / exception / Status
 - [ ] 错误保留必要上下文
 
-## ISR / volatile
+## ISR 与 volatile
 
 - [ ] volatile 未被当作线程同步
 - [ ] ISR 工作量最小
 - [ ] 共享状态同步策略明确
 
-## Magic Number
+## 魔法数字
 
 - [ ] baudrate / timeout / buffer capacity 有明确名称或类型
 - [ ] 协议常量使用 constexpr

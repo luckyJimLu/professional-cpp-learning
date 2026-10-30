@@ -132,7 +132,7 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-016/main.cpp -
 
 ## ⑦ 常见坑 · 3 分钟
 
-把零告警当成没有逻辑错误；用强制转换隐藏截断；运行 clang-format 后认为已经做过静态分析。
+误把零编译告警当成没有逻辑错误；用强制转换隐藏数据截断；运行 clang-format 后误认为已完成静态分析。
 
 ## ⑧ 自测 · 4 分钟
 

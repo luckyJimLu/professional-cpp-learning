@@ -147,7 +147,7 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-018/main.cpp -
 
 ## ⑦ 常见坑 · 3 分钟
 
-from_chars 返回成功但未检查尾随内容；用 atoi 的 0 区分失败；把解析和硬件操作合并而无法隔离测试。
+使用 `std::from_chars` 返回成功但忽略检查尾随字符；用 `atoi` 返回的 0 区分失败；将数据解析与硬件操作紧偶合导致无法隔离测试。
 
 ## ⑧ 自测 · 4 分钟
 

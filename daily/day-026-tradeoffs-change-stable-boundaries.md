@@ -86,9 +86,9 @@ next: 27
 
 让依赖指向更稳定的一侧。 业务层依赖“发送命令”的能力，而不是 UART 寄存器布局：Application → ModemSession → ITransport → UartTransport → BSP。
 
-Policy 与 mechanism 分离。 重试次数、等待多久属于 policy；如何把 bytes 写入 UART 属于 mechanism。
+策略与机制分离。 重试次数与等待时长属于策略；如何将字节写入 UART 属于机制。
 
-设计是 trade-off。 虚接口便于运行时替换但存在间接调用；模板可以静态绑定但可能增加编译依赖和代码膨胀。应依据 Flash/RAM、实时性、测试和维护成本选择。
+设计是权衡取舍。 虚接口便于运行时替换但存在间接调用；模板可以静态绑定但可能增加编译依赖和代码膨胀。应依据 Flash/RAM、实时性、测试和维护成本选择。
 
 ## ④ C 写法 vs 现代 C++ 写法（10分钟）
 
@@ -100,7 +100,7 @@ return -1;
 }
 ```
 
-上层知道 transport 类型，每新增一种 transport 都修改核心函数。
+上层依赖具体的传输类型，每新增一种传输实现都要修改核心函数。
 
 ```cpp
 class ITransport {

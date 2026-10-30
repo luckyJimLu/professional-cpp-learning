@@ -205,9 +205,9 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-009/main.cpp -
 
 ## ⑦ 3 个常见坑 · 5分钟
 
-- 误以为 string 永不分配；SSO 不是实时保证。
+- 误以为 `std::string` 永远不会触发动态分配；SSO 不提供实时时延保证。
 
-- 保存指向被销毁或扩容 string 的 view。
+- 保存指向已销毁或重新分配内存的 `std::string` 的视图。
 
 - 无条件把所有 const char* 改为 string，制造无意义分配。
 

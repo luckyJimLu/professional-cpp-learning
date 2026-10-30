@@ -110,9 +110,9 @@ Chapter 33 重点讲解以下模式：
 | Chain of Responsibility | Behavioral | 请求处理链 | handler chain |
 | Singleton | Creational-ish | 全局唯一实例 | function-local static；谨慎使用 |
 
-如果只记模式名字，价值很低。
+如果仅记忆模式名称，工程价值极其有限。
 
-建议始终用下面的方式理解：
+建议始终按以下维度理解：
 
 ```text
 问题是什么？
@@ -124,7 +124,7 @@ Chapter 33 重点讲解以下模式：
 
 ---
 
-# 4. Strategy Pattern
+# 4. 策略模式（Strategy Pattern）
 
 ## 4.1 解决的问题
 
@@ -204,7 +204,7 @@ private:
 
 ---
 
-# 5. Abstract Factory Pattern
+# 5. 抽象工厂模式（Abstract Factory）
 
 ## 5.1 解决的问题
 
@@ -257,7 +257,7 @@ std::shared_ptr<ITransport>
 
 ---
 
-# 6. Factory Method Pattern
+# 6. 工厂方法模式（Factory Method）
 
 Factory Method 解决的是：
 
@@ -292,7 +292,7 @@ std::unique_ptr<ITransport> CreateTransport(TransportType type, const TransportC
 
 ---
 
-# 7. Adapter Pattern
+# 7. 适配器模式（Adapter）
 
 Adapter 的核心：
 
@@ -341,7 +341,7 @@ Adapter 是嵌入式 C → C++ 迁移中非常重要的模式。
 
 ---
 
-# 8. Proxy Pattern
+# 8. 代理模式（Proxy）
 
 Proxy 与 Adapter 很容易混淆。
 
@@ -389,7 +389,7 @@ Sensor Service Task
 
 ---
 
-# 9. Iterator Pattern
+# 9. 迭代器模式（Iterator）
 
 Iterator 建立的是：
 
@@ -442,7 +442,7 @@ for (const auto& packet : packets) {
 
 ---
 
-# 10. Observer Pattern
+# 10. 观察者模式（Observer）
 
 Observer 解决：
 
@@ -500,7 +500,7 @@ std::weak_ptr<IObserver>
 
 ---
 
-# 11. Decorator Pattern
+# 11. 装饰器模式（Decorator）
 
 Decorator 建立：
 
@@ -562,7 +562,7 @@ LoggedRetriedEncryptedUartTransport
 
 ---
 
-# 12. Chain of Responsibility
+# 12. 职责链模式（Chain of Responsibility）
 
 核心结构：
 
@@ -614,7 +614,7 @@ Command dispatch
 
 ---
 
-# 13. Singleton Pattern
+# 13. 单例模式（Singleton）
 
 Singleton 是最容易被滥用的模式之一。
 
@@ -667,7 +667,7 @@ Singleton 容易导致：
 
 ---
 
-# 14. Pattern 与智能指针
+# 14. 模式与智能指针
 
 这是 C++ 与 Java/C# 最大的工程差别之一。
 
@@ -690,7 +690,7 @@ B lifetime ?
 
 例如 Decorator：
 
-### Borrowing decorator
+### 借用式装饰器（Borrowing Decorator）
 
 ```cpp
 ITransport& inner_;
@@ -703,7 +703,7 @@ Decorator 不拥有 inner
 inner 必须活得更久
 ```
 
-### Owning decorator
+### 拥有式装饰器（Owning Decorator）
 
 ```cpp
 std::unique_ptr<ITransport> inner_;
@@ -722,7 +722,7 @@ Decorator 独占拥有下一层
 
 ---
 
-# 15. Pattern 与现代 C++ 的关系
+# 15. 模式与现代 C++ 的关系
 
 经典 GoF 模式产生于 C++ 早期时代。
 
@@ -746,7 +746,7 @@ Decorator 独占拥有下一层
 
 ---
 
-# 16. Pattern 与 SOLID
+# 16. 模式与 SOLID
 
 模式解决具体结构问题，SOLID 更像模式背后的设计压力。
 
@@ -781,7 +781,7 @@ DIP
 
 ---
 
-# 17. Embedded C++ 模式选择表
+# 17. 嵌入式 C++（Embedded C++）模式选择表
 
 | 场景 | 首选思路 | 备注 |
 |---|---|---|
@@ -827,38 +827,38 @@ ownership 是什么？
 
 ---
 
-# 19. Code Review：设计模式检查清单
+# 19. 代码评审（Code Review）：设计模式检查清单
 
 看到一个 Pattern 时，至少检查：
 
-## Boundary
+## 边界（Boundary）
 
 - [ ] 它隔离的变化是什么？
 - [ ] 稳定接口是否真的稳定？
 - [ ] 是否只是为了“套模式”？
 
-## Ownership
+## 所有权（Ownership）
 
 - [ ] 谁拥有对象？
 - [ ] 谁只是 borrow？
 - [ ] 是否错误使用 `shared_ptr`？
 - [ ] callback / observer 是否可能 dangling？
 
-## Runtime
+## 运行时（Runtime）
 
 - [ ] 是否引入 heap allocation？
 - [ ] 是否在实时路径分配？
 - [ ] virtual dispatch 是否真的需要 runtime replacement？
 - [ ] handler chain 是否有最坏执行时间？
 
-## API
+## 接口设计（API）
 
 - [ ] timeout 是否显式？
 - [ ] error model 是否统一？
 - [ ] buffer 边界是否类型化？
 - [ ] interface 是否过宽？
 
-## Testing
+## 可测试性（Testing）
 
 - [ ] 是否容易注入 Fake？
 - [ ] 是否能测试 failure path？

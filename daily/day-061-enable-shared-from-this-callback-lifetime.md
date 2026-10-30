@@ -124,7 +124,7 @@ ConnectionManager requests stop
   -> close transport / hardware resource
 ```
 
-`weak_ptr` 是最后一道 lifetime 防线，不是 teardown protocol。若 callback 在 ISR 中执行，更不能直接进行 `shared_ptr` refcount、锁、heap 或复杂析构；ISR 应把 bounded event 投递给 task context。
+`weak_ptr` 是最后一道 lifetime 防线，不是 teardown protocol。若 callback 在 ISR 中执行，更不能直接操作 `shared_ptr` 引用计数、锁、heap 或复杂析构；ISR 应把 bounded event 投递给 task context。
 
 固定 RTOS task graph 中，如果 ConnectionManager 的 lifetime 明确覆盖 RX worker，则 reference + explicit stop/join 往往比 shared ownership 更可预测。
 

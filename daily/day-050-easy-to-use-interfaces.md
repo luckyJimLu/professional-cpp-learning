@@ -98,7 +98,7 @@ next: 51
 ### 先用白话建立概念
 
 - **安全默认值**：常用场景下明确且合理的默认策略。
-- **RAII**：随对象生命周期进行清理。
+- **RAII**：随对象生命周期完成资源清理。
 
 ### 跟着本课实验走一遍
 
@@ -130,7 +130,7 @@ device.Send(payload);
 // 离开作用域自动释放资源
 ```
 
-这不是“语法糖”，而是把正确生命周期放进语言机制。
+这并不是“语法糖”，而是把正确的生命周期规则放进语言机制中。
 
 ### 2. Easy to use 不等于删掉高级能力
 
@@ -257,7 +257,7 @@ ModemFacade → ModemCore → FakeTransport
 
 ### static polymorphism 是否更合适？
 
-如果 transport 在固件构建时固定，且不需要 host runtime fake replacement，可使用 template/concept 形成编译期边界，消除 virtual dispatch。但本课保留 runtime interface，是为了展示 host fake 与平台替换的清晰测试边界；Embedded 项目应根据真实变化时机选择。
+如果 transport 在固件构建时已固定，且不需要主机运行期的伪对象（fake replacement），可用 template/concept 建立编译期边界，从而消除虚函数派发。但本课保留 runtime interface，是为了展示 host fake 与平台替换的清晰测试边界；Embedded 项目应根据真实变化时机选择。
 
 ### Pattern 滥用
 

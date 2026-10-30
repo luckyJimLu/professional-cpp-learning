@@ -1,77 +1,77 @@
-# Learning UX
+# 学习体验（Learning UX）
 
-## Today
+## 今日
 
-Today answers only:
+今日页只回答三个问题：
 
-- where am I?
-- what should I do now?
-- where is Continue?
+- 我现在在哪里？
+- 现在该做什么？
+- “继续”在哪里？
 
-Repository `progress.md` is used as the baseline. If the next Day has not yet been published, Today shows the next planned Day and falls back to reviewing the latest published lesson.
+以仓库中的 `progress.md` 为基线。若下一个 Day 尚未发布，今日页将展示计划中的下一个 Day，并回退至最近已发布课程的复习。
 
-## Daily lesson
+## 每日课程
 
-Each historical course section is mapped to the pipeline:
+每个历史课程小节都映射到下面这条学习流水线（Compile Rail）：
 
-| Markdown section | Compile Rail |
+| Markdown 小节 | Compile Rail |
 |---|---|
-| ① Reading | READ |
-| ② Recall | RECALL |
-| ③ Concept | CONCEPT |
-| ④ C vs Modern C++ | REFACTOR |
-| ⑤ Coding Guideline | RULES |
-| ⑥ Lab | LAB |
-| ⑦ Pitfalls | REVIEW |
-| ⑧ Quiz | PASS |
+| ① 阅读 | READ |
+| ② 回顾 | RECALL |
+| ③ 概念 | CONCEPT |
+| ④ C 写法 vs Modern C++ | REFACTOR |
+| ⑤ 编码规范 | RULES |
+| ⑥ 实验 | LAB |
+| ⑦ 常见坑 | REVIEW |
+| ⑧ 自测 | PASS |
 
-The mapping uses the circled section number, so historical Chinese titles can vary without breaking navigation.
+映射依据带圈的小节编号，因此历史课程的中文标题可以变化，不会破坏导航。
 
-## Roadmap
+## 路线图
 
-Roadmap is a vertical execution path grouped by week. It is generated from the Course Index instead of manually maintained cards.
+路线图是按周分组的纵向执行路径，由课程索引生成，而不是手工维护的卡片。
 
-Part is inferred from Chapter only as a backward-compatibility fallback. New lessons should provide frontmatter.
+仅在缺失 frontmatter 时，Part 才作为兼容降级由 Chapter 推断；新课程必须提供完整 frontmatter。
 
-## Lab extraction
+## 实验提取
 
-Resolution order:
+解析顺序：
 
-1. `lab.path` from frontmatter;
-2. `examples/day-XXX/main.cpp`;
-3. first C++ code fence in the Day ⑥ Lab section.
+1. frontmatter 中的 `lab.path`；
+2. `examples/day-XXX/main.cpp`；
+3. Day ⑥ 实验小节中的第一个 C++ 代码块。
 
-This allows old lessons to work today while moving future exercises into independent compilable files.
+这样旧课程可以照常工作，同时新练习逐步迁移到可独立编译的文件。
 
-## Progress
+## 进度
 
-Repository history through the current completed Day forms the baseline. Browser learning state extends that baseline for future lessons.
+以仓库历史中已经完成的 Day 为基线，浏览器中的学习状态在此基础上向后延伸。
 
-Local state key:
+本地状态键：
 
 `professional-cpp-learning-console:v1`
 
-The first release intentionally avoids a backend.
+首个版本有意不引入后端。
 
-## Responsive behavior
+## 响应式行为
 
-Desktop:
+桌面端：
 
-- persistent 7-item left navigation;
-- focused central workspace;
-- optional sticky lesson metadata.
+- 固定的 7 项左侧导航；
+- 居中、专注的工作区；
+- 可选的课程元信息吸顶条。
 
-Mobile:
+移动端：
 
-- no desktop sidebar;
-- compact header;
-- bottom navigation for Today / Roadmap / Lab / Progress;
-- lesson becomes one reading column;
-- Lab becomes task-above-code.
+- 不显示桌面侧边栏；
+- 紧凑页头；
+- 底部导航：今日 / 路线图 / 实验 / 进度；
+- 课程变为单列阅读；
+- 实验区变为任务在代码上方。
 
-## Accessibility
+## 无障碍
 
-- real buttons are used for navigation actions;
-- visible focus rings are preserved;
-- status is not communicated by color alone;
-- touch targets are kept near or above 40 px where practical.
+- 导航操作使用真正的 button 元素；
+- 保留可见的焦点环；
+- 状态不只靠颜色传达；
+- 触控目标在可行时保持 40 px 左右或更大。

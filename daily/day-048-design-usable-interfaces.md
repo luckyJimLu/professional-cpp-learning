@@ -363,7 +363,7 @@ int Send(void* driver, const unsigned char* data, int len, int timeout, int urge
 
 **答案要点：**
 
-- chrono duration 把单位编码进类型，可进行类型安全转换，减少调用者传错 us/ms/tick 的机会；
+- chrono duration 把单位编码进类型，能自动完成类型安全转换，减少调用者传错 us/ms/tick 的机会；
 - HAL handle 是平台实现细节，一旦进入公共 contract，上层测试、移植和替换 transport 都被具体平台耦合。
 
 ---
@@ -388,4 +388,4 @@ int Send(void* driver, const unsigned char* data, int len, int timeout, int urge
 
 ## 下一步
 
-Day 49 继续 Chapter 6，沿教材顺序推进 reusable interface 的后续主题，并进行第 7 周工程化复盘。
+Day 49 继续 Chapter 6，沿教材顺序推进 reusable interface 的后续主题，同时做第 7 周工程化复盘。

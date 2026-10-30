@@ -4,7 +4,7 @@ week: 6
 part: II
 chapter: 6
 chapter_title: Designing for Reuse
-title: Reuse Starts with Stable Contracts
+title: "复用始于稳定契约"
 status: published
 date: 2026-10-07
 duration: 60
@@ -18,7 +18,7 @@ guidelines:
   - explicit-contract
 ---
 
-# Day 41 · Designing for Reuse：复用从稳定 Contract 开始
+# Day 41 · 复用始于稳定契约
 
 <!-- cpp-standards:start -->
 ## 本课涉及的 C++ 标准
@@ -52,7 +52,7 @@ guidelines:
 
 **本课最低完成目标：** 能按下面的步骤说明示例如何得到结果，并独立完成一项小修改；高级模式与平台性能分析可第二遍再读。新增导读和拓展练习不计入原有约 60 分钟安排，可分两次完成。
 
-进入 Chapter 6 · **Designing for Reuse**。今天先建立本章主线：可复用代码不是“把函数放进 utils”，而是让组件拥有清晰职责、最小依赖、稳定 contract 与可替换边界。
+进入 Chapter 6 · **Designing for Reuse**。可复用代码并非简单的“将工具函数塞进 utils”，而是让组件具备单一职责、最小依赖、稳定契约与可替换边界。
 
 建议阅读 Chapter 6 开篇与 reuse/design principles 相关部分，重点思考：一个只在当前 Modem 工程可工作的类，与一个可被 UART、USB、测试替身共同使用的组件，设计上差在哪里？
 
@@ -104,7 +104,7 @@ contract 越清楚，组件越容易在新环境复用。
 
 ### 复用 ≠ 泛化一切
 
-不要一开始就设计“万能 TransportFramework”。先提取真实变化点：数据输出 contract、buffer 上限、timeout、错误模型。过早泛化通常会把平台细节变成公共 API。
+不要一开始就设计“万能 TransportFramework”。先提取真实变化点：数据输出 contract、buffer 上限、timeout、错误模型。过早的过度泛化容易将具体的平台实现细节误暴露为公共接口。
 
 ### 依赖方向
 

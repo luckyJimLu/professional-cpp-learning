@@ -137,7 +137,7 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-002/main.cpp -
 
 ## ⑦ 常见坑 · 3 分钟
 
-以为 static_cast 自动做范围检查；将 -1 转换成 unsigned 后再检查；把花括号能阻止窄化理解为能证明所有运行时数值安全。
+以为 static_cast 会自动检查范围；先把 -1 转换为无符号数再做检查；误以为花括号阻止窄化就能保证运行时数值安全。
 
 ## ⑧ 自测 · 4 分钟
 

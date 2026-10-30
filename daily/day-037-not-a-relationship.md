@@ -4,7 +4,7 @@ week: 6
 part: II
 chapter: 5
 chapter_title: Designing with Classes
-title: The Not-a Relationship
+title: "not-a 关系：既非 is-a 也非 has-a"
 duration: 60
 status: published
 date: 2026-09-30
@@ -23,7 +23,7 @@ previous: 36
 next: 38
 ---
 
-# Day 37 · Not-a：不要把现实世界分类机械搬进代码层次
+# Day 37 · not-a 关系：既非 is-a 也非 has-a
 
 <!-- cpp-standards:start -->
 ## 本课涉及的 C++ 标准

@@ -3,7 +3,7 @@
 > 来源：[Google Drive《Zephyr C++20 关键实现原理》](https://docs.google.com/document/d/1T-KqZooKAnd82QNdLXVNrhyVKOUR9dM8MpLnerZZuMw/edit)，整理日期：2026-10-19。本文是学习摘要，具体 API 与 Kconfig 选项须以所用 Zephyr / ZPP 版本源码验证。
 
 ## 学习目标
-理解如何在无异常、受限堆内存的 RTOS 中利用 C++20 封装 C API，同时保留内存、线程和实时性可预测性。
+理解如何在无异常、受限堆内存的 RTOS 中利用 C++20 封装 C API，同时保留内存、线程与实时性的可预测性。
 
 ## 1. ZPP 的架构定位
 ZPP（[lowlander/zpp](https://github.com/lowlander/zpp)）是面向 Zephyr 的 C++ 包装层，不是新的 RTOS。重点是薄封装、静态资源、RAII、类型安全及 Lambda 线程入口。不要将其与教学用 zpp_lib 混淆。框架版本和 API 可能变化。
@@ -23,14 +23,20 @@ ZPP（[lowlander/zpp](https://github.com/lowlander/zpp)）是面向 Zephyr 的 C
 
 ```cpp
 // 纯 C++ 演示 RAII 思路，不是 ZPP API 示例
-template<class Mutex> class ScopedLock {
+template <class Mutex>
+class ScopedLock {
 public:
-    explicit ScopedLock(Mutex& m) noexcept : m_(m) { m_.lock(); }
-    ~ScopedLock() noexcept { m_.unlock(); }
-    ScopedLock(const ScopedLock&) = delete;
-    ScopedLock& operator=(const ScopedLock&) = delete;
+  explicit ScopedLock(Mutex& m) noexcept : m_(m) {
+    m_.lock();
+  }
+  ~ScopedLock() noexcept {
+    m_.unlock();
+  }
+  ScopedLock(const ScopedLock&) = delete;
+  ScopedLock& operator=(const ScopedLock&) = delete;
+
 private:
-    Mutex& m_;
+  Mutex& m_;
 };
 ```
 

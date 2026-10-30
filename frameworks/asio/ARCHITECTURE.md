@@ -755,6 +755,6 @@ sequenceDiagram
 
 ## 参考链接
 
-- [README.md](README.md) —— 本仓库代码树与模块功能说明
-- `doc/overview/` —— 概念性概览（异步模型、执行器、缓冲区等官方文档源）
-- `doc/net_ts.qbk` —— Networking TS 兼容性说明
+- [README.md](README.md)：本仓库代码树与模块功能说明
+- `doc/overview/`：概念性概览（异步模型、执行器、缓冲区等官方文档源）
+- `doc/net_ts.qbk`：Networking TS 兼容性说明

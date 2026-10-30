@@ -4,7 +4,7 @@ week: 5
 part: II
 chapter: 5
 chapter_title: Designing with Classes
-title: override, final and Safe Polymorphic Destruction
+title: "override、final 与安全的多态析构"
 duration: 60
 status: published
 date: 2026-09-27
@@ -109,7 +109,7 @@ class UartTransport final : public ITransport {
 
 它适合具体叶子实现，不应无差别使用。
 
-### virtual destructor
+### 虚析构函数（virtual destructor）
 
 当对象可能通过基类 owning handle 管理时：
 
@@ -190,7 +190,7 @@ virtual ~ITransport() = default;
 class UartTransport final : public ITransport {};
 ~~~
 
-这表达设计边界；性能收益不能靠猜测，仍需测量。
+这清晰表达了类的设计边界；至于性能收益，不能靠臆测，必须基于实际测量。
 
 ## ⑥ 可编译实验 / 练习（15 分钟）
 

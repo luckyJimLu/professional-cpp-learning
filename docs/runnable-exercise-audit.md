@@ -1,8 +1,8 @@
-# Runnable Exercise Audit
+# 可运行练习审计
 
 ## 结论
 
-当前仓库已经具备完整的 **主 Lab 可运行链路**，但尚未形成“每一道代码型修复题/挑战题都有独立 runnable source”的统一结构。
+当前仓库已具备完整的 **主 Lab 可运行链路**，但尚未形成“每道代码类修复题/挑战题均有独立可运行源码”的统一结构。
 
 本次结构审计覆盖 `examples/day-001` 至 `examples/day-052`：
 
@@ -24,9 +24,9 @@
 | 独立代码练习由 CI 运行 | ✅ 本次加入 |
 | 历史 Markdown 修复题全部迁移为独立 source | ⏳ 渐进迁移 |
 
-## Runnable Exercise Contract
+## 可运行练习契约
 
-从现在起，凡是要求学习者实际修改代码的练习，不应只存在于 Markdown fenced code block 中。
+凡要求学习者实际修改代码的练习，均不应仅保留在 Markdown 代码块中。
 
 推荐结构：
 
@@ -50,7 +50,7 @@ examples/day-053/
 7. Embedded 练习要把 timeout、capacity、ownership、lifetime、thread/ISR context 等约束显式化。
 8. 设计模式练习优先展示“保持简单 → 识别变化轴 → 建立稳定边界 → 必要时引入 Pattern”的演化过程，而不是强行套模式。
 
-## CI Contract
+## CI 契约
 
 `.github/workflows/web-build.yml` 会查找：
 

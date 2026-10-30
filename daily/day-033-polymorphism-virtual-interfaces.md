@@ -4,7 +4,7 @@ week: 5
 part: II
 chapter: 5
 chapter_title: Designing with Classes
-title: Polymorphism and Virtual Interfaces
+title: "多态与虚接口"
 duration: 60
 status: published
 
@@ -27,7 +27,7 @@ previous: 32
 next: 34
 ---
 
-# Day 33 · Polymorphism and Virtual Interfaces
+# Day 33 · 多态与虚接口
 
 <!-- cpp-standards:start -->
 ## 本课涉及的 C++ 标准

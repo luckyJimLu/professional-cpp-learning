@@ -8,7 +8,7 @@
 
 ## 在线学习平台
 
-- [Learning Console](https://luckyJimLu.github.io/professional-cpp-learning/)：课程、专题、Lab、代码搜索与学习复盘。
+- [学习控制台](https://luckyJimLu.github.io/professional-cpp-learning/)：课程、专题、Lab、代码搜索与学习复盘。
 - [RTOS 并发模拟器](https://luckyJimLu.github.io/professional-cpp-learning/rtos.html)：独立的调度与同步机制教学工作台。
 
 ## 当前进度
@@ -26,9 +26,9 @@
 - [Day 1–65 逐课导航与前置知识](docs/beginner-course-map.md)
 - [完整学习进度](progress.md)
 - [章节里程碑与 16 周顺序参考](docs/learning-plan.md)
-- [Runnable Exercise Audit & Contract](docs/runnable-exercise-audit.md)
+- [可运行练习审计与契约](docs/runnable-exercise-audit.md)
 - [C++ Design Patterns · 工程化专题](patterns/)
-- [Ownership & Smart Pointers](patterns/ownership-and-smart-pointers.md)
+- [所有权与智能指针](patterns/ownership-and-smart-pointers.md)
 - [Embedded C++ 编码规范索引](guidelines/embedded-cpp-guideline-notes.md)
 - [每日课程](daily/)
 - [周复盘](weekly/)
@@ -39,15 +39,15 @@
 
 核心原则：**先识别变化，再建立稳定边界；先设计 lifetime，再选择 pointer。**
 
-优先 value semantics / composition / 小接口；需要 runtime replacement 时才引入 virtual interface。Embedded 场景持续审计 heap、锁、blocking、callback、registration、flash/RAM 与 WCET 上界。
+优先使用值语义、组合和小接口，仅在需要运行时替换时才引入虚接口。嵌入式场景需持续审计堆内存、锁、阻塞调用、回调、注册机制、Flash/RAM 占用与 WCET 上界。
 
 ## 最近课程
 
-- [Day 65 · Optional Lifetime and Fixed-Pool Safety Boundaries](daily/day-065-optional-fixed-pool-lifetime-boundaries.md)
-- [Day 64 · Object Lifetime, Placement Construction and Fixed Storage Reuse](daily/day-064-object-lifetime-placement-construction-fixed-pool.md)
-- [Day 63 · PMR, Bounded Allocation and Memory-Resource Policy](daily/day-063-pmr-bounded-allocation-resource-policy.md)
-- [Day 62 · Smart Pointer Aliasing, Casts and Ownership API Boundaries](daily/day-062-smart-pointer-aliasing-casts-ownership-api.md)
-- [Day 61 · enable_shared_from_this · Async Callback Lifetime and Teardown](daily/day-061-enable-shared-from-this-callback-lifetime.md)
+- [Day 65 · optional 生命周期与固定池安全边界](daily/day-065-optional-fixed-pool-lifetime-boundaries.md)
+- [Day 64 · 对象生命周期、placement 构造与固定存储复用](daily/day-064-object-lifetime-placement-construction-fixed-pool.md)
+- [Day 63 · PMR、有界分配与内存资源策略](daily/day-063-pmr-bounded-allocation-resource-policy.md)
+- [Day 62 · 智能指针别名、类型转换与所有权 API 边界](daily/day-062-smart-pointer-aliasing-casts-ownership-api.md)
+- [Day 61 · enable_shared_from_this：异步回调生命周期与拆除](daily/day-061-enable-shared-from-this-callback-lifetime.md)
 
 ## 每日课程结构
 
@@ -64,7 +64,7 @@
 9. 3 个常见坑与 Pattern 滥用
 10. 2 道检查题 + 1 道设计题
 
-代码型“修复 / 重构 / 实现 / 调试”练习必须落成独立 `exercise-XX.cpp`，可以直接编译运行；纯知识问答和纯设计题不强制生成 source。CI 会编译并运行 `examples/day-*/*.cpp` 下的全部 standalone C++ 文件。
+代码类“修复/重构/实现/调试”练习须落地为独立的 `exercise-XX.cpp`，可直接编译运行；纯知识问答与设计题不强制生成源码。CI 会编译并运行 `examples/day-*/*.cpp` 下的全部独立 C++ 源文件。
 
 每 7 天安排工程化周复盘，并增加 Design Review：变化轴、稳定边界、Pattern 选择、ownership/lifetime 与 overengineering 检查。
 

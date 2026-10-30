@@ -65,7 +65,7 @@
   - Ch30 Testing
   - Ch31 Debugging
   - Ch32 Design Techniques / Frameworks ➔ *(推荐结合 [frameworks/asio/](../frameworks/asio/) 研读 Service Registry 模式与泛型架构设计)*
-  - Ch33 Design Patterns ➔ **专题预习：[C++ Design Patterns · 工程化学习指南](../patterns/README.md)**；重点模式：Strategy、Abstract Factory、Factory Method、Adapter、Proxy、Iterator、Observer、Decorator、Chain of Responsibility、Singleton；同时结合 [Ownership & Smart Pointers](../patterns/ownership-and-smart-pointers.md) 理解 C++ 特有的生命周期问题
+  - Ch33 Design Patterns ➔ **专题预习：[C++ Design Patterns · 工程化学习指南](../patterns/README.md)**；重点模式：Strategy、Abstract Factory、Factory Method、Adapter、Proxy、Iterator、Observer、Decorator、Chain of Responsibility、Singleton；同时结合 [所有权与智能指针](../patterns/ownership-and-smart-pointers.md) 理解 C++ 特有的生命周期问题
   - Ch34 Cross-Platform / Cross-Language Development
 
 ## 每日约 60 分钟结构
@@ -81,7 +81,7 @@
 9. 3 个常见坑与 Pattern 滥用
 10. 2 道检查题 + 1 道设计题
 
-### 第 8 节 Runnable Exercise Contract
+### 第 8 节 可运行练习契约
 
 主 Lab 必须落到 `examples/day-XXX/main.cpp`，完整、可独立编译并运行。
 
@@ -103,7 +103,7 @@ examples/day-XXX/
 - 纯知识问答和纯架构设计题不强制生成额外 source；
 - Embedded 练习必须显式说明 ownership/lifetime、timeout、capacity、thread/ISR context 等边界。
 
-完整规范见 [Runnable Exercise Audit & Contract](runnable-exercise-audit.md)。
+完整规范见 [可运行练习审计与契约](runnable-exercise-audit.md)。
 
 ## 每 7 天复盘
 

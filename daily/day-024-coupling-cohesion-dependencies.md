@@ -37,7 +37,7 @@ next: 25
 
 ### 新手起步：先知道今天在解决什么
 
-把每个模块会因何变化写下来。协议变化和串口寄存器变化若总要改同一个文件，通常说明职责混在一起。
+在设计时，尝试列出每个模块可能发生变更的原因。如果通讯协议变更与串口寄存器修改总是需要调整同一个文件，通常意味着该模块混杂了不相关的职责。
 
 **前置检查：** 先能解释 [Day 19](day-019-requirements-architecture-boundaries.md)、[Day 22](day-022-abstraction-stable-interface.md)、[Day 23](day-023-reuse-stdlib-third-party-own.md) 的核心例子；不必先掌握整本教材。
 

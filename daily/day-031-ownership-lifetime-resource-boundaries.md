@@ -4,7 +4,7 @@ week: 5
 part: II
 chapter: 5
 chapter_title: Designing with Classes
-title: Object Ownership, Lifetime and Resource Boundaries
+title: "对象所有权、生命周期与资源边界"
 duration: 60
 status: published
 
@@ -24,7 +24,7 @@ previous: 30
 next: 32
 ---
 
-# Day 31 · 对象所有权、生命周期与资源管理边界
+# Day 31 · 对象所有权、生命周期与资源边界
 
 <!-- cpp-standards:start -->
 ## 本课涉及的 C++ 标准
@@ -87,11 +87,11 @@ next: 32
 
 先尝试口头预测，再到第⑥节运行。下面原有概念、图示与接口对照用于解释这些步骤，短代码片段不一定能单独编译；完整程序以本课 `main.cpp` 为准。
 
-### Ownership
+### 所有权（Ownership）
 
 负责资源生命周期结束的对象才是 owner。
 
-### Borrowing
+### 借用（Borrowing）
 
 借用对象不负责销毁资源，要求被借用对象活得更久。
 

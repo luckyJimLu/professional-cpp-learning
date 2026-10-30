@@ -98,7 +98,7 @@ flowchart TD
     SINGLE_TASK
 ```
 
-## 5. Bootstrap
+## 5. 引导启动（Bootstrap）
 
 源材料区分两类引导方式：
 
@@ -186,7 +186,7 @@ flowchart LR
 
 适合系统状态变化、传感器事件、多模块联动等场景。
 
-### 6.4 LiteOS-A IPC Proxy
+### 6.4 LiteOS-A IPC 代理
 
 跨进程时，本地 `IUnknown` 函数指针模型扩展为 `IClientProxy / IServerProxy`，通过 `IpcIo` 序列化参数并由服务端 `Invoke()` 分发。
 

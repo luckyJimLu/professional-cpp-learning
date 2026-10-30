@@ -4,7 +4,7 @@ week: 1
 part: I
 chapter: 2
 chapter_title: Professional C++ Basics
-title: Week 1 Review - Modem Control Module
+title: "第 1 周复盘：Modem 控制模块"
 duration: 60
 status: published
 
@@ -25,7 +25,7 @@ previous: 6
 next: 8
 ---
 
-# Day 07 · 第一周复盘：Modem 控制模块
+# Day 07 · 第 1 周复盘：Modem 控制模块
 
 <!-- cpp-standards:start -->
 ## 本课涉及的 C++ 标准

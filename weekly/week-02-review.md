@@ -1,4 +1,4 @@
-# Week 02 Review · Day 8–14
+# 第 02 周复盘 · Day 8–14
 
 重点：string/string_view、文本生命周期、格式化、raw string、Coding with Style、头文件与依赖边界。
 

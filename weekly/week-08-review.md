@@ -1,8 +1,8 @@
-# Week 08 Review · Reuse Boundaries → Memory Ownership
+# 第 08 周复盘 · 复用边界 → 内存所有权
 
 覆盖 Day 50–56。目标不是复述语法，而是检查“稳定边界”和“生命周期边界”是否同时成立。
 
-## Code Review
+## 代码评审
 
 逐项检查：
 
@@ -15,7 +15,7 @@
 - magic number 是否进入类型/常量；容量、timeout、单位是否可见。
 - empty / max / max+1 / timeout / teardown 等边界是否覆盖。
 
-## Design Review
+## 设计评审
 
 按以下链路审查一个 Modem RX 组件：
 
@@ -38,7 +38,7 @@
 5. runtime registration 必须有容量上界，优先限制在初始化阶段。
 6. callback 必须规定执行线程、unsubscribe/cancel 和 owner 销毁顺序。
 
-## Runnable Design Refactor Exercise
+## 可运行的设计重构练习
 
 文件：`examples/day-056/exercise-02.cpp`
 
@@ -67,4 +67,4 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-056/exercise-0
 
 ## 本周结论
 
-> 稳定 API 只是第一层边界；真正工程可用的组件还必须让 owner、borrow、teardown、allocation、timeout 与 WCET 同样稳定且可见。
+> 稳定 API 仅是第一层边界。工程可用的组件还需确保所有权、借用、拆除、内存分配、超时与 WCET 同样稳定透明。

@@ -1,4 +1,4 @@
-# Week 06 Review · Class Relationships → Designing for Reuse
+# 第 06 周复盘 · 类关系 → 面向复用设计
 
 覆盖 **Day 36–42**。
 
@@ -14,7 +14,7 @@
 - Day 41：Reuse Starts with Stable Contracts
 - Day 42：Use Abstraction
 
-核心转变：**不要先问“C++ 能不能这样继承/复用”，先问“这个关系和 contract 是否真实、稳定、可被调用者理解”。**
+核心转变：**设计时无需先考虑 C++ 能否这样继承，先确认该关系与契约（contract）是否真实、稳定且可被调用方理解。**
 
 ## 复盘 8 问
 
@@ -27,7 +27,7 @@
 7. abstraction leakage 在 Driver/RTOS/Linux 边界上通常长什么样？
 8. 为什么 abstraction 不等于 virtual interface？
 
-## Code Review 检查
+## 代码评审检查
 
 ### 头文件依赖
 
@@ -64,13 +64,13 @@
 - [ ] 阻塞 API 显式 timeout
 - [ ] 错误没有被随意压缩成 bool
 
-### ISR / volatile
+### ISR 与 volatile
 
 - [ ] ISR 保持最小
 - [ ] `volatile` 仅表达 MMIO/特定可见性需求，不充当线程同步
 - [ ] 共享状态有明确同步策略
 
-### Magic number
+### 魔法数字
 
 - [ ] timeout、baudrate、buffer size 等有命名或强类型单位
 - [ ] HAL 常量没有泄漏到 reusable contract

@@ -1,23 +1,23 @@
-# Impeccable UI refinement — 2026-10-27
+# Impeccable UI 精修 — 2026-10-27
 
-## Scope and decisions
+## 范围与决策
 
-The existing light engineering handbook remains the visual direction: blue navigation, neutral reading surfaces, and dark technical workspaces. PRODUCT.md records the audience and evidence-based learning semantics; DESIGN.md owns visual decisions; UX-CONTRACT.md owns interaction behavior. Impeccable 4.8.0 is installed locally for OpenCode and Codex. See [integration and usage](impeccable.md). Hooks and telemetry are disabled; no global skills or trust settings are changed.
+现有浅色工程手册风格仍是视觉方向：蓝色导航、中性阅读底色、深色技术工作区。PRODUCT.md 记录受众与基于证据的学习语义；DESIGN.md 负责视觉决策；UX-CONTRACT.md 负责交互行为。Impeccable 4.8.0 已本地安装给 OpenCode 与 Codex，用法见[集成与用法](impeccable.md)。hook 与遥测已关闭；未改动任何全局 skill 或信任设置。
 
-Shared typography, spacing, control geometry, focus and scrollbars now use the application token owner in styles.css. Navigation and content cards have quieter borders and fewer decorative labels. Reading columns are bounded, and long C++ identifiers wrap on narrow screens. Code and simulation workspaces retain their technical contrast and semantic colors. Source teaching decks and their canvas styling remain intact.
+共享的字体、间距、控件几何、焦点与滚动条，现在统一由 styles.css 中的应用 token 管理。导航与内容卡片的边框更安静，装饰性标签更少。阅读列宽有界，较长的 C++ 标识符在窄屏自动换行。代码与仿真工作区保留技术对比度与语义色。课件源文件及其画布样式保持不变。
 
-Slides now use shared SVG icons, keyboard-operable tabs, native thumbnail buttons, recoverable filtering, course-specific Slidev commands, bounded URL parameters and readable fullscreen failure messages. Mobile selectors and controls fit their available width. The lab starts with its task disclosure collapsed so its editor is immediately reachable; task content remains available.
+课件现在使用共享 SVG 图标、可键盘操作的标签页、原生缩略图按钮、可恢复的筛选、按课程区分的 Slidev 命令、有界的 URL 参数和可读的全屏失败提示。移动端选择器与控件适配可用宽度。实验区默认折叠任务说明，编辑器因此可以立即触达；任务内容仍然可查。
 
-## Verification
+## 验证
 
-- Application TypeScript/Vite build and GitHub Pages build passed. Existing large-chunk advisory remains.
-- Browser regression run: 66 of 70 passed initially; two stale test assumptions, narrow-screen title overflow, and one request interrupted by rebuilding were addressed. The affected suite was rerun: all 17 passed, covering the remaining four cases and neighboring behavior.
-- New design-system tests cover 320/390/768/1440 widths, tab keyboard behavior, filtering recovery, command selection, fullscreen rejection and malformed URL parameters.
-- Eleven routes at five viewport sizes (320, 390, 768, 800 landscape, 1440): no document overflow or JavaScript runtime errors.
-- All three teaching decks passed strict slide validation; all 15 slide-skill regression tests passed.
-- DESIGN.md official lint: zero errors and warnings. Premium strict audit: zero findings. Vendor distributions match the pinned upstream copies, with only an added upstream LICENSE in each copy.
-- One manual Impeccable source scan was run. Its original output is retained: 14 primary findings and 967 advisory findings. Seven application accent-border findings were corrected; seven teaching-canvas callout findings were retained under the explicit source-content exception. Broader syntax/teaching/simulation palettes and compact technical labels account for advisory findings; this scan is not claimed to be clean. No blanket detector ignores were introduced.
+- 应用 TypeScript/Vite 构建与 GitHub Pages 构建通过；既有的大 chunk 提示仍然存在。
+- 浏览器回归：首轮 70 项中 66 项通过；已修复两个过时的测试假设、窄屏标题溢出，以及一次因重新构建而中断的请求。重跑受影响套件后全部 17 项通过，覆盖其余四个用例及相邻行为。
+- 新增设计系统测试覆盖 320/390/768/1440 宽度、标签页键盘行为、筛选恢复、命令选择、全屏拒绝与畸形 URL 参数。
+- 五个视口宽度（320、390、768、800 横屏、1440）下的 11 条路由：没有页面级横向溢出，也没有 JavaScript 运行时错误。
+- 三套教学课件全部通过严格课件校验；15 项 slide-skill 回归测试全部通过。
+- DESIGN.md 官方 lint：零错误、零警告。Premium 严格审计：零发现。供应商发行版与锁定的上游副本一致，仅各自增加了一份上游 LICENSE。
+- 手动运行过一次 Impeccable 源码扫描，原始输出保留：14 项主要发现、967 项提示性发现。已修正 7 处应用强调色边框问题；7 处教学画布 callout 问题依据“源内容例外”保留。更广泛的语法／教学／仿真配色与紧凑技术标签解释了其余提示性发现；本次扫描不声称已完全干净，也未引入一刀切的检测器忽略规则。
 
-Review artifacts are under `/workspace/artifacts/ui-impeccable/`: before/after screenshots, desktop contact sheet, viewport checks, Pages smoke checks, detector output/review, and the premium audit. These are review artifacts, not deployed application assets.
+评审产物位于 `/workspace/artifacts/ui-impeccable/`：前后对比截图、桌面总览图、视口检查、Pages 冒烟检查、检测器输出与评审、premium 审计。这些是评审产物，不是已部署的应用资源。
 
-Existing lesson 3 work was preserved and is included alongside this UI refinement. Deployment is managed separately from this implementation.
+此前的第 3 课工作已保留，并与本轮 UI 精修一并存在。部署与本次实现分开管理。

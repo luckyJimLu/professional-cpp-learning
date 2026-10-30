@@ -100,7 +100,7 @@ next: 52
 Send(data, size, timeout, retry, priority, trace, async, raw_mode);
 ```
 
-这会把所有变化压到一个入口，产生 parameter blindness、非法组合和难以界定的 WCET。
+这会把所有变化压缩到一个入口，产生参数含义混淆（parameter blindness）、非法状态组合以及难以界定的 WCET。
 
 更好的设计先区分 **mechanism** 与 **policy**：
 
@@ -166,7 +166,7 @@ template <typename RetryPolicy>
 class Sender;
 ```
 
-这避免 runtime ownership 与 virtual dispatch，但要审计 template 实例化数量和 flash。
+这避免了运行期所有权管理与虚函数派发，但需要审计模板实例化的数量和 flash 占用。
 
 ### 为什么今天不需要 Factory / Observer？
 

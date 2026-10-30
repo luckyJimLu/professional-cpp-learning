@@ -102,7 +102,7 @@ Prototype 是风险消除工具
 int modem_send(void* ctx, const char* data, int len, int timeout, int retry);
 ```
 
-ctx 生命周期、len 合法范围、timeout 单位和 retry 语义都不清楚。
+ctx 的生命周期、len 的合法范围、timeout 的时间单位以及 retry 语义均不明确。
 
 ```cpp
 enum class Status { kOk, kTimeout, kIoError, kInvalidArgument };
@@ -217,7 +217,7 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-025/main.cpp -
 
 - 把函数签名误认为完整接口契约。
 
-- prototype 未经清理逐渐变成 production code。
+- 原型未经清理直接演变成生产代码。
 
 - 没有 benchmark/WCET 证据就提前采用复杂对象池、手写容器或 lock-free。
 

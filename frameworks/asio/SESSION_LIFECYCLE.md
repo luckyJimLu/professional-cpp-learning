@@ -30,7 +30,7 @@ sequenceDiagram
     Ctx->>StackSession: handler(ec, len) 调用 ❌<br/>use-after-free：访问已析构的 this
 ```
 
-**结论**：异步操作挂起期间，必须有一个"活着的所有者"持有上下文 —— 这就是 `std::shared_ptr` 的职责。
+**结论**：异步操作挂起期间，必须有一个"活着的所有者"持有上下文：这就是 `std::shared_ptr` 的职责。
 
 ---
 
@@ -153,7 +153,7 @@ sequenceDiagram
 - `connection` 继承 `enable_shared_from_this`，**禁止拷贝**（connection.hpp:32-33）；
 - 定义 `typedef std::shared_ptr<connection> connection_ptr;`（connection.hpp:74）；
 - `connection_manager` 持有 `std::set<connection_ptr> connections_;`（connection_manager.hpp:42），提供 `start/stop/stop_all`；
-- 错误路径主动归还所有权：`do_read`/`do_write` 失败时调用 `connection_manager_.stop(shared_from_this())`（connection.cpp:66、:87），且显式**过滤 `operation_aborted`**（connection.cpp:64、:85）—— 服务器主动关闭触发的取消不视为错误；
+- 错误路径主动归还所有权：`do_read`/`do_write` 失败时调用 `connection_manager_.stop(shared_from_this())`（connection.cpp:66、:87），且显式**过滤 `operation_aborted`**（connection.cpp:64、:85），服务器主动关闭触发的取消不视为错误；
 - 成功路径优雅关闭：`do_write` 完成后 `socket_.shutdown(shutdown_both, ignored_ec)`（connection.cpp:81）再 `stop()`；
 - `stop()` 本身只是 `socket_.close()`（connection.cpp:32-35）→ 使挂起的异步操作以 `operation_aborted` 完成。
 
@@ -166,9 +166,9 @@ sequenceDiagram
 - 抽象接口 `chat_participant` + `typedef std::shared_ptr<chat_participant> chat_participant_ptr;`（:29-36）；
 - `chat_room` 持有 `std::set<chat_participant_ptr> participants_;`（:66），`join()`（:43）/ `leave()`（:50）/ `deliver()`（:55）多播消息；
 - `chat_session` 双继承：`chat_participant`（多态接口）+ `enable_shared_from_this<chat_session>`（生命周期）（:73-75）；
-- `start()` 先 `room_.join(shared_from_this())`（:86）—— **room 立即持有一份引用**，session 的存活不再仅依赖未完成操作；
+- `start()` 先 `room_.join(shared_from_this())`（:86），**room 立即持有一份引用**，session 的存活不再仅依赖未完成操作；
 - 三处错误路径都以 `room_.leave(shared_from_this())`（:114、:133、:156）从容器移除 → 计数归零 → 析构；
-- `deliver()` 用 `write_in_progress` 判断（:92-97）：写队列非空只入队，避免并发写同一 socket —— 这是"每会话写队列"的惯用法。
+- `deliver()` 用 `write_in_progress` 判断（:92-97）：写队列非空只入队，避免并发写同一 socket，这是"每会话写队列"的惯用法。
 
 **适用**：会话间协作（聊天室、广播）、会话被容器与其他组件共同持有。
 
@@ -206,7 +206,7 @@ class executor_op : public Operation  // :30-32 操作对象基类
 |---|---|---|
 | 操作对象基类 | `detail/scheduler_operation.hpp:33` | `scheduler_operation` 用函数指针 `func_(owner, this, ec, bytes)` 派发，**非虚函数**（避免开销） |
 | 所有权语义 | `scheduler_operation.hpp:42-49` | `complete()`（`owner != 0`）= "接管并回调"；`destroy()`（`owner == 0`）= "仅销毁"；基类析构为 protected（防止经基类删除） |
-| handler 内存管理 | `executor_op.hpp:63-64` | 回调**之前**先把 handler 移到栈上、再释放操作对象内存 —— 保证 handler（及其捕获的 session shared_ptr）在整个 upcall 期间存活 |
+| handler 内存管理 | `executor_op.hpp:63-64` | 回调**之前**先把 handler 移到栈上、再释放操作对象内存，保证 handler（及其捕获的 session shared_ptr）在整个 upcall 期间存活 |
 | 平台统一 | `detail/operation.hpp:25-31` | 非_IOCP 平台 `operation = scheduler_operation`；IOCP 平台 `operation = win_iocp_operation`，语义相同 |
 
 **层次对照**：库层面用**所有权转移**（`owner` 参数语义，操作对象独占 handler 内存直到回调）；应用层用 **shared_ptr 引用计数**（多个未完成操作共享 session）。两层正交组合，构成完整的生命周期保障。
@@ -232,8 +232,8 @@ class executor_op : public Operation  // :30-32 操作对象基类
 
 要点：
 
-- 计数在"**跨操作边界**"时降到 1（仅挂起操作的 lambda 持有），而不是 0 —— 这正是生命周期绑定；
-- `self` 局部副本在成员函数返回时立即释放，不会累积 —— 每跳只增加"在飞"的计数；
+- 计数在"**跨操作边界**"时降到 1（仅挂起操作的 lambda 持有），而不是 0，这正是生命周期绑定；
+- `self` 局部副本在成员函数返回时立即释放，不会累积，每跳只增加"在飞"的计数；
 - 析构发生在**最后一个 handler 返回时**（库回调栈帧内），不发生在 `io_context` 之外。
 
 ---
@@ -455,11 +455,11 @@ sequenceDiagram
 1. `server::do_accept()`（async_tcp_echo_server.cpp:75）调用 `acceptor_.async_accept(...)`；
 2. 库内：`async_initiate(initiate_async_accept{}, token)` → `basic_socket_acceptor` 的服务创建 accept 操作对象，`epoll_ctl` 注册监听 fd 可读事件；
 3. 客户端连接到达 → `epoll_wait` 返回 → 操作完成 → accept 回调执行，得到新 `tcp::socket`；
-4. 应用：`std::make_shared<session>(std::move(socket))->start()`（:82）—— socket **移动**进 session（heap 分配 1 次）。
+4. 应用：`std::make_shared<session>(std::move(socket))->start()`（:82），socket **移动**进 session（heap 分配 1 次）。
 
 **阶段二：读操作挂起（生命周期绑定点）**
 
-5. `session::do_read()`（:34）：`auto self(shared_from_this())` —— 从弱引用 `_M_weak_this` 升级出强引用；
+5. `session::do_read()`（:34）：`auto self(shared_from_this())`，从弱引用 `_M_weak_this` 升级出强引用；
 6. `socket_.async_read_some(buffer(data_, max_length), [this, self]{...})`（:37）；
 7. 库内：`async_result::initiate` 用 token（lambda）生成真实 handler → 服务创建 `reactive_socket_recv_op`（内含 executor_op，**持有 lambda 副本**）→ `epoll_ctl(ADD)` 注册读事件；
 8. `do_read` 返回 → 栈上 `self` 析构；`start` 返回 → 临时 shared_ptr 析构。此刻 **use_count == 1，唯一持有者是存于操作对象内的 lambda**。只要读操作挂起，session 必然存活。
@@ -470,7 +470,7 @@ sequenceDiagram
 10. reactor 标记 `reactive_socket_recv_op` 完成（`perform()` 执行 `::recv` 搬运数据）→ 操作入任务队列；
 11. `scheduler` 调 `op->complete(owner, ec, bytes)` → `executor_op::do_complete`（executor_op.hpp:45）：
     - 把 handler（lambda，内含 self 副本）**移到栈上**（:63）；
-    - `p.reset()` 释放操作对象内存（:64）—— 在调用用户代码**之前**完成，避免 upcall 中再次分配；
+    - `p.reset()` 释放操作对象内存（:64），在调用用户代码**之前**完成，避免 upcall 中再次分配；
     - 调用 lambda（:71）。**此刻 session 由栈上 handler 持有（count==1），回调期间绝对安全。**
 
 **阶段四：回环续接与最终析构**

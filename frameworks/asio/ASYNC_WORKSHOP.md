@@ -57,4 +57,4 @@ python3 tools/check-asio-echo.py --bin-dir build/asio
 
 ## 验收记录
 
-正常路径烟测由脚本执行；第 2–4 节是待学习者实现与运行的扩展实验，不能因读完本页标为通过。记录 OS、编译器、Asio revision、配置、输入序列、实际日志和未覆盖竞争顺序。使用 [五项评审](../../guidelines/review-rubric.md) 检查是否存在重复完成、悬挂访问或无界等待。
+正常路径烟测由脚本执行；第 2-4 节是待学习者实现与运行的扩展实验，不能因读完本页标为通过。记录 OS、编译器、Asio revision、配置、输入序列、实际日志和未覆盖竞争顺序。使用 [五项评审](../../guidelines/review-rubric.md) 检查是否存在重复完成、悬挂访问或无界等待。

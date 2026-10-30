@@ -4,7 +4,7 @@ week: 7
 part: II
 chapter: 6
 chapter_title: Designing for Reuse
-title: Avoid Combining Unrelated or Logically Separate Concepts
+title: "避免合并不相关或逻辑独立的概念"
 status: published
 date: 2026-10-10
 duration: 60
@@ -18,7 +18,7 @@ guidelines:
   - explicit-contract
 ---
 
-# Day 44 · Avoid Combining Unrelated or Logically Separate Concepts：不要把无关职责绑在一起
+# Day 44 · 避免合并不相关或逻辑独立的概念
 
 <!-- cpp-standards:start -->
 ## 本课涉及的 C++ 标准

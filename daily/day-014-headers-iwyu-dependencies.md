@@ -127,7 +127,7 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-014/main.cpp -
 
 ## ⑦ 常见坑 · 3 分钟
 
-用 include guard 修复链接重复定义；靠间接 include 编译成功；按值成员只有前置声明却没有完整类型。
+误用 include guard 解决链接阶段的符号重复定义；依赖间接包含侥幸通过编译；按值成员仅有前置声明而缺少完整类型定义。
 
 ## ⑧ 自测 · 4 分钟
 

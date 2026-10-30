@@ -268,9 +268,9 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-019/main.cpp -
 
 ## ⑦ 3 个常见坑（5 分钟）
 
-- 设计阶段立即制造大量 class，却没有识别变化轴。
+- 在设计初期盲目拆分大量类，却没有真正识别变化轴。
 
-- 建立巨大的 IPlatform，把几十个无关能力塞进一个接口。
+- 构建过于庞大的 `IPlatform` 接口，将无关功能强行组合。
 
 - 为了“解耦”到处使用 shared_ptr，导致生命周期与所有权反而更模糊。
 

@@ -75,7 +75,7 @@ stateDiagram-v2
 
 ## ④ C 写法 vs Modern C++ · 8 分钟
 
-将分散的 ready 标志、busy 标志和整数码改为 enum class 状态与具名事件，避免表达多个互相矛盾的状态组合。
+将分散的 ready 标志、busy 标志和整数状态码改为 enum class 状态与具名事件，避免出现互相矛盾的状态组合。
 
 ## ⑤ 今日编码规范 · 8 分钟
 

@@ -212,7 +212,7 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-006/main.cpp -
 
 ## ⑦ 3 个常见坑 · 5分钟
 
-- enum class 后又到处转成 int，主动绕开类型安全。
+- 使用 enum class 后又到处强转成 int，主动放弃类型安全。
 
 - switch 用 default 隐藏新增状态遗漏。
 

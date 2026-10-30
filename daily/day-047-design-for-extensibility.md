@@ -54,7 +54,7 @@ next: 48
 
 继续 Chapter 6 · **Designing for Reuse**，沿教材顺序进入 **Design for Extensibility**。
 
-今天的目标不是“把所有东西都设计成插件”，而是识别**真正可能变化的轴**，为这些变化建立稳定 customization point，使新增行为尽量通过扩展完成，而不是不断修改已经验证过的核心代码。
+今天的目标不是“把所有东西都设计成插件”，而是识别**真正可能变化的轴**，为这些变化建立稳定的扩展点（customization point），用扩展来完成新增行为，而不是不断修改已经验证过的核心代码。
 
 建议阅读时重点关注：
 
@@ -362,7 +362,7 @@ bool Recover(int modem_type) {
 
 **答案要点：**
 
-- OCP 描述的是设计目标，不规定实现技术；编译期变化可以用 template/concept，轻量行为可以用 callable，独立 runtime implementation 才更适合 virtual interface；
+- OCP 描述的是设计目标，不规定实现技术。编译期变化可以用 template/concept，轻量行为可以用 callable，独立的运行期实现才更适合虚接口；
 - 启动期确定依赖能让对象数量、ownership、内存、初始化顺序和 WCET 更容易审计，减少实时路径动态分配与生命周期不确定性。
 
 ---

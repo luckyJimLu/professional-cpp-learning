@@ -4,7 +4,7 @@ week: 5
 part: II
 chapter: 5
 chapter_title: Designing with Classes
-title: Object Slicing, Dynamic Type and Lifetime Boundaries
+title: "对象切片、动态类型与生命周期边界"
 duration: 60
 status: published
 date: 2026-09-28
@@ -25,7 +25,7 @@ previous: 34
 next: 36
 ---
 
-# Day 35 · Object Slicing、Dynamic Type 与多态对象生命周期边界
+# Day 35 · 对象切片、动态类型与生命周期边界
 
 <!-- cpp-standards:start -->
 ## 本课涉及的 C++ 标准
@@ -65,7 +65,7 @@ next: 36
 
 Day 33 学了运行时多态，Day 34 学了 `override / final` 与安全析构。今天进一步解决一个常见但隐蔽的问题：
 
-> 为什么把派生对象“按值”传给基类会丢失动态类型信息，以及为什么多态对象通常应该通过 reference / pointer 使用，而不是复制基类值。
+> 为什么将派生类对象按值传递给基类参数会丢失动态类型信息，以及为何多态对象通常应通过引用或指针操作，而非按值复制。
 
 重点理解：
 
@@ -147,7 +147,7 @@ Status SendCommand(ITransport* transport) {
 
 ---
 
-### 3. Object slicing
+### 3. 对象切片（Object slicing）
 
 错误示例：
 
@@ -168,7 +168,7 @@ UseTransport(uart);
 
 工程上最危险的地方不是“少复制了一些字段”，而是：
 
-> 代码看起来仍然像在使用多态类型，但动态类型已经丢失。
+> 代码表面上仍在调用多态接口，但实际的动态类型信息已经丢失。
 
 ---
 

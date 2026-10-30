@@ -206,9 +206,9 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-010/main.cpp -
 
 ## ⑦ 3 个常见坑 · 5分钟
 
-- view 指向临时 string，随后悬空。
+- 视图指向临时 `std::string`，导致后置悬空。
 
-- 把 view.data() 当 NUL-terminated 字符串。
+- 把 `view.data()` 当作 NUL 结尾的 C 字符串。
 
 - from_chars 只检查 ec，不检查 ptr == end，错误接受尾部垃圾。
 

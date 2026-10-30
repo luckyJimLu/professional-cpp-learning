@@ -39,40 +39,40 @@
 - 避免可写全局状态
 - 明确 `nullptr` 语义
 - 避免多个 `bool` 参数
-- reusable abstraction 的公共接口不得泄漏 HAL handle、DMA channel、RTOS object、Linux fd 等平台实现细节，除非它们就是该 abstraction 的业务语义。
-- abstraction 不等于必须使用 virtual；根据变化时机选择 runtime interface、template/concept 或 composition。
-- required dependency 若不拥有且不允许为空，优先引用；不要用 nullable pointer 制造虚假状态。
-- buffer、timeout、长度、频率等边界优先使用 `std::span`、`std::chrono` 或明确单位类型表达。
-- reusable component 不强制携带与其核心概念无关的 logger、storage、retry 或 platform dependency。
-- policy、mechanism、observation 若具有独立变化原因，应拆成可组合组件；上层负责 orchestration。
-- 解耦不能以隐藏 ownership、service locator 或无界运行时注册为代价，尤其是实时路径。
+- 可复用抽象的公共接口不得泄漏 HAL 句柄、DMA 通道、RTOS 对象、Linux 文件描述符等平台实现细节，除非它们就是该抽象的业务语义。
+- 使用抽象不等于必须使用虚接口。根据变化发生的时机，选择运行时接口、模板/概念或组合。
+- 对于非所有且不允许为空的必需依赖，优先使用引用；不要用可空指针制造虚假状态。
+- 缓冲区、超时、长度、频率等边界优先使用 `std::span`、`std::chrono` 或明确单位类型表达。
+- 可复用组件不强制携带与其核心概念无关的日志、存储、重试或平台依赖。
+- 策略、机制与观察点若具有独立的变化原因，应拆成可组合组件，由上层负责编排。
+- 解耦不能以隐藏所有权、服务定位器或无界运行时注册为代价，尤其是实时路径。
 
 ### SOLID 与 Embedded 边界
 
-- SRP 用于隔离真实变化原因，不等于每个函数建立一个类；transport、protocol、diagnostics、storage 只有在变化原因独立时才拆分。
-- OCP 只为已识别扩展点建立稳定 contract，不为假想未来提前设计万能插件系统。
-- LSP 要求 Fake/Mock 与 production implementation 保持相同 contract，包括 timeout、错误语义、容量和线程上下文约束。
-- ISP 按 caller purpose 设计小接口；避免 application 被迫依赖 reset、diagnostics、factory-test 等无关能力，也避免过度拆成单函数接口。
-- DIP 要求 required dependency 显式注入；禁止用 service locator、可写全局对象或 `shared_ptr` 掩盖 ownership 与初始化顺序。
-- SOLID 不等于 runtime polymorphism；固定固件配置应同时评估 composition、template/concept 与 virtual interface 的 flash、WCET、测试性和生命周期成本。
+- 单一职责原则用于隔离真实变化原因，不等于每个函数建立一个类。传输、协议、诊断、存储仅在变化原因独立时才拆分。
+- 开闭原则只为已识别扩展点建立稳定契约，不为假想未来提前设计万能插件系统。
+- 里氏替换原则要求 Fake/Mock 与生产实现保持相同契约，包括超时、错误语义、容量和线程上下文约束。
+- 接口隔离原则按调用方意图设计小接口；避免应用层被迫依赖复位、诊断、出厂测试等无关能力，也避免过度拆成单函数接口。
+- 依赖倒置原则要求显式注入必需依赖；禁止用服务定位器、可写全局对象或 `shared_ptr` 掩盖所有权与初始化顺序。
+- SOLID 不等于运行时多态；固定固件配置应同时评估组合、模板/概念与虚接口在 Flash、WCET、可测试性和生命周期上的成本。
 
-### Usable Interfaces
+### 可用接口（Usable Interfaces）
 
-- 公共 API 应让正确用法自然、错误用法困难；不要把关键 contract 留在注释、magic value 或调用顺序约定中。
+- 公共 API 应让正确用法自然、错误用法困难；不要把关键契约留在注释、魔数或调用顺序约定中。
 - 时间、长度、频率等物理单位优先编码进类型；例如 `std::chrono::milliseconds` 优于无单位整数。
-- buffer 参数优先同时携带地址与边界，例如 `std::span`；避免可分离的裸 pointer + length。
-- 多个同基础类型的位置参数容易产生 parameter blindness；优先 `enum class`、config/options 类型或强类型包装。
-- reusable interface 不泄漏与业务语义无关的 HAL handle、RTOS object、Linux fd 或 DMA channel；平台细节留在 adapter 内。
-- 错误模型应保留调用者做恢复决策所需的原因；不要把 timeout、busy、invalid input、transport failure 全部压缩成 `bool` 或 `-1`。
-- required borrow 优先引用；optional borrow 才使用具有明确 `nullptr` 语义的裸指针。
+- 缓冲区参数优先同时携带地址与边界，例如 `std::span`；避免可分离的裸指针与长度组合。
+- 多个相同基础类型的位置参数容易导致参数语义混淆；优先使用 `enum class`、配置类型或强类型包装。
+- 可复用接口不泄漏与业务语义无关的 HAL 句柄、RTOS 对象、Linux 文件描述符或 DMA 通道；平台细节留在适配器内部。
+- 错误模型应保留调用者做恢复决策所需的原因；不要把超时、忙碌、无效输入、传输失败全部压缩成 `bool` 或 `-1`。
+- 必需借用优先使用引用；可选借用才使用具有明确 `nullptr` 语义的裸指针。
 
-### Easy-to-Use Interfaces
+### 易用接口（Easy-to-Use Interfaces）
 
-- MUST 遵循熟悉的 C++ 生命周期习惯：资源优先 RAII；不要要求调用者手工配对 `Initialize()` / `Cleanup()`。若初始化可能失败且项目禁异常，使用显式 factory/result，而不是半初始化对象。
-- SHOULD 让 common case 具有短而安全的调用路径；高级、低频选项使用强类型 `Options` / `Config`，不要把大量 primitive/bool 参数堆进主入口。
-- SHOULD 对真实复杂子系统使用小 Facade 降低调用者认知负担，但 Facade 不得复制全部底层能力，也不得隐藏无界 blocking、retry、allocation 或 WCET。
-- MUST 把单位、buffer 边界、状态和 ownership 尽量放进类型；线程安全、callback 上下文、timeout 计算范围、复杂度和 lifetime 等类型无法完整表达的 contract 必须文档化。
-- 不为简单对象机械增加 Facade/Factory/Manager 层；Pattern 必须对应真实变化轴或复杂度边界。
+- 必须遵循熟悉的 C++ 生命周期惯例：资源优先使用 RAII，不要要求调用者手工配对 `Initialize()` / `Cleanup()`。若初始化可能失败且项目禁用异常，使用显式工厂/结果类型，而不是半初始化对象。
+- 宜让常用场景具有短而安全的调用路径；高级与低频选项使用强类型 `Options` / `Config`，避免将大量基础类型和布尔参数堆进主入口。
+- 宜对真实复杂子系统使用精简门面（Facade）降低调用者认知负担，但门面不得复制全部底层能力，也不得隐藏无界阻塞、重试、动态分配或 WCET。
+- 必须将单位、缓冲区边界、状态和所有权尽量放入类型中；对线程安全、回调上下文、超时计算范围、复杂度与生命周期等类型无法完整表达的契约，必须在文档中明确说明。
+- 不为简单对象机械增加 Facade/Factory/Manager 层；模式必须对应真实变化轴或复杂度边界。
 
 ### Audience 与 Purpose
 
@@ -83,7 +83,7 @@
 - Adapter 用于隔离真实的平台/第三方接口差异；如果没有实际变化轴，不为“未来可能”提前制造多层 interface/factory。
 - reusable 不等于 maximum capability；可复用性来自稳定、最小、语义清楚、可测试的边界。
 
-### Extensibility
+### 可扩展性（Extensibility）
 
 - 只为已识别的真实变化轴建立 customization point，不为假想未来设计万能插件接口。
 - 扩展点应保持最小、稳定、语义明确；OCP 是设计目标，不要求一律使用 virtual inheritance。

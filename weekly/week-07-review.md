@@ -1,4 +1,4 @@
-# Week 07 Review · Reusable Boundaries, Extensibility and Usable Interfaces
+# 第 07 周复盘 · 可复用边界、可扩展性与可用接口
 
 覆盖 **Day 43–49**。
 
@@ -12,9 +12,9 @@
 - Day 48：Design Usable Interfaces
 - Day 49：Consider the Audience and Purpose
 
-这一周的核心转变是：
+核心转变：
 
-> **不是先选 Pattern，而是先找变化轴；不是先画 hierarchy，而是先建立稳定 contract；不是先选 smart pointer，而是先设计 lifetime。**
+> **先识别变化轴，再选择模式；先建立稳定契约，再构造层级；先设计生命周期，再分配智能指针。**
 
 ## 一、7 个关键问题
 
@@ -26,7 +26,7 @@
 6. usable interface 如何把单位、buffer 边界和错误语义放入类型？
 7. audience / purpose 如何决定接口应该暴露哪些能力？
 
-## 二、Pattern 映射复盘
+## 二、模式映射复盘
 
 | 变化 | 优先思路 | 何时不要用 |
 |---|---|---|
@@ -38,7 +38,7 @@
 | 事件通知 | Observer | 单一同步调用直接函数即可 |
 | required dependency | Dependency Injection | 不要退化成 service locator |
 
-## 三、Code Review 检查
+## 三、代码评审检查
 
 ### 头文件依赖
 
@@ -79,13 +79,13 @@
 - [ ] retry 有最大次数或 deadline
 - [ ] 错误跨层仍保留调用者需要的原因
 
-### ISR / volatile
+### ISR 与 volatile
 
 - [ ] ISR 保持最小
 - [ ] `volatile` 不作为线程同步
 - [ ] ISR → task 的共享状态有明确 atomic/queue/critical-section 策略
 
-### Magic number
+### 魔法数字
 
 - [ ] timeout 使用 chrono 或明确单位
 - [ ] capacity / payload limit 有具名常量
@@ -101,7 +101,7 @@
 - [ ] capacity exhausted
 - [ ] dependency teardown / invalid lifetime 假设
 
-## 四、Design Review 检查
+## 四、设计评审检查
 
 ### 1. 本周的主要变化轴
 
@@ -126,7 +126,7 @@
 边界是否泄漏平台细节？
 ```
 
-### 3. Pattern 使用判断
+### 3. 模式使用判断
 
 - [ ] Pattern 是否对应真实重复出现的结构问题？
 - [ ] 是否能用 value semantics / composition / function 解决？

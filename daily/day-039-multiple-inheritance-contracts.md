@@ -4,7 +4,7 @@ week: 6
 part: II
 chapter: 5
 chapter_title: Designing with Classes
-title: Multiple Inheritance and Multiple Contracts
+title: "多重继承与多重契约"
 duration: 60
 status: published
 date: 2026-10-05
@@ -24,7 +24,7 @@ previous: 38
 next: 40
 ---
 
-# Day 39 · Multiple Inheritance：多个基类何时代表真实 contract
+# Day 39 · 多重继承与多重契约
 
 <!-- cpp-standards:start -->
 ## 本课涉及的 C++ 标准
@@ -62,7 +62,7 @@ next: 40
 
 今天不把多继承当作语法技巧，而是回答工程问题：
 
-> 一个 concrete type 同时满足两个独立 contract 时，是否可以公开继承两个小接口？什么时候应该改用 composition？
+> 当一个具体类型同时满足两个独立契约时，是否可以公开继承两个小接口？何时又应该改用组合？
 
 建议阅读时重点关注：
 
@@ -168,7 +168,7 @@ protected:
 class Modem : public UartBuffer, public RetryState {};
 ```
 
-这里继承并没有表达清晰的 is-a，只是在偷用实现。
+这里的继承并没有表达明确的 is-a 语义，仅仅是为了复用内部实现。
 
 更好的模型：
 

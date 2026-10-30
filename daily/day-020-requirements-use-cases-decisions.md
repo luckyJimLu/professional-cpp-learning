@@ -217,7 +217,7 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-020/main.cpp -
 
 ## ⑦ 3 个常见坑（5 分钟）
 
-- 一看到需求就创建大量类，类结构只是实现猜测而不是问题模型。
+- 拿到需求即盲目堆叠类，类结构反映的是实现猜测而非业务模型。
 
 - timeout、buffer size、retry count 藏在实现内部，调用者看不到契约。
 

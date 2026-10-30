@@ -50,7 +50,7 @@
 | GPIO | `iot_gpio.h` | `IoTGpioInit`、`IoTGpioSetDir`、`IoTGpioSetOutputVal`、`IoTGpioGetInputVal`、`IoTGpioRegisterIsrFunc`、`IoTGpioUnregisterIsrFunc` | pin ID 与引脚复用；中断回调取消后是否仍可能在途 |
 | UART | `iot_uart.h` | `IoTUartInit`、`IoTUartRead`、`IoTUartWrite`、`IoTUartSetFlowCtrl`、`IoTUartDeinit` | Read/Write 返回 `int`；处理负值及短读写；此接口本身没有显式 timeout 参数 |
 | I2C | `iot_i2c.h` | `IoTI2cInit`、`IoTI2cRead`、`IoTI2cWrite`、`IoTI2cSetBaudrate` | 地址编码、总线速度、缓冲区有效范围与故障恢复依赖板级实现 |
-| PWM | `iot_pwm.h` | `IoTPwmInit`、`IoTPwmStart`、`IoTPwmStop`、`IoTPwmDeinit` | duty/freq 的范围和单位按驱动核对，不假设 duty 是 0–100 |
+| PWM | `iot_pwm.h` | `IoTPwmInit`、`IoTPwmStart`、`IoTPwmStop`、`IoTPwmDeinit` | duty/freq 的范围和单位按驱动核对，不假设 duty 是 0 到 100 |
 | Flash | `iot_flash.h` | `IoTFlashInit`、`IoTFlashRead`、`IoTFlashWrite`、`IoTFlashErase` | 分区边界、擦除对齐、写前擦除策略、寿命、掉电一致性 |
 | 看门狗 | `iot_watchdog.h` | `IoTWatchDogEnable`、`IoTWatchDogKick`、`IoTWatchDogDisable` | 不以“仍能喂狗”代替全系统健康；调用时序与硬件配置相关 |
 | 低功耗 | `lowpower.h` | `LpcInit`、`LpcSetType` | 唤醒源、外设上下文和计时源连续性需按平台验证 |

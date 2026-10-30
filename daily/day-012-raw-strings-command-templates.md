@@ -168,7 +168,7 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-012/main.cpp -
 
 ## ⑦ 3 个常见坑 · 5分钟
 
-- 看到反斜杠就机械改 raw string，反而让 CR/LF 难以 Review。
+- 看到反斜杠就机械改用原始字符串，反而降低 CR/LF 等控制字符的可读性。
 
 - 认为 string_view 指向任何表达式都安全；它不拥有数据。
 

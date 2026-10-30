@@ -180,9 +180,9 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-011/main.cpp -
 
 ## ⑦ 3 个常见坑 · 5分钟
 
-- 把 std::string 当成“UTF-8 类型”——编码其实是接口契约。
+- 把 `std::string` 误认为具有 UTF-8 编码约束——编码本质上是接口契约。
 
-- 认为 std::format 一定比 snprintf 更适合嵌入式——先测 ROM/RAM/分配/时延。
+- 认为 `std::format` 一定比 `snprintf` 更适合嵌入式环境——使用前先评估 ROM/RAM/分配/时延。
 
 - 忽略格式化截断——snprintf 返回值决定结果是否完整。
 

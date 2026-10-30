@@ -4,7 +4,7 @@ week: 3
 part: I
 chapter: 3
 chapter_title: Coding with Style
-title: Errors, Assert and Clear Control Flow
+title: "错误处理、断言与清晰的控制流"
 duration: 60
 status: published
 
@@ -27,7 +27,7 @@ previous: 16
 next: 18
 ---
 
-# Day 17 · Coding with Style：错误处理、断言与清晰控制流
+# Day 17 · Coding with Style：错误处理、断言与清晰的控制流
 
 <!-- cpp-standards:start -->
 ## 本课涉及的 C++ 标准

@@ -4,7 +4,7 @@ week: 5
 part: II
 chapter: 5
 chapter_title: Designing with Classes
-title: is-a, Hierarchies and Mixins - When to Inherit
+title: "is-a、继承层级与 Mixin：何时该继承"
 duration: 60
 status: published
 
@@ -24,7 +24,7 @@ previous: 31
 next: 33
 ---
 
-# Day 32 · is-a、not-a、类层次与 Mixin：什么时候才应该继承
+# Day 32 · is-a、继承层级与 Mixin：何时该继承
 
 <!-- cpp-standards:start -->
 ## 本课涉及的 C++ 标准
@@ -103,7 +103,7 @@ ITransport
 └── FakeTransport
 ```
 
-### not-a
+### not-a 关系
 
 `ModemSession` **不是** `UartTransport`。
 
@@ -117,7 +117,7 @@ ModemSession --uses--> ITransport
 
 良好的 hierarchy 应围绕稳定抽象，而不是硬件型号堆叠出深层继承树。
 
-### Mixin
+### Mixin（混入类）
 
 Mixin 可以用于给类型叠加小而正交的能力，但不应成为替代清晰 composition 的技巧。
 

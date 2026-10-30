@@ -44,7 +44,7 @@ next: 53
 
 > 主教材主线：Chapter 6 · **Designing for Reuse → Reconciling Generality and Ease of Use**。
 >
-> 今日目标：理解 reusable API 的核心张力——既要覆盖多种真实用途，又不能把复杂度全部转嫁给调用者。
+> 今日目标：理解 reusable API 的核心张力：既要覆盖多种真实用途，又不能把复杂度全部转嫁给调用者。
 
 ## ① 今日章节与建议阅读范围（5 分钟）
 
@@ -108,7 +108,7 @@ Status Send(std::span<const std::byte> payload, int channel, int timeout, int re
             bool urgent, bool raw_mode);
 ```
 
-这既不真正通用，也不容易使用：调用点必须理解所有 policy，而且大量参数可以组成无意义状态。
+这种方式既不真正通用，也不容易使用。调用点必须理解所有策略（policy），而且大量参数可能组合出非法或无意义的状态。
 
 ### 分层 API
 

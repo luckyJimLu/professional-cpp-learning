@@ -80,20 +80,25 @@ sequenceDiagram
 ```cpp
 // 平台无关的设计示意；KernelMutex 为待实现的适配接口。
 struct KernelMutex {
-    bool lock() noexcept;
-    void unlock() noexcept;
+  bool lock() noexcept;
+  void unlock() noexcept;
 };
 
 class ScopedMutex {
 public:
-    explicit ScopedMutex(KernelMutex& m) noexcept : mutex_(m), locked_(m.lock()) {}
-    ~ScopedMutex() noexcept { if (locked_) mutex_.unlock(); }
-    bool owns_lock() const noexcept { return locked_; }
-    ScopedMutex(const ScopedMutex&) = delete;
-    ScopedMutex& operator=(const ScopedMutex&) = delete;
+  explicit ScopedMutex(KernelMutex& m) noexcept : mutex_(m), locked_(m.lock()) {}
+  ~ScopedMutex() noexcept {
+    if (locked_) mutex_.unlock();
+  }
+  bool owns_lock() const noexcept {
+    return locked_;
+  }
+  ScopedMutex(const ScopedMutex&) = delete;
+  ScopedMutex& operator=(const ScopedMutex&) = delete;
+
 private:
-    KernelMutex& mutex_;
-    bool locked_;
+  KernelMutex& mutex_;
+  bool locked_;
 };
 ```
 

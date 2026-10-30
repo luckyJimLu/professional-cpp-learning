@@ -47,7 +47,7 @@ A shares B ?
 
 # 2. 四种最常见关系
 
-## 2.1 Required Borrow
+## 2.1 必需借用（Required Borrow）
 
 调用者必须提供对象，但当前对象不拥有它。
 
@@ -78,7 +78,7 @@ Transport 必须比 ModemSession 活得更久
 
 ---
 
-## 2.2 Optional Borrow
+## 2.2 可选借用（Optional Borrow）
 
 依赖可以不存在，但仍不拥有。
 
@@ -106,13 +106,13 @@ private:
 nullptr = logging disabled
 ```
 
-裸指针并不等于“不安全”。
+此处的裸指针并不意味着不安全。
 
-如果它明确表示 non-owning optional reference，就是合理用途。
+当其明确表示非拥有属性的可选引用（non-owning optional reference）时，即为合理用途。
 
 ---
 
-## 2.3 Exclusive Ownership
+## 2.3 独占所有权（Exclusive Ownership）
 
 一个对象独占负责另一个对象生命周期。
 
@@ -138,7 +138,7 @@ caller becomes owner
 
 ---
 
-## 2.4 Shared Ownership
+## 2.4 共享所有权（Shared Ownership）
 
 多个对象共同决定某个对象何时销毁。
 
@@ -246,9 +246,9 @@ std::shared_ptr<T>
 
 ---
 
-# 5. Strategy Pattern 中怎么用指针
+# 5. 策略模式（Strategy Pattern）中怎么用指针
 
-## Borrowed Strategy
+## 借用式策略（Borrowed Strategy）
 
 如果策略由外部长期管理：
 
@@ -269,7 +269,7 @@ private:
 - Embedded firmware；
 - strategy 生命周期明确。
 
-## Owned Strategy
+## 拥有式策略（Owned Strategy）
 
 如果 Sender 独占策略：
 
@@ -302,7 +302,7 @@ std::shared_ptr<IRetryStrategy>
 
 ---
 
-# 6. Factory Pattern 中怎么用指针
+# 6. 工厂模式（Factory Pattern）中怎么用指针
 
 Factory 是 `unique_ptr` 最经典的使用场景。
 
@@ -338,7 +338,7 @@ shared_ptr（只有真实共享 ownership 才用）
 
 ---
 
-# 7. Abstract Factory 中的 ownership
+# 7. 抽象工厂（Abstract Factory）中的所有权（Ownership）
 
 ```cpp
 class IPlatformFactory {
@@ -376,7 +376,7 @@ EventLoop&
 
 ---
 
-# 8. Adapter Pattern 中怎么用指针
+# 8. 适配器模式（Adapter Pattern）中怎么用指针
 
 Adapter 经常只是 borrow 被适配对象：
 
@@ -406,11 +406,11 @@ std::unique_ptr<VendorUart>
 
 ---
 
-# 9. Decorator Pattern 中怎么用指针
+# 9. 装饰器模式（Decorator Pattern）中怎么用指针
 
 Decorator 有两种典型 ownership 模式。
 
-## Borrowing Decorator
+## 借用式装饰器（Borrowing Decorator）
 
 ```cpp
 class TracingTransport final : public ITransport {
@@ -433,7 +433,7 @@ main()
 
 无 heap，非常适合 Embedded。
 
-## Owning Decorator
+## 拥有式装饰器（Owning Decorator）
 
 ```cpp
 class TracingTransport final : public ITransport {
@@ -459,11 +459,11 @@ UART
 
 ---
 
-# 10. Proxy Pattern 中怎么用指针
+# 10. 代理模式（Proxy Pattern）中怎么用指针
 
 Proxy 不代表固定 ownership。
 
-### Proxy borrows remote/service client
+### 代理借用远程/服务客户端（Proxy borrows remote/service client）
 
 ```cpp
 class SensorProxy {
@@ -475,13 +475,13 @@ private:
 };
 ```
 
-### Proxy owns implementation
+### 代理拥有具体实现（Proxy owns implementation）
 
 ```cpp
 std::unique_ptr<IBackend>
 ```
 
-### Async Proxy
+### 异步代理（Async Proxy）
 
 如果 operation 必须保证 proxy/session 在 callback 前一直活着，才可能出现：
 
@@ -493,7 +493,7 @@ std::shared_ptr<Session>
 
 ---
 
-# 11. Observer Pattern 是生命周期高风险区
+# 11. 观察者模式（Observer Pattern）是生命周期高风险区
 
 Observer 的典型错误：
 
@@ -553,7 +553,7 @@ Subscription Subscribe(Callback callback);
 
 ---
 
-# 12. Chain of Responsibility 中怎么用指针
+# 12. 职责链模式（Chain of Responsibility）中怎么用指针
 
 动态链：
 
@@ -593,7 +593,7 @@ std::array<Handler*, N>
 
 ---
 
-# 13. Iterator 不应该拥有 Container
+# 13. 迭代器（Iterator）不应该拥有容器（Container）
 
 通常：
 
@@ -622,7 +622,7 @@ Iterator 的生命周期契约通常是：
 
 ---
 
-# 14. Singleton 与智能指针
+# 14. 单例（Singleton）与智能指针
 
 Singleton 通常根本不需要智能指针。
 
@@ -801,7 +801,7 @@ Child weak_ptr   → Parent
 
 ---
 
-# 19. Embedded C++ 推荐 ownership 顺序
+# 19. 嵌入式 C++（Embedded C++）推荐所有权（Ownership）顺序
 
 在 MCU / RTOS / Driver 代码里，推荐优先级通常是：
 
@@ -827,7 +827,7 @@ shared_ptr（真实共享生命周期时）
 
 ---
 
-# 20. Application Root：最值得掌握的 ownership 技巧
+# 20. 应用根节点（Application Root）：最值得掌握的所有权（Ownership）技巧
 
 很多系统根本不需要复杂智能指针。
 
@@ -855,7 +855,7 @@ components borrow dependencies by reference
 
 ---
 
-# 21. Pattern × Ownership 快速表
+# 21. 模式与所有权（Pattern × Ownership）快速表
 
 | Pattern | 常见 ownership |
 |---|---|
@@ -872,13 +872,13 @@ components borrow dependencies by reference
 
 ---
 
-# 22. Code Review Checklist
+# 22. 代码评审检查清单（Code Review Checklist）
 
 看到智能指针时，不要只问“会不会内存泄漏”。
 
 应该问：
 
-## Ownership
+## 所有权（Ownership）
 
 - [ ] 为什么这里需要动态 ownership？
 - [ ] 为什么不是 value？
@@ -886,20 +886,20 @@ components borrow dependencies by reference
 - [ ] `shared_ptr` 的 shared owners 是谁？
 - [ ] ownership transfer 是否明确？
 
-## Lifetime
+## 生命周期（Lifetime）
 
 - [ ] callback 执行时对象是否还活着？
 - [ ] Observer 是否可能 dangling？
 - [ ] 是否存在 cycle？
 - [ ] destructor 是否执行必要 cleanup？
 
-## Realtime
+## 实时性（Realtime）
 
 - [ ] 是否在实时路径 `make_shared/make_unique`？
 - [ ] 是否存在不可控 heap fragmentation？
 - [ ] shared ref-count 操作是否位于热点路径？
 
-## API
+## 接口设计（API）
 
 - [ ] API 参数用智能指针是否真的表示 ownership transfer？
 - [ ] 如果只是 borrow，为什么不用 `T&` / `T*`？

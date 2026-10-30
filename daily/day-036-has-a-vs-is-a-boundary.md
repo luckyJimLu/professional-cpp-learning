@@ -4,7 +4,7 @@ week: 6
 part: II
 chapter: 5
 chapter_title: Designing with Classes
-title: The Fine Line Between Has-a and Is-a
+title: "has-a 与 is-a 的边界"
 duration: 60
 status: published
 date: 2026-09-29
@@ -24,7 +24,7 @@ previous: 35
 next: 37
 ---
 
-# Day 36 · Has-a 与 Is-a 的边界：优先用关系表达真实设计
+# Day 36 · has-a 与 is-a 的边界
 
 <!-- cpp-standards:start -->
 ## 本课涉及的 C++ 标准
@@ -63,7 +63,7 @@ next: 37
 
 今天只解决一个设计问题：
 
-> 当两个类既可以用继承表达，也可以用组合表达时，怎样判断哪种关系更准确、更容易维护？
+> 当两个类既能使用继承又能使用组合表达时，如何判断哪种关系更加准确且易于维护？
 
 本章在这一节强调：同一个设计问题可能有多种可行方案；当 has-a 与 is-a 都说得通时，应谨慎评估继承是否真的表达稳定的替换关系。
 
@@ -208,7 +208,7 @@ private:
 };
 ```
 
-继承和组合在代码里承担不同语义，而不是同一种“复用手段”。
+继承与组合在代码中承载着不同的设计语义，绝非同一种代码复用的替代手段。
 
 ---
 

@@ -4,7 +4,7 @@ week: 6
 part: II
 chapter: 5
 chapter_title: Designing with Classes
-title: Mixin Classes
+title: "Mixin 类"
 duration: 60
 status: published
 date: 2026-10-06
@@ -24,7 +24,7 @@ previous: 39
 next: 41
 ---
 
-# Day 40 · Mixin Classes：用小型可组合行为扩展类型
+# Day 40 · Mixin 类
 
 <!-- cpp-standards:start -->
 ## 本课涉及的 C++ 标准
@@ -70,7 +70,7 @@ next: 41
 - mixin 通常不作为独立业务对象使用；
 - 多个小 mixin 可以组合能力，但会增加编译期耦合；
 - 如果能力需要运行时替换、独立 ownership 或复杂状态，composition 往往更合适；
-- mixin 不应成为“为了少写几行代码就继承”的借口。
+- Mixin 不应成为“仅仅为了少写几行代码而滥用继承”的借口。
 
 嵌入式映射：可以把轻量统计、计数或边界检查做成受控的编译期行为组合；UART driver、logger、RTOS queue 等有资源和生命周期的对象仍优先 composition。
 
@@ -247,7 +247,7 @@ private:
 
 然后由 concrete type 选择性暴露 API。
 
-重点不是“C++ 写法更短”，而是：
+核心优势并非代码更加简短，而是：
 
 > mixin 把一项正交行为封装在类型系统中，并限制可访问边界。
 

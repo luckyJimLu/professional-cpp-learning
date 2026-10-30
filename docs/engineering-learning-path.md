@@ -3,7 +3,7 @@ summary: 用可控时钟和 Fake Transport 运行 Modem 通道，验证快照、
 ---
 # Modem 数据通道：贯穿实验与参考解
 
-前置：Day 8–10 的借用、Day 20 的接口契约、Day 28–35 的对象生命周期，以及 [Chapter 6 评审](chapter-06-review.md)。本实验是伴随项目，不增加 Day 编号，也不提前发布 Chapter 7 课程。
+前置知识：Day 8–10 的借用、Day 20 的接口契约、Day 28–35 的对象生命周期，以及 [Chapter 6 评审](chapter-06-review.md)。本实验属于配套项目，不占用新的 Day 编号，也不提前发布 Chapter 7 课程。
 
 ## 1. 本轮交付与边界
 

@@ -4,7 +4,7 @@ week: 2
 part: I
 chapter: 3
 chapter_title: Coding with Style
-title: Readability, Naming and Interface Contracts
+title: "可读性、命名与接口契约"
 duration: 60
 status: published
 
@@ -83,7 +83,7 @@ next: 14
 
 专业代码风格并不等于“排版漂亮”。它的目标是降低维护者理解代码所需的推理量。
 
-### Reader-first
+### 读者优先（Reader-first）
 
 调用者应能从类型和名称中直接看出：
 
@@ -94,11 +94,11 @@ next: 14
 - 谁拥有对象；
 - 是否允许为空。
 
-### Consistency
+### 一致性（Consistency）
 
 团队统一采用一套约定，比每个文件选择“个人最喜欢”的风格更重要。
 
-### Contract
+### 契约（Contract）
 
 以下接口迫使调用者猜测：
 
@@ -251,7 +251,7 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-013/main.cpp -
 ## ⑦ 3 个常见坑（5 分钟）
 
 1. 通过长注释弥补糟糕接口，而不是先修接口。
-2. 参数名称写得清楚，但类型依然允许误传。
+2. 参数名称虽然清晰，但弱类型依然允许误传。
 3. 每个模块发明自己的命名风格。
 
 ## ⑧ 检查题（5 分钟）

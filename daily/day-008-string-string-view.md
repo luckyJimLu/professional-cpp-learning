@@ -229,9 +229,9 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-008/main.cpp -
 
 ## ⑦ 三个常见坑 · 5 分钟
 
-- 把 string_view 当拥有者，导致悬空。
+- 把 `string_view` 当成拥有者，导致悬空指针。
 
-- 假设 data() 一定 NUL 终止；子 view 不保证 C 字符串语义。
+- 假设 `data()` 一定以 NUL 结尾；子视图不保证 C 字符串语义。
 
 - 为了“零拷贝”牺牲生命周期安全；先正确，再测量。
 

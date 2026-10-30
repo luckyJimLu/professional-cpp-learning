@@ -4,7 +4,7 @@ week: 6
 part: II
 chapter: 5
 chapter_title: Designing with Classes
-title: Hierarchies
+title: "继承层级"
 duration: 60
 status: published
 date: 2026-10-01
@@ -24,7 +24,7 @@ previous: 37
 next: 39
 ---
 
-# Day 38 · Hierarchies：什么时候类层级真正有价值
+# Day 38 · 继承层级
 
 <!-- cpp-standards:start -->
 ## 本课涉及的 C++ 标准
@@ -67,7 +67,7 @@ next: 39
 
 今天进一步回答：
 
-> 当 hierarchy 确实存在时，怎样让它保持有意义、可替换、可维护，而不是不断长成“继承树迷宫”？
+> 当继承层级（hierarchy）确实存在时，如何使其保持清晰、可替换且易于维护，而不是陷入“继承树迷宫”？
 
 本节重点不是继承语法，而是**层级结构设计**：
 
@@ -201,7 +201,7 @@ TracingTransport --has-a--> ITransport
 
 ### 5. hierarchy 深度本身不是目标
 
-层级的目的不是展示 OOP 技巧。
+继承层级的目的不是展示面向对象技巧。
 
 真正应该优化的是：
 
@@ -215,7 +215,7 @@ TracingTransport --has-a--> ITransport
 
 ## ④ C 写法 vs Modern C++（8 分钟）
 
-### C：tag + switch
+### C 做法：标签 + switch
 
 ```c
 enum transport_type {
@@ -240,7 +240,7 @@ int transport_write(struct transport* t) {
 
 优点是结构直接，但随着类型增加，中心 switch 会不断扩大。
 
-### Modern C++：stable contract + concrete leaves
+### Modern C++：稳定契约 + 具体叶子类型
 
 ```cpp
 class ITransport {

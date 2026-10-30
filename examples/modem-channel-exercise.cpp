@@ -18,8 +18,17 @@ constexpr std::size_t kCapacity = 2;
 constexpr std::size_t kPayloadCapacity = 8;
 
 enum class Status {
-  kOk, kPending, kFull, kInvalidArgument, kInvalidTime, kClosed,
-  kNotFound, kCancelled, kTimeout, kTransportError, kIdExhausted
+  kOk,
+  kPending,
+  kFull,
+  kInvalidArgument,
+  kInvalidTime,
+  kClosed,
+  kNotFound,
+  kCancelled,
+  kTimeout,
+  kTransportError,
+  kIdExhausted
 };
 struct Result {
   Status status;
@@ -27,11 +36,13 @@ struct Result {
 };
 
 class FakeTransport {
- public:
+public:
   explicit FakeTransport(Time latency = 1ms) : latency_(latency) {
     assert(latency >= 0ms);
   }
-  void FailNext() { fail_next_ = true; }
+  void FailNext() {
+    fail_next_ = true;
+  }
   void Begin(std::string_view payload, Time now) {
     assert(!active_ && payload.size() <= payload_.size());
     std::copy(payload.begin(), payload.end(), payload_.begin());
@@ -52,13 +63,22 @@ class FakeTransport {
     return failing_ ? Status::kTransportError : Status::kOk;
   }
   void Abort() {
-    if (active_) { active_ = false; ++aborts_; }
+    if (active_) {
+      active_ = false;
+      ++aborts_;
+    }
   }
-  [[nodiscard]] std::string_view LastPayload() const { return {payload_.data(), size_}; }
-  [[nodiscard]] std::size_t Begins() const { return begins_; }
-  [[nodiscard]] std::size_t Aborts() const { return aborts_; }
+  [[nodiscard]] std::string_view LastPayload() const {
+    return {payload_.data(), size_};
+  }
+  [[nodiscard]] std::size_t Begins() const {
+    return begins_;
+  }
+  [[nodiscard]] std::size_t Aborts() const {
+    return aborts_;
+  }
 
- private:
+private:
   Time latency_;
   Time started_{};
   std::array<char, kPayloadCapacity> payload_{};
@@ -72,9 +92,11 @@ class FakeTransport {
 
 // One channel borrows one transport exclusively. Transport must outlive channel.
 class Channel {
- public:
+public:
   explicit Channel(FakeTransport& transport) : transport_(transport) {}
-  ~Channel() { Close(); }
+  ~Channel() {
+    Close();
+  }
   Channel(const Channel&) = delete;
   Channel& operator=(const Channel&) = delete;
   Channel(Channel&&) = delete;
@@ -85,8 +107,8 @@ class Channel {
     if (payload.empty() || payload.size() > kPayloadCapacity || timeout <= 0ms)
       return {Status::kInvalidArgument};
     if (!Advance(now)) return {Status::kInvalidTime};
-    const auto free = std::find_if(slots_.begin(), slots_.end(),
-                                   [](const Slot& slot) { return !slot.used; });
+    const auto free =
+        std::find_if(slots_.begin(), slots_.end(), [](const Slot& slot) { return !slot.used; });
     if (free == slots_.end()) return {Status::kFull};
     if (next_id_ == std::numeric_limits<std::uint64_t>::max())
       return {Status::kIdExhausted};  // Never wrap and reuse a live/historical ID.
@@ -146,11 +168,11 @@ class Channel {
     closed_ = true;
   }
   [[nodiscard]] std::size_t Size() const {
-    return static_cast<std::size_t>(std::count_if(slots_.begin(), slots_.end(),
-                                                [](const Slot& slot) { return slot.used; }));
+    return static_cast<std::size_t>(
+        std::count_if(slots_.begin(), slots_.end(), [](const Slot& slot) { return slot.used; }));
   }
 
- private:
+private:
   struct Slot {
     std::array<char, kPayloadCapacity> payload{};
     std::size_t size = 0;
@@ -166,7 +188,10 @@ class Channel {
     return true;
   }
   void Abort(std::uint64_t id) {
-    if (active_ == id) { transport_.Abort(); active_.reset(); }
+    if (active_ == id) {
+      transport_.Abort();
+      active_.reset();
+    }
   }
   FakeTransport& transport_;
   std::array<Slot, kCapacity> slots_{};

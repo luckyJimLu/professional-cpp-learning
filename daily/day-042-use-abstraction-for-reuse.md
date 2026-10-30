@@ -4,7 +4,7 @@ week: 6
 part: II
 chapter: 6
 chapter_title: Designing for Reuse
-title: Use Abstraction for Reuse
+title: "用抽象支撑复用"
 status: published
 date: 2026-10-08
 duration: 60
@@ -18,7 +18,7 @@ guidelines:
   - explicit-contract
 ---
 
-# Day 42 · Use Abstraction：用接口/实现分离建立可复用边界
+# Day 42 · 用抽象支撑复用
 
 <!-- cpp-standards:start -->
 ## 本课涉及的 C++ 标准
@@ -128,7 +128,7 @@ UartSink   FakeSink     <- changing implementations
 
 上层不随 UART HAL、USB、测试 fake 的变化而修改。
 
-### Abstraction leakage
+### 抽象泄漏（Abstraction leakage）
 
 下面虽然有接口，但仍然泄漏平台实现：
 

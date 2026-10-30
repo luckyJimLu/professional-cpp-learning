@@ -10,15 +10,15 @@ summary: 理解事件循环、异步回调与协程，通过 TCP Echo 示例掌�
 
 ## 1. 为什么选择 Asio 作为首选解构对象？
 
-在 C++ 工程生态中，**Asio**（Boost.Asio 的独立无 Boost 依赖版本）占据着举足轻重的地位：
+在 C++ 工程生态中，**Asio**（Boost.Asio 的独立无 Boost 依赖版本）是极为关键的网络与异步 C++ 基础库：
 
-1. **C++ 网络与异步的事实标准**：ISO C++ Networking TS（网络技术规范）与 P0443 执行器模型的核心提案原型即源于 Asio。
-2. **Proactor 架构模式的最高水准落地**：封装了各平台最底层的异步 I/O 复用技术（Linux `epoll` / `io_uring`、Windows `IOCP`、macOS `kqueue`）。
-3. **现代 C++ 语言特性的集大成者**：
-   - **智能指针与所有权（Ch7）**：工业界中 `std::enable_shared_from_this` 解决异步 use-after-free 的最经典范例。
+1. **C++ 网络与异步的事实标准**：ISO C++ Networking TS（网络技术规范）与 P0443 执行器模型的核心提案原型均源于 Asio。
+2. **Proactor 架构模式的典型实现**：封装了各平台底层的异步 I/O 复用技术（Linux `epoll` / `io_uring`、Windows `IOCP`、macOS `kqueue`）。
+3. **现代 C++ 语言特性的典型应用**：
+   - **智能指针与所有权（Ch7）**：用 `std::enable_shared_from_this` 解决异步 use-after-free 的常见范例。
    - **泛型完成模型（Ch12）**：`async_result` 定制点机制，一套 API 无缝适配回调、`std::future`、协程与惰性执行对象。
    - **C++20 协程落地（Ch27）**：`co_spawn` 与 `use_awaitable` 是目前生产环境最为成熟的协程事件循环基础设施。
-   - **框架与设计模式（Ch32–33）**：Service Registry（单例服务模式）、Strand（Handler 串行化适配器）、Executor 抽象。
+   - **框架与设计模式（Ch32-33）**：Service Registry（单例服务模式）、Strand（Handler 串行化适配器）、Executor 抽象。
 
 ---
 
@@ -52,11 +52,11 @@ flowchart LR
 
 ### 锚点 2：Ch13 I/O（标准流 vs 异步网络）
 - **教材痛点**：标准库仅提供阻塞式 `iostream`，现代高性能服务器需要基于事件的多路复用机制。
-- **Asio 对照**：精读 [ARCHITECTURE.md](ARCHITECTURE.md) 的第 1–3 节。理解非阻塞 I/O、Scatter/Gather 内存连续/离散缓冲区（`mutable_buffer` / `const_buffer`）以及跨平台 Reactor 后端抽象。
+- **Asio 对照**：精读 [ARCHITECTURE.md](ARCHITECTURE.md) 的第 1-3 节。理解非阻塞 I/O、Scatter/Gather 内存连续/离散缓冲区（`mutable_buffer` / `const_buffer`）以及跨平台 Reactor 后端抽象。
 
 ### 锚点 3：Ch27 多线程与并发（事件循环捕获与工作线程池）
 - **教材痛点**：多线程编程教科书往往只讲 `std::thread`、`std::mutex`、条件变量，缺乏工业级事件调度线程池的设计范式。
-- **Asio 对照**：精读 [EVENT_LOOP_RUNNER.md](EVENT_LOOP_RUNNER.md)。学习 `io_context::run()` 的线程捕获机制、`make_work_guard` 防止空闲退出的守护原理、多原生线程共享事件池模型，以及利用 `asio::strand` 规避并发数据竞争的Handler 串行化边界。
+- **Asio 对照**：精读 [EVENT_LOOP_RUNNER.md](EVENT_LOOP_RUNNER.md)。学习 `io_context::run()` 的线程捕获机制、`make_work_guard` 防止空闲退出的守护原理、多原生线程共享事件池模型，以及利用 `asio::strand` 规避并发数据竞争的 Handler 串行化边界。
 
 ### 锚点 4：Ch27 多线程与并发（C++20 协程实战）
 - **教材痛点**：C++20 协程（`co_await` / `co_return` / `std::coroutine_handle`）底层概念繁杂，缺乏完整的事件循环运行时驱动。

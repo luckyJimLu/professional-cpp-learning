@@ -3,7 +3,7 @@ summary: 从教材章节到工程专题、可运行实验和评审，按前置�
 ---
 # 内容总索引与覆盖矩阵
 
-本项目提供现代 C++ 入门主线与 C / Embedded 进阶路径。主线仍按《Professional C++, Sixth Edition》章节推进；专题、模拟器和综合实验不占用新的 Day 编号。
+本项目提供现代 C++ 入门主线与 C / 嵌入式进阶路径。主线严格按《Professional C++, Sixth Edition》章节推进；专题、模拟器与综合实验不占用新的 Day 编号。
 
 ## 如何开始
 

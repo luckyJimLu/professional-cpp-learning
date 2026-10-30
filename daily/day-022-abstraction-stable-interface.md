@@ -237,7 +237,7 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-022/main.cpp -
 
 ## ⑦ 3 个常见坑（5分钟）
 
-- 加 interface 就等于低耦合：接口若仍暴露 UART fd、DMA channel，耦合只是换了位置。
+- 误以为引入接口就自动实现解耦合：若接口依然透传底层描述符，耦合并未消除。
 
 - Getter/Setter 泛滥：private + 全量可写 setter 仍可能破坏 invariant；优先暴露业务动作。
 
