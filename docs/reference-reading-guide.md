@@ -8,6 +8,14 @@
 
 另见 [C++ 入门与软件设计四阶段书单](../references/reading-paths/cpp-software-design.md)，含资料库原文件链接及核对后的版次。
 
+## 编程规范
+
+[Google 风格与嵌入式工程实践](../guidelines/google-cpp-style-guide.md)：用官方风格指南对照日常编码，配合 Core Guidelines 检查资源与接口边界；不是把大厂约定当作 ISO 标准。
+
+## 从书单进入二进制实验
+
+[五维深度拆解](cpp-implementation-deep-dive.md)用 GCC 14.2/x86-64 实测虚表、尾部填充复用、多继承 thunk 和 lambda，并提供固定版本源码入口及可复用提问模板。
+
 ## 按问题查资料
 
 | 你现在的问题 | 推荐入口 | 读完后做什么 |

@@ -15,6 +15,7 @@ const sources = import.meta.glob(
     "../../docs/chapter-06-review.md",
     "../../docs/historical-exercises.md",
     "../../docs/reference-reading-guide.md",
+    "../../docs/cpp-implementation-deep-dive.md",
     "../../docs/content-refinement-validation.md",
     "../../docs/memory-visualizer-guide.md",
     "../../docs/rtos-simulator/LEARNING-GUIDE.md",

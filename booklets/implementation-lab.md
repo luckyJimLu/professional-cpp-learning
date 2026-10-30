@@ -65,3 +65,7 @@ C++ 示例中，optional 的移动构造建立第二个 Item，源 optional 仍�
 - **C23**：分别查询前端与库支持。_BitInt、#embed 和 stdckdint.h 属于不同实现层，不用单个版本号推断全部可用。
 
 本实验只验证所列 C17/C++20 行为及当前工具链能生成观察产物，不验证所有特性、协程调度、跨平台 ABI 或性能结论。
+
+## 对象模型与虚调用进阶实验
+
+新增 `labs/object-model.cpp`，由 `npm run check:booklets` 编译运行。布局、虚表地址点、多继承 thunk、闭包与优化结果见[五维深度拆解](../docs/cpp-implementation-deep-dive.md)。测试只断言语言行为，打印尺寸作观察，不固定目标 ABI。

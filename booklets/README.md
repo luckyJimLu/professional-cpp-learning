@@ -69,3 +69,7 @@ C++ 完整自测位于 `examples/cpp20-reference.cpp` 和 `examples/cpp23-refere
 C++ 的 47 个版本特性条目均补充实现机制与深入讨论；另补模块、比较、原子等主题。C 册补充 14 个相关条目的 C99/C11 实现解释，并在 C/C++ 差异条目列出 C23 重点增量，保持 C17 为主体。区分前端、后端、ABI 与标准库，不把常见布局或优化结果当作标准保证。
 
 [实现观察实验](implementation-lab.md) 提供类型、闭包、常量求值、原子与 optional 生命周期的观察步骤。`npm run check:booklets` 会编译运行 `labs/` 下的 C17/C++20 自测；C23 增量表和可选 Clang AST 命令不在这些自测的验证范围内。
+
+## 源码与二进制深读
+
+[五维深度拆解](../docs/cpp-implementation-deep-dive.md)补充 virtual/override、多继承 thunk、构造阶段、lambda、移动、编译期机制、类型擦除、optional 与协程。小册子的对应条目可直接打开在线深读页面。精确布局与汇编限定于已记录的 GCC/x86-64 实验；协程保留为明确标注的模型。`labs/object-model.cpp` 已接入既有自测，不以固定尺寸作为跨平台断言。

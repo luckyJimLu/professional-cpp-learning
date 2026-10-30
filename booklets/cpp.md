@@ -434,6 +434,8 @@ auto task = [p = std::make_unique<int>(7)] { return *p; }; // C++14
 
 **深入讨论：** 对象副本若仍包含借用指针，复制 *this 也不会消除所有悬空风险。
 
+**源码与二进制实战：** [五维深度拆解与实测实验](?view=topics&topic=docs/cpp-implementation-deep-dive.md)，对照布局、教学 C 模型、指令和适用边界。
+
 ### 标准属性速查 [C++11 / C++14 / C++17 / C++20] <!-- entry: attributes -->
 
 关键词：nodiscard deprecated maybe_unused fallthrough likely unlikely noreturn 属性
@@ -505,6 +507,8 @@ struct Leaf final : Base {
 virtual 在 C++98 已有，override/final 从 C++11 起。override 检查是否真正覆盖，包括 const 和引用限定；允许合法的协变返回类型，不要求文本签名完全相同。
 
 通过基类指针 delete 派生对象，通常需可访问的虚析构；另一种接口策略是 protected 非虚析构以禁止该删除方式。final 限制继承/覆盖，不保证任意调用都会去虚化，也不能自动防止切片或所有安全绕过。
+
+**源码与二进制实战：** [五维深度拆解与实测实验](?view=topics&topic=docs/cpp-implementation-deep-dive.md)，对照布局、教学 C 模型、指令和适用边界。
 
 ### 六个特殊成员与零法则 [C++98 / C++11] <!-- entry: special-members -->
 
@@ -926,6 +930,8 @@ shared_from_this（C++11）要求对象已经处于适当的 shared_ptr 管理�
 
 **深入讨论：** 无捕获 lambda 可转换成合适的函数指针；有捕获对象需要携带状态。内联后闭包可能完全消失，不能据源码推断必有一次间接调用。
 
+**源码与二进制实战：** [五维深度拆解与实测实验](?view=topics&topic=docs/cpp-implementation-deep-dive.md)，对照布局、教学 C 模型、指令和适用边界。
+
 ### = default / = delete [C++11] <!-- entry: feature-2 -->
 
 关键词：= default / = delete C++11 标准版本 编译器实现 底层机制 深入讨论
@@ -973,6 +979,8 @@ shared_from_this（C++11）要求对象已经处于适当的 shared_ptr 管理�
 **实现机制（标准要求与常见实现）：** 编译器具有常量表达式求值器，按语言规则解释表达式并跟踪对象生命周期；需要常量表达式的位置不合法则诊断。普通调用仍可生成机器码。
 
 **深入讨论：** 编译期求值不同于优化器常量折叠：前者决定程序是否合法，后者遵守 as-if 规则改变代码。递归与循环可能触及实现的求值步数限制。
+
+**源码与二进制实战：** [五维深度拆解与实测实验](?view=topics&topic=docs/cpp-implementation-deep-dive.md)，对照布局、教学 C 模型、指令和适用边界。
 
 ### static_assert [C++11] <!-- entry: feature-6 -->
 
@@ -1086,6 +1094,8 @@ shared_from_this（C++11）要求对象已经处于适当的 shared_ptr 管理�
 
 **深入讨论：** 优化器知道确切动态类型时可去虚化；final 提供信息而非性能承诺。不要用固定偏移解析不同 ABI 的对象。
 
+**源码与二进制实战：** [五维深度拆解与实测实验](?view=topics&topic=docs/cpp-implementation-deep-dive.md)，对照布局、教学 C 模型、指令和适用边界。
+
 ### alignas / alignof [C++11] <!-- entry: feature-14 -->
 
 关键词：alignas / alignof C++11 标准版本 编译器实现 底层机制 深入讨论
@@ -1182,6 +1192,8 @@ shared_from_this（C++11）要求对象已经处于适当的 shared_ptr 管理�
 
 **深入讨论：** 移动 vector 常可转移缓冲区，但分配器条件可能迫使逐元素处理；移动 array 仍逐元素操作。不要笼统称所有 move 为 O(1)。
 
+**源码与二进制实战：** [五维深度拆解与实测实验](?view=topics&topic=docs/cpp-implementation-deep-dive.md)，对照布局、教学 C 模型、指令和适用边界。
+
 ### std::function [C++11] <!-- entry: feature-28 -->
 
 关键词：std::function C++11 标准版本 编译器实现 底层机制 深入讨论
@@ -1197,6 +1209,8 @@ shared_from_this（C++11）要求对象已经处于适当的 shared_ptr 管理�
 **实现机制（标准要求与常见实现）：** 库以类型擦除保存目标，通过管理函数处理调用、复制与销毁；常见实现结合小对象缓冲与堆分配。
 
 **深入讨论：** 缓冲大小及适用条件不统一；大或不合适的目标可能分配。模板直接接收 callable 往往更易内联，但也可能增加实例化代码体积。
+
+**源码与二进制实战：** [五维深度拆解与实测实验](?view=topics&topic=docs/cpp-implementation-deep-dive.md)，对照布局、教学 C 模型、指令和适用边界。
 
 ### std::chrono [C++11] <!-- entry: feature-29 -->
 
@@ -1330,6 +1344,8 @@ shared_from_this（C++11）要求对象已经处于适当的 shared_ptr 管理�
 
 **深入讨论：** 与普通 if 的死代码优化不同：普通 if 两支仍须满足实例化要求。非模板环境中的 if constexpr 也不能藏任意非法语句。
 
+**源码与二进制实战：** [五维深度拆解与实测实验](?view=topics&topic=docs/cpp-implementation-deep-dive.md)，对照布局、教学 C 模型、指令和适用边界。
+
 ### enable_shared_from_this::weak_from_this [C++17] <!-- entry: feature-26 -->
 
 关键词：enable_shared_from_this::weak_from_this C++17 标准版本 编译器实现 底层机制 深入讨论
@@ -1377,6 +1393,8 @@ shared_from_this（C++11）要求对象已经处于适当的 shared_ptr 管理�
 **实现机制（标准要求与常见实现）：** 库通常以带有效标志的原地存储实现，按需构造/析构 T；编译器负责对齐、生命周期及特殊成员优化。
 
 **深入讨论：** optional<T> 不需要为 T 单独分配，但 T 自己可能分配。标志与填充使 sizeof 不等于 sizeof(T)+1 的通用公式。
+
+**源码与二进制实战：** [五维深度拆解与实测实验](?view=topics&topic=docs/cpp-implementation-deep-dive.md)，对照布局、教学 C 模型、指令和适用边界。
 
 ### std::variant / std::visit [C++17] <!-- entry: feature-34 -->
 
@@ -1524,6 +1542,8 @@ shared_from_this（C++11）要求对象已经处于适当的 shared_ptr 管理�
 
 **深入讨论：** 概念满足不证明语义公理，例如排序比较器的严格弱序；不同写法的约束也未必被编译器认作等价原子约束。
 
+**源码与二进制实战：** [五维深度拆解与实测实验](?view=topics&topic=docs/cpp-implementation-deep-dive.md)，对照布局、教学 C 模型、指令和适用边界。
+
 ### 协程语言支持 [C++20] <!-- entry: feature-21 -->
 
 关键词：协程语言支持 C++20 标准版本 编译器实现 底层机制 深入讨论
@@ -1539,6 +1559,8 @@ shared_from_this（C++11）要求对象已经处于适当的 shared_ptr 管理�
 **实现机制（标准要求与常见实现）：** 前端/中间层把协程降低为可恢复的状态机；协程帧保存 promise、跨挂起点存活的局部对象和恢复状态，通过 await_ready/suspend/resume 协议控制挂起。
 
 **深入讨论：** 帧常动态分配，但可在满足条件时消除分配。执行器、线程切换与取消由库设计；销毁帧和外部引用生命周期仍须设计。
+
+**源码与二进制实战：** [五维深度拆解与实测实验](?view=topics&topic=docs/cpp-implementation-deep-dive.md)，对照布局、教学 C 模型、指令和适用边界。
 
 ### string / string_view 的前后缀检查 [C++20] <!-- entry: feature-32 -->
 
@@ -1704,3 +1726,5 @@ POSIX、Boost、fmt 等不是 ISO C++ 标准库。第三方库提供同名或相
 [实现观察实验](https://github.com/luckyJimLu/professional-cpp-learning/blob/main/booklets/implementation-lab.md) 提供可复现实验；搜索“编译器实现”“控制块”“协程”可找到相关条目。
 
 资料入口：[C++ 工作草案](https://eel.is/c++draft/)、[GCC 转储选项](https://gcc.gnu.org/onlinedocs/gcc/Developer-Options.html)、[Clang AST](https://clang.llvm.org/docs/IntroductionToTheClangAST.html)、[LLVM 协程降低](https://llvm.org/docs/Coroutines.html)、[Itanium C++ ABI](https://itanium-cxx-abi.github.io/cxx-abi/abi.html)。公开草案可能与发布标准不同；Itanium ABI 不代表所有平台。
+
+**源码与二进制实战：** [五维深度拆解与实测实验](?view=topics&topic=docs/cpp-implementation-deep-dive.md)，对照布局、教学 C 模型、指令和适用边界。
