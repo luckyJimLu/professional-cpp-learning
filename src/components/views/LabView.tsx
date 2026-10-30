@@ -139,11 +139,16 @@ export function LabView({
         description="从当前课例开始。先查看任务与自测清单，再运行代码，结合输出或轨迹验证理解。"
       />
       <div className="lab-shell lab-shell-runtime">
-        <section className="lab-task">
+        <section className="lab-task guide-current-lesson">
           <div className="lab-task-header">
-            <span className="page-eyebrow">
-              第 {lesson.day} 天实验 · {lesson.duration} 分钟
-            </span>
+            <div className="guide-current-top">
+              <span className="page-eyebrow">
+                第 {lesson.day} 天实验 · {lesson.duration} 分钟
+              </span>
+              <span className="guide-current-badge mono">
+                第 {lesson.week} 周 · {lesson.labMode === "rtos-sim" ? "RTOS 并发模拟" : "Clang C++23 · 内存轨迹"}
+              </span>
+            </div>
             <h2>{lesson.title}</h2>
           </div>
           <details ref={instructionsRef} className="lab-instructions">

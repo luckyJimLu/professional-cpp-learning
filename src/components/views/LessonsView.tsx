@@ -94,32 +94,38 @@ export function LessonsView({
     </a>
   );
   return (
-    <div className="course-page">
-      <PageHeader
-        title="课程"
-        description="按周逐步进阶，或按标题、天数与章节查找。每一课都从理解走向可运行的实验。"
-      />
-      {target && (
-        <section className="course-resume" aria-label="继续学习">
-          <div>
-            <span className="page-eyebrow">
-              {currentDay && !lessonByDay(currentDay)
-                ? "最新课程 · 回顾与巩固"
-                : "继续学习"}
-            </span>
-            <strong>
-              Day {target.day} · {target.title}
-            </strong>
-          </div>
-          <button
-            type="button"
-            className="primary-button"
-            onClick={() => openLesson(target.day)}
-          >
-            打开课程 →
-          </button>
-        </section>
-      )}
+    <div className="course-page docs-layout today-layout">
+      <div className="guide-document">
+        <PageHeader
+          title="课程"
+          description="按周逐步进阶，或按标题、天数与章节查找。每一课都从理解走向可运行的实验。"
+        />
+        {target && (
+          <section className="course-resume guide-current-lesson" aria-label="继续学习">
+            <div className="guide-current-main">
+              <div className="guide-current-top">
+                <span className="page-eyebrow">
+                  {currentDay && !lessonByDay(currentDay)
+                    ? "最新课程 · 回顾与巩固"
+                    : "继续学习"}
+                </span>
+                <span className="guide-current-badge mono">
+                  课程 {target.day} / {lessons.length} 节 · 第 {target.week} 周
+                </span>
+              </div>
+              <strong>
+                Day {target.day} · {target.title}
+              </strong>
+            </div>
+            <button
+              type="button"
+              className="primary-button"
+              onClick={() => openLesson(target.day)}
+            >
+              打开课程 →
+            </button>
+          </section>
+        )}
       <div className="course-toolbar">
         <div className="search-input-row course-search">
           <input
@@ -273,10 +279,47 @@ export function LessonsView({
           })}
         </div>
       )}
-      <details className="source-details">
-        <summary>查看章节里程碑与原始路线</summary>
-        <Markdown embedDocument>{learningPlan}</Markdown>
-      </details>
+        <details className="source-details" id="course-plan">
+          <summary>查看章节里程碑与原始路线</summary>
+          <Markdown embedDocument>{learningPlan}</Markdown>
+        </details>
+      </div>
+
+      <aside className="today-aside" aria-label="课程周次导航与基线">
+        <div className="today-aside-card">
+          <span className="page-eyebrow">周次导航</span>
+          <nav aria-label="课程周次跳转" className="today-aside-nav">
+            {weeks.map((week) => (
+              <a key={week.week} href={`#course-week-${week.week}`}>
+                第 {week.week} 周 · Day {week.lessons[0]?.day}–
+                {week.lessons.at(-1)?.day}
+              </a>
+            ))}
+            <a href="#course-plan">章节里程碑与原始路线</a>
+          </nav>
+        </div>
+        <div className="today-aside-card">
+          <span className="page-eyebrow">课程基线</span>
+          <dl className="today-aside-stats">
+            <div>
+              <dt>已发布课程</dt>
+              <dd>
+                {lessons.length} 节（{weeks.length} 周进阶）
+              </dd>
+            </div>
+            <div>
+              <dt>当前主线</dt>
+              <dd>
+                第 {target?.week ?? 1} 周 · Day {target?.day ?? 1}
+              </dd>
+            </div>
+            <div>
+              <dt>单课结构</dt>
+              <dd>8 阶段闭环 · 源码与实验</dd>
+            </div>
+          </dl>
+        </div>
+      </aside>
     </div>
   );
 }

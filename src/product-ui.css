@@ -1,9 +1,7 @@
 /* Shared product surfaces. Palette and typography are owned by styles.css. */
-.content > :is(.course-page, .review-page) {
-  max-width: 1100px;
-  margin-inline: auto;
-}
-.content > .reading-page {
+.content > :is(.today-layout, .course-page, .review-page, .reading-page, .booklets-page, .lab-page-container),
+.topics-catalog,
+.topic-reading {
   max-width: var(--frame-max);
   margin-inline: auto;
 }
@@ -68,7 +66,7 @@
 }
 .today-layout {
   display: block;
-  max-width: 1100px;
+  max-width: var(--frame-max);
   margin: 0 auto;
 }
 .guide-document {
@@ -797,13 +795,10 @@
   .today-layout,
   .course-page,
   .review-page,
+  .reading-page,
+  .booklets-page,
   .lab-page-container
-) {
-  max-width: var(--content-max);
-  margin-inline: auto;
-}
-
-.content > :is(.reading-page, .booklets-page),
+),
 .topics-catalog,
 .topic-reading {
   max-width: var(--frame-max);
@@ -993,9 +988,83 @@
   transition: background 0.15s ease, color 0.15s ease;
 }
 
-.today-aside-nav a:hover {
+.today-aside-nav a:hover,
+.today-aside-nav a[aria-current="location"] {
   color: var(--blue);
   background: var(--blue-soft);
+}
+
+.today-aside-nav a[aria-current="location"] {
+  font-weight: 600;
+}
+
+.today-aside-nav a.is-sub-heading {
+  padding-left: 20px;
+  font-size: 0.775rem;
+  color: var(--muted);
+}
+
+.course-resume.guide-current-lesson {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 24px;
+  margin: 0 0 var(--space-6);
+}
+
+.course-resume.guide-current-lesson .guide-current-main {
+  flex: 1;
+  min-width: 0;
+  gap: 6px;
+}
+
+.course-resume.guide-current-lesson strong {
+  font-size: 1.125rem;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+@media (min-width: 761px) {
+  .lab-shell-runtime .lab-task.guide-current-lesson {
+    padding: 18px 22px;
+    margin: 0 0 18px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--canvas);
+  }
+}
+
+@media (max-width: 760px) {
+  .lab-shell-runtime .lab-task.guide-current-lesson {
+    padding: 0 0 8px;
+    margin: 0;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    background: transparent;
+  }
+  .lab-task .guide-current-badge {
+    display: none;
+  }
+}
+
+.lab-task.guide-current-lesson .lab-task-header {
+  margin-bottom: 6px;
+}
+
+.lab-task.guide-current-lesson .lab-task-header h2 {
+  font-size: 1.15rem;
+  margin: 4px 0 0;
+}
+
+.faq-page .faq-summary-card {
+  margin: var(--space-5) 0 var(--space-6);
+  padding: 20px 24px;
+}
+
+.faq-page .faq-document {
+  max-width: none;
 }
 
 .today-aside-stats {
@@ -1518,13 +1587,6 @@
   grid-column: 2;
   font-size: 14px;
   line-height: 1.7;
-}
-
-.lab-shell-runtime .lab-task {
-  border: 0;
-  border-bottom: 1px solid var(--line);
-  border-radius: 0;
-  padding: 0 0 var(--space-4);
 }
 
 .lab-task-header .page-eyebrow {

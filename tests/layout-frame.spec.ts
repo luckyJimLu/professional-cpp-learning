@@ -65,6 +65,30 @@ for (const viewport of [
       viewport.height + 1,
     );
 
+    // Navigate to Today, Lessons, FAQ, and Lab: all share the same centered frame
+    for (const [buttonName, selector] of [
+      ["学习指南", ".today-layout"],
+      ["课程", ".course-page"],
+      ["FAQ", ".faq-page"],
+      ["实验", ".lab-page-container"],
+    ] as const) {
+      await page
+        .getByRole("navigation", { name: "Primary navigation" })
+        .getByRole("button", { name: buttonName, exact: true })
+        .click();
+      const box = (await page.locator(selector).boundingBox())!;
+      expect(Math.abs(box.x - topicFrame.x)).toBeLessThanOrEqual(1);
+      expect(Math.abs(box.width - topicFrame.width)).toBeLessThanOrEqual(1);
+    }
+
+    // Verify GitHub link at bottom of sidebar
+    const githubLink = page.locator(".sidebar-footer .sidebar-github-link");
+    await expect(githubLink).toBeVisible();
+    await expect(githubLink).toHaveAttribute(
+      "href",
+      "https://github.com/luckyJimLu/professional-cpp-learning",
+    );
+
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
@@ -73,7 +97,26 @@ for (const viewport of [
   });
 }
 
-test("mobile 390x844 layout has no horizontal overflow across topics, booklets and slides", async ({
+test("topics catalog consolidates domains and renames books option to 参考书籍", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/?view=topics");
+  const options = await page
+    .locator("#topic-category option")
+    .allInnerTexts();
+  expect(options).toEqual([
+    "全部领域",
+    "框架与阅读指南",
+    "网络与异步",
+    "嵌入式系统",
+    "设计模式",
+    "C++ 并发编程",
+    "参考书籍",
+  ]);
+});
+
+test("mobile 390x844 layout has no horizontal overflow across topics, booklets, slides and faq", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -81,6 +124,7 @@ test("mobile 390x844 layout has no horizontal overflow across topics, booklets a
     "/?view=topics&topicCategory=books&topic=references%2Freading-paths%2Fcpp-compiler-abi.md",
     "/?view=booklets",
     "/?view=slides",
+    "/?view=faq",
   ]) {
     await page.goto(url);
     expect(

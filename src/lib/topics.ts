@@ -23,7 +23,6 @@ const sources = import.meta.glob(
     "../../docs/content-migration.md",
     "../../docs/harmonyos-mini-cpp11-compatibility.md",
     "../../docs/zephyr-cpp20-zpp.md",
-    "../../docs/faq.md",
     "../../guidelines/*.md",
     "../../utils/**/*.md",
     "../../references/system-design-notes/content/**/*.md",
@@ -34,14 +33,10 @@ const sources = import.meta.glob(
 export function topicGroup(path: string) {
   if (path.includes("references/reading-paths/")) return "参考书导读";
   if (/C\+\+ Concurrency/.test(path)) return "C++ 并发编程";
-  if (/Boost[. ]Asio/.test(path)) return "Boost.Asio";
-  if (/Cpp System/.test(path)) return "C++ 系统架构";
+  if (/Boost[. ]Asio|frameworks\/asio/.test(path)) return "网络与异步";
   if (/embedded-systems|frameworks\/(trace32|openharmony)/.test(path))
     return "嵌入式系统";
-  if (/Development Tools|^utils\//.test(path)) return "开发工具";
-  if (/patterns/.test(path)) return "设计模式";
-  if (/frameworks\/asio/.test(path)) return "网络与异步";
-  if (/faq/.test(path)) return "常见问题 (FAQ)";
+  if (/patterns|Cpp System/.test(path)) return "设计模式";
   return "框架与阅读指南";
 }
 export const topics = Object.entries(sources)
@@ -81,11 +76,10 @@ export function topicSeries(topic: Topic) {
   if (path.startsWith("frameworks/openharmony/")) return "OpenHarmony 轻量系统";
   if (path.startsWith("frameworks/trace32/"))
     return "TRACE32 · RTOS 稳定性分析";
-  if (path.startsWith("frameworks/asio/")) return "Asio · 网络与异步";
-  if (path.startsWith("patterns/")) return "C++ 设计模式";
+  if (/Boost[. ]Asio|frameworks\/asio/.test(path)) return "Asio · 网络与异步";
+  if (/patterns|Cpp System/.test(path)) return "C++ 设计模式";
   if (path.startsWith("docs/") && path !== "docs/mermaid.md")
     return "学习路线与实验手册";
-  if (path.startsWith("guidelines/")) return "工程规范与评审";
   return topic.group;
 }
 

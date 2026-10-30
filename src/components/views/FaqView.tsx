@@ -4,7 +4,7 @@ import { Markdown } from "../Markdown";
 
 const faqBody = faqRaw
   .replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "")
-  .replace(/^#\s+.+\r?\n+/, "");
+  .replace(/^[\s\S]*?(?=^## Q1:)/m, "");
 
 export function FaqView() {
   const articleRef = useRef<HTMLElement>(null);

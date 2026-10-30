@@ -49,11 +49,12 @@ export function Topics() {
   const groupNames = [
     ...new Set(
       topics
-        .filter((topic) => topic.locale === "zh")
+        .filter((topic) => topic.locale === "zh" && topic.group !== "参考书导读")
         .map((topic) => topic.group),
     ),
   ];
-  const requestedCategory = params.get("topicCategory") ?? "all";
+  const rawCategory = params.get("topicCategory") ?? "all";
+  const requestedCategory = rawCategory === "参考书导读" ? "books" : rawCategory;
   const category = ["all", "books", ...groupNames].includes(requestedCategory)
     ? requestedCategory
     : "all";
@@ -73,7 +74,9 @@ export function Topics() {
 
   const visible = topics.filter(
     (topic) =>
-      topic.locale === "zh" && (category === "all" || topic.group === category),
+      topic.locale === "zh" &&
+      topic.group !== "参考书导读" &&
+      (category === "all" || topic.group === category),
   );
   const collections = [...new Set(visible.map(topicSeries))].map((title) => {
     const first = visible.find((topic) => topicSeries(topic) === title)!;
@@ -105,7 +108,7 @@ export function Topics() {
               {group}
             </option>
           ))}
-          <option value="books">参考书籍 · 书单与 PDF</option>
+          <option value="books">参考书籍</option>
         </select>
         <span className="topic-result-count" aria-live="polite">
           {category === "books"
