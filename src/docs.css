@@ -955,6 +955,14 @@ body {
   display: inline-flex;
   align-items: center;
 }
+.topic-breadcrumb-current {
+  color: var(--ink);
+  font-weight: 500;
+  max-width: 480px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .topic-reader-tools {
   display: flex;
   align-items: flex-start;
@@ -1170,15 +1178,16 @@ body {
 /* Desktop reader: persistent chapter navigation beside a bounded document. */
 .topic-reader-main { min-width: 0; }
 @media (min-width: 1100px) {
-  .topic-reading { max-width: 1200px; }
-  .topic-reader-layout { display: grid; align-items: start; grid-template-columns: 220px minmax(0, var(--reading-max)); gap: var(--space-8); }
+  .topic-reading { max-width: 1360px; }
+  .topic-reader-layout { display: grid; align-items: start; grid-template-columns: 250px minmax(0, 1fr); gap: 36px; }
   .topic-reader-tools { position: sticky; top: calc(var(--header-height) + 20px); display: flex; flex-direction: column; flex-wrap: nowrap; width: 100%; max-height: calc(100dvh - var(--header-height) - 40px); overflow-y: auto; margin: 0; }
   .topic-reader-tools details { flex: none; width: 100%; padding: 0 12px; }
-  .topic-reader-tools nav { max-height: 28vh; }
+  .topic-reader-tools nav { max-height: min(48vh, 480px); }
   .topic-reader-tools summary { font-size: 14px; }
   .topic-reader-tools nav a {
   flex-shrink: 0; font-size: 13px; padding-top: 10px; padding-bottom: 10px; }
-  .topic-document-centered { width: 100%; padding: 0; }
+  .topic-document-centered { width: 100%; max-width: 980px; margin: 0; padding: 0; }
+  .topic-adjacent { max-width: 980px; margin: 24px 0 0; }
   .topic-document-centered .markdown h1 { font-size: var(--font-h1); line-height: 1.45; }
   .topic-language { padding-left: 12px; }
 }

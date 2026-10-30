@@ -20,6 +20,7 @@
 
 ## 快速入口
 
+- [C++ 常见问题与核心概念辨析 (FAQ)](docs/faq.md)（含修饰符、限定符与属性全景）
 - [C++ 新特性与标准来源速查](docs/cpp-feature-standards.md)（各课课首标注版本）
 - [C / C++ 独立速查小册子与关键字查找](booklets/README.md)（网页主导航「小册子」）
 - [新手起步：编辑、编译、运行与学习方法](docs/beginner-start.md)

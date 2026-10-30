@@ -1665,16 +1665,22 @@
 .topic-reading .markdown-table-scroll {
   margin-block: var(--space-6);
   scrollbar-gutter: stable;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  overflow-x: auto;
 }
 
 .topic-reading .markdown-table-scroll table {
   margin: 0;
-  table-layout: fixed;
+  width: 100%;
+  table-layout: auto;
+  border-collapse: collapse;
 }
 
 .topic-reading .markdown-table-scroll :is(th, td) {
-  padding: 12px 14px;
-  overflow-wrap: anywhere;
+  padding: 12px 16px;
+  overflow-wrap: break-word;
 }
 
 .topic-reading .markdown-table-scroll th {
@@ -1683,11 +1689,25 @@
   background: var(--canvas);
   font-size: 13px;
   font-weight: 650;
+  border-bottom: 1px solid var(--line);
 }
 
 .topic-reading .markdown-table-scroll td {
   vertical-align: top;
   line-height: 1.7;
+  border-bottom: 1px solid var(--line);
+}
+
+.topic-reading .markdown-table-scroll tr:last-child td {
+  border-bottom: none;
+}
+
+.topic-reading .markdown-table-scroll th:first-child,
+.topic-reading .markdown-table-scroll td:first-child {
+  white-space: nowrap;
+  font-weight: 600;
+  color: var(--ink);
+  background: rgba(2, 132, 199, 0.03);
 }
 
 @media (max-width: 760px) {

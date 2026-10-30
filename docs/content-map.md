@@ -26,6 +26,7 @@ summary: 从教材章节到工程专题、可运行实验和评审，按前置�
 | RTOS 模拟器 | 任务状态、同步、阻塞与超时 | [9 场景教学手册](rtos-simulator/LEARNING-GUIDE.md) | 预测 → 回放 → 参数对照 → 解释；保存事件或导出轨迹 | 不代表真实内核时序、吞吐或 WCET |
 | 内存可视化 | 指针、作用域、RAII、容器 | [5 轨迹导学](memory-visualizer-guide.md) | 源码行、对象状态、所有权关系与检查题 | 预置快照不是当前编译器的内存布局证明 |
 | 编码规范与复盘 | 对应概念和可运行代码 | [规范索引](../guidelines/embedded-cpp-guideline-notes.md) → [评审标准](../guidelines/review-rubric.md) → 章／周复盘 | 五项评审、错误／推荐对照、检测方法和例外依据 | 尚无统一实测评分，阅读记录不是掌握度 |
+| 常见问题 (FAQ) | 语言基础机制 | [FAQ 核心概念辨析](faq.md) | 核心修饰符/说明符/属性全景分类、四大维度与避坑建议 | 持续扩充高频工程疑问 |
 | 工程工具 | Git、构建产物、SSH／SCP | [工具首页](../utils/README.md) → [操作与失败清单](../utils/windows-remote-script-runner/OPERATIONS.md) | manifest、hash、日志和失败恢复记录 | Windows／硬件行为需在目标环境验证 |
 
 ## 状态与证据

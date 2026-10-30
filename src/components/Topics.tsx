@@ -319,8 +319,16 @@ function TopicReader({
         >
           {selected.group}
         </a>
+        {topicSeries(selected) !== selected.group && (
+          <>
+            <span aria-hidden="true">/</span>
+            <span>{topicSeries(selected)}</span>
+          </>
+        )}
         <span aria-hidden="true">/</span>
-        <span>{topicSeries(selected)}</span>
+        <span className="topic-breadcrumb-current" aria-current="page">
+          {selected.title}
+        </span>
       </nav>
       <div className="topic-reader-layout">
         <aside className="topic-reader-tools" aria-label="阅读导航">

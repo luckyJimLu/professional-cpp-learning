@@ -23,6 +23,7 @@ const sources = import.meta.glob(
     "../../docs/content-migration.md",
     "../../docs/harmonyos-mini-cpp11-compatibility.md",
     "../../docs/zephyr-cpp20-zpp.md",
+    "../../docs/faq.md",
     "../../guidelines/*.md",
     "../../utils/**/*.md",
     "../../references/system-design-notes/content/**/*.md",
@@ -40,6 +41,7 @@ export function topicGroup(path: string) {
   if (/Development Tools|^utils\//.test(path)) return "开发工具";
   if (/patterns/.test(path)) return "设计模式";
   if (/frameworks\/asio/.test(path)) return "网络与异步";
+  if (/faq/.test(path)) return "常见问题 (FAQ)";
   return "框架与阅读指南";
 }
 export const topics = Object.entries(sources)
