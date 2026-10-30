@@ -138,7 +138,7 @@
 
 /* ---------- 幻灯片 16:9 画布容器 ---------- */
 .slide-stage-wrapper {
-  --stage-chrome: 320px;
+  --stage-chrome: 356px;
   display: flex;
   flex-direction: column;
   width: min(100%, calc((100dvh - var(--stage-chrome)) * 16 / 9));
