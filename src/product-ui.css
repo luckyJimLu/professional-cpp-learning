@@ -1525,3 +1525,137 @@
   color: var(--muted);
   letter-spacing: 0;
 }
+
+/* Homepage: make the next learning decision visually unmistakable without
+   introducing a second visual language. */
+
+.guide-current-lesson h2 {
+  max-width: 42ch;
+  font-size: clamp(22px, 2vw, 26px);
+  letter-spacing: -0.018em;
+}
+
+.guide-current-top {
+  padding-top: 2px;
+}
+
+.guide-current-badge {
+  white-space: nowrap;
+}
+
+.guide-progress-bar {
+  background: color-mix(in srgb, var(--blue) 10%, var(--surface));
+}
+
+.guide-current-lesson .primary-button {
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--blue) 55%, #000);
+}
+
+.guide-current-lesson .ghost-button {
+  border-color: var(--line-strong);
+}
+
+.guide-pathways a {
+  min-height: 92px;
+  transition: background-color 160ms ease, border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.guide-pathways a:hover {
+  transform: translateX(3px);
+}
+
+.guide-pathways a:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.guide-pathways a:hover .pathway-icon {
+  color: var(--ink);
+}
+
+.guide-pipeline {
+  padding: 24px;
+}
+
+.pipeline-stage-detail {
+  border-color: color-mix(in srgb, var(--blue) 18%, var(--line));
+}
+
+.pipeline-stage-link {
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.on-this-page a {
+  border-left: 2px solid transparent;
+  margin-left: -20px;
+  padding: 7px 0 7px 18px;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+
+.on-this-page a[aria-current] {
+  border-left-color: var(--blue);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-pathways a {
+    transition: none;
+  }
+
+  .guide-pathways a:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .guide-current-lesson {
+    padding: 20px;
+  }
+
+  .guide-current-lesson h2 {
+    font-size: 22px;
+  }
+
+  .guide-current-top {
+    align-items: flex-start;
+  }
+
+  .guide-current-badge {
+    white-space: normal;
+  }
+
+  .guide-pathways a {
+    min-height: 0;
+  }
+
+  .guide-pipeline {
+    padding: 14px;
+  }
+}
+
+/* Topic reader: the document frame needs a real reading inset on wide
+   screens; phones retain the existing edge-to-edge prose treatment. */
+.topic-reading .topic-document-centered {
+  padding: var(--space-6);
+}
+
+.topic-reading .topic-document-centered .markdown > :first-child {
+  margin-top: 0;
+}
+
+.topic-reading .topic-document-centered .markdown h1 {
+  text-wrap: balance;
+}
+
+.topic-reader-tools summary:hover {
+  color: var(--blue);
+}
+
+@media (max-width: 760px) {
+  .topic-reading .topic-document-centered {
+    padding: 0;
+  }
+}
