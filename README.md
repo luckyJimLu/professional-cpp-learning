@@ -13,8 +13,8 @@
 
 ## 当前进度
 
-- **已发布：Day 1–64**
-- **下一课：Day 65 · Chapter 7 · Memory Management**
+- **已发布：Day 1–65**
+- **下一课：Day 66 · Chapter 7 · Memory Management**
 - 当前主线：**Chapter 7 · Memory Management：ownership / resource policy / bounded allocation / object lifetime**
 - 更新方式：**GitHub Markdown only**
 
@@ -22,10 +22,8 @@
 
 - [C++ 新特性与标准来源速查](docs/cpp-feature-standards.md)（各课课首标注版本）
 - [C / C++ 独立速查小册子与关键字查找](booklets/README.md)（网页主导航「小册子」）
-
 - [新手起步：编辑、编译、运行与学习方法](docs/beginner-start.md)
-- [Day 1–64 逐课导航与前置知识](docs/beginner-course-map.md)
-
+- [Day 1–65 逐课导航与前置知识](docs/beginner-course-map.md)
 - [完整学习进度](progress.md)
 - [章节里程碑与 16 周顺序参考](docs/learning-plan.md)
 - [Runnable Exercise Audit & Contract](docs/runnable-exercise-audit.md)
@@ -45,11 +43,11 @@
 
 ## 最近课程
 
+- [Day 65 · Optional Lifetime and Fixed-Pool Safety Boundaries](daily/day-065-optional-fixed-pool-lifetime-boundaries.md)
 - [Day 64 · Object Lifetime, Placement Construction and Fixed Storage Reuse](daily/day-064-object-lifetime-placement-construction-fixed-pool.md)
 - [Day 63 · PMR, Bounded Allocation and Memory-Resource Policy](daily/day-063-pmr-bounded-allocation-resource-policy.md)
 - [Day 62 · Smart Pointer Aliasing, Casts and Ownership API Boundaries](daily/day-062-smart-pointer-aliasing-casts-ownership-api.md)
 - [Day 61 · enable_shared_from_this · Async Callback Lifetime and Teardown](daily/day-061-enable-shared-from-this-callback-lifetime.md)
-- [Day 60 · Shared Ownership · shared_ptr, weak_ptr and Lifetime Cycles](daily/day-060-shared-ptr-weak-ptr-lifetime.md)
 
 ## 每日课程结构
 
@@ -76,7 +74,7 @@
 .
 ├── README.md
 ├── progress.md
-├── daily/                       # 已发布课程 Day 1–64
+├── daily/                       # 已发布课程 Day 1–65
 ├── weekly/
 ├── patterns/
 ├── frameworks/
@@ -118,12 +116,12 @@ GitHub Pages 必须选择 **GitHub Actions** 作为发布来源，由 Vite 构�
 课程大纲 `PPT/设计模式大纲.md` 由 [`.opencode/skills/slidev-ppt`](.opencode/skills/slidev-ppt) 技能生成工程蓝图风格的交互式课件（`slides/lesson-0X.md`）。课件生成已集成到本仓库的脚本与 CI 中。
 
 ```bash
-npm run ppt:sync       # 同步技能主题（style.css / global-top.vue / components）到 slides/
-npm run ppt:install    # 首次安装 slides/ 依赖
-npm run ppt:check      # 校验全部 slides/lesson-*.md（三栏防幻觉 + 结构/词表/资源）+ 技能回归测试
-npm run ppt:build      # 构建静态站点到 slides/dist/
-npm run ppt:export     # 导出 PDF
-npm run ppt:all        # sync -> check -> build
+npm run ppt:sync
+npm run ppt:install
+npm run ppt:check
+npm run ppt:build
+npm run ppt:export
+npm run ppt:all
 ```
 
 - 校验器 CLI：`python3 .opencode/skills/slidev-ppt/scripts/check_slides.py DECK --outline PPT/设计模式大纲.md --lesson N`（`--strict` 将 warning 视为 error）。
@@ -136,10 +134,10 @@ npm run ppt:all        # sync -> check -> build
 - [页面溯源、术语与大纲歧义说明](slides/lesson-02-traceability.md)。主站「课件」选择器自动发现第 2 课。
 
 ```bash
-npm --prefix slides run dev:02       # 交互预览第 2 课
-npm --prefix slides run build:02     # 构建至 slides/dist/lesson-02
-npm --prefix slides run export:02    # 导出第 2 课 PDF
-npm --prefix slides run build:all    # 构建第 1、2 课
+npm --prefix slides run dev:02
+npm --prefix slides run build:02
+npm --prefix slides run export:02
+npm --prefix slides run build:all
 ```
 
 ### 第 3 课：架构解耦与值语义多态
@@ -148,9 +146,9 @@ npm --prefix slides run build:all    # 构建第 1、2 课
 - [页面溯源、术语与技术边界](slides/lesson-03-traceability.md)。主站「课件」选择器自动发现第 3 课；这是全课程终章。
 
 ```bash
-npm --prefix slides run dev:03       # 交互预览
-npm --prefix slides run build:03     # 构建至 slides/dist/lesson-03
-npm --prefix slides run export:03    # 导出第 3 课 PDF
-npm --prefix slides run build:all    # 构建第 1、2、3 课
-npm run ppt:build                    # 构建全部三课
+npm --prefix slides run dev:03
+npm --prefix slides run build:03
+npm --prefix slides run export:03
+npm --prefix slides run build:all
+npm run ppt:build
 ```
