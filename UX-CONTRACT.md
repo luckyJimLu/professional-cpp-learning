@@ -266,3 +266,5 @@ shows the latest published lesson when the next lesson is unavailable.
 ## Reference reading paths
 
 Reference books include repository-owned reading guides and PDF assets. Guides derive from `references/reading-paths/*.md` through `topics.ts`, open in the shared TopicReader with its heading directory and history, and return through the reference-books category. PDF links keep their separate new-tab behavior. Counts distinguish guides from PDFs. Native category selection remains platform-owned.
+
+Reference catalog separates staged reading guides from PDF files. Desktop uses two columns; below 980px it uses one. Guide summaries derive from Markdown metadata, and both formats retain native links and existing reader/history behavior.

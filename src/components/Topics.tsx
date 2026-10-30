@@ -130,22 +130,35 @@ export function Topics() {
       )}
       {category === "books" ? (
         <section aria-label="参考书籍" className="topic-books">
-          {referenceGuides.map((guide) => (
-            <a href={topicUrl(guide.path, "books")} key={guide.path}>
-              {guide.title}
-              <span>阅读导读 →</span>
-            </a>
-          ))}
-          {referenceBooks.length ? (
-            referenceBooks.map(([file, url]) => (
-              <a href={url} key={file} target="_blank" rel="noreferrer">
-                {file.split("/").pop()}
-                <span>打开 PDF ↗</span>
+          <header className="reference-section-heading">
+            <h2>按路线选书</h2>
+            <p>先明确学习目标，再沿阶段阅读与实践。</p>
+          </header>
+          <div className="reference-guide-grid">
+            {referenceGuides.map((guide) => (
+              <a href={topicUrl(guide.path, "books")} key={guide.path}>
+                <h3>{guide.title}</h3>
+                <p>{topicSummary(guide)}</p>
+                <span>阅读路线与书目 →</span>
               </a>
-            ))
-          ) : (
-            <p>暂无 PDF，可先阅读书单导读。</p>
-          )}
+            ))}
+          </div>
+          <header className="reference-section-heading">
+            <h2>PDF 资料库</h2>
+            <p>直接打开原书文件，在新标签页阅读。</p>
+          </header>
+          <div className="reference-pdf-grid">
+            {referenceBooks.length ? (
+              referenceBooks.map(([file, url]) => (
+                <a href={url} key={file} target="_blank" rel="noreferrer">
+                  {file.split("/").pop()}
+                  <span>打开 PDF ↗</span>
+                </a>
+              ))
+            ) : (
+              <p>暂无 PDF，可先阅读书单导读。</p>
+            )}
+          </div>
         </section>
       ) : (
         <div className="topic-collections">
