@@ -1659,3 +1659,43 @@
     padding: 0;
   }
 }
+
+/* Reading-route tables are comparison tools, not body-text containers. Keep
+   their header and cell rhythm clear without introducing a second surface. */
+.topic-reading .markdown-table-scroll {
+  margin-block: var(--space-6);
+  scrollbar-gutter: stable;
+}
+
+.topic-reading .markdown-table-scroll table {
+  margin: 0;
+  table-layout: fixed;
+}
+
+.topic-reading .markdown-table-scroll :is(th, td) {
+  padding: 12px 14px;
+  overflow-wrap: anywhere;
+}
+
+.topic-reading .markdown-table-scroll th {
+  vertical-align: bottom;
+  color: var(--ink);
+  background: var(--canvas);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.topic-reading .markdown-table-scroll td {
+  vertical-align: top;
+  line-height: 1.7;
+}
+
+@media (max-width: 760px) {
+  .topic-reading .markdown-table-scroll {
+    margin-block: var(--space-4);
+  }
+
+  .topic-reading .markdown-table-scroll :is(th, td) {
+    padding: 10px 12px;
+  }
+}
