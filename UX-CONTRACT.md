@@ -262,3 +262,7 @@ shows the latest published lesson when the next lesson is unavailable.
 - Search remains local, literal, NFKC-normalized, case-insensitive and AND-based. Whitespace alone is not an active search. Language switching still clears the previous booklet query/location; modified clicks and browser history remain native.
 - C++ chapter navigation groups topic chapters and standard-version chapters without filtering the book. Desktop scroll-follow keeps the active directory link inside its bounded scroll region. The return action outside search restores the booklet heading.
 - Verification: `tests/booklets.spec.ts` covers persistent tools, narrow/short landscape, focus clearance, keyboard search/reset, result navigation and existing IME/download/error/history paths. Screenshots and static audit live in `/workspace/artifacts/booklets-ux/` for the implementation session.
+
+## Reference reading paths
+
+Reference books include repository-owned reading guides and PDF assets. Guides derive from `references/reading-paths/*.md` through `topics.ts`, open in the shared TopicReader with its heading directory and history, and return through the reference-books category. PDF links keep their separate new-tab behavior. Counts distinguish guides from PDFs. Native category selection remains platform-owned.

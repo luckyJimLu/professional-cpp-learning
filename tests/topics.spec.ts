@@ -211,3 +211,46 @@ test("desktop keeps chapter navigation beside the document while reading", async
     ),
   ).toBe(true);
 });
+
+for (const width of [390, 1440]) {
+  test(`reference guides open, navigate and return at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/?view=topics&topicCategory=books");
+    const books = page.getByRole("region", { name: "参考书籍" });
+    await books.getByRole("link", { name: /底层机制进阶书单/ }).click();
+    await expect(page.locator(".topic-document-centered h1")).toContainText(
+      "从二进制到编译器与 ABI",
+    );
+    await expect(page.locator(".topic-document-centered h2")).toHaveCount(7);
+    await page.reload();
+    await expect(page.locator(".topic-document-centered")).toContainText(
+      "Concepts",
+    );
+    await page
+      .locator(".topic-document-centered")
+      .getByRole("link", { name: /四阶段参考书导读/ })
+      .click();
+    const article = page.locator(".topic-document-centered");
+    await expect(article).toContainText("2018 第一版");
+    await expect(
+      article.locator('a[href^="https://drive.google.com/file/"]'),
+    ).toHaveCount(3);
+    await expect(article).toContainText("2023 第二版");
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    await page.screenshot({
+      path: `test-results/reference-guide-${width}.png`,
+    });
+    await page
+      .getByRole("navigation", { name: "专题路径" })
+      .getByRole("link", { name: "参考书导读", exact: true })
+      .click();
+    await expect(page.getByLabel("浏览领域")).toHaveValue("books");
+    await expect(page.getByRole("region", { name: "参考书籍" })).toBeVisible();
+  });
+}

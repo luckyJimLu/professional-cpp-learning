@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   topics,
   referenceBooks,
+  referenceGuides,
   topicSeries,
   topicSummary,
   seriesTopics,
@@ -104,11 +105,11 @@ export function Topics() {
               {group}
             </option>
           ))}
-          <option value="books">参考书籍 · PDF</option>
+          <option value="books">参考书籍 · 书单与 PDF</option>
         </select>
         <span className="topic-result-count" aria-live="polite">
           {category === "books"
-            ? `${referenceBooks.length} 本参考书`
+            ? `${referenceGuides.length} 篇导读 · ${referenceBooks.length} 本 PDF`
             : `${collections.length} 个专题 · ${visible.length} 篇文章`}
         </span>
       </div>
@@ -129,6 +130,12 @@ export function Topics() {
       )}
       {category === "books" ? (
         <section aria-label="参考书籍" className="topic-books">
+          {referenceGuides.map((guide) => (
+            <a href={topicUrl(guide.path, "books")} key={guide.path}>
+              {guide.title}
+              <span>阅读导读 →</span>
+            </a>
+          ))}
           {referenceBooks.length ? (
             referenceBooks.map(([file, url]) => (
               <a href={url} key={file} target="_blank" rel="noreferrer">
@@ -137,7 +144,7 @@ export function Topics() {
               </a>
             ))
           ) : (
-            <p>暂无参考书籍，请选择其他领域浏览。</p>
+            <p>暂无 PDF，可先阅读书单导读。</p>
           )}
         </section>
       ) : (
@@ -291,7 +298,14 @@ function TopicReader({
       <nav aria-label="专题路径" className="topic-breadcrumb">
         <a href={topicUrl()}>专题知识库</a>
         <span aria-hidden="true">/</span>
-        <a href={topicUrl(undefined, selected.group)}>{selected.group}</a>
+        <a
+          href={topicUrl(
+            undefined,
+            selected.group === "参考书导读" ? "books" : selected.group,
+          )}
+        >
+          {selected.group}
+        </a>
         <span aria-hidden="true">/</span>
         <span>{topicSeries(selected)}</span>
       </nav>
@@ -389,7 +403,14 @@ function TopicReader({
                 <span>{previous.title}</span>
               </a>
             ) : (
-              <a href={topicUrl(undefined, selected.group)}>返回专题列表</a>
+              <a
+                href={topicUrl(
+                  undefined,
+                  selected.group === "参考书导读" ? "books" : selected.group,
+                )}
+              >
+                返回专题列表
+              </a>
             )}
             {next && (
               <a href={topicUrl(next.path)}>

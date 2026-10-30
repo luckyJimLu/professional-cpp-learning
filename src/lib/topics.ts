@@ -3,6 +3,7 @@ export { referenceBooks } from "./contentAssets";
 const sources = import.meta.glob(
   [
     "../../patterns/**/*.md",
+    "../../references/reading-paths/*.md",
     "../../frameworks/**/*.md",
     "../../docs/mermaid.md",
     "../../docs/content-map.md",
@@ -29,6 +30,7 @@ const sources = import.meta.glob(
 ) as Record<string, string>;
 
 export function topicGroup(path: string) {
+  if (path.includes("references/reading-paths/")) return "参考书导读";
   if (/C\+\+ Concurrency/.test(path)) return "C++ 并发编程";
   if (/Boost[. ]Asio/.test(path)) return "Boost.Asio";
   if (/Cpp System/.test(path)) return "C++ 系统架构";
@@ -121,3 +123,8 @@ export function seriesTopics(topic: Topic) {
         a.path.localeCompare(b.path, "zh-CN", { numeric: true }),
     );
 }
+
+export const referenceGuides = topics.filter(
+  (topic) =>
+    topic.path.startsWith("references/reading-paths/") && topic.locale === "zh",
+);
