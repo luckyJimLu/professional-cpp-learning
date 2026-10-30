@@ -38,6 +38,15 @@ if len(re.findall(r"^```", cpp_source, re.M)) % 2:
 for version in ("11", "14", "17", "20", "23"):
     if f"cpp-{version}" not in cpp_categories:
         raise SystemExit(f"Missing C++{version} chapter")
+# Modern-feature explanations must include the problem, scenario and usage limits.
+feature_blocks = re.findall(r"^### [^\n]+ <!-- entry: (feature-\d+) -->\n(.*?)(?=^### |^## |\Z)", cpp_source, re.M | re.S)
+if not feature_blocks:
+    raise SystemExit("Missing C++ standard-version feature explanations")
+for feature_id, body in feature_blocks:
+    for label in ("**首次标准化：", "**引入原因：**", "**应用场景：**", "**使用边界：**", "**实现机制（标准要求与常见实现）：**", "**深入讨论：**"):
+        if label not in body:
+            raise SystemExit(f"{feature_id} is missing {label}")
+print(f"C++ feature context PASS: {len(feature_blocks)} versioned entries")
 print(f"C++ structure PASS: {len(cpp_categories)} categories, {len(cpp_entries)} entries")
 # Validate the promised C17 index and keyword inventory, not just page length.
 header_entry = source.split("<!-- entry: standard-headers -->", 1)[1].split("\n### ", 1)[0]
@@ -62,6 +71,7 @@ with tempfile.TemporaryDirectory(prefix="c-booklet-") as temporary:
         path.write_text(program, encoding="utf-8")
         files.append(path)
     files += sorted((ROOT / "booklets/examples").glob("*.c"))
+    files += sorted((ROOT / "booklets/labs").glob("*.c"))
     for index, path in enumerate(files):
         binary = directory / f"example-{index}"
         subprocess.run(compiler + flags + [str(path), "-o", str(binary), "-lm"], check=True, timeout=30)
@@ -81,6 +91,7 @@ with tempfile.TemporaryDirectory(prefix="cpp-booklet-") as temporary:
         cpp_files.append((path, "c++20"))
     cpp_files += [(path, "c++23" if path.name.startswith("cpp23-") else "c++20")
                   for path in sorted((ROOT / "booklets/examples").glob("*.cpp"))]
+    cpp_files += [(path, "c++20") for path in sorted((ROOT / "booklets/labs").glob("*.cpp"))]
     for index, (path, standard) in enumerate(cpp_files):
         binary = directory / f"cpp-example-{index}"
         subprocess.run(cpp_compiler + [f"-std={standard}", "-Wall", "-Wextra", "-Wconversion", "-Wpedantic", "-Werror", "-pthread", str(path), "-o", str(binary)], check=True, timeout=60)

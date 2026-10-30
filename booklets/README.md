@@ -33,7 +33,7 @@ C17 是默认标准。C23、POSIX、平台扩展及 C++ 的差异单独提醒。
 
 ## C++ 内容与校核
 
-[C++ 语言速查](cpp.md) 结合用户提供的《Cpp Comprehensive Cheatsheet.md》，扩充为 **17 章、108 个条目**，覆盖关键字、编译、类型、函数、类、内存、容器算法、流、文件和并发；现代功能逐条标注标准版本。保留原有条目 ID，不破坏已有定位链接。
+[C++ 语言速查](cpp.md) 结合用户提供的《Cpp Comprehensive Cheatsheet.md》，扩充为 **17 章、108 个条目**，覆盖关键字、编译、类型、函数、类、内存、容器算法、流、文件和并发；现代功能逐条标注标准版本；按版本分类的新特性说明引入原因、应用场景及使用边界。保留原有条目 ID，不破坏已有定位链接。
 
 [覆盖与校核说明](cpp-coverage.md) 记录附件各主题的落点、修正点及验证范围。无需记住版本目录：搜索 explicit、try_emplace、jthread、constinit 等可直接找到主题用法。
 
@@ -63,3 +63,9 @@ gcc -std=c17 -Wall -Wextra -Wconversion -Wpedantic -Werror booklets/examples/c17
 保留 `<!-- category: id -->`、`<!-- entry: id -->` 标记和每条的 `关键词：` 行，避免破坏分享链接。新增标准或平台接口时标明适用范围，正常与失败路径均可解释，再运行内容检查与 `tests/booklets.spec.ts`。
 
 C++ 完整自测位于 `examples/cpp20-reference.cpp` 和 `examples/cpp23-reference.cpp`；使用 `npm run check:booklets` 在临时目录中运行。需要同时提供 C17 与 C++23 可用的主机编译器，可通过 CC/CXX 指定；局部示例不声称能独立编译。
+
+## 实现机制与深入讨论
+
+C++ 的 47 个版本特性条目均补充实现机制与深入讨论；另补模块、比较、原子等主题。C 册补充 14 个相关条目的 C99/C11 实现解释，并在 C/C++ 差异条目列出 C23 重点增量，保持 C17 为主体。区分前端、后端、ABI 与标准库，不把常见布局或优化结果当作标准保证。
+
+[实现观察实验](implementation-lab.md) 提供类型、闭包、常量求值、原子与 optional 生命周期的观察步骤。`npm run check:booklets` 会编译运行 `labs/` 下的 C17/C++20 自测；C23 增量表和可选 Clang AST 命令不在这些自测的验证范围内。

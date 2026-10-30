@@ -71,7 +71,7 @@ size_t element_size = sizeof(int);
 `sizeof(char)` 恒为 1，但一个 C 字节不必是 8 位，用 `CHAR_BIT` 查询位数。`uint32_t` 等恰好位宽类型仅在实现提供对应类型时存在；不能假定 `sizeof(int) == 4`。
 
 ### 布尔、大小与空指针 <!-- entry: bool-size-null -->
-关键词：bool true false _Bool stdbool size_t NULL stddef 空指针
+关键词：bool true false _Bool stdbool size_t NULL stddef 空指针 编译器实现 底层机制 深入讨论
 
 C17 的 `bool`、`true`、`false` 由 `<stdbool.h>` 提供；`size_t` 是 `sizeof` 的无符号结果类型；空指针用 `NULL` 表达。
 
@@ -84,6 +84,12 @@ int *optional_value = NULL;
 ```
 
 > 注意：`size_t` 是无符号类型，递减循环不能依赖 `i >= 0` 停止。C17 没有 C++ 的 `nullptr` 关键字。
+
+**标准版本：C99：_Bool。**
+
+**实现机制（标准要求与常见实现）：** 前端把转为 _Bool 的结果规范为 0 或 1，布局由 ABI 决定；C17 的 bool/true/false 是头文件宏。
+
+**深入讨论与应用：** 用于逻辑状态。C23 将 bool/true/false 变为关键字，并新增 nullptr；不能用 memset 代替可移植的空指针初始化。
 
 ### const 与类型转换 <!-- entry: const-casts -->
 关键词：const 常量 类型转换 强制转换 cast 截断 窄化
@@ -114,7 +120,7 @@ float single = 1.5f;        /* 无 f 的 1.5 是 double */
 C17 不规定 `0b1010` 二进制字面量。负号是单独的运算符；极小负数边界优先使用 `<limits.h>` 的 `INT_MIN` 等宏。
 
 ### 零初始化、指定初始化与复合字面量 <!-- entry: initializers -->
-关键词：初始化 零初始化 指定初始化 复合字面量 designated initializer compound literal
+关键词：初始化 零初始化 指定初始化 复合字面量 designated initializer compound literal 编译器实现 底层机制 深入讨论
 
 部分初始化时，其余成员按静态初始化规则处理：算术值为零、指针为空指针。C17 用 `{0}`，不使用空的 `{}`。
 
@@ -128,8 +134,14 @@ const int *values = (int[]){2, 4, 6};
 
 复合字面量在文件作用域有静态存储期，在块作用域有对应块的自动存储期；不要让借用指针越过其生命周期。
 
+**标准版本：C99：指定初始化与复合字面量。**
+
+**实现机制（标准要求与常见实现）：** 前端将成员/下标映射到布局；静态对象可形成数据段，自动对象生成存储或复制。复合字面量引入未命名对象，不是堆分配。
+
+**深入讨论与应用：** 用于配置和稀疏表；C17 块内复合字面量具有关联块的自动存储期，块外为静态存储期。C 的指定初始化不同于 C++20。
+
 ### 定宽整数的输入输出 <!-- entry: integer-formats -->
-关键词：inttypes PRIu32 PRId64 SCNu32 uint32_t int64_t 定宽整数 格式宏
+关键词：inttypes PRIu32 PRId64 SCNu32 uint32_t int64_t 定宽整数 格式宏 编译器实现 底层机制 深入讨论
 
 `<stdint.h>` 提供类型，`<inttypes.h>` 提供匹配的格式宏；类型存在时再使用对应宏。
 
@@ -142,8 +154,14 @@ printf("id=%" PRIu32 "\n", id); /* 另需 <stdio.h> */
 
 `uint32_t` 不保证总是 `unsigned int`；不要硬写 `%u`。`int_least32_t` 表达至少 32 位，`int_fast32_t` 表达至少 32 位的实现选定快速类型，二者不承诺恰好 32 位。
 
+**标准版本：C99：stdint.h / inttypes.h。**
+
+**实现机制（标准要求与常见实现）：** 头文件将类型名映射到 ABI 支持的基础整数类型，PRI/SCN 宏展开成相应格式串。
+
+**深入讨论与应用：** 解决 int/long 宽度的平台差异；格式诊断不会在运行时自动修正错误的可变参数类型。
+
 ### C17 关键字 <!-- entry: keywords -->
-关键词：关键字 reserved auto register _Alignas _Alignof _Atomic _Generic _Noreturn _Static_assert _Thread_local _Bool _Complex _Imaginary
+关键词：关键字 reserved auto register _Alignas _Alignof _Atomic _Generic _Noreturn _Static_assert _Thread_local _Bool _Complex _Imaginary 编译器实现 底层机制 深入讨论
 
 C17 有 44 个关键字，不能用作普通标识符。
 
@@ -157,6 +175,12 @@ _Alignas _Alignof _Atomic _Generic _Noreturn _Static_assert _Thread_local
 ```
 
 `bool` 是 C17 `<stdbool.h>` 中的宏，不是本标准的关键字。C23 新增的 `nullptr`、`constexpr`、`typeof` 等不属于本册默认语法；实现可选择不提供部分复数、原子或线程能力。
+
+**标准版本：C11：_Noreturn。**
+
+**实现机制（标准要求与常见实现）：** 前端把不返回调用者的契约传给控制流分析，优化器可去掉调用后的路径。
+
+**深入讨论与应用：** 用于终止型错误处理；不自动插入 exit，违反契约正常返回为未定义行为；C23 推荐 [[noreturn]] 属性。
 
 ## 输入与输出 <!-- category: io -->
 
@@ -401,7 +425,7 @@ return status;
 ## 函数与作用域 <!-- category: functions -->
 
 ### 声明、定义与值传递 <!-- entry: functions -->
-关键词：函数 声明 定义 原型 参数 返回值 void 传值
+关键词：函数 声明 定义 原型 参数 返回值 void 传值 编译器实现 底层机制 深入讨论
 
 在使用前提供声明；参数按值传递。C17 用 `(void)` 明确表示无参数，空 `()` 在普通声明中不是同一含义。
 
@@ -412,6 +436,12 @@ void greet(void) { puts("hello"); }
 ```
 
 函数体需位于文件作用域，不能在标准 C 中嵌套定义函数。返回局部自动对象的地址会留下悬空指针。
+
+**标准版本：C99：__func__。**
+
+**实现机制（标准要求与常见实现）：** 前端提供类似 static const char 数组的函数名对象，通常放入只读数据。
+
+**深入讨论与应用：** 用于日志定位；它不是预处理宏，不能按宏字符串拼接规则使用。
 
 ### 通过指针修改调用者 <!-- entry: output-parameter -->
 关键词：指针参数 输出参数 pass by pointer 引用 & 解引用
@@ -511,7 +541,7 @@ int first = values[0];
 > 注意：长度公式仅适用于这里仍是数组类型的表达式。函数形参 `int values[]` 会调整为指针，不能在函数内用它计算调用者数组长度。
 
 ### 数组参数与多维数组 <!-- entry: array-parameters -->
-关键词：数组传参 二维数组 指针 长度 矩阵
+关键词：数组传参 二维数组 指针 长度 矩阵 编译器实现 底层机制 深入讨论
 
 数组传入函数时通常转换为指向首元素的指针，必须另外传元素数。二维数组的行宽属于所指向类型。
 
@@ -525,6 +555,12 @@ void clear_rows(int rows[][3], size_t count);
 ```
 
 `int (*)[3]` 与 `int **` 不是同一类型。变长数组在 C11/C17 中属于可选能力，速查示例不依赖它。
+
+**标准版本：C99：VLA 与数组形参 static。**
+
+**实现机制（标准要求与常见实现）：** 变长数组边界在运行时求值，后端可动态调整栈或使用其他自动存储机制，sizeof VLA 可在运行时计算；数组形参仍调整为指针。
+
+**深入讨论与应用：** 用于受控维度；大 VLA 可能耗尽自动存储，不能检查 NULL。C11/C17 可不支持 VLA；a[static n] 是调用前提，不是自动越界检查。
 
 ### 字符串与终止符 <!-- entry: strings -->
 关键词：字符串 string char strlen \0 NUL NULL 字符串字面量
@@ -693,7 +729,7 @@ ptrdiff_t count = end - begin; /* 需 <stddef.h>，结果为 3 */
 不能形成 `values + 4`，也不能跨独立分配块相减求距离。相减结果还必须能由 `ptrdiff_t` 表示。`void *` 算术是扩展，不属于 ISO C17。
 
 ### 对象表示、别名与 restrict <!-- entry: aliasing -->
-关键词：严格别名 strict aliasing effective type restrict unsigned char 对象表示
+关键词：严格别名 strict aliasing effective type restrict unsigned char 对象表示 编译器实现 底层机制 深入讨论
 
 不要把“能强转指针”当作“允许通过该类型访问对象”。字符类型可观察对象表示，按字节复制使用 `memcpy`。
 
@@ -705,8 +741,14 @@ memcpy(bytes, &value, sizeof bytes); /* 查看表示，不假定具体字节布�
 
 `restrict` 约束被修改对象的访问路径，不是声明指针值永不相等，也不是自动检查。例如 `memcpy` 的源和目标不能重叠。违反契约可能是未定义行为；不要仅为性能给可能重叠的指针加 `restrict`。
 
+**标准版本：C99：restrict。**
+
+**实现机制（标准要求与常见实现）：** 前端将指针访问约定传给别名分析，帮助向量化、重排和消除重复加载，不插入别名检测。
+
+**深入讨论与应用：** 用于满足约定的数值循环；存在写访问时违反相关访问约束可导致未定义行为，仅两个指针地址不同不足以证明合法。
+
 ### 对齐与 aligned_alloc <!-- entry: alignment -->
-关键词：_Alignas _Alignof stdalign alignas alignof max_align_t aligned_alloc 对齐
+关键词：_Alignas _Alignof stdalign alignas alignof max_align_t aligned_alloc 对齐 编译器实现 底层机制 深入讨论
 
 对象地址必须满足类型对齐要求；不能把任意字节地址直接作为任意类型使用。
 
@@ -717,6 +759,12 @@ size_t required = _Alignof(double);
 ```
 
 `<stdalign.h>` 提供 C17 的 `alignas`、`alignof` 宏。`aligned_alloc(alignment, size)` 要求实现支持该对齐，且大小是对齐的整数倍；失败检查空指针，成功用 `free` 释放。对齐只解决地址要求，不自动保证大小、有效类型和生命周期正确。
+
+**标准版本：C11：_Alignas / _Alignof / aligned_alloc。**
+
+**实现机制（标准要求与常见实现）：** 前端记录对齐约束，后端安排布局；aligned_alloc 由分配库返回符合对齐的存储。
+
+**深入讨论与应用：** 用于硬件与 SIMD 布局。C17 的 size 必须为 alignment 的整数倍且对齐需实现支持；C23 提供 alignas/alignof 拼写。
 
 ## 结构体、枚举与联合体 <!-- category: records -->
 
@@ -765,7 +813,7 @@ struct Flags { unsigned int ready : 1; unsigned int mode : 2; };
 不要假设 `offset == 1`，不要对位域取地址或使用 `offsetof`。位域的分配顺序、填充及字节序不适合作为可移植线协议；序列化应按字段显式编码。
 
 ### 柔性数组成员 <!-- entry: flexible-array -->
-关键词：柔性数组 flexible array member 变长尾部 struct sizeof
+关键词：柔性数组 flexible array member 变长尾部 struct sizeof 编译器实现 底层机制 深入讨论
 
 结构体最后一个成员可以是不指定长度的数组；它不是可变长度的普通成员对象。
 
@@ -780,6 +828,12 @@ if (p != NULL) {
 ```
 
 需要至少一个其他具名成员。`sizeof(struct Packet)` 不含额外数据区；结构体按值赋值不会复制尾部数据。C17 不把 `data[0]` 的零长数组写法视为等价标准语法。
+
+**标准版本：C99：柔性数组成员。**
+
+**实现机制（标准要求与常见实现）：** 编译器记录末尾成员偏移，动态元素不计入 sizeof，结构体可有尾部填充；附加空间由程序分配。
+
+**深入讨论与应用：** 用于报文头与负载一次分配。计算 sizeof(*p)+n*sizeof(p->data[0]) 必须检查溢出，结构体赋值不负责复制整个动态尾部。
 
 ## 文件与错误处理 <!-- category: files -->
 
@@ -969,7 +1023,7 @@ int sensor_read(void);
 `#` 把实参记号字符串化，`##` 拼接记号；两层宏可先展开实参。它们不等于字符串拼接运算。宏仍没有类型检查，实参是否多次求值必须看展开结果。
 
 ### _Static_assert 与 inline <!-- entry: static-assert -->
-关键词：_Static_assert static_assert 编译期断言 inline static inline 内联
+关键词：_Static_assert static_assert 编译期断言 inline static inline 内联 编译器实现 底层机制 深入讨论
 
 `_Static_assert` 的条件必须是整数常量表达式；失败时编译器必须诊断。
 
@@ -983,8 +1037,14 @@ static inline int max_int(int a, int b) {
 
 C17 `<assert.h>` 提供 `static_assert` 宏。头文件中的小辅助函数常用 `static inline`；它不保证机器码一定内联，也不要把 C 的外部 `inline` 规则直接当成 C++ 的规则。
 
+**标准版本：C99：inline；C11：_Static_assert。**
+
+**实现机制（标准要求与常见实现）：** 静态断言在前端求值并诊断，无运行时分支；inline 影响定义规则，是否消除函数调用由优化器决定。
+
+**深入讨论与应用：** 用于布局约束与头文件函数。C 外部 inline 规则与 C++ 不同，小型头文件辅助函数常用 static inline；C23 支持 static_assert 拼写和省略消息。
+
 ### _Generic 按类型选择 <!-- entry: generic -->
-关键词：_Generic 泛型选择 type generic 类型分派
+关键词：_Generic 泛型选择 type generic 类型分派 编译器实现 底层机制 深入讨论
 
 按表达式类型选择一个关联；匹配类型不能重复，`default` 可处理未匹配类型。
 
@@ -995,6 +1055,12 @@ C17 `<assert.h>` 提供 `static_assert` 宏。头文件中的小辅助函数常�
 ```
 
 控制表达式不求值，但未选分支仍须满足语法与语义约束；不能靠它隐藏本来非法的代码。它不是 C++ 模板。
+
+**标准版本：C11：_Generic。**
+
+**实现机制（标准要求与常见实现）：** 前端按控制表达式类型选择关联表达式，控制表达式不求值；未选分支不执行，但仍须满足语法及相关语义约束。
+
+**深入讨论与应用：** 用于泛型宏，不是 C++ 模板实例化；可先选函数名再统一调用，避免未选分支出现非法类型运算。
 
 ## 常用库与易错点 <!-- category: library -->
 
@@ -1081,7 +1147,7 @@ volatile unsigned int *register_address = NULL;
 线程间共享状态应研究 `<stdatomic.h>` 与平台同步原语；MMIO 的正确性还涉及地址、对齐、访问宽度和硬件屏障，不能仅加 `volatile`。
 
 ### C 与 C++ 不要混用 <!-- entry: c-vs-cpp -->
-关键词：C C++ 区别 malloc new delete free nullptr string 引用 auto bool C23 POSIX
+关键词：C C++ 区别 malloc new delete free nullptr string 引用 auto bool C23 POSIX 编译器实现 底层机制 深入讨论
 
 本册是 C17：使用 `.c` 和 C 编译器验证，不把 C++ 编译成功当作 C 合法性的证明。
 
@@ -1091,8 +1157,27 @@ volatile unsigned int *register_address = NULL;
 - `getline`、`strdup` 等不要默认为 C17 标准库接口；确认目标标准、POSIX 与工具链扩展。
 - `malloc/free` 与 `new/delete` 不交叉配对。
 
+#### C23 增量：与 C17 主体分开阅读
+
+C17 主要修正 C11 缺陷，没有新增同等规模的一组语言机制。下表列出 C23 重点增量，不代表完整变更清单，也不表示主机已验证全部支持。
+
+| C23 特性 | 引入原因／场景 | 实现机制与边界 |
+| --- | --- | --- |
+| auto 推导、typeof / typeof_unqual | 减少重复类型声明 | 前端确定静态类型，typeof_unqual 去除顶层限定和原子属性；不是动态类型，不能照搬 C++ 的 auto&&；变长类型有特殊求值规则 |
+| constexpr 对象 | 命名常量表达式 | 前端检查初始化和常量表达式规则；C23 没有因此获得 C++ constexpr 函数体系 |
+| nullptr / nullptr_t | 避免整数式 NULL 的类型歧义 | 前端提供独立空指针类型，后端生成目标表示；字节不保证全零 |
+| _BitInt(N) | 特殊位宽整数 | 前端保留位宽，后端选择寄存器、多字运算或库辅助；位宽不等于存储大小或硬件原生支持 |
+| [[属性]] | 诊断与控制流意图 | 前端处理 nodiscard、maybe_unused、fallthrough、noreturn 等，各自语义不同，不是统一运行时检查 |
+| 空初始化 {} | 简明的空初始化 | 前端按类型落实初始化规则，不等同于任意对象的 memset；C17 不采用此写法 |
+| #embed | 编译期嵌入资源 | 预处理读取资源并生成记号，影响构建依赖与产物大小，不是运行时读文件 |
+| stdckdint.h：ckd_add/sub/mul | 检查整数溢出 | 库宏可调用编译器内建，降低为状态位检测或范围判断；返回真表示溢出，必须检查 |
+| stdbit.h | 可移植位运算查询 | 库调用目标指令或软件回退；某平台单指令不构成跨平台保证 |
+
+先确认 `__STDC_VERSION__`、编译器与库支持表。启用标准模式不代表所有库功能均已提供。公开标准草案见 [WG14 文档目录](https://www.open-std.org/jtc1/sc22/wg14/www/docs/)（C11 N1570、C23 N3096）；草案与发布标准可能有差异。
+
+
 ### 数学函数与浮点限制 <!-- entry: math -->
-关键词：math sqrt pow fabs fmod floor ceil round isnan isinf isfinite float FLT_EPSILON DBL_MAX
+关键词：math sqrt pow fabs fmod floor ceil round isnan isinf isfinite float FLT_EPSILON DBL_MAX 编译器实现 底层机制 深入讨论
 
 `<math.h>` 提供数学运算与分类，`<float.h>` 提供范围和精度信息。
 
@@ -1103,6 +1188,12 @@ int finite = isfinite(root); /* 非零表示有限值 */
 ```
 
 域错误、范围错误的报告方式见 `math_errhandling`，不能一律只检查 `errno`。不要假定所有实现都是 IEEE 754；`FLT_EPSILON`、`DBL_EPSILON` 也不是适合所有量级的通用比较误差。部分工具链链接时需 `-lm`。
+
+**标准版本：C99：复数与 tgmath.h。**
+
+**实现机制（标准要求与常见实现）：** 复数运算可降低为实部/虚部算术及库调用；泛型数学宏由实现选择对应函数，可借助内建或泛型机制。
+
+**深入讨论与应用：** 用于信号处理；不意味着硬件有复数单指令，NaN、溢出和浮点环境限制可用优化。
 
 ### rand、srand 与随机质量 <!-- entry: random -->
 关键词：rand srand RAND_MAX 随机数 伪随机 种子 random
@@ -1147,7 +1238,7 @@ if (found != NULL) { /* 使用 *found */ }
 `compare_int` 可使用本册排序条目的比较规则。未找到返回空指针；有多个相等元素时，不保证选中哪一个。不要在未排序数组上使用它。
 
 ### 原子对象与内存顺序 <!-- entry: atomics -->
-关键词：_Atomic stdatomic atomic_int atomic_fetch_add atomic_load atomic_store memory_order relaxed 原子
+关键词：_Atomic stdatomic atomic_int atomic_fetch_add atomic_load atomic_store memory_order relaxed 原子 编译器实现 底层机制 深入讨论
 
 `<stdatomic.h>` 在 C17 是可选能力，先检查实现。原子操作不等于相关对象整体线程安全。
 
@@ -1161,8 +1252,14 @@ unsigned int old = atomic_fetch_add_explicit(
 
 `relaxed` 保证该操作的原子性，不为其他非原子数据建立发布／获取关系。原子操作不保证 lock-free；用 `atomic_is_lock_free` 等查询。实现可定义 `__STDC_NO_ATOMICS__` 表示不支持。
 
+**标准版本：C11：_Atomic 与 stdatomic.h。**
+
+**实现机制（标准要求与常见实现）：** 操作降低为带内存序的中间表示；后端选择原子指令、屏障、CAS 循环或运行库锁。
+
+**深入讨论与应用：** 用于共享计数与发布状态。同一内存序在 x86/ARM 的指令可不同；非 lock-free 类型可能需 libatomic。没看到 fence 不表示没有同步语义。
+
 ### 线程、互斥与线程局部存储 <!-- entry: threads -->
-关键词：threads thrd_create thrd_join thrd_detach mtx_init mtx_lock mtx_unlock mtx_destroy _Thread_local thread_local
+关键词：threads thrd_create thrd_join thrd_detach mtx_init mtx_lock mtx_unlock mtx_destroy _Thread_local thread_local 编译器实现 底层机制 深入讨论
 
 `<threads.h>` 是 C17 可选库，支持情况以实现为准。
 
@@ -1173,6 +1270,12 @@ _Thread_local int per_thread_count = 0; /* 文件作用域 */
 ```
 
 检查有状态返回值的接口是否返回 `thrd_success`；被借用的回调参数须在工作线程访问期间存活。`<threads.h>` 的 `thread_local` 是 `_Thread_local` 的宏别名；可用 `__STDC_NO_THREADS__` 检查不支持的实现。它不是任意 RTOS 任务 API 的替代品。
+
+**标准版本：C11：threads.h 与 _Thread_local。**
+
+**实现机制（标准要求与常见实现）：** 线程库封装平台线程设施；TLS 通过线程指针偏移、TLS 段或动态查询定位对象。
+
+**深入讨论与应用：** 用于每线程状态；动态库 TLS 成本可不同，线程局部不自动提供共享安全。C11/C17 可缺少标准线程库；C23 提供 thread_local 拼写。
 
 ### signal 与信号处理约束 <!-- entry: signals -->
 关键词：signal raise SIGINT SIGTERM SIG_ERR sig_atomic_t 信号
