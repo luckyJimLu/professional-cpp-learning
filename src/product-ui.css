@@ -1,6 +1,10 @@
 /* Shared product surfaces. Palette and typography are owned by styles.css. */
-.content > :is(.course-page, .review-page, .reading-page) {
+.content > :is(.course-page, .review-page) {
   max-width: 1100px;
+  margin-inline: auto;
+}
+.content > .reading-page {
+  max-width: var(--frame-max);
   margin-inline: auto;
 }
 .page-header {
@@ -793,12 +797,16 @@
   .today-layout,
   .course-page,
   .review-page,
-  .reading-page,
   .lab-page-container
-),
+) {
+  max-width: var(--content-max);
+  margin-inline: auto;
+}
+
+.content > :is(.reading-page, .booklets-page),
 .topics-catalog,
 .topic-reading {
-  max-width: var(--content-max);
+  max-width: var(--frame-max);
   margin-inline: auto;
 }
 

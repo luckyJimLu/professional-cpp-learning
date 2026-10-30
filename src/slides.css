@@ -24,10 +24,30 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 1200px;
+  max-width: var(--frame-max);
   margin-inline: auto;
-  gap: var(--space-6);
+  gap: 12px;
   min-width: 0;
+}
+
+.slides-page > .page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 16px;
+  margin-bottom: 0;
+}
+
+.slides-page > .page-header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.slides-page > .page-header .page-description {
+  margin: 0;
+  font-size: 14px;
+  max-width: none;
+  flex: 1 1 420px;
 }
 
 /* ---------- 工具栏与选项卡 ---------- */
@@ -37,8 +57,8 @@
   align-items: center;
   justify-content: space-between;
   border: 1px solid var(--line);
-  gap: var(--space-4);
-  padding: var(--space-4);
+  gap: 12px;
+  padding: 8px 12px;
   border-radius: var(--radius);
   background: var(--canvas);
   min-width: 0;
@@ -47,7 +67,7 @@
 .slides-deck-select-group {
   display: flex;
   align-items: center;
-  flex: 1 1 380px;
+  flex: 1 1 320px;
   min-width: 0;
   gap: var(--space-3);
 }
@@ -118,8 +138,12 @@
 
 /* ---------- 幻灯片 16:9 画布容器 ---------- */
 .slide-stage-wrapper {
+  --stage-chrome: 320px;
   display: flex;
   flex-direction: column;
+  width: min(100%, calc((100dvh - var(--stage-chrome)) * 16 / 9));
+  min-width: min(100%, 640px);
+  margin-inline: auto;
   background: #080d1a;
   border: 1px solid var(--pc-border);
   overflow: hidden;
@@ -583,6 +607,7 @@
 }
 
 @media (max-width: 760px) {
+  .slide-stage-wrapper { width: 100%; min-width: 0; }
   .slide-stage-header,
   .slide-stage-footer { padding: 8px; gap: 8px; }
   .slide-stage-header { align-items: flex-start; }

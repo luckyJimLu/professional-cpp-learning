@@ -28,6 +28,9 @@
   --header-height: 56px;
   --content-max: 1120px;
   --reading-max: 760px;
+  --frame-max: 1280px;
+  --frame-nav: 240px;
+  --frame-gap: 32px;
   --radius-control: 8px;
   --control-height: 36px;
   --touch-target: 44px;
@@ -235,7 +238,7 @@ summary:focus-visible {
 
 .content {
   width: min(1520px, 100%);
-  margin: 0;
+  margin-inline: auto;
   padding: 28px clamp(24px, 2.5vw, 36px) 72px;
 }
 

@@ -3,22 +3,31 @@
   --booklet-scroll-offset: calc(
     var(--header-height) + var(--booklet-toolbar-height) + 16px
   );
-  max-width: calc(var(--reading-max) + 232px);
+  max-width: var(--frame-max);
   margin: 0 auto;
   min-width: 0;
 }
 .booklets-page > .page-header {
-  margin-bottom: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 16px;
+  margin-bottom: 8px;
+}
+.booklets-page > .page-header h1 {
+  margin: 0;
+  font-size: 24px;
 }
 .booklets-page > .page-header .page-description {
-  margin: 6px 0 0;
+  margin: 0;
+  font-size: 14px;
 }
 .booklet-heading {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  margin: 12px 0 16px;
+  margin: 8px 0 12px;
 }
 .booklet-heading > div {
   min-width: 0;
@@ -133,7 +142,7 @@
   min-height: var(--touch-target);
 }
 .booklet-search-help {
-  margin: 8px 0;
+  margin: 6px 0;
   color: var(--muted);
   font-size: 13px;
 }
@@ -141,10 +150,10 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin: 8px 0 20px;
+  margin: 6px 0 16px;
 }
 .booklet-quick button {
-  min-height: var(--touch-target);
+  min-height: 36px;
   padding: 4px 10px;
   border: 1px solid var(--line);
   border-radius: var(--radius-control);
@@ -172,8 +181,8 @@
 }
 .booklet-layout {
   display: grid;
-  grid-template-columns: 200px minmax(0, 1fr);
-  gap: 32px;
+  grid-template-columns: var(--frame-nav) minmax(0, 1fr);
+  gap: var(--frame-gap);
   align-items: start;
 }
 .booklet-directory {
@@ -398,7 +407,7 @@
 @media (max-width: 1100px) {
   .booklets-page {
     --booklet-toolbar-height: 112px;
-    max-width: var(--reading-max);
+    max-width: 100%;
   }
   .booklet-layout {
     grid-template-columns: minmax(0, 1fr);
@@ -465,6 +474,7 @@
     margin-bottom: 16px;
   }
   .booklet-quick button {
+    min-height: var(--touch-target);
     padding: 4px 7px;
     font-size: 12px;
   }

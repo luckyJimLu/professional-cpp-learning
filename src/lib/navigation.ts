@@ -26,11 +26,33 @@ export type View =
   | "roadmap"
   | "progress"
   | "slides";
+
+const PAGE_PARAMS: Partial<Record<View, string[]>> = {
+  topics: ["topic", "topicCategory"],
+  booklets: ["book", "bq", "category", "entry"],
+  slides: ["deck", "slide", "tab"],
+  lab: ["code", "line"],
+  lessons: ["courseTab", "courseQuery"],
+};
+
 export function navigate(
   values: Record<string, string | undefined>,
   replace = false,
 ) {
   const url = new URL(window.location.href);
+  const rawCurrent = url.searchParams.get("view") ?? "today";
+  const currentView = VIEW_ALIASES[rawCurrent] ?? rawCurrent;
+  const rawNext = values.view;
+  const nextView =
+    rawNext !== undefined ? (VIEW_ALIASES[rawNext] ?? rawNext) : undefined;
+  if (nextView !== undefined && nextView !== currentView) {
+    for (const keys of Object.values(PAGE_PARAMS)) {
+      if (!keys) continue;
+      for (const key of keys) {
+        if (!(key in values)) url.searchParams.delete(key);
+      }
+    }
+  }
   for (const [key, value] of Object.entries(values)) {
     if (value === undefined) url.searchParams.delete(key);
     else url.searchParams.set(key, value);
