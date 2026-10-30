@@ -252,6 +252,14 @@ export function Shell({
                   <span aria-hidden="true">⌁</span>
                   <span>RTOS 模拟器 ↗</span>
                 </a>
+                <a
+                  href="https://github.com/luckyJimLu/professional-cpp-learning"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <NavIcon id="github" />
+                  <span>GitHub 仓库 ↗</span>
+                </a>
               </nav>
             </div>
           </details>
@@ -397,6 +405,23 @@ export function Shell({
             </small>
           </a>
         </nav>
+
+        <div className="sidebar-footer">
+          <a
+            className="nav-item sidebar-github-link"
+            href="https://github.com/luckyJimLu/professional-cpp-learning"
+            target="_blank"
+            rel="noreferrer"
+            title="在 GitHub 查看本项目仓库"
+            aria-label="GitHub 仓库"
+          >
+            <NavIcon id="github" />
+            <span>GitHub 仓库</span>
+            <small className="nav-external-badge" aria-hidden="true">
+              ↗
+            </small>
+          </a>
+        </div>
       </aside>
 
       <div className="main-shell">

@@ -17,6 +17,7 @@ import { LessonView } from "./components/views/LessonView";
 import { LabView } from "./components/views/LabView";
 import { ReviewView } from "./components/views/ReviewView";
 import { GuidelinesView } from "./components/views/GuidelinesView";
+import { FaqView } from "./components/views/FaqView";
 import { VisualizerView } from "./components/views/VisualizerView";
 import { SlidesView } from "./components/views/SlidesView";
 
@@ -185,6 +186,9 @@ export default function App() {
       break;
     case "guidelines":
       page = <GuidelinesView />;
+      break;
+    case "faq":
+      page = <FaqView />;
       break;
     case "lesson":
       page = selectedLesson ? (
