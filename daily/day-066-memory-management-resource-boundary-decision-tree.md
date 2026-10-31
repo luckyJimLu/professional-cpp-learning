@@ -33,7 +33,7 @@ next: 67
 2. 固定 Pool 中为什么“地址仍然相同”不代表旧 borrow 在 slot reuse 后仍然有效？
 3. 哪种情况下 `array<T,N>` 比 Object Pool 更正确？
 
-## ③ 核心概念（15 分钟）
+## ③ 核心概念与系统场景（25 分钟）
 
 ### 资源边界决策树
 
@@ -65,15 +65,7 @@ stop source → unsubscribe/cancel → drain/join → destroy resource
 
 `unique_ptr` 回答 owner，不回答 allocator 是否适合实时路径；PMR 回答 allocation source，不回答业务 lifetime；`optional` 回答 0/1 value lifetime，不是 borrow；RAII 回答 teardown 绑定 lifetime，不保证 teardown 可以在 ISR 或任意线程执行。
 
-## ④ C 写法 vs Modern C++（6 分钟）
-
-传统 C 常把 `malloc/free`、handle、used bitmap、cleanup label 分散在业务流程中，ownership 依赖注释和调用顺序。
-
-Modern C++ 优先把 contract 放进类型：长期固定对象用 value；0/1 lifetime 用 `optional`; 单 owner 用 `unique_ptr`; required borrow 用 `T&`; 连续 borrow 用 `span`; 特殊资源用 RAII handle/custom deleter；有界动态工作集才评估 pool/PMR。
-
-差异不是“代码更短”，而是非法 ownership/lifetime 状态更少、测试边界更清楚。成本则必须审计模板代码尺寸、virtual dispatch、refcount、heap、锁和析构路径。
-
-## ⑤ 设计模式映射（8 分钟）
+### 设计模式映射
 
 **真实变化轴**：硬件实现替换、资源创建策略、短生命周期对象并发量、内存来源。
 
@@ -87,13 +79,21 @@ Modern C++ 优先把 contract 放进类型：长期固定对象用 value；0/1 l
 
 **明确不使用 Pattern 的情况**：一个 BSP UART 从启动活到关机，硬件实现固定。直接 value composition + reference borrow 比 Factory + shared_ptr + Service Locator 更稳定。
 
-## ⑥ Embedded / System Design 场景（7 分钟）
+### Embedded / System Design 场景
 
 以 Modem middleware 为例：UART Driver 是长期 value/RAII owner；AT parser 通过 `Driver&` required borrow；最多 8 个 transaction 使用固定 Pool；启动阶段可使用 bounded PMR arena 建立表项，但实时收发路径禁止隐式 heap fallback；callback 只保存有界 borrow/可验证 token。
 
 teardown 顺序必须明确：停止 IRQ/event producer → 禁止新 transaction → unsubscribe callback → drain queue/in-flight callback → join worker → 销毁 transaction → 释放 Driver。ISR 中避免 allocation、`shared_ptr` refcount、阻塞锁和复杂 destructor。
 
-## ⑦ 今日编码规范（6 分钟）
+## ④ C 写法 vs Modern C++（6 分钟）
+
+传统 C 常把 `malloc/free`、handle、used bitmap、cleanup label 分散在业务流程中，ownership 依赖注释和调用顺序。
+
+Modern C++ 优先把 contract 放进类型：长期固定对象用 value；0/1 lifetime 用 `optional`; 单 owner 用 `unique_ptr`; required borrow 用 `T&`; 连续 borrow 用 `span`; 特殊资源用 RAII handle/custom deleter；有界动态工作集才评估 pool/PMR。
+
+差异不是“代码更短”，而是非法 ownership/lifetime 状态更少、测试边界更清楚。成本则必须审计模板代码尺寸、virtual dispatch、refcount、heap、锁和析构路径。
+
+## ⑤ 今日编码规范（6 分钟）
 
 ### MUST：先写 lifetime/owner，再选 pointer
 
@@ -113,7 +113,7 @@ teardown 顺序必须明确：停止 IRQ/event producer → 禁止新 transactio
 
 推荐：固定实现用 composition；只有 runtime replacement 是真实需求时才增加抽象层。
 
-## ⑧ 可编译 Lab / 练习（5 分钟）
+## ⑥ 可编译 Lab / 练习（9 分钟）
 
 ### 主 Lab：固定 Packet Pool 与显式 borrow
 
@@ -137,13 +137,13 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-066/exercise-0
 
 Starter 可直接运行。请逐项说明为什么固定 Driver 用 value + reference、Session 用 single owner、bounded work slots 用 `array<optional<T>,N>`；然后尝试把三者全部改成 `shared_ptr`，记录新增的 ownership ambiguity、allocation/refcount 和 teardown 问题，再恢复最小方案。
 
-## ⑨ 3 个常见坑（1 分钟）
+## ⑦ 常见坑（2 分钟）
 
 1. **把 smart pointer 当架构**：pointer 只表达 lifetime/ownership 的一部分，不替代稳定边界设计。
 2. **只检查 RAM，不检查 WCET**：Pool 扫描、refcount、锁、析构、callback drain 都有时间成本。
 3. **Pattern 驱动设计**：为了使用 Factory/Observer/Pool 制造不存在的变化轴，最终隐藏 owner 与 teardown。
 
-## ⑩ 检查题（2 分钟）
+## ⑧ 检查题（2 分钟）
 
 1. 为什么 `unique_ptr<T>` 不能证明其 allocation 适合实时路径？
 2. 一个 API 参数写成 `shared_ptr<Driver>` 与 `Driver&` 分别向调用者表达什么 contract？
