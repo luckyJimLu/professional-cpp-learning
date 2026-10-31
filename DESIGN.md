@@ -169,11 +169,13 @@ The booklet is an Operate/Read reference surface, preserving the light handbook 
 shared PageHeader, Markdown, CodeBlock and SVG Icon owners. `src/booklets.css` consumes the
 existing runtime tokens; no additional palette, font stack or shadow treatment is introduced.
 
-The compact heading states the selected language, standard range and factual chapter/entry
-counts. The Markdown download remains visibly labeled on phones. The page is bounded by
-`--reading-max` plus the 200px directory and 32px gap; prose therefore stays at most 760px.
+The compact heading keeps only the page title and selected booklet title. Standard range,
+chapter totals, entry totals, search instructions and keyword suggestions do not repeat in
+the page chrome. The reading surface does not expose Markdown or example-source download
+actions. The page is bounded by `--reading-max` plus the 200px directory and 32px gap; prose
+therefore stays at most 760px.
 
-One sticky toolbar owns language links, local search and the return action. Below 1100px it
+One sticky toolbar owns a native C/C++ language select, local search and the return action. Below 1100px it
 also owns the native chapter select; on short landscape screens these controls form one row.
 A ResizeObserver measures its actual height into the scoped `--booklet-toolbar-height`, so
 chapter/entry scroll offsets and the desktop directory reserve the real toolbar geometry.
@@ -181,10 +183,11 @@ The global Shell header remains above it. Native selects retain platform-owned p
 
 The complete booklet remains one continuous page. Search temporarily narrows entries and
 provides a bounded link index for multiple matches; entries still render in full below it.
-C++ directories group topic chapters and version chapters. Active desktop directory items
-stay visible within that directory's own scroll area. Only code, tables and bounded directories
-own local overflow; the document keeps its natural height.
+C++ directories group topic chapters and version chapters. Directory rows keep only chapter
+titles; result totals appear only while a search is active. Active desktop directory items stay
+visible within that directory's own scroll area. Only code, tables and bounded directories own
+local overflow; the document keeps its natural height.
 
-Entry titles separate factual C++ standard labels from the topic name. Language links use
-real URLs and `aria-current="page"`; controls preserve 44px touch targets, clear focus rings
-and Chinese labels. No card grid, decorative counters or motion is added.
+Entry titles separate factual C++ standard labels from the topic name. Language selection keeps
+the selected booklet in URL state; controls preserve 44px touch targets, clear focus rings and
+Chinese labels. No card grid, decorative counters or motion is added.

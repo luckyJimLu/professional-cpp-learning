@@ -114,23 +114,13 @@ for (const [width, height] of [
   });
 }
 
-test("booklet downloads and clipboard rejection/retry retain working code", async ({
+test("clipboard rejection and retry retain working code", async ({
   page,
 }) => {
   await page.goto("/?view=booklets&bq=realloc&entry=realloc");
-  const download = page.getByRole("link", { name: "下载 Markdown" });
-  const response = await page.request.get(
-    (await download.getAttribute("href"))!,
-  );
-  expect(response.ok()).toBe(true);
-  expect(await response.text()).toContain("# C 语言速查");
-  const example = await page.request.get(
-    (await page
-      .getByRole("link", { name: "下载 C17 自测源码" })
-      .getAttribute("href"))!,
-  );
-  expect(example.ok()).toBe(true);
-  expect(await example.text()).toContain("C17 cheatsheet checks passed");
+  await expect(
+    page.getByRole("link", { name: "下载 Markdown", exact: true }),
+  ).toHaveCount(0);
   await page.evaluate(() =>
     Object.defineProperty(navigator, "clipboard", {
       configurable: true,
@@ -238,14 +228,12 @@ for (const viewport of [
   }) => {
     await page.setViewportSize(viewport);
     await page.goto("/?view=booklets&book=c&bq=malloc&category=memory");
-    const languages = page.getByRole("navigation", { name: "小册子语言" });
-    await languages.getByRole("link", { name: "C++", exact: true }).click();
+    const languages = page.getByLabel("小册子语言", { exact: true });
+    await languages.selectOption("cpp");
     await expect(page).toHaveURL(/book=cpp/);
     expect(new URL(page.url()).searchParams.has("bq")).toBe(false);
     expect(new URL(page.url()).searchParams.has("category")).toBe(false);
-    await expect(
-      languages.getByRole("link", { name: "C++", exact: true }),
-    ).toHaveAttribute("aria-current", "page");
+    await expect(languages).toHaveValue("cpp");
     await expect(page.locator("#booklet-top")).toHaveText("C++ 语言速查");
     const cppCount = [
       ...readFileSync("booklets/cpp.md", "utf8").matchAll(/<!-- entry:/g),
@@ -272,8 +260,8 @@ for (const viewport of [
     await expect(search).toHaveValue("std::make_unique");
     await expect(
       page.getByRole("link", { name: "下载 Markdown", exact: true }),
-    ).toHaveAttribute("download", "cpp-cheatsheet.md");
-    await languages.getByRole("link", { name: "C 语言", exact: true }).click();
+    ).toHaveCount(0);
+    await languages.selectOption("c");
     await expect(page.locator(".booklet-entry")).toHaveCount(totalEntries);
     await search.fill("unique_ptr");
     await expect(
@@ -307,13 +295,9 @@ test("C++ attachment topics are searchable with corrected version boundaries", a
   page,
 }) => {
   await page.goto("/?view=booklets&book=cpp");
-  const source = page.getByRole("link", { name: "下载 C++20 主机自测源码" });
-  await expect(source).toHaveAttribute("download", "cpp20-reference.cpp");
-  const download = await page.request.get(
-    (await source.getAttribute("href")) as string,
-  );
-  expect(download.ok()).toBe(true);
-  expect(await download.text()).toContain("C++20 booklet checks passed");
+  await expect(
+    page.getByRole("link", { name: "下载 Markdown", exact: true }),
+  ).toHaveCount(0);
   const search = page.getByRole("searchbox", { name: /^快速查找/ });
   for (const [query, id, text] of [
     ["explicit", "explicit", "C++20"],
@@ -361,10 +345,8 @@ for (const viewport of [
     await expect(
       page.getByRole("searchbox", { name: /^快速查找/ }),
     ).toBeInViewport();
-    const languages = page.getByRole("navigation", { name: "小册子语言" });
-    await expect(
-      languages.getByRole("link", { name: "C++", exact: true }),
-    ).toBeInViewport();
+    const languages = page.getByLabel("小册子语言", { exact: true });
+    await expect(languages).toBeInViewport();
     const tools = (await toolbar.boundingBox())!;
     const chapter = (await page
       .locator("#booklet-category-streams")
@@ -381,7 +363,7 @@ for (const viewport of [
       await select.press("Escape");
       await expect(select).toBeFocused();
     }
-    await page.getByRole("button", { name: "返回册首", exact: true }).click();
+    await page.getByRole("button", { name: "返回顶部", exact: true }).click();
     await expect(page.locator("#booklet-top")).toBeFocused();
     expect(
       await page.evaluate(
