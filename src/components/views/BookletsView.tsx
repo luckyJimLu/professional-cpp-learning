@@ -7,10 +7,8 @@ import {
   type BookletEntry,
 } from "../../lib/booklets";
 import { navigate, useLocationParams } from "../../lib/navigation";
-import { PageHeader } from "../common/PageHeader";
 import { Icon } from "../common/Icon";
 import { Markdown } from "../Markdown";
-import { NativeSelect } from "@/components/ui/native-select";
 import "../../booklets.css";
 
 export function BookletsView() {
@@ -27,6 +25,8 @@ export function BookletsView() {
   const requestedEntry = params.get("entry");
   const [activeSection, setActiveSection] = useState(category);
   const [draft, setDraft] = useState(query);
+  const [searchScope, setSearchScope] = useState<"all" | "c" | "cpp">("all");
+  const [isScrolled, setIsScrolled] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const composing = useRef(false);
   const toolbarRef = useRef<HTMLDivElement>(null);
@@ -79,11 +79,25 @@ export function BookletsView() {
   useEffect(() => {
     composing.current = false;
     setDraft(query);
+    if (!query.trim()) setSearchScope("all");
   }, [query, booklet]);
+  const allMatches = useMemo(() => {
+    if (!query.trim()) return [];
+    return searchBooklet(query);
+  }, [query]);
+  const cMatchesCount = useMemo(
+    () => allMatches.filter((entry) => entry.bookId === "c").length,
+    [allMatches],
+  );
+  const cppMatchesCount = useMemo(
+    () => allMatches.filter((entry) => entry.bookId === "cpp").length,
+    [allMatches],
+  );
   const matches = useMemo(() => {
     if (!query.trim()) return booklet.sections.flatMap((s) => s.entries);
-    return searchBooklet(query);
-  }, [query, booklet]);
+    if (searchScope === "all") return allMatches;
+    return allMatches.filter((entry) => entry.bookId === searchScope);
+  }, [query, booklet, allMatches, searchScope]);
   const visible = matches;
   const visibleIds = useMemo(
     () => new Set(visible.map((entry) => entry.id)),
@@ -103,9 +117,11 @@ export function BookletsView() {
     );
     heading?.scrollIntoView({ block: "start", behavior: "instant" });
     heading?.focus({ preventScroll: true });
+    setIsScrolled(value !== "all" || window.scrollY > 120);
   };
   const setCategory = (value: string) => {
     setDraft("");
+    setSearchScope("all");
     composing.current = false;
     navigate({
       category: value === "all" ? undefined : value,
@@ -121,10 +137,11 @@ export function BookletsView() {
     return () => cancelAnimationFrame(frame);
   }, [category, query, requestedEntry, booklet]);
   useEffect(() => {
-    if (query.trim()) return;
     let frame = 0;
     const update = () => {
       frame = 0;
+      setIsScrolled(window.scrollY > 120);
+      if (query.trim()) return;
       const current = booklet.sections
         .filter((section) => {
           const heading = document.getElementById(
@@ -184,6 +201,7 @@ export function BookletsView() {
   }, []);
   const reset = () => {
     setDraft("");
+    setSearchScope("all");
     composing.current = false;
     setActiveSection("all");
     navigate({ bq: undefined, category: undefined, entry: undefined }, true);
@@ -256,40 +274,57 @@ export function BookletsView() {
       </article>
     );
   };
+  const showReturnButton =
+    isScrolled ||
+    Boolean(query.trim()) ||
+    Boolean(requestedEntry) ||
+    activeSection !== "all";
   return (
     <div className="booklets-page">
-      <PageHeader title="小册子" />
-      <div className="booklet-heading mb-4 flex items-center justify-between gap-3">
-        <h2 id="booklet-top" tabIndex={-1} className="text-xl font-bold text-slate-900">
+      <div className="booklet-heading mb-3 flex items-center justify-between gap-3">
+        <h1
+          id="booklet-top"
+          tabIndex={-1}
+          className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 m-0"
+        >
           {booklet.title}
-        </h2>
-        <div className="booklet-language shrink-0">
-          <label htmlFor="booklet-language" className="sr-only">
-            小册子语言
-          </label>
-          <NativeSelect
-            id="booklet-language"
-            className="w-28 h-9 text-xs rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-slate-700 shadow-2xs focus:border-blue-500 focus:outline-hidden"
-            value={booklet.id}
-            onChange={(event) => {
-              composing.current = false;
-              setDraft("");
-              setActiveSection("all");
-              navigate({
-                book: event.target.value,
-                bq: undefined,
-                category: undefined,
-                entry: undefined,
-              });
-              requestAnimationFrame(() => jumpToSection("all"));
-            }}
-          >
-            {booklets.map((book) => (
-              <option key={book.id} value={book.id}>
+        </h1>
+        <div
+          className="booklet-language inline-flex items-center rounded-lg border border-slate-200 bg-slate-100/90 p-1 shrink-0"
+          role="group"
+          aria-label="小册子语言"
+        >
+          {booklets.map((book) => {
+            const active = book.id === booklet.id;
+            return (
+              <button
+                key={book.id}
+                type="button"
+                aria-pressed={active}
+                className={`px-3 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer ${
+                  active
+                    ? "bg-white text-blue-600 shadow-2xs ring-1 ring-slate-200/60"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+                onClick={() => {
+                  if (active) return;
+                  composing.current = false;
+                  setDraft("");
+                  setSearchScope("all");
+                  setActiveSection("all");
+                  navigate({
+                    book: book.id,
+                    bq: undefined,
+                    category: undefined,
+                    entry: undefined,
+                  });
+                  requestAnimationFrame(() => jumpToSection("all"));
+                }}
+              >
                 {book.id === "c" ? "C 语言" : "C++"}
-              </option>
-            ))}
-          </NativeSelect>
+              </button>
+            );
+          })}
         </div>
       </div>
       {params.get("book") &&
@@ -297,11 +332,11 @@ export function BookletsView() {
           <p role="status">未找到指定小册子，已打开 C 语言速查。</p>
         )}
       <div
-        className="booklet-toolbar mb-4 flex flex-wrap items-center gap-3"
+        className="booklet-toolbar mb-4 flex items-center gap-3"
         ref={toolbarRef}
       >
         <form
-          className="booklet-search relative flex-1 min-w-0 max-w-xl m-0"
+          className="booklet-search relative flex-1 w-full min-w-0 m-0"
           role="search"
           noValidate
           onSubmit={(event) => {
@@ -324,7 +359,7 @@ export function BookletsView() {
           <div className="relative flex items-center min-h-[44px]">
             <Icon
               id="search"
-              className="absolute left-3 text-slate-400 pointer-events-none size-4"
+              className="absolute left-3.5 text-slate-400 pointer-events-none size-4"
             />
             <input
               id="booklet-query"
@@ -338,8 +373,10 @@ export function BookletsView() {
                   reset();
                 }
               }}
-              placeholder="搜索全部小册子（按 / 聚焦）..."
-              className="w-full h-11 min-h-[44px] rounded-lg border border-slate-200 bg-white pl-9 pr-11 py-1.5 text-sm text-slate-800 shadow-2xs focus:border-blue-500 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20"
+              placeholder="搜索 C / C++ 小册子…"
+              className={`w-full h-11 min-h-[44px] rounded-xl border border-slate-200/90 bg-slate-50/90 hover:bg-slate-100/60 focus:bg-white pl-10 ${
+                draft ? "pr-24" : "pr-12"
+              } py-1.5 text-sm text-slate-800 transition-colors focus:border-blue-500 focus:outline-hidden focus:ring-3 focus:ring-blue-500/15 [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden`}
               value={draft}
               onCompositionStart={() => {
                 composing.current = true;
@@ -353,37 +390,39 @@ export function BookletsView() {
                 if (!composing.current) setQuery(event.target.value);
               }}
             />
-            {draft && (
-              <button
-                type="button"
-                style={{ width: 44, height: 44, minWidth: 44, minHeight: 44 }}
-                className="search-clean-clear-btn absolute right-0 top-0 text-slate-400 hover:text-slate-600 inline-flex items-center justify-center"
-                aria-label="清除小册子搜索"
-                onClick={reset}
+            {!draft ? (
+              <kbd
+                aria-hidden="true"
+                className="pointer-events-none absolute right-3.5 select-none rounded border border-slate-200 bg-white px-1.5 py-0.5 font-mono text-[11px] font-medium text-slate-400 shadow-2xs"
               >
-                <Icon id="close" />
-              </button>
+                /
+              </kbd>
+            ) : (
+              <>
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute right-11 select-none rounded-md bg-slate-200/70 px-2 py-0.5 text-xs font-medium text-slate-600 tabular-nums"
+                >
+                  {visible.length} 条
+                </span>
+                <button
+                  type="button"
+                  style={{
+                    width: 44,
+                    height: 44,
+                    minWidth: 44,
+                    minHeight: 44,
+                  }}
+                  className="search-clean-clear-btn absolute right-0 top-0 text-slate-400 hover:text-slate-600 inline-flex items-center justify-center cursor-pointer"
+                  aria-label="清除小册子搜索"
+                  onClick={reset}
+                >
+                  <Icon id="close" />
+                </button>
+              </>
             )}
           </div>
         </form>
-        <button
-          type="button"
-          className="ghost-button booklet-return ml-auto inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-2xs hover:bg-slate-50 transition"
-          aria-label={query.trim() ? "返回搜索结果" : "返回顶部"}
-          title={query.trim() ? "返回搜索结果" : "返回顶部"}
-          onClick={() => {
-            if (query.trim()) {
-              navigate({ entry: undefined }, true);
-              resultsRef.current?.scrollIntoView({
-                block: "start",
-                behavior: "instant",
-              });
-              resultsRef.current?.focus({ preventScroll: true });
-            } else setCategory("all");
-          }}
-        >
-          <Icon id="up" />
-        </button>
       </div>
       <div className="booklet-layout">
         <aside className="booklet-directory" ref={directoryRef}>
@@ -434,14 +473,55 @@ export function BookletsView() {
         </aside>
         <div className="booklet-content">
           {query.trim() && (
-            <p
-              className="booklet-result-count"
-              role="status"
-              ref={resultsRef}
-              tabIndex={-1}
-            >
-              “{query.trim()}” · {visible.length} 个结果
-            </p>
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+              <p
+                className="booklet-result-count m-0"
+                role="status"
+                ref={resultsRef}
+                tabIndex={-1}
+              >
+                “{query.trim()}” · {visible.length} 个结果
+              </p>
+              <div
+                className="booklet-scope-filters inline-flex flex-wrap items-center gap-1.5"
+                role="group"
+                aria-label="搜索范围筛选"
+              >
+                {(
+                  [
+                    { id: "all", label: "全部", count: allMatches.length },
+                    { id: "c", label: "C", count: cMatchesCount },
+                    { id: "cpp", label: "C++", count: cppMatchesCount },
+                  ] as const
+                ).map((scope) => {
+                  const active = searchScope === scope.id;
+                  return (
+                    <button
+                      key={scope.id}
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => setSearchScope(scope.id)}
+                      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition cursor-pointer ${
+                        active
+                          ? "bg-blue-600 text-white shadow-2xs"
+                          : "border border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-600"
+                      }`}
+                    >
+                      <span>{scope.label}</span>
+                      <span
+                        className={`rounded-full px-1.5 py-0.2 text-[11px] tabular-nums ${
+                          active
+                            ? "bg-blue-500/40 text-white"
+                            : "bg-slate-100 text-slate-500"
+                        }`}
+                      >
+                        {scope.count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           )}
           {query.trim() && visible.length > 1 && (
             <nav
@@ -532,6 +612,29 @@ export function BookletsView() {
           )}
         </div>
       </div>
+      {showReturnButton && (
+        <button
+          type="button"
+          className="ghost-button booklet-return fixed bottom-6 right-6 z-30 inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-slate-200 bg-white/95 text-slate-700 shadow-lg backdrop-blur-xs hover:bg-slate-50 hover:text-blue-600 transition cursor-pointer"
+          aria-label={query.trim() ? "返回搜索结果" : "返回顶部"}
+          title={query.trim() ? "返回搜索结果" : "返回顶部"}
+          onClick={() => {
+            if (query.trim()) {
+              navigate({ entry: undefined }, true);
+              resultsRef.current?.scrollIntoView({
+                block: "start",
+                behavior: "instant",
+              });
+              resultsRef.current?.focus({ preventScroll: true });
+            } else {
+              setCategory("all");
+              setIsScrolled(false);
+            }
+          }}
+        >
+          <Icon id="up" />
+        </button>
+      )}
     </div>
   );
 }

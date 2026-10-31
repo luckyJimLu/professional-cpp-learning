@@ -163,7 +163,7 @@ test("unknown entry has recovery and mobile navigation exposes booklets", async 
     .getByRole("navigation", { name: "Mobile navigation" })
     .getByRole("button", { name: "小册子", exact: true })
     .click();
-  await expect(page.locator("h1")).toHaveText("小册子");
+  await expect(page.locator("h1")).toHaveText("C 语言速查");
   await expect(page.locator("#main-content")).toBeFocused();
 });
 
@@ -225,12 +225,14 @@ for (const viewport of [
   }) => {
     await page.setViewportSize(viewport);
     await page.goto("/?view=booklets&book=c&bq=malloc&category=memory");
-    const languages = page.getByLabel("小册子语言", { exact: true });
-    await languages.selectOption("cpp");
+    const languages = page.getByRole("group", { name: "小册子语言" });
+    await languages.getByRole("button", { name: "C++", exact: true }).click();
     await expect(page).toHaveURL(/book=cpp/);
     expect(new URL(page.url()).searchParams.has("bq")).toBe(false);
     expect(new URL(page.url()).searchParams.has("category")).toBe(false);
-    await expect(languages).toHaveValue("cpp");
+    await expect(
+      languages.getByRole("button", { name: "C++", exact: true }),
+    ).toHaveAttribute("aria-pressed", "true");
     await expect(page.locator("#booklet-top")).toHaveText("C++ 语言速查");
     const cppCount = [
       ...readFileSync("booklets/cpp.md", "utf8").matchAll(/<!-- entry:/g),
@@ -258,9 +260,19 @@ for (const viewport of [
     await expect(
       page.getByRole("link", { name: "下载 Markdown", exact: true }),
     ).toHaveCount(0);
-    await languages.selectOption("c");
+    await languages.getByRole("button", { name: "C 语言", exact: true }).click();
     await expect(page.locator(".booklet-entry")).toHaveCount(totalEntries);
     await search.fill("unique_ptr");
+    await expect(page.locator(".booklet-entry").first()).toContainText(
+      "unique_ptr",
+    );
+    const scopeGroup = page.getByRole("group", { name: "搜索范围筛选" });
+    await expect(scopeGroup).toBeVisible();
+    await scopeGroup.getByRole("button", { name: /^C\s/ }).click();
+    await expect(
+      page.getByRole("heading", { name: "没有找到匹配条目" }),
+    ).toBeVisible();
+    await scopeGroup.getByRole("button", { name: /^全部/ }).click();
     await expect(page.locator(".booklet-entry").first()).toContainText(
       "unique_ptr",
     );
@@ -336,8 +348,11 @@ for (const viewport of [
     await page.goto("/?view=booklets&book=cpp");
     const first = await page.locator(".booklet-entry").first().boundingBox();
     if (viewport.width <= 390) expect(first!.y).toBeLessThan(600);
-    const languages = page.getByLabel("小册子语言", { exact: true });
+    const languages = page.getByRole("group", { name: "小册子语言" });
     await expect(languages).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "返回顶部", exact: true }),
+    ).toHaveCount(0);
     await page
       .locator("#booklet-category-streams")
       .evaluate((node) =>
@@ -356,6 +371,9 @@ for (const viewport of [
     if (viewport.height < 480) expect(tools.height).toBeLessThan(80);
     await page.getByRole("button", { name: "返回顶部", exact: true }).click();
     await expect(page.locator("#booklet-top")).toBeFocused();
+    await expect(
+      page.getByRole("button", { name: "返回顶部", exact: true }),
+    ).toHaveCount(0);
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
