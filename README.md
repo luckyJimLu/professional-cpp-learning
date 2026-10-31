@@ -13,9 +13,9 @@
 
 ## 当前进度
 
-- **已发布：Day 1–65**
-- **下一课：Day 66 · Chapter 7 · Memory Management**
-- 当前主线：**Chapter 7 · Memory Management：ownership / resource policy / bounded allocation / object lifetime**
+- **已发布：Day 1–66**
+- **下一课：Day 67 · Chapter 8 · Classes and Objects**
+- 当前主线：**Chapter 7 · Memory Management 已完成工程化收束；下一步进入 Classes and Objects**
 - 更新方式：**GitHub Markdown only**
 
 ## 快速入口
@@ -24,7 +24,7 @@
 - [C++ 新特性与标准来源速查](docs/cpp-feature-standards.md)（各课课首标注版本）
 - [C / C++ 独立速查小册子与关键字查找](booklets/README.md)（网页主导航「小册子」）
 - [新手起步：编辑、编译、运行与学习方法](docs/beginner-start.md)
-- [Day 1–65 逐课导航与前置知识](docs/beginner-course-map.md)
+- [Day 1–66 逐课导航与前置知识](docs/beginner-course-map.md)
 - [完整学习进度](progress.md)
 - [章节里程碑与 16 周顺序参考](docs/learning-plan.md)
 - [可运行练习审计与契约](docs/runnable-exercise-audit.md)
@@ -44,11 +44,11 @@
 
 ## 最近课程
 
+- [Day 66 · Memory Management 资源边界决策树](daily/day-066-memory-management-resource-boundary-decision-tree.md)
 - [Day 65 · optional 生命周期与固定池安全边界](daily/day-065-optional-fixed-pool-lifetime-boundaries.md)
 - [Day 64 · 对象生命周期、placement 构造与固定存储复用](daily/day-064-object-lifetime-placement-construction-fixed-pool.md)
 - [Day 63 · PMR、有界分配与内存资源策略](daily/day-063-pmr-bounded-allocation-resource-policy.md)
 - [Day 62 · 智能指针别名、类型转换与所有权 API 边界](daily/day-062-smart-pointer-aliasing-casts-ownership-api.md)
-- [Day 61 · enable_shared_from_this：异步回调生命周期与拆除](daily/day-061-enable-shared-from-this-callback-lifetime.md)
 
 ## 每日课程结构
 
@@ -75,7 +75,7 @@
 .
 ├── README.md
 ├── progress.md
-├── daily/                       # 已发布课程 Day 1–65
+├── daily/                       # 已发布课程 Day 1–66
 ├── weekly/
 ├── patterns/
 ├── frameworks/
