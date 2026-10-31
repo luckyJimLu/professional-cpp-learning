@@ -261,6 +261,10 @@ for (const viewport of [
     await languages.selectOption("c");
     await expect(page.locator(".booklet-entry")).toHaveCount(totalEntries);
     await search.fill("unique_ptr");
+    await expect(page.locator(".booklet-entry").first()).toContainText(
+      "unique_ptr",
+    );
+    await search.fill("unknown_symbol_xyz");
     await expect(
       page.getByRole("heading", { name: "没有找到匹配条目" }),
     ).toBeVisible();
@@ -332,6 +336,8 @@ for (const viewport of [
     await page.goto("/?view=booklets&book=cpp");
     const first = await page.locator(".booklet-entry").first().boundingBox();
     if (viewport.width <= 390) expect(first!.y).toBeLessThan(600);
+    const languages = page.getByLabel("小册子语言", { exact: true });
+    await expect(languages).toBeVisible();
     await page
       .locator("#booklet-category-streams")
       .evaluate((node) =>
@@ -342,8 +348,6 @@ for (const viewport of [
     await expect(
       page.getByRole("searchbox", { name: /^快速查找/ }),
     ).toBeInViewport();
-    const languages = page.getByLabel("小册子语言", { exact: true });
-    await expect(languages).toBeInViewport();
     const tools = (await toolbar.boundingBox())!;
     const chapter = (await page
       .locator("#booklet-category-streams")

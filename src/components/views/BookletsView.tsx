@@ -80,10 +80,10 @@ export function BookletsView() {
     composing.current = false;
     setDraft(query);
   }, [query, booklet]);
-  const matches = useMemo(
-    () => searchBooklet(query, booklet),
-    [query, booklet],
-  );
+  const matches = useMemo(() => {
+    if (!query.trim()) return booklet.sections.flatMap((s) => s.entries);
+    return searchBooklet(query);
+  }, [query, booklet]);
   const visible = matches;
   const visibleIds = useMemo(
     () => new Set(visible.map((entry) => entry.id)),
@@ -205,50 +205,92 @@ export function BookletsView() {
         </span>
       </>
     ) : (
-      entry.title
+      <>
+        <span>{entry.title}</span>
+        {query.trim() && entry.bookId === "c" && (
+          <span className="ml-2 rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 ring-1 ring-slate-400/20">
+            C17
+          </span>
+        )}
+      </>
     );
   };
-  const renderEntry = (entry: BookletEntry) => (
-    <article
-      key={entry.id}
-      id={`booklet-${entry.id}`}
-      className="booklet-entry mb-6 rounded-xl border border-slate-200 bg-white p-5 sm:p-6 shadow-2xs"
-    >
-      <h3 tabIndex={-1} className="text-lg font-bold text-slate-900 mb-2">
-        <a
-          href={bookletHref({ entry: entry.id })}
-          className="inline-flex items-center gap-2 hover:text-blue-600 transition"
-          onClick={(event) => {
-            if (
-              event.ctrlKey ||
-              event.metaKey ||
-              event.shiftKey ||
-              event.altKey
-            )
-              return;
-            event.preventDefault();
-            navigate({ entry: entry.id });
-          }}
-        >
-          {entryTitle(entry)}
-          <Icon id="link" className="size-4 text-slate-400" />
-        </a>
-      </h3>
-      {query.trim() && (
-        <p className="booklet-entry-category text-xs text-slate-500 mb-3 font-medium">
-          {entry.categoryTitle}
-        </p>
-      )}
-      <Markdown sourcePath={`booklets/${booklet.id}.md`}>{entry.body}</Markdown>
-    </article>
-  );
+  const renderEntry = (entry: BookletEntry) => {
+    const entryBookId = entry.bookId ?? booklet.id;
+    const elementId =
+      entry.bookId && entry.bookId !== booklet.id
+        ? `booklet-${entry.bookId}-${entry.id}`
+        : `booklet-${entry.id}`;
+    return (
+      <article
+        key={`${entryBookId}-${entry.id}`}
+        id={elementId}
+        className="booklet-entry mb-6 rounded-xl border border-slate-200 bg-white p-5 sm:p-6 shadow-2xs"
+      >
+        <h3 tabIndex={-1} className="text-lg font-bold text-slate-900 mb-2">
+          <a
+            href={bookletHref({ book: entryBookId, entry: entry.id })}
+            className="inline-flex items-center gap-2 hover:text-blue-600 transition"
+            onClick={(event) => {
+              if (
+                event.ctrlKey ||
+                event.metaKey ||
+                event.shiftKey ||
+                event.altKey
+              )
+                return;
+              event.preventDefault();
+              navigate({ book: entryBookId, entry: entry.id });
+            }}
+          >
+            {entryTitle(entry)}
+            <Icon id="link" className="size-4 text-slate-400" />
+          </a>
+        </h3>
+        {query.trim() && (
+          <p className="booklet-entry-category text-xs text-slate-500 mb-3 font-medium">
+            {entry.bookTitle ? `${entry.bookTitle} · ` : ""}{entry.categoryTitle}
+          </p>
+        )}
+        <Markdown sourcePath={`booklets/${entryBookId}.md`}>{entry.body}</Markdown>
+      </article>
+    );
+  };
   return (
     <div className="booklets-page">
       <PageHeader title="小册子" />
-      <div className="booklet-heading">
-        <h2 id="booklet-top" tabIndex={-1}>
+      <div className="booklet-heading mb-4 flex items-center justify-between gap-3">
+        <h2 id="booklet-top" tabIndex={-1} className="text-xl font-bold text-slate-900">
           {booklet.title}
         </h2>
+        <div className="booklet-language shrink-0">
+          <label htmlFor="booklet-language" className="sr-only">
+            小册子语言
+          </label>
+          <NativeSelect
+            id="booklet-language"
+            className="w-28 h-9 text-xs rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-slate-700 shadow-2xs focus:border-blue-500 focus:outline-hidden"
+            value={booklet.id}
+            onChange={(event) => {
+              composing.current = false;
+              setDraft("");
+              setActiveSection("all");
+              navigate({
+                book: event.target.value,
+                bq: undefined,
+                category: undefined,
+                entry: undefined,
+              });
+              requestAnimationFrame(() => jumpToSection("all"));
+            }}
+          >
+            {booklets.map((book) => (
+              <option key={book.id} value={book.id}>
+                {book.id === "c" ? "C 语言" : "C++"}
+              </option>
+            ))}
+          </NativeSelect>
+        </div>
       </div>
       {params.get("book") &&
         !booklets.some((book) => book.id === params.get("book")) && (
@@ -296,7 +338,7 @@ export function BookletsView() {
                   reset();
                 }
               }}
-              placeholder="在当前小册子中搜索..."
+              placeholder="搜索全部小册子（按 / 聚焦）..."
               className="w-full h-11 min-h-[44px] rounded-lg border border-slate-200 bg-white pl-9 pr-11 py-1.5 text-sm text-slate-800 shadow-2xs focus:border-blue-500 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20"
               value={draft}
               onCompositionStart={() => {
@@ -324,34 +366,6 @@ export function BookletsView() {
             )}
           </div>
         </form>
-        <div className="booklet-language shrink-0">
-          <label htmlFor="booklet-language" className="sr-only">
-            小册子语言
-          </label>
-          <NativeSelect
-            id="booklet-language"
-            className="w-28 h-11 min-h-[44px] rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 shadow-2xs focus:border-blue-500 focus:outline-hidden"
-            value={booklet.id}
-            onChange={(event) => {
-              composing.current = false;
-              setDraft("");
-              setActiveSection("all");
-              navigate({
-                book: event.target.value,
-                bq: undefined,
-                category: undefined,
-                entry: undefined,
-              });
-              requestAnimationFrame(() => jumpToSection("all"));
-            }}
-          >
-            {booklets.map((book) => (
-              <option key={book.id} value={book.id}>
-                {book.id === "c" ? "C 语言" : "C++"}
-              </option>
-            ))}
-          </NativeSelect>
-        </div>
         <button
           type="button"
           className="ghost-button booklet-return ml-auto inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-2xs hover:bg-slate-50 transition"
@@ -427,11 +441,6 @@ export function BookletsView() {
               tabIndex={-1}
             >
               “{query.trim()}” · {visible.length} 个结果
-              {activeSection !== "all" && (
-                <span className="booklet-scope-badge">
-                  （已限定章节）
-                </span>
-              )}
             </p>
           )}
           {query.trim() && visible.length > 1 && (
@@ -445,31 +454,34 @@ export function BookletsView() {
                 </span>
               </div>
               <div className="flex flex-wrap gap-2">
-                {visible.map((entry) => (
-                  <a
-                    key={entry.id}
-                    href={bookletHref({ entry: entry.id })}
-                    className="group inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs shadow-2xs transition hover:border-blue-300 hover:bg-blue-50/40"
-                    onClick={(event) => {
-                      if (
-                        event.ctrlKey ||
-                        event.metaKey ||
-                        event.shiftKey ||
-                        event.altKey
-                      )
-                        return;
-                      event.preventDefault();
-                      navigate({ entry: entry.id });
-                    }}
-                  >
-                    <span className="font-medium text-slate-800 group-hover:text-blue-600">
-                      {entry.title}
-                    </span>
-                    <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-500">
-                      {entry.categoryTitle}
-                    </span>
-                  </a>
-                ))}
+                {visible.map((entry) => {
+                  const entryBookId = entry.bookId ?? booklet.id;
+                  return (
+                    <a
+                      key={`${entryBookId}-${entry.id}`}
+                      href={bookletHref({ book: entryBookId, entry: entry.id })}
+                      className="group inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs shadow-2xs transition hover:border-blue-300 hover:bg-blue-50/40"
+                      onClick={(event) => {
+                        if (
+                          event.ctrlKey ||
+                          event.metaKey ||
+                          event.shiftKey ||
+                          event.altKey
+                        )
+                          return;
+                        event.preventDefault();
+                        navigate({ book: entryBookId, entry: entry.id });
+                      }}
+                    >
+                      <span className="font-medium text-slate-800 group-hover:text-blue-600">
+                        {entry.title}
+                      </span>
+                      <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-500">
+                        {entry.bookTitle ? `${entry.bookTitle} · ` : ""}{entry.categoryTitle}
+                      </span>
+                    </a>
+                  );
+                })}
               </div>
             </nav>
           )}

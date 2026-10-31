@@ -8,6 +8,8 @@ export interface BookletEntry {
   body: string;
   category: string;
   categoryTitle: string;
+  bookId?: string;
+  bookTitle?: string;
 }
 export interface BookletSection {
   id: string;
@@ -15,7 +17,11 @@ export interface BookletSection {
   entries: BookletEntry[];
 }
 
-function parseSections(source: string): BookletSection[] {
+function parseSections(
+  source: string,
+  bookId?: string,
+  bookTitle?: string,
+): BookletSection[] {
   const headings = [
     ...source.matchAll(/^## (.+?) <!-- category: ([a-z0-9-]+) -->$/gm),
   ];
@@ -42,6 +48,8 @@ function parseSections(source: string): BookletSection[] {
           body: text.replace(/^关键词：.+\n?/m, "").trim(),
           category: match[2],
           categoryTitle: match[1],
+          bookId,
+          bookTitle,
         };
       }),
     };
@@ -57,7 +65,7 @@ export const cBooklet = {
   id: "c",
   title: "C 语言速查",
   standard: "ISO C17",
-  sections: parseSections(cSource),
+  sections: parseSections(cSource, "c", "C 语言"),
   downloadUrl: downloads["../../booklets/c.md"],
   exampleUrl: downloads["../../booklets/examples/c17-reference.c"],
 };
@@ -65,7 +73,7 @@ export const cppBooklet = {
   id: "cpp",
   title: "C++ 语言速查",
   standard: "ISO C++98–C++23",
-  sections: parseSections(cppSource),
+  sections: parseSections(cppSource, "cpp", "C++"),
   downloadUrl: downloads["../../booklets/cpp.md"],
   exampleUrl: downloads["../../booklets/examples/cpp20-reference.cpp"],
 };
@@ -74,7 +82,7 @@ export const bookletEntries = cBooklet.sections.flatMap(
   (section) => section.entries,
 );
 const normalize = (value: string) => value.normalize("NFKC").toLowerCase();
-export function searchBooklet(query: string, booklet = cBooklet) {
+export function searchBooklet(query: string, booklet?: typeof cBooklet) {
   const terms = normalize(query).trim().split(/\s+/).filter(Boolean);
   const score = (entry: BookletEntry) =>
     terms.reduce(
@@ -88,7 +96,12 @@ export function searchBooklet(query: string, booklet = cBooklet) {
     (terms.length && ["keywords", "standard-headers"].includes(entry.id)
       ? 5
       : 0);
-  return booklet.sections
+
+  const targetSections = booklet
+    ? booklet.sections
+    : booklets.flatMap((b) => b.sections);
+
+  return targetSections
     .flatMap((section) => section.entries)
     .filter((entry) => {
       const text = normalize(
