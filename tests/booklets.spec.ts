@@ -84,17 +84,14 @@ for (const [width, height] of [
     page,
   }) => {
     await page.setViewportSize({ width, height });
-    await page.goto("/?view=booklets");
-    const category = page.getByLabel("章节导航", { exact: true });
-    await category.selectOption("memory");
-    await expect(page).toHaveURL(/category=memory/);
+    await page.goto("/?view=booklets&category=memory");
     await expect(page.locator(".booklet-entry")).toHaveCount(totalEntries);
     await expect(page.locator("#booklet-category-memory")).toBeFocused();
     const chapterBox = await page
       .locator("#booklet-category-memory")
       .boundingBox();
-    const menuBox = await category.boundingBox();
-    expect(chapterBox!.y).toBeGreaterThanOrEqual(menuBox!.y + menuBox!.height);
+    const toolbarBox = (await page.locator(".booklet-toolbar").boundingBox())!;
+    expect(chapterBox!.y).toBeGreaterThanOrEqual(toolbarBox.y + toolbarBox.height);
     await page.getByRole("searchbox", { name: /^快速查找/ }).fill("realloc");
     const heading = page.locator("#booklet-realloc h3");
     await heading.getByRole("link").click();
@@ -272,7 +269,7 @@ for (const viewport of [
     await expect(search).toHaveValue("std::make_unique");
     await page.getByRole("button", { name: "清除小册子搜索" }).click();
     if (viewport.width < 1100) {
-      await page.getByLabel("章节导航").selectOption("cpp-20");
+      await page.goto("/?view=booklets&book=cpp&category=cpp-20");
     } else {
       await page
         .getByRole("navigation", { name: "小册子目录" })
@@ -353,16 +350,6 @@ for (const viewport of [
       .boundingBox())!;
     expect(chapter.y).toBeGreaterThanOrEqual(tools.y + tools.height - 1);
     if (viewport.height < 480) expect(tools.height).toBeLessThan(80);
-    if (viewport.width < 1100) {
-      const select = page.getByLabel("章节导航", { exact: true });
-      await expect(select).toBeInViewport();
-      await select.click();
-      await page.screenshot({
-        path: `test-results/booklets-ux/native-chapters-${viewport.width}.png`,
-      });
-      await select.press("Escape");
-      await expect(select).toBeFocused();
-    }
     await page.getByRole("button", { name: "返回顶部", exact: true }).click();
     await expect(page.locator("#booklet-top")).toBeFocused();
     expect(
@@ -409,9 +396,6 @@ test("search index, Enter, Escape and return action preserve the booklet flow", 
   await expect(search).toHaveValue("");
   await expect(page).not.toHaveURL(/bq=/);
   await search.fill("   ");
-  await expect(page.getByLabel("章节导航", { exact: true })).not.toHaveValue(
-    "search",
-  );
   await expect(index).toHaveCount(0);
   await search.fill("unknown-booklet-term-321");
   await expect(

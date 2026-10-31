@@ -84,10 +84,7 @@ export function BookletsView() {
     () => searchBooklet(query, booklet),
     [query, booklet],
   );
-  const visible = useMemo(() => {
-    if (!query.trim() || activeSection === "all") return matches;
-    return matches.filter((entry) => entry.category === activeSection);
-  }, [matches, query, activeSection]);
+  const visible = matches;
   const visibleIds = useMemo(
     () => new Set(visible.map((entry) => entry.id)),
     [visible],
@@ -262,7 +259,7 @@ export function BookletsView() {
         ref={toolbarRef}
       >
         <form
-          className="booklet-search relative flex-1 min-w-0 lg:min-w-[240px] max-w-md m-0"
+          className="booklet-search relative flex-1 min-w-0 max-w-xl m-0"
           role="search"
           noValidate
           onSubmit={(event) => {
@@ -333,7 +330,7 @@ export function BookletsView() {
           </label>
           <NativeSelect
             id="booklet-language"
-            className="w-24 lg:w-28 h-11 min-h-[44px] rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 shadow-2xs focus:border-blue-500 focus:outline-hidden"
+            className="w-28 h-11 min-h-[44px] rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 shadow-2xs focus:border-blue-500 focus:outline-hidden"
             value={booklet.id}
             onChange={(event) => {
               composing.current = false;
@@ -353,56 +350,6 @@ export function BookletsView() {
                 {book.id === "c" ? "C 语言" : "C++"}
               </option>
             ))}
-          </NativeSelect>
-        </div>
-        <div className="booklet-mobile-category shrink-0">
-          <label htmlFor="booklet-category" className="sr-only">
-            章节导航
-          </label>
-          <NativeSelect
-            id="booklet-category"
-            className="w-36 sm:w-44 lg:w-56 max-w-[calc(100vw-120px)] h-11 min-h-[44px] rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 shadow-2xs focus:border-blue-500 focus:outline-hidden"
-            value={activeSection}
-            onChange={(event) => {
-              const val = event.target.value;
-              setActiveSection(val);
-              if (!query.trim()) {
-                setCategory(val);
-              } else {
-                requestAnimationFrame(() => {
-                  resultsRef.current?.scrollIntoView({
-                    block: "start",
-                    behavior: "instant",
-                  });
-                });
-              }
-            }}
-          >
-            <option value="all">全部内容</option>
-            {standardSections.length ? (
-              <>
-                <optgroup label="按主题">
-                  {topicSections.map((section) => (
-                    <option key={section.id} value={section.id}>
-                      {section.title}
-                    </option>
-                  ))}
-                </optgroup>
-                <optgroup label="按标准">
-                  {standardSections.map((section) => (
-                    <option key={section.id} value={section.id}>
-                      {section.title}
-                    </option>
-                  ))}
-                </optgroup>
-              </>
-            ) : (
-              booklet.sections.map((section) => (
-                <option key={section.id} value={section.id}>
-                  {section.title}
-                </option>
-              ))
-            )}
           </NativeSelect>
         </div>
         <button
@@ -537,21 +484,8 @@ export function BookletsView() {
           {!visible.length && (
             <section className="booklet-empty">
               <h2>没有找到匹配条目</h2>
-              <p>
-                {activeSection !== "all"
-                  ? "当前章节下未找到匹配项，可切换到「全部内容」查看全册结果。"
-                  : "换一个函数名、中文术语，或清除搜索回到完整小册子。"}
-              </p>
+              <p>换一个函数名、中文术语，或清除搜索回到完整小册子。</p>
               <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                {activeSection !== "all" && (
-                  <button
-                    type="button"
-                    className="ghost-button"
-                    onClick={() => setActiveSection("all")}
-                  >
-                    搜索全部内容
-                  </button>
-                )}
                 <button type="button" className="ghost-button" onClick={reset}>
                   清除搜索，查看全册
                 </button>
