@@ -13,7 +13,7 @@ function renderDiagram(id: string, source: string): Promise<string> {
       maxTextSize: 50000,
       maxEdges: 500,
       theme: "neutral",
-      fontFamily: '"IBM Plex Sans", "Noto Sans SC", system-ui, sans-serif',
+      fontFamily: '"Noto Sans TC Variable", "Noto Sans TC", "Noto Sans CJK TC", "Noto Sans SC", system-ui, sans-serif',
       flowchart: { htmlLabels: false, useMaxWidth: true },
       secure: ["secure", "securityLevel", "startOnLoad", "maxTextSize", "maxEdges", "suppressErrorRendering"],
     });

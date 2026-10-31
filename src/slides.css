@@ -15,7 +15,7 @@
   --pc-quote: #f59e0b;       /* 金句专用 */
   --pc-violet: #a78bfa;      /* 辅助：跨层 / 惯用法标注 */
   --pc-radius: 10px;
-  --pc-font-sans: 'IBM Plex Sans', 'Noto Sans SC', system-ui, sans-serif;
+  --pc-font-sans: var(--font-sans);
   --pc-font-mono: 'IBM Plex Mono', 'JetBrains Mono', Consolas, monospace;
 }
 

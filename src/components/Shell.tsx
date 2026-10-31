@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { NAV, type View } from "../lib/navigation";
+import { NAV, NAV_GROUPS, type View } from "../lib/navigation";
 import { Icon as NavIcon } from "./common/Icon";
 import { OpenCodeLogo } from "./OpenCodeLogo";
 
@@ -176,6 +176,13 @@ export function Shell({
           ? "课程阅读"
           : (NAV.find((item) => item.id === view)?.label ?? "课程");
 
+  const layoutMode =
+    view === "lesson"
+      ? "read"
+      : ["lab", "slides", "search", "visualizer"].includes(view)
+        ? "operate"
+        : "browse";
+
   return (
     <div
       className={`app-shell ${isSidebarCollapsed ? "is-sidebar-collapsed" : ""}`}
@@ -213,25 +220,30 @@ export function Shell({
                 </button>
               </div>
               <nav aria-label="Mobile navigation">
-                {NAV.map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    aria-current={
-                      view === item.id ||
-                      (view === "lesson" && item.id === "lessons")
-                        ? "page"
-                        : undefined
-                    }
-                    onClick={() => {
-                      setView(item.id);
-                      closeDrawer(false);
-                      focusMainContent();
-                    }}
-                  >
-                    <NavIcon id={item.id} />
-                    <span>{item.label}</span>
-                  </button>
+                {NAV_GROUPS.map((group) => (
+                  <div className="nav-group mobile-nav-group" key={group.id}>
+                    <span className="nav-group-label">{group.label}</span>
+                    {NAV.filter((item) => item.group === group.id).map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        aria-current={
+                          view === item.id ||
+                          (view === "lesson" && item.id === "lessons")
+                            ? "page"
+                            : undefined
+                        }
+                        onClick={() => {
+                          setView(item.id);
+                          closeDrawer(false);
+                          focusMainContent();
+                        }}
+                      >
+                        <NavIcon id={item.id} />
+                        <span>{item.label}</span>
+                      </button>
+                    ))}
+                  </div>
                 ))}
                 <button
                   key="search"
@@ -373,37 +385,45 @@ export function Shell({
         </div>
 
         <nav className="side-nav" aria-label="Primary navigation">
-          {NAV.map((item) => {
-            const isActive =
-              view === item.id || (view === "lesson" && item.id === "lessons");
-            return (
-              <button
-                key={item.id}
-                type="button"
-                className={`nav-item ${isActive ? "is-active" : ""}`}
-                aria-current={isActive ? "page" : undefined}
-                onClick={() => goToView(item.id)}
-                title={item.label}
-                aria-label={item.label}
-              >
-                <NavIcon id={item.id} />
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
-          <a
-            className="nav-item nav-item-external"
-            href={`${import.meta.env.BASE_URL}rtos.html`}
-            title="RTOS 模拟器"
-          >
-            <span className="nav-icon" aria-hidden="true">
-              ⌁
-            </span>
-            <span>RTOS 模拟器</span>
-            <small className="nav-external-badge" aria-hidden="true">
-              ↗
-            </small>
-          </a>
+          {NAV_GROUPS.map((group) => (
+            <div className="nav-group" key={group.id}>
+              <span className="nav-group-label">{group.label}</span>
+              {NAV.filter((item) => item.group === group.id).map((item) => {
+                const isActive =
+                  view === item.id ||
+                  (view === "lesson" && item.id === "lessons");
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className={`nav-item ${isActive ? "is-active" : ""}`}
+                    aria-current={isActive ? "page" : undefined}
+                    onClick={() => goToView(item.id)}
+                    title={item.label}
+                    aria-label={item.label}
+                  >
+                    <NavIcon id={item.id} />
+                    <span>{item.label}</span>
+                  </button>
+                );
+              })}
+              {group.id === "tools" && (
+                <a
+                  className="nav-item nav-item-external"
+                  href={`${import.meta.env.BASE_URL}rtos.html`}
+                  title="RTOS 模拟器"
+                >
+                  <span className="nav-icon" aria-hidden="true">
+                    ⌁
+                  </span>
+                  <span>RTOS 模拟器</span>
+                  <small className="nav-external-badge" aria-hidden="true">
+                    ↗
+                  </small>
+                </a>
+              )}
+            </div>
+          ))}
         </nav>
 
         <div className="sidebar-footer">
@@ -430,6 +450,7 @@ export function Shell({
           id="main-content"
           tabIndex={-1}
           data-view={view}
+          data-layout={layoutMode}
         >
           {children}
         </main>

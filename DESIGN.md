@@ -10,7 +10,7 @@ colors:
   primarySoft: "#e9f3fb"
 typography:
   sans:
-    fontFamily: '"IBM Plex Sans", "Noto Sans CJK SC", "Noto Sans SC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+    fontFamily: '"Noto Sans TC Variable", "Noto Sans TC", "Noto Sans CJK TC", "Source Han Sans TC", "Noto Sans SC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
     fontSize: 16px
     lineHeight: 1.75
   mono:
@@ -49,7 +49,9 @@ Selected states use text and a border as well as color. Do not create a second t
 
 ## Typography
 
-Shared fonts and `--mono` remain canonical. Chinese prose is at least 16px; topic reading uses
+`Noto Sans TC Variable` is self-hosted and owns the shared sans role; installed Noto/Source Han
+families and system UI fonts remain fallbacks. `--mono` remains canonical for code and technical
+identifiers. Chinese prose is at least 16px; topic reading uses
 1.8 line height, 28px mobile article titles and 22px section headings. English identifiers and
 long titles may wrap. Code retains the shared Markdown renderer and code block owner.
 
@@ -110,6 +112,12 @@ sit between the editor and trace, rather than hiding export or speed controls.
 Native non-modal disclosures own its configuration popup; `keyboardTabs.ts` shares
 arrow-key tab behavior between its detail panel and the memory output panel. The memory workbench retains its shared session and rendering model,
 with larger mobile controls and consistent dark layout-switch buttons.
+
+The shared shell labels every route as one of three layout modes: Browse for catalogs and
+overview pages, Read for bounded long-form lessons, and Operate for code, search and slide
+workspaces. Sidebar destinations are grouped as Learning, Knowledge Base and Tools without
+changing their URLs. Context rails contain page-local navigation only; repeated course totals,
+current-day metadata and learning status stay in the owning primary surface.
 
 ## Task-first refinement · 20 October 2026
 

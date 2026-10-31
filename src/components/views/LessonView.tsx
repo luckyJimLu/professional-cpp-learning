@@ -36,6 +36,11 @@ export function LessonView({
     "pass";
   const [active, setActive] = useState<StepKey>(firstIncomplete);
   const [queuedReview, setQueuedReview] = useState<Set<StepKey>>(new Set());
+  const completedSteps = STEP_DEFS.filter((step) =>
+    isStepComplete(lesson.day, step.key),
+  ).length;
+  const activeStep =
+    STEP_DEFS.find((step) => step.key === active) ?? STEP_DEFS[0];
   useEffect(() => setQueuedReview(new Set()), [lesson.day]);
 
   useEffect(() => {
@@ -124,12 +129,35 @@ export function LessonView({
           </div>
           <h1>{lesson.title}</h1>
           <div className="lesson-rail-sticky">
-            <CompileRail
-              lesson={lesson}
-              active={active}
-              onSelect={navigate}
-              isStepComplete={isStepComplete}
-            />
+            <div className="lesson-stage-desktop">
+              <CompileRail
+                lesson={lesson}
+                active={active}
+                onSelect={navigate}
+                isStepComplete={isStepComplete}
+              />
+            </div>
+            <details className="lesson-stage-disclosure">
+              <summary>
+                <span>
+                  <small>当前阶段</small>
+                  <strong>
+                    {activeStep.label} · {activeStep.title}
+                  </strong>
+                </span>
+                <span className="lesson-stage-progress mono">
+                  {completedSteps} / {STEP_DEFS.length}
+                </span>
+              </summary>
+              <div className="lesson-stage-panel">
+                <CompileRail
+                  lesson={lesson}
+                  active={active}
+                  onSelect={navigate}
+                  isStepComplete={isStepComplete}
+                />
+              </div>
+            </details>
           </div>
         </header>
 

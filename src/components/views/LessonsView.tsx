@@ -21,6 +21,7 @@ const WEEK_ZH_THEMES: Record<number, string> = {
   7: "代码复用、泛型模板与防御性检查",
   8: "易用接口设计、受众边界与 SOLID",
   9: "智能指针、动态内存与资源分配边界",
+  10: "对象生命周期、固定容量与资源边界",
 };
 
 export function LessonsView({
@@ -162,11 +163,6 @@ export function LessonsView({
           )}
         </div>
         <div className="course-toolbar-actions">
-          {target && !query.trim() && activeTab === "roadmap" && (
-            <a className="course-locate" href={`#course-week-${target.week}`}>
-              定位当前周 · 第 {target.week} 周 ↓
-            </a>
-          )}
           <div
             className="course-tab-group"
             role="group"
@@ -285,7 +281,7 @@ export function LessonsView({
         </details>
       </div>
 
-      <aside className="today-aside" aria-label="课程周次导航与基线">
+      <aside className="today-aside" aria-label="课程周次导航">
         <div className="today-aside-card">
           <span className="page-eyebrow">周次导航</span>
           <nav aria-label="课程周次跳转" className="today-aside-nav">
@@ -297,27 +293,6 @@ export function LessonsView({
             ))}
             <a href="#course-plan">章节里程碑与原始路线</a>
           </nav>
-        </div>
-        <div className="today-aside-card">
-          <span className="page-eyebrow">课程基线</span>
-          <dl className="today-aside-stats">
-            <div>
-              <dt>已发布课程</dt>
-              <dd>
-                {lessons.length} 节（{weeks.length} 周进阶）
-              </dd>
-            </div>
-            <div>
-              <dt>当前主线</dt>
-              <dd>
-                第 {target?.week ?? 1} 周 · Day {target?.day ?? 1}
-              </dd>
-            </div>
-            <div>
-              <dt>单课结构</dt>
-              <dd>8 阶段闭环 · 源码与实验</dd>
-            </div>
-          </dl>
         </div>
       </aside>
     </div>

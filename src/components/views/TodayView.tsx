@@ -312,28 +312,9 @@ export function TodayView({
           <nav aria-label="学习指南章节" className="today-aside-nav">
             <a href="#introduction">工程化学习概览</a>
             <a href="#current-lesson">当前课程 · Day {target?.day ?? 1}</a>
-            <a href="#pathways">三大专项入口</a>
+            <a href="#pathways">四个学习入口</a>
             <a href="#learning-method">每天一小时闭环</a>
           </nav>
-        </div>
-        <div className="today-aside-card">
-          <span className="page-eyebrow">学习基线</span>
-          <dl className="today-aside-stats">
-            <div>
-              <dt>已发布课程</dt>
-              <dd>{lessons.length} 节（9 周进阶）</dd>
-            </div>
-            <div>
-              <dt>当前主线</dt>
-              <dd>
-                第 {target?.week ?? 1} 周 · Day {target?.day ?? 1}
-              </dd>
-            </div>
-            <div>
-              <dt>配套工具</dt>
-              <dd>Clang 编译器 · 内存轨迹 · RTOS 模拟</dd>
-            </div>
-          </dl>
         </div>
       </aside>
     </div>

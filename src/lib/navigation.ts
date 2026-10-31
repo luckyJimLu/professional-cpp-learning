@@ -1,15 +1,21 @@
 import { useEffect, useState } from "react";
 
 export const NAV = [
-  { id: "today", label: "学习指南" },
-  { id: "lessons", label: "课程" },
-  { id: "slides", label: "课件" },
-  { id: "topics", label: "专题" },
-  { id: "booklets", label: "小册子" },
-  { id: "faq", label: "FAQ" },
-  { id: "lab", label: "实验" },
-  { id: "guidelines", label: "编码规范" },
-  { id: "review", label: "复盘" },
+  { id: "today", label: "学习指南", group: "learn" },
+  { id: "lessons", label: "课程", group: "learn" },
+  { id: "slides", label: "课件", group: "learn" },
+  { id: "review", label: "复盘", group: "learn" },
+  { id: "topics", label: "专题", group: "reference" },
+  { id: "booklets", label: "小册子", group: "reference" },
+  { id: "guidelines", label: "编码规范", group: "reference" },
+  { id: "faq", label: "FAQ", group: "reference" },
+  { id: "lab", label: "实验", group: "tools" },
+] as const;
+
+export const NAV_GROUPS = [
+  { id: "learn", label: "学习" },
+  { id: "reference", label: "知识库" },
+  { id: "tools", label: "工具" },
 ] as const;
 
 export const VIEW_ALIASES: Record<string, (typeof NAV)[number]["id"]> = {

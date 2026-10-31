@@ -41,25 +41,13 @@ Do not replace Compile Rail with a generic percentage-only progress bar.
 
 ## 4. Information architecture
 
-Desktop primary navigation:
+Desktop primary navigation is visually grouped while preserving every route:
 
-1. Today (学习指南)
-2. 课程 (Lessons - 进阶路线与完整目录合一)
-3. 课件 (Slides - Slidev 工程蓝图交互式幻灯片与大纲对照)
-4. 专题 (Topics)
-5. 实验 (Lab)
-6. 编码规范 (Guidelines)
-7. 复盘 (Review - 进度闭环、薄弱点与周复盘检查点)
+1. 学习：学习指南、课程、课件、复盘
+2. 知识库：专题、小册子、编码规范、FAQ
+3. 工具：实验、RTOS 模拟器
 
-Mobile primary navigation:
-
-- 学习指南
-- 课程
-- 课件
-- 专题
-- 实验
-- 编码规范
-- 复盘
+Mobile navigation uses the same groups and includes code search plus the GitHub repository link.
 
 All destinations, including code search, are reachable on mobile through the shared navigation drawer.
 
