@@ -2,6 +2,8 @@
 
 本目录构建了一套**以 [`slidev-ppt`](./slidev-ppt) 为核心枢纽（Core Hub）、其余 7 个专业技能为辅助支撑（Auxiliary Spokes）**的演示文稿（PPT）与架构可视化生成体系。核心目标是将课程大纲转化为**零幻觉、100% 忠于原文、逻辑严密、形状即语义、全链路视觉高度统一**的工程蓝图级交互式 Slidev 课件。
 
+本目录同时收录一套独立的 **UI/UX 设计技能套件**（`ui-ux-pro-max` 及其 7 个伴生技能，共 4.8 MB），服务于 Web 学习控制台与设计资产，**不参与** Slidev 课件生成链路，详见文末「UI/UX 设计 · UI UX Pro Max 套件」。
+
 ---
 
 ## 核心中枢与辅助子技能一览表（Hub-and-Spoke 架构）
@@ -61,7 +63,7 @@ flowchart TD
 ## 常用校验与维护命令
 
 ```bash
-# 1. 检查所有 8 个 skills 的目录与元数据健康度
+# 1. 检查 8 个课件 / 图示技能的目录与元数据健康度（不含 UI/UX 设计套件）
 python3 .opencode/skills/diagram-orchestrator/scripts/check_diagram_skills.py
 
 # 2. 检查本机思源黑体与 C++ 代码等宽字体
@@ -83,3 +85,55 @@ python3 -m unittest discover -s .opencode/skills/slidev-ppt/scripts -p 'test_*.p
 - 只安装技能并按需检测，不安装自动钩子或修改全局技能。
 - 产品事实见 `PRODUCT.md`，视觉约定见 `DESIGN.md`，行为约定见 `UX-CONTRACT.md`。
 - [安装、调用和更新说明](../../docs/design/impeccable.md)。
+
+---
+
+## UI/UX 设计 · UI UX Pro Max 套件
+
+来自 `nextlevelbuilder/ui-ux-pro-max-skill` 的 8 个技能，用于 **Web 学习控制台（`src/` 前端）与设计资产**，与 `slidev-ppt` 课件链路相互独立：课件画面与图示仍由中枢 + 图示技能负责，本套件只在产品 UI 任务中触发。
+
+- 来源：npm 包 `ui-ux-pro-max-cli@2.15.0`（官方 CLI，非手工 clone）。
+- 安装：`npx --yes ui-ux-pro-max-cli init --ai opencode`，产物全部落在 `.opencode/skills/`，不改动 `opencode.json`、`AGENTS.md` 与仓库其他文件。
+- 运行时依赖：Python 3（仅标准库，不联网、不安装任何包）。
+- 数据规模：79 种 UI 风格（50 种活跃）、192 条行业配色与推理规则、74 组字体搭配、119 条 UX 准则、105 个图标、17 个 GSAP 预设、25 种图表、22 个技术栈。
+
+| 技能名称 (Directory) | 主要定位与职责 | 触发场景 |
+| :--- | :--- | :--- |
+| [**`ui-ux-pro-max`**](./ui-ux-pro-max/SKILL.md) | **核心设计智能**<br>本地 BM25 搜索 + 设计系统生成器（模式 / 风格 / 配色 / 字体 / 反模式 / 交付前清单），覆盖 Web、移动端与桌面端 | 新页面、新组件、选风格配色字体、UI 审查与修复、图表与技术栈最佳实践 |
+| [**`design`**](./design/SKILL.md) | 品牌识别、设计 token、UI 样式、Logo（55 种风格）、CIP（50 项交付物）、HTML 演示、Banner、图标、社媒图 | 需要成套品牌资产或营销物料时 |
+| [**`design-system`**](./design-system/SKILL.md) | 三层 token 架构（primitive → semantic → component）、CSS 变量、间距与字阶、组件规格、策略型幻灯片 | 建立或审计设计系统与 token 体系 |
+| [**`ui-styling`**](./ui-styling/SKILL.md) | shadcn/ui（Radix）+ Tailwind 的可访问组件、主题与暗色模式、响应式布局、canvas 视觉 | 具体实现 shadcn/Tailwind 组件与主题 |
+| [**`frontend-design`**](./frontend-design/SKILL.md) | 有辨识度的视觉方向：排版、调色、布局，规避模板化默认风格 | 需要独特视觉主张、避免「AI 感」页面时 |
+| [**`brand`**](./brand/SKILL.md) | 品牌语调、视觉识别、消息框架、资产管理与一致性 | 品牌文案、语气统一、品牌合规审查 |
+| [**`banner-design`**](./banner-design/SKILL.md) | 22 种 Banner 风格，覆盖社交、广告、网站 hero 与印刷尺寸 | 出图类横幅与封面物料 |
+| [**`slides`**](./slides/SKILL.md) | HTML + Chart.js 的策略型演示（设计 token、响应式、文案公式） | **仅**用于 HTML 网页演示；本仓库课件以 `slidev-ppt` 为唯一入口 |
+
+### 路由约定
+
+| 任务 | 使用 | 不使用 |
+| :--- | :--- | :--- |
+| `slides/lesson-0X.md` 课件、大纲映射、防幻觉校验 | `slidev-ppt` + `diagram-orchestrator` | `slides`、`design-system` |
+| Web 学习控制台页面、组件、dark mode | `ui-ux-pro-max`（必要时叠加 `ui-styling`） | `slidev-ppt` |
+| 视觉方向争议、避免模板感 | `impeccable` 或 `frontend-design`（二选一，勿叠加） | — |
+| 品牌物料、Banner、社媒图 | `design` / `brand` / `banner-design` | — |
+
+### 维护命令
+
+```bash
+# 设计系统生成（快速验证套件可用）
+python3 .opencode/skills/ui-ux-pro-max/scripts/search.py "fintech banking dark" --design-system
+
+# 定向域检索（style / color / chart / landing / product / ux / typography / icons / gsap / react / web / google-fonts）
+python3 .opencode/skills/ui-ux-pro-max/scripts/search.py "hover state" --domain ux
+
+# 技术栈检索
+python3 .opencode/skills/ui-ux-pro-max/scripts/search.py "list rerender" --stack react
+
+# 数据完整性校验与自带回归测试
+python3 .opencode/skills/ui-ux-pro-max/scripts/validate_data.py
+python3 -m unittest discover -s .opencode/skills/ui-ux-pro-max/scripts/tests -p 'test_*.py'
+```
+
+- 已知上游打包缺陷：回归测试共 132 个，`test_catalog_refresh` 与 `test_relevance_evaluator` 会因 npm 包未携带维护者脚本 `refresh-google-fonts.py` / `evaluate-relevance.py` 而 import 失败，其余 130 个通过；升级 CLI 后应复测。
+- 升级：`npx --yes ui-ux-pro-max-cli update`；卸载：`npx --yes ui-ux-pro-max-cli uninstall`。
+- 与 `impeccable` 存在能力重叠：同一任务只选其一，避免样式约定互相覆盖。
