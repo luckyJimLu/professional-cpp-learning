@@ -188,38 +188,69 @@
   color: var(--muted);
   overflow-wrap: anywhere;
   scroll-margin-top: var(--booklet-scroll-offset);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.booklet-scope-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--blue);
+  background: var(--blue-soft);
+  font-weight: 500;
 }
 .booklet-search-index {
   border: 1px solid var(--line);
-  border-radius: var(--radius-control);
-  margin-bottom: 24px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
+.booklet-search-index-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line);
+  background: var(--canvas);
+}
+.booklet-search-index-header > p,
 .booklet-search-index > p {
   margin: 0;
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--line);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
+  color: var(--ink);
+}
+.booklet-search-index-count {
+  font-size: 12px;
+  color: var(--muted);
 }
 .booklet-search-index ul {
   margin: 0;
   padding: 4px;
   list-style: none;
-  max-height: 260px;
+  max-height: 200px;
   overflow: auto;
 }
 .booklet-search-index a {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 2px 8px;
-  padding: 8px;
-  min-height: var(--touch-target);
+  padding: 6px 10px;
+  min-height: 38px;
+  border-radius: 6px;
   color: var(--ink);
   text-decoration: none;
   overflow-wrap: anywhere;
+  transition: background-color 0.15s ease;
 }
 .booklet-search-index a span {
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 500;
 }
 .booklet-search-index small {
   grid-column: 1;
@@ -368,6 +399,12 @@
   .booklet-return {
     padding: 0;
     width: 44px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-control);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .booklet-return span {
     display: none;
@@ -386,6 +423,15 @@
   }
   .booklet-heading h2 {
     font-size: 20px;
+  }
+  .booklet-search-index {
+    margin-bottom: 16px;
+  }
+  .booklet-search-index ul {
+    max-height: 130px;
+  }
+  .booklet-search-index a {
+    padding: 6px 8px;
   }
   .booklet-entry .code-block-copy-btn {
     min-height: var(--touch-target);

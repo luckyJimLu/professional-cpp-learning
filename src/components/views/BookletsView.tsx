@@ -84,13 +84,17 @@ export function BookletsView() {
     () => searchBooklet(query, booklet),
     [query, booklet],
   );
-  const visible = matches;
+  const visible = useMemo(() => {
+    if (!query.trim() || activeSection === "all") return matches;
+    return matches.filter((entry) => entry.category === activeSection);
+  }, [matches, query, activeSection]);
   const visibleIds = useMemo(
     () => new Set(visible.map((entry) => entry.id)),
     [visible],
   );
   const setQuery = (value: string) => {
     setDraft(value);
+    setActiveSection("all");
     navigate(
       { bq: value || undefined, category: undefined, entry: undefined },
       true,
@@ -184,6 +188,7 @@ export function BookletsView() {
   const reset = () => {
     setDraft("");
     composing.current = false;
+    setActiveSection("all");
     navigate({ bq: undefined, category: undefined, entry: undefined }, true);
     inputRef.current?.focus({ preventScroll: true });
     requestAnimationFrame(() =>
@@ -340,18 +345,23 @@ export function BookletsView() {
           <label htmlFor="booklet-category">章节导航</label>
           <NativeSelect
             id="booklet-category"
-            value={query.trim() ? "search" : activeSection}
+            value={activeSection}
             onChange={(event) => {
-              if (event.target.value !== "search")
-                setCategory(event.target.value);
+              const val = event.target.value;
+              setActiveSection(val);
+              if (!query.trim()) {
+                setCategory(val);
+              } else {
+                requestAnimationFrame(() => {
+                  resultsRef.current?.scrollIntoView({
+                    block: "start",
+                    behavior: "instant",
+                  });
+                });
+              }
             }}
           >
             <option value="all">全部内容</option>
-            {query.trim() && (
-              <option value="search" disabled>
-                搜索结果
-              </option>
-            )}
             {standardSections.length ? (
               <>
                 <optgroup label="按主题">
@@ -453,11 +463,21 @@ export function BookletsView() {
               tabIndex={-1}
             >
               “{query.trim()}” · {visible.length} 个结果
+              {activeSection !== "all" && (
+                <span className="booklet-scope-badge">
+                  （已限定章节）
+                </span>
+              )}
             </p>
           )}
           {query.trim() && visible.length > 1 && (
             <nav className="booklet-search-index" aria-label="搜索结果索引">
-              <p>跳到匹配条目</p>
+              <div className="booklet-search-index-header">
+                <p>跳到匹配条目</p>
+                <span className="booklet-search-index-count">
+                  {visible.length} 项
+                </span>
+              </div>
               <ul>
                 {visible.map((entry) => (
                   <li key={entry.id}>
@@ -495,10 +515,25 @@ export function BookletsView() {
           {!visible.length && (
             <section className="booklet-empty">
               <h2>没有找到匹配条目</h2>
-              <p>换一个函数名、中文术语，或清除搜索回到完整小册子。</p>
-              <button type="button" className="ghost-button" onClick={reset}>
-                清除搜索，查看全册
-              </button>
+              <p>
+                {activeSection !== "all"
+                  ? "当前章节下未找到匹配项，可切换到「全部内容」查看全册结果。"
+                  : "换一个函数名、中文术语，或清除搜索回到完整小册子。"}
+              </p>
+              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                {activeSection !== "all" && (
+                  <button
+                    type="button"
+                    className="ghost-button"
+                    onClick={() => setActiveSection("all")}
+                  >
+                    搜索全部内容
+                  </button>
+                )}
+                <button type="button" className="ghost-button" onClick={reset}>
+                  清除搜索，查看全册
+                </button>
+              </div>
             </section>
           )}
           {query.trim() ? (
