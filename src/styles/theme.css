@@ -47,7 +47,7 @@
   --color-code-ink: var(--code-ink);
 
   --font-sans: var(--font-sans);
-  --font-mono: var(--mono);
+  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --radius-lg: var(--radius);
   --radius-md: var(--radius-control);

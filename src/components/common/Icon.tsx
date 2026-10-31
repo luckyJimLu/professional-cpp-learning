@@ -1,6 +1,12 @@
-export function Icon({ id }: { id: string }) {
+export function Icon({
+  id,
+  className = "",
+}: {
+  id: string;
+  className?: string;
+}) {
   const common = {
-    className: "ui-icon nav-icon",
+    className: `ui-icon nav-icon ${className}`.trim(),
     width: 18,
     height: 18,
     viewBox: "0 0 24 24",

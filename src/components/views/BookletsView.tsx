@@ -202,7 +202,10 @@ export function BookletsView() {
     const parts = entry.title.match(/^(.*?)\s+\[(C\+\+[^\]]+)\]$/);
     return parts ? (
       <>
-        {parts[1]} <span className="booklet-standard">{parts[2]}</span>
+        <span>{parts[1]}</span>{" "}
+        <span className="booklet-standard rounded-md bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-600 ring-1 ring-blue-500/20">
+          {parts[2]}
+        </span>
       </>
     ) : (
       entry.title
@@ -212,11 +215,12 @@ export function BookletsView() {
     <article
       key={entry.id}
       id={`booklet-${entry.id}`}
-      className="booklet-entry"
+      className="booklet-entry mb-6 rounded-xl border border-slate-200 bg-white p-5 sm:p-6 shadow-2xs"
     >
-      <h3 tabIndex={-1}>
+      <h3 tabIndex={-1} className="text-lg font-bold text-slate-900 mb-2">
         <a
           href={bookletHref({ entry: entry.id })}
+          className="inline-flex items-center gap-2 hover:text-blue-600 transition"
           onClick={(event) => {
             if (
               event.ctrlKey ||
@@ -230,11 +234,13 @@ export function BookletsView() {
           }}
         >
           {entryTitle(entry)}
-          <Icon id="link" />
+          <Icon id="link" className="size-4 text-slate-400" />
         </a>
       </h3>
       {query.trim() && (
-        <p className="booklet-entry-category">{entry.categoryTitle}</p>
+        <p className="booklet-entry-category text-xs text-slate-500 mb-3 font-medium">
+          {entry.categoryTitle}
+        </p>
       )}
       <Markdown sourcePath={`booklets/${booklet.id}.md`}>{entry.body}</Markdown>
     </article>
@@ -251,11 +257,83 @@ export function BookletsView() {
         !booklets.some((book) => book.id === params.get("book")) && (
           <p role="status">未找到指定小册子，已打开 C 语言速查。</p>
         )}
-      <div className="booklet-toolbar" ref={toolbarRef}>
-        <div className="booklet-language">
-          <label htmlFor="booklet-language">小册子语言</label>
+      <div
+        className="booklet-toolbar mb-4 flex flex-wrap items-center gap-3"
+        ref={toolbarRef}
+      >
+        <form
+          className="booklet-search relative flex-1 min-w-0 lg:min-w-[240px] max-w-md m-0"
+          role="search"
+          noValidate
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (!composing.current) {
+              setQuery(draft);
+              requestAnimationFrame(() => {
+                resultsRef.current?.scrollIntoView({
+                  block: "start",
+                  behavior: "instant",
+                });
+                resultsRef.current?.focus({ preventScroll: true });
+              });
+            }
+          }}
+        >
+          <label htmlFor="booklet-query" className="sr-only">
+            快速查找 按 <kbd>/</kbd> 聚焦
+          </label>
+          <div className="relative flex items-center min-h-[44px]">
+            <Icon
+              id="search"
+              className="absolute left-3 text-slate-400 pointer-events-none size-4"
+            />
+            <input
+              id="booklet-query"
+              ref={inputRef}
+              type="search"
+              autoComplete="off"
+              spellCheck={false}
+              onKeyDown={(event) => {
+                if (event.key === "Escape" && !composing.current) {
+                  event.preventDefault();
+                  reset();
+                }
+              }}
+              placeholder="在当前小册子中搜索..."
+              className="w-full h-11 min-h-[44px] rounded-lg border border-slate-200 bg-white pl-9 pr-11 py-1.5 text-sm text-slate-800 shadow-2xs focus:border-blue-500 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20"
+              value={draft}
+              onCompositionStart={() => {
+                composing.current = true;
+              }}
+              onCompositionEnd={(event) => {
+                composing.current = false;
+                setQuery(event.currentTarget.value);
+              }}
+              onChange={(event) => {
+                setDraft(event.target.value);
+                if (!composing.current) setQuery(event.target.value);
+              }}
+            />
+            {draft && (
+              <button
+                type="button"
+                style={{ width: 44, height: 44, minWidth: 44, minHeight: 44 }}
+                className="search-clean-clear-btn absolute right-0 top-0 text-slate-400 hover:text-slate-600 inline-flex items-center justify-center"
+                aria-label="清除小册子搜索"
+                onClick={reset}
+              >
+                <Icon id="close" />
+              </button>
+            )}
+          </div>
+        </form>
+        <div className="booklet-language shrink-0">
+          <label htmlFor="booklet-language" className="sr-only">
+            小册子语言
+          </label>
           <NativeSelect
             id="booklet-language"
+            className="w-24 lg:w-28 h-11 min-h-[44px] rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 shadow-2xs focus:border-blue-500 focus:outline-hidden"
             value={booklet.id}
             onChange={(event) => {
               composing.current = false;
@@ -277,74 +355,13 @@ export function BookletsView() {
             ))}
           </NativeSelect>
         </div>
-        <form
-          className="booklet-search"
-          role="search"
-          noValidate
-          onSubmit={(event) => {
-            event.preventDefault();
-            if (!composing.current) {
-              setQuery(draft);
-              requestAnimationFrame(() => {
-                resultsRef.current?.scrollIntoView({
-                  block: "start",
-                  behavior: "instant",
-                });
-                resultsRef.current?.focus({ preventScroll: true });
-              });
-            }
-          }}
-        >
-          <label htmlFor="booklet-query">
-            快速查找{" "}
-            <span>
-              按 <kbd>/</kbd> 聚焦
-            </span>
+        <div className="booklet-mobile-category shrink-0">
+          <label htmlFor="booklet-category" className="sr-only">
+            章节导航
           </label>
-          <div className="search-clean-box">
-            <Icon id="search" />
-            <input
-              id="booklet-query"
-              ref={inputRef}
-              type="search"
-              autoComplete="off"
-              spellCheck={false}
-              onKeyDown={(event) => {
-                if (event.key === "Escape" && !composing.current) {
-                  event.preventDefault();
-                  reset();
-                }
-              }}
-              placeholder="搜索当前小册子"
-              value={draft}
-              onCompositionStart={() => {
-                composing.current = true;
-              }}
-              onCompositionEnd={(event) => {
-                composing.current = false;
-                setQuery(event.currentTarget.value);
-              }}
-              onChange={(event) => {
-                setDraft(event.target.value);
-                if (!composing.current) setQuery(event.target.value);
-              }}
-            />
-            {draft && (
-              <button
-                type="button"
-                className="search-clean-clear-btn"
-                aria-label="清除小册子搜索"
-                onClick={reset}
-              >
-                <Icon id="close" />
-              </button>
-            )}
-          </div>
-        </form>
-        <div className="booklet-mobile-category">
-          <label htmlFor="booklet-category">章节导航</label>
           <NativeSelect
             id="booklet-category"
+            className="w-36 sm:w-44 lg:w-56 max-w-[calc(100vw-120px)] h-11 min-h-[44px] rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 shadow-2xs focus:border-blue-500 focus:outline-hidden"
             value={activeSection}
             onChange={(event) => {
               const val = event.target.value;
@@ -390,7 +407,7 @@ export function BookletsView() {
         </div>
         <button
           type="button"
-          className="ghost-button booklet-return"
+          className="ghost-button booklet-return ml-auto inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-2xs hover:bg-slate-50 transition"
           aria-label={query.trim() ? "返回搜索结果" : "返回顶部"}
           title={query.trim() ? "返回搜索结果" : "返回顶部"}
           onClick={() => {
@@ -471,37 +488,42 @@ export function BookletsView() {
             </p>
           )}
           {query.trim() && visible.length > 1 && (
-            <nav className="booklet-search-index" aria-label="搜索结果索引">
-              <div className="booklet-search-index-header">
-                <p>跳到匹配条目</p>
-                <span className="booklet-search-index-count">
-                  {visible.length} 项
+            <nav
+              className="booklet-search-index mb-6 rounded-xl border border-slate-200/80 bg-slate-50/60 p-3 shadow-2xs"
+              aria-label="搜索结果索引"
+            >
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-xs font-semibold tracking-wide text-slate-500 uppercase">
+                  跳到匹配条目 ({visible.length})
                 </span>
               </div>
-              <ul>
+              <div className="flex flex-wrap gap-2">
                 {visible.map((entry) => (
-                  <li key={entry.id}>
-                    <a
-                      href={bookletHref({ entry: entry.id })}
-                      onClick={(event) => {
-                        if (
-                          event.ctrlKey ||
-                          event.metaKey ||
-                          event.shiftKey ||
-                          event.altKey
-                        )
-                          return;
-                        event.preventDefault();
-                        navigate({ entry: entry.id });
-                      }}
-                    >
-                      <span>{entry.title}</span>
-                      <small>{entry.categoryTitle}</small>
-                      <Icon id="right" />
-                    </a>
-                  </li>
+                  <a
+                    key={entry.id}
+                    href={bookletHref({ entry: entry.id })}
+                    className="group inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs shadow-2xs transition hover:border-blue-300 hover:bg-blue-50/40"
+                    onClick={(event) => {
+                      if (
+                        event.ctrlKey ||
+                        event.metaKey ||
+                        event.shiftKey ||
+                        event.altKey
+                      )
+                        return;
+                      event.preventDefault();
+                      navigate({ entry: entry.id });
+                    }}
+                  >
+                    <span className="font-medium text-slate-800 group-hover:text-blue-600">
+                      {entry.title}
+                    </span>
+                    <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-500">
+                      {entry.categoryTitle}
+                    </span>
+                  </a>
                 ))}
-              </ul>
+              </div>
             </nav>
           )}
           {requestedEntry && !visibleIds.has(requestedEntry) && (

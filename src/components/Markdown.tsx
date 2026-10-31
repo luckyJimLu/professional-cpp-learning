@@ -61,12 +61,12 @@ const components: Components = {
   table({ children }) {
     return (
       <div
-        className="markdown-table-scroll"
+        className="markdown-table-scroll my-5 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xs"
         role="region"
         aria-label="数据表格，可横向滚动"
         tabIndex={0}
       >
-        <table>{children}</table>
+        <table className="w-full table-auto border-collapse text-left text-sm">{children}</table>
       </div>
     );
   },
