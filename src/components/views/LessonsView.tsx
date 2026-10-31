@@ -10,6 +10,10 @@ import { calculateReadingStats } from "../../lib/readingTime";
 import { navigate, useLocationParams } from "../../lib/navigation";
 import { PageHeader } from "../common/PageHeader";
 import { Markdown } from "../Markdown";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 const WEEK_ZH_THEMES: Record<number, string> = {
   1: "从 C 到现代 C++ 基础与状态建模",
@@ -102,34 +106,40 @@ export function LessonsView({
           description="按周逐步进阶，或按标题、天数与章节查找。每一课都从理解走向可运行的实验。"
         />
         {target && (
-          <section className="course-resume guide-current-lesson" aria-label="继续学习">
-            <div className="guide-current-main">
-              <div className="guide-current-top">
-                <span className="page-eyebrow">
-                  {currentDay && !lessonByDay(currentDay)
-                    ? "最新课程 · 回顾与巩固"
-                    : "继续学习"}
-                </span>
-                <span className="guide-current-badge mono">
-                  课程 {target.day} / {lessons.length} 节 · 第 {target.week} 周
-                </span>
+          <Card
+            asChild
+            className="course-resume guide-current-lesson"
+            aria-label="继续学习"
+          >
+            <section>
+              <div className="guide-current-main">
+                <div className="guide-current-top">
+                  <span className="page-eyebrow">
+                    {currentDay && !lessonByDay(currentDay)
+                      ? "最新课程 · 回顾与巩固"
+                      : "继续学习"}
+                  </span>
+                  <Badge variant="outline" className="guide-current-badge mono font-normal">
+                    课程 {target.day} / {lessons.length} 节 · 第 {target.week} 周
+                  </Badge>
+                </div>
+                <strong>
+                  Day {target.day} · {target.title}
+                </strong>
               </div>
-              <strong>
-                Day {target.day} · {target.title}
-              </strong>
-            </div>
-            <button
-              type="button"
-              className="primary-button"
-              onClick={() => openLesson(target.day)}
-            >
-              打开课程 →
-            </button>
-          </section>
+              <Button
+                type="button"
+                className="primary-button"
+                onClick={() => openLesson(target.day)}
+              >
+                打开课程 →
+              </Button>
+            </section>
+          </Card>
         )}
       <div className="course-toolbar">
         <div className="search-input-row course-search">
-          <input
+          <Input
             ref={inputRef}
             type="search"
             value={draft}
@@ -148,8 +158,9 @@ export function LessonsView({
             }}
           />
           {draft && (
-            <button
+            <Button
               type="button"
+              variant="outline"
               className="ghost-button"
               aria-label="清空课程搜索"
               onClick={() => {
@@ -159,7 +170,7 @@ export function LessonsView({
               }}
             >
               清空
-            </button>
+            </Button>
           )}
         </div>
         <div className="course-toolbar-actions">
@@ -196,7 +207,8 @@ export function LessonsView({
             <div className="product-empty">
               <h2>没有找到这节课程</h2>
               <p>试试“指针”“54”或章节编号，也可以清空搜索回到进阶路线。</p>
-              <button
+              <Button
+                variant="outline"
                 className="ghost-button"
                 onClick={() => {
                   setDraft("");
@@ -205,7 +217,7 @@ export function LessonsView({
                 }}
               >
                 清空搜索
-              </button>
+              </Button>
             </div>
           )}
         </section>

@@ -1,0 +1,10 @@
+@layer theme, base, legacy, components, utilities;
+
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "./styles/theme.css";
+
+@import "./styles.css" layer(legacy);
+@import "./workspace.css" layer(legacy);
+@import "./docs.css" layer(legacy);
+@import "./product-ui.css" layer(legacy);

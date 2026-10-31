@@ -45,7 +45,13 @@ test("第 2 课自动发现、备注隔离、大纲定位及横竖屏全屏", as
     { width: 360, height: 800 },
     { width: 800, height: 360 },
   ]) {
-    await page.setViewportSize(viewport);
+    const session = await page.context().newCDPSession(page);
+    await session.send("Emulation.setDeviceMetricsOverride", {
+      width: viewport.width,
+      height: viewport.height,
+      deviceScaleFactor: 1,
+      mobile: false,
+    });
     for (const control of await stage
       .locator(".slide-stage-footer button, select")
       .all()) {

@@ -12,17 +12,17 @@ test("documentation anchors, course navigation and search shortcut", async ({
     fullPage: true,
   });
   await page.goto("/?view=lesson&day=1");
-  await expect(page.locator(".lesson-toc button").first()).toHaveAttribute(
+  await expect(page.locator(".lesson-stage-desktop .lesson-toc button").first()).toHaveAttribute(
     "aria-current",
     "location",
   );
-  await page.locator(".lesson-toc button").filter({ hasText: "概念" }).click();
+  await page.locator(".lesson-stage-desktop .lesson-toc button").filter({ hasText: "概念" }).click();
   await expect(
-    page.locator(".lesson-toc button").filter({ hasText: "概念" }),
+    page.locator(".lesson-stage-desktop .lesson-toc button").filter({ hasText: "概念" }),
   ).toHaveAttribute("aria-current", "location");
   await page.getByRole("link", { name: "下一课 · Day 2 →" }).click();
   await expect(page).toHaveURL(/day=2/);
-  await expect(page.locator(".lesson-toc button").first()).toHaveAttribute(
+  await expect(page.locator(".lesson-stage-desktop .lesson-toc button").first()).toHaveAttribute(
     "aria-current",
     "location",
   );

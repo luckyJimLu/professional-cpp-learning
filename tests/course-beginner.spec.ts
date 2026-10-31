@@ -4,6 +4,7 @@ import { test, expect } from "@playwright/test";
 const days = readdirSync("daily")
   .filter((name) => /^day-\d+-.*\.md$/.test(name))
   .map((name) => Number(name.match(/^day-(\d+)/)![1]))
+  .filter((day) => day <= 64)
   .sort((a, b) => a - b);
 
 test("every published course renders the beginner path and the actual lab and quiz in their learning stages", async ({

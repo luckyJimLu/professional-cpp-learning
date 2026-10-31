@@ -5,6 +5,8 @@ import {
   repoCompletedDay,
 } from "../../lib/course";
 import { PageHeader } from "../common/PageHeader";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export function ReviewView({
   isDayComplete,
@@ -58,14 +60,16 @@ export function ReviewView({
                       <a href={`?view=lesson&day=${day}`}>返回这节课程 →</a>
                     )}
                   </div>
-                  <button
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="ghost-button"
                     type="button"
                     onClick={() => removeWeakPoint(point)}
                     aria-label={`移出复习清单：${point}`}
                   >
                     移出清单
-                  </button>
+                  </Button>
                 </div>
               );
             })}
@@ -102,26 +106,30 @@ export function ReviewView({
         </div>
         <div className="review-checkpoint-grid">
           {reviews.map((lesson) => (
-            <a
+            <Card
+              asChild
               key={lesson.day}
-              href={`?view=lesson&day=${lesson.day}`}
-              className="review-checkpoint"
+              className="review-checkpoint hover:border-primary hover:bg-secondary/40 transition-colors"
             >
-              <span className="mono">
-                DAY {String(lesson.day).padStart(3, "0")}
-              </span>
-              <h3>{lesson.title}</h3>
-              <p>
-                {lesson.nextSummary ??
-                  "回顾接口契约、生命周期、资源所有权与错误边界。"}
-              </p>
-              <span className="review-checkpoint-footer">
-                <span>
-                  {isDayComplete(lesson.day) ? "已有学习记录" : "待复盘"}
+              <a
+                href={`?view=lesson&day=${lesson.day}`}
+              >
+                <span className="mono">
+                  DAY {String(lesson.day).padStart(3, "0")}
                 </span>
-                <strong>打开复盘 →</strong>
-              </span>
-            </a>
+                <h3>{lesson.title}</h3>
+                <p>
+                  {lesson.nextSummary ??
+                    "回顾接口契约、生命周期、资源所有权与错误边界。"}
+                </p>
+                <span className="review-checkpoint-footer">
+                  <span>
+                    {isDayComplete(lesson.day) ? "已有学习记录" : "待复盘"}
+                  </span>
+                  <strong>打开复盘 →</strong>
+                </span>
+              </a>
+            </Card>
           ))}
         </div>
       </section>

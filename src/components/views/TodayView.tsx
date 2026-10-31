@@ -7,6 +7,9 @@ import {
   type StepKey,
 } from "../../lib/course";
 import { CompileRail } from "../common/CompileRail";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 
 const STAGE_DESCRIPTIONS: Record<StepKey, { budget: number; desc: string }> = {
   read: {
@@ -83,66 +86,71 @@ export function TodayView({
         </header>
 
         {target && (
-          <section
+          <Card
+            asChild
             id="current-lesson"
             className="guide-current-lesson"
             aria-label="当前课程"
           >
-            <div className="guide-current-main">
-              <h2>
-                Day {target.day} · {target.title}
-              </h2>
-              <div className="guide-current-top">
-                <span className="page-eyebrow">
-                  {recent
-                    ? "本浏览器上次阅读 · 不代表完成"
-                    : planned
-                      ? "仓库学习计划"
-                      : "最新发布 · 可开始复习"}
-                </span>
-                <span className="guide-current-badge mono">
-                  课程 {target.day} / {lessons.length} 节 · 第 {target.week} 周
-                </span>
-              </div>
-              <p className="guide-current-meta">
-                第 {target.week} 周
-                {target.chapter ? ` · 第 ${target.chapter} 章` : ""}
-                {target.chapterTitle ? ` (${target.chapterTitle})` : ""} · 预计{" "}
-                {target.duration} 分钟 · 已完成 {completedSteps} /{" "}
-                {STEP_DEFS.length} 阶段
-              </p>
-              <div
-                className="mini-progress guide-progress-bar"
-                role="progressbar"
-                aria-label={`Day ${target.day} 学习阶段`}
-                aria-valuemin={0}
-                aria-valuemax={STEP_DEFS.length}
-                aria-valuenow={completedSteps}
-              >
-                <i
-                  style={{
-                    width: `${Math.round((completedSteps / STEP_DEFS.length) * 100)}%`,
-                  }}
-                />
-              </div>
-              <div className="guide-hero-cta">
-                <button
-                  type="button"
-                  className="primary-button hero-cta-btn"
-                  onClick={() => openLesson(target.day)}
+            <section>
+              <div className="guide-current-main">
+                <h2>
+                  Day {target.day} · {target.title}
+                </h2>
+                <div className="guide-current-top">
+                  <span className="page-eyebrow">
+                    {recent
+                      ? "本浏览器上次阅读 · 不代表完成"
+                      : planned
+                        ? "仓库学习计划"
+                        : "最新发布 · 可开始复习"}
+                  </span>
+                  <Badge variant="outline" className="guide-current-badge mono font-normal">
+                    课程 {target.day} / {lessons.length} 节 · 第 {target.week} 周
+                  </Badge>
+                </div>
+                <p className="guide-current-meta">
+                  第 {target.week} 周
+                  {target.chapter ? ` · 第 ${target.chapter} 章` : ""}
+                  {target.chapterTitle ? ` (${target.chapterTitle})` : ""} · 预计{" "}
+                  {target.duration} 分钟 · 已完成 {completedSteps} /{" "}
+                  {STEP_DEFS.length} 阶段
+                </p>
+                <div
+                  className="mini-progress guide-progress-bar"
+                  role="progressbar"
+                  aria-label={`Day ${target.day} 学习阶段`}
+                  aria-valuemin={0}
+                  aria-valuemax={STEP_DEFS.length}
+                  aria-valuenow={completedSteps}
                 >
-                  {recent
-                    ? `继续阅读 · Day ${recent.day} →`
-                    : planned
-                      ? `打开计划课程 · Day ${planned.day} →`
-                      : `打开最新课程 · Day ${latest?.day ?? 1} →`}
-                </button>
-                <a href="?view=lessons" className="ghost-button">
-                  浏览全部课程 ({lessons.length} 节)
-                </a>
+                  <i
+                    style={{
+                      width: `${Math.round((completedSteps / STEP_DEFS.length) * 100)}%`,
+                    }}
+                  />
+                </div>
+                <div className="guide-hero-cta">
+                  <Button
+                    type="button"
+                    className="primary-button hero-cta-btn"
+                    onClick={() => openLesson(target.day)}
+                  >
+                    {recent
+                      ? `继续阅读 · Day ${recent.day} →`
+                      : planned
+                        ? `打开计划课程 · Day ${planned.day} →`
+                        : `打开最新课程 · Day ${latest?.day ?? 1} →`}
+                  </Button>
+                  <Button variant="outline" asChild className="ghost-button">
+                    <a href="?view=lessons">
+                      浏览全部课程 ({lessons.length} 节)
+                    </a>
+                  </Button>
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
+          </Card>
         )}
 
         <nav id="pathways" className="guide-pathways" aria-label="学习入口">
@@ -239,9 +247,9 @@ export function TodayView({
         <section id="learning-method" className="guide-section">
           <div className="guide-section-header">
             <h2>每天一小时 · 学习闭环</h2>
-            <span className="guide-section-badge">
+            <Badge variant="secondary" className="guide-section-badge font-normal">
               8 阶段 · 60 分钟标准节奏
-            </span>
+            </Badge>
           </div>
           <p>
             通过八个阶段完成一次扎实的学习：阅读、回忆、理解、重构、规范、实验、避坑与自测。点击任一阶段可查看任务说明，或直接进入对应章节。
@@ -264,12 +272,13 @@ export function TodayView({
                   <strong>{activeStageDef.title}</strong>
                   <p>{activeStageMeta.desc}</p>
                 </div>
-                <a
-                  className="ghost-button pipeline-stage-link"
-                  href={`?view=lesson&day=${target.day}#section-${activeStageDef.key}`}
-                >
-                  进入本阶段 →
-                </a>
+                <Button variant="outline" asChild className="ghost-button pipeline-stage-link">
+                  <a
+                    href={`?view=lesson&day=${target.day}#section-${activeStageDef.key}`}
+                  >
+                    进入本阶段 →
+                  </a>
+                </Button>
               </div>
             </div>
           )}

@@ -3,6 +3,8 @@ import { codeEntries, searchCode, type CodeEntry } from "../lib/search";
 import { navigate, useLocationParams } from "../lib/navigation";
 import { PageHeader } from "./common/PageHeader";
 import { Icon } from "./common/Icon";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 function Highlight({ text, query }: { text: string; query: string }) {
   const trimmed = query.trim();
@@ -276,7 +278,8 @@ export function CodeSearch() {
                 </span>
               </div>
               <div className="source-header-actions">
-                <button
+                <Button
+                  variant="outline"
                   className="ghost-button"
                   onClick={() => handleCopyCode(selected)}
                   title="复制代码内容"
@@ -285,8 +288,9 @@ export function CodeSearch() {
                   copyFeedback.status === "copied"
                     ? "已复制"
                     : "复制代码"}
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="outline"
                   className="ghost-button"
                   onClick={() => {
                     navigate({ code: undefined, line: undefined });
@@ -294,7 +298,7 @@ export function CodeSearch() {
                   }}
                 >
                   <Icon id="close" /> 关闭预览
-                </button>
+                </Button>
               </div>
             </header>
             <p className="source-path">{selected.path}</p>
@@ -307,27 +311,29 @@ export function CodeSearch() {
             )}
 
             <div className="source-action-links">
-              <button
+              <Button
                 className="action-pill primary"
                 onClick={() => handleRunInLab(selected)}
               >
                 <Icon id="lab" /> 在 Lab 中运行
-              </button>
+              </Button>
 
               {selected.path.endsWith(".md") &&
                 (selected.category === "topics" ||
                   selected.category === "patterns") && (
-                  <button
+                  <Button
+                    variant="outline"
                     className="action-pill"
                     onClick={() =>
                       navigate({ view: "topics", topic: selected.path })
                     }
                   >
                     阅读所在文档 <Icon id="right" />
-                  </button>
+                  </Button>
                 )}
               {selected.path.startsWith("daily/") && (
-                <button
+                <Button
+                  variant="outline"
                   className="action-pill"
                   onClick={() =>
                     navigate({
@@ -339,7 +345,7 @@ export function CodeSearch() {
                   }
                 >
                   阅读所在课程 <Icon id="right" />
-                </button>
+                </Button>
               )}
             </div>
 
@@ -390,7 +396,7 @@ export function CodeSearch() {
                   {entry.kind === "file" ? "源码" : "代码块"} · L
                   {entry.line + lineIndex}
                 </span>
-                <span className="result-category-badge">
+                <Badge variant="outline" className="result-category-badge font-normal">
                   {entry.category === "daily"
                     ? "课程"
                     : entry.category === "topics"
@@ -400,7 +406,7 @@ export function CodeSearch() {
                         : entry.category === "patterns"
                           ? "模式"
                           : "规范"}
-                </span>
+                </Badge>
               </div>
               <strong>{entry.title}</strong>
               <span className="result-source-path">{entry.path}</span>
@@ -423,23 +429,25 @@ export function CodeSearch() {
 
       {results.length > pageSize && (
         <nav className="pagination" aria-label="搜索结果分页">
-          <button
+          <Button
+            variant="outline"
             className="ghost-button"
             disabled={page <= 1}
             onClick={() => navigate({ page: String(page - 1) })}
           >
             上一页
-          </button>
+          </Button>
           <span>
             第 {page} / {totalPages} 页
           </span>
-          <button
+          <Button
+            variant="outline"
             className="ghost-button"
             disabled={page >= totalPages}
             onClick={() => navigate({ page: String(page + 1) })}
           >
             下一页
-          </button>
+          </Button>
         </nav>
       )}
     </div>

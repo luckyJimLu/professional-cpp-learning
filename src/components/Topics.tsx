@@ -14,6 +14,8 @@ import {
   resolveContentHref,
   resolveContentNavigation,
 } from "../lib/contentNavigation";
+import { NativeSelect } from "@/components/ui/native-select";
+import { Badge } from "@/components/ui/badge";
 
 const kLastRead = "professional-cpp:topic:last-read";
 const positionKey = (path: string) => `professional-cpp:topic:position:${path}`;
@@ -97,10 +99,11 @@ export function Topics() {
       )}
       <div className="topics-catalog-controls">
         <label htmlFor="topic-category">浏览领域</label>
-        <select
+        <NativeSelect
           id="topic-category"
           value={category}
           onChange={(event) => changeCategory(event.target.value)}
+          className="w-auto min-w-[180px]"
         >
           <option value="all">全部领域</option>
           {groupNames.map((group) => (
@@ -109,7 +112,7 @@ export function Topics() {
             </option>
           ))}
           <option value="books">参考书籍</option>
-        </select>
+        </NativeSelect>
         <span className="topic-result-count" aria-live="polite">
           {category === "books"
             ? `${referenceGuides.length} 篇导读 · ${referenceBooks.length} 本 PDF`
@@ -185,8 +188,8 @@ export function Topics() {
                 </a>
               </h2>
               <div className="topic-collection-meta">
-                <span className="topic-domain-badge">{articles[0].group}</span>
-                <span className="topic-count-badge">{articles.length} 篇</span>
+                <Badge variant="secondary" className="topic-domain-badge font-normal">{articles[0].group}</Badge>
+                <Badge variant="outline" className="topic-count-badge font-normal">{articles.length} 篇</Badge>
               </div>
               <p>{topicSummary(articles[0])}</p>
               <details className="topic-collection-directory">

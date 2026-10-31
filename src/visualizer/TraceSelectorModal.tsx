@@ -1,7 +1,13 @@
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { PRESET_TRACES_META } from "./presetTraces";
 import { normalizeVisualizerTrace } from "./traceProtocol";
 import type { VisualizerTrace } from "./types";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export function TraceSelectorModal({
   isOpen,
@@ -20,37 +26,6 @@ export function TraceSelectorModal({
   const [pasteText, setPasteText] = useState("");
   const [parseError, setParseError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const dialogRef = useRef<HTMLDivElement>(null);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const previousFocusRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    previousFocusRef.current = document.activeElement as HTMLElement | null;
-    closeButtonRef.current?.focus();
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-      if (event.key !== "Tab" || !dialogRef.current) return;
-      const focusable = Array.from(dialogRef.current.querySelectorAll<HTMLElement>("button, input, textarea, [tabindex]:not([tabindex='-1'])"));
-      if (!focusable.length) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      previousFocusRef.current?.focus();
-    };
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     setParseError(null);
@@ -60,23 +35,27 @@ export function TraceSelectorModal({
     const reader = new FileReader();
     reader.onload = (event) => {
       try {
-        const content = event.target?.result as string;
-        const parsed = normalizeVisualizerTrace(JSON.parse(content));
+        const raw = JSON.parse(event.target?.result as string);
+        const parsed = normalizeVisualizerTrace(raw);
         onImportCustomTrace(parsed);
         onClose();
       } catch (err) {
-        setParseError(`解析失败: ${err instanceof Error ? err.message : String(err)}`);
+        setParseError(`文件解析失败: ${err instanceof Error ? err.message : String(err)}`);
       }
     };
+    reader.onerror = () => setParseError("读取文件失败");
     reader.readAsText(file);
   };
 
-  const handlePasteSubmit = () => {
+  const handlePasteImport = () => {
     setParseError(null);
-    if (!pasteText.trim()) return;
-
+    if (!pasteText.trim()) {
+      setParseError("请先粘贴 JSON 文本内容");
+      return;
+    }
     try {
-      const parsed = normalizeVisualizerTrace(JSON.parse(pasteText));
+      const raw = JSON.parse(pasteText);
+      const parsed = normalizeVisualizerTrace(raw);
       onImportCustomTrace(parsed);
       onClose();
     } catch (err) {
@@ -85,61 +64,63 @@ export function TraceSelectorModal({
   };
 
   return (
-    <div className="trace-modal-backdrop" onClick={onClose}>
-      <div
-        ref={dialogRef}
-        role="dialog"
-        aria-modal="true"
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent
+        className="trace-modal-dialog p-0 gap-0 max-w-2xl bg-[#0d131d] border-[#1e293b] text-[#f8fafc] overflow-hidden"
         aria-labelledby="trace-dialog-title"
-        className="trace-modal-dialog"
-        onClick={(e) => e.stopPropagation()}
       >
         {/* Modal 头部 */}
-        <div className="trace-modal-header">
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <span style={{ fontSize: "16px" }}>📂</span>
-            <span id="trace-dialog-title" style={{ fontSize: "14px", fontWeight: 600, color: "#f8fafc" }}>
+        <DialogHeader className="trace-modal-header p-4 border-b border-[#1e293b] bg-[#162032] flex-row items-center justify-between space-y-0">
+          <div className="flex items-center gap-2">
+            <span className="text-base">📂</span>
+            <DialogTitle
+              id="trace-dialog-title"
+              className="text-sm font-semibold text-[#f8fafc]"
+            >
               C++ 内存执行轨迹剧本库 (Trace Library)
-            </span>
+            </DialogTitle>
           </div>
-          <button
-            ref={closeButtonRef}
-            aria-label="关闭轨迹剧本库"
-            type="button"
-            onClick={onClose}
-            className="trace-modal-close"
-          >
-            ✕
-          </button>
-        </div>
+        </DialogHeader>
 
         {/* Tab 切换 */}
-        <div className="trace-modal-tabs">
+        <div className="trace-modal-tabs flex bg-[#090d13] px-4 py-2 border-b border-[#1e293b] gap-2">
           <button
             type="button"
             onClick={() => setActiveTab("presets")}
-            className={`trace-modal-tab ${activeTab === "presets" ? "is-active" : ""}`}
+            className={`trace-modal-tab px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+              activeTab === "presets"
+                ? "is-active bg-[#1e293b] text-[#38bdf8]"
+                : "text-[#94a3b8] hover:text-[#f8fafc]"
+            }`}
           >
             📚 内置经典案例 (5)
           </button>
           <button
             type="button"
             onClick={() => setActiveTab("upload")}
-            className={`trace-modal-tab ${activeTab === "upload" ? "is-active" : ""}`}
+            className={`trace-modal-tab px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+              activeTab === "upload"
+                ? "is-active bg-[#1e293b] text-[#38bdf8]"
+                : "text-[#94a3b8] hover:text-[#f8fafc]"
+            }`}
           >
             ⬆️ 本地上传 JSON
           </button>
           <button
             type="button"
             onClick={() => setActiveTab("paste")}
-            className={`trace-modal-tab ${activeTab === "paste" ? "is-active" : ""}`}
+            className={`trace-modal-tab px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+              activeTab === "paste"
+                ? "is-active bg-[#1e293b] text-[#38bdf8]"
+                : "text-[#94a3b8] hover:text-[#f8fafc]"
+            }`}
           >
             📋 粘贴 JSON 文本
           </button>
         </div>
 
         {/* 内容区 */}
-        <div className="trace-modal-body">
+        <div className="trace-modal-body p-4 max-h-[60vh] overflow-y-auto">
           {activeTab === "presets" && (
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               <div style={{ fontSize: "12px", color: "#64748b", marginBottom: "4px" }}>
@@ -198,139 +179,141 @@ export function TraceSelectorModal({
           )}
 
           {activeTab === "upload" && (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                border: "2px dashed #1e293b",
-                borderRadius: "10px",
-                padding: "36px 16px",
-                textAlign: "center",
-                background: "#090d13",
-                gap: "12px",
-              }}
-            >
-              <div style={{ fontSize: "32px" }}>📄</div>
-              <div style={{ fontSize: "13px", color: "#e2e8f0", fontWeight: 500 }}>
-                选择符合协议的 .json 轨迹文件并在浏览器中校验
-              </div>
-              <div style={{ fontSize: "11px", color: "#64748b", maxWidth: "360px" }}>
-                符合规范的轨迹文件将直接由浏览器前端引擎读取渲染，零服务器开销。
-              </div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".json,application/json"
-                style={{ display: "none" }}
-                onChange={handleFileUpload}
-              />
-              <button
-                type="button"
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              <div
                 onClick={() => fileInputRef.current?.click()}
                 style={{
-                  background: "#1e3a5f",
-                  color: "#38bdf8",
-                  border: "1px solid #2563eb",
-                  borderRadius: "6px",
-                  padding: "6px 16px",
-                  fontSize: "12px",
-                  fontWeight: 600,
+                  border: "2px dashed #334155",
+                  borderRadius: "8px",
+                  padding: "36px 20px",
+                  textAlign: "center",
                   cursor: "pointer",
-                  marginTop: "6px",
+                  background: "#090d13",
+                  transition: "border-color 0.15s ease",
                 }}
               >
-                选择本地 JSON 文件
-              </button>
+                <div style={{ fontSize: "32px", marginBottom: "8px" }}>📁</div>
+                <div style={{ fontSize: "13px", color: "#cbd5e1", fontWeight: 500 }}>
+                  点击选择本地 JSON 轨迹文件
+                </div>
+                <div style={{ fontSize: "11px", color: "#64748b", marginTop: "4px" }}>
+                  支持由专业版 C++ 探针或模拟器导出的标准 .json 格式
+                </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".json,application/json"
+                  style={{ display: "none" }}
+                  onChange={handleFileUpload}
+                />
+              </div>
+
+              {parseError && (
+                <div
+                  role="alert"
+                  style={{
+                    padding: "8px 12px",
+                    background: "#450a0a",
+                    border: "1px solid #7f1d1d",
+                    borderRadius: "6px",
+                    color: "#fca5a5",
+                    fontSize: "12px",
+                  }}
+                >
+                  {parseError}
+                </div>
+              )}
             </div>
           )}
 
           {activeTab === "paste" && (
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-              <div style={{ fontSize: "12px", color: "#94a3b8" }}>
-                直接粘贴包含 sourceCode 与 snapshots 数组的 JSON 剧本：
+              <div style={{ fontSize: "11px", color: "#94a3b8" }}>
+                直接粘贴包含 sourceCode 和 snapshots 的完整 JSON 字符串：
               </div>
               <textarea
-                className="resize-none"
                 aria-label="粘贴轨迹 JSON"
                 value={pasteText}
                 onChange={(e) => setPasteText(e.target.value)}
-                placeholder='{\n  "sourceCode": "...",\n  "snapshots": [ ... ]\n}'
+                placeholder='{\n  "sourceCode": "...",\n  "snapshots": [...]\n}'
+                rows={8}
                 style={{
                   width: "100%",
-                  height: "180px",
                   background: "#090d13",
                   border: "1px solid #1e293b",
                   borderRadius: "6px",
-                  padding: "10px",
-                  color: "#f1f5f9",
+                  color: "#e2e8f0",
                   fontFamily: "var(--mono, monospace)",
-                  fontSize: "12px",
-                  lineHeight: "1.5",
-                  resize: "none",
+                  fontSize: "11px",
+                  padding: "10px",
+                  boxSizing: "border-box",
+                  resize: "vertical",
+                  outline: "none",
                 }}
               />
-              <button
-                type="button"
-                onClick={handlePasteSubmit}
-                disabled={!pasteText.trim()}
-                style={{
-                  alignSelf: "flex-end",
-                  background: pasteText.trim() ? "#18794e" : "#1e293b",
-                  color: "#ffffff",
-                  border: "none",
-                  borderRadius: "6px",
-                  padding: "6px 18px",
-                  fontSize: "12px",
-                  fontWeight: 600,
-                  cursor: pasteText.trim() ? "pointer" : "not-allowed",
-                }}
-              >
-                导入并解析
-              </button>
-            </div>
-          )}
 
-          {parseError && (
-            <div
-              role="alert"
-              style={{
-                marginTop: "12px",
-                padding: "8px 12px",
-                background: "rgba(239, 68, 68, 0.15)",
-                border: "1px solid #ef4444",
-                borderRadius: "6px",
-                color: "#fca5a5",
-                fontSize: "12px",
-                fontFamily: "var(--mono, monospace)",
-              }}
-            >
-              ⚠️ {parseError}
+              {parseError && (
+                <div
+                  role="alert"
+                  style={{
+                    padding: "8px 12px",
+                    background: "#450a0a",
+                    border: "1px solid #7f1d1d",
+                    borderRadius: "6px",
+                    color: "#fca5a5",
+                    fontSize: "12px",
+                  }}
+                >
+                  {parseError}
+                </div>
+              )}
+
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px" }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPasteText("");
+                    setParseError(null);
+                  }}
+                  style={{
+                    padding: "6px 12px",
+                    fontSize: "12px",
+                    background: "transparent",
+                    color: "#94a3b8",
+                    border: "1px solid #334155",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                  }}
+                >
+                  清空
+                </button>
+                <button
+                  type="button"
+                  onClick={handlePasteImport}
+                  style={{
+                    padding: "6px 16px",
+                    fontSize: "12px",
+                    background: "#0284c7",
+                    color: "#ffffff",
+                    border: "none",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    fontWeight: 500,
+                  }}
+                >
+                  导入并解析
+                </button>
+              </div>
             </div>
           )}
         </div>
 
-        {/* 底部提示 */}
-        <div className="trace-modal-footer">
-          <span>💡 支持 URL 参数：<code>?trace=smart-ptr-unique</code> 自动直达</span>
-          <button
-            type="button"
-            onClick={onClose}
-            style={{
-              background: "transparent",
-              border: "1px solid #334155",
-              color: "#94a3b8",
-              borderRadius: "4px",
-              padding: "3px 10px",
-              fontSize: "11px",
-              cursor: "pointer",
-            }}
-          >
-            关闭
-          </button>
+        {/* Modal 底部小提示 */}
+        <div className="trace-modal-footer px-4 py-2.5 bg-[#090d13] border-t border-[#1e293b] flex items-center justify-between text-[11px] text-[#64748b]">
+          <span>提示: 纯前端渲染，所有内存轨迹仅在本地浏览器执行，绝不上传服务器</span>
+          <span style={{ fontFamily: "var(--mono, monospace)" }}>Visualizer v2.1</span>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

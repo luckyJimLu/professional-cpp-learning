@@ -286,7 +286,7 @@ for (const viewport of [
       ),
     ).toBe(true);
     await page.screenshot({
-      path: `/workspace/artifacts/booklets/language-split-${viewport.width}.png`,
+      path: `test-results/booklets/language-split-${viewport.width}.png`,
     });
   });
 }
@@ -358,7 +358,7 @@ for (const viewport of [
       await expect(select).toBeInViewport();
       await select.click();
       await page.screenshot({
-        path: `/workspace/artifacts/booklets-ux/native-chapters-${viewport.width}.png`,
+        path: `test-results/booklets-ux/native-chapters-${viewport.width}.png`,
       });
       await select.press("Escape");
       await expect(select).toBeFocused();

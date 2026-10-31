@@ -10,6 +10,7 @@ import { navigate, useLocationParams } from "../../lib/navigation";
 import { PageHeader } from "../common/PageHeader";
 import { Icon } from "../common/Icon";
 import { Markdown } from "../Markdown";
+import { NativeSelect } from "@/components/ui/native-select";
 import "../../booklets.css";
 
 export function BookletsView() {
@@ -248,7 +249,7 @@ export function BookletsView() {
       <div className="booklet-toolbar" ref={toolbarRef}>
         <div className="booklet-language">
           <label htmlFor="booklet-language">小册子语言</label>
-          <select
+          <NativeSelect
             id="booklet-language"
             value={booklet.id}
             onChange={(event) => {
@@ -269,7 +270,7 @@ export function BookletsView() {
                 {book.id === "c" ? "C 语言" : "C++"}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         </div>
         <form
           className="booklet-search"
@@ -337,7 +338,7 @@ export function BookletsView() {
         </form>
         <div className="booklet-mobile-category">
           <label htmlFor="booklet-category">章节导航</label>
-          <select
+          <NativeSelect
             id="booklet-category"
             value={query.trim() ? "search" : activeSection}
             onChange={(event) => {
@@ -375,7 +376,7 @@ export function BookletsView() {
                 </option>
               ))
             )}
-          </select>
+          </NativeSelect>
         </div>
         <button
           type="button"

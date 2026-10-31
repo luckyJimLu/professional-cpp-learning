@@ -49,7 +49,13 @@ test("第 3 课自动发现、备注隔离、步进图、大纲定位及旋转",
     { width: 360, height: 800 },
     { width: 800, height: 360 },
   ]) {
-    await page.setViewportSize(viewport);
+    const session = await page.context().newCDPSession(page);
+    await session.send("Emulation.setDeviceMetricsOverride", {
+      width: viewport.width,
+      height: viewport.height,
+      deviceScaleFactor: 1,
+      mobile: false,
+    });
     for (const control of await stage
       .locator(".slide-stage-footer button, select")
       .all()) {

@@ -14,7 +14,13 @@ test("课件全屏适配竖屏、横屏与旋转", async ({ page }) => {
     { width: 1280, height: 573 },
     { width: 1440, height: 900 },
   ]) {
-    await page.setViewportSize(viewport);
+    const session = await page.context().newCDPSession(page);
+    await session.send("Emulation.setDeviceMetricsOverride", {
+      width: viewport.width,
+      height: viewport.height,
+      deviceScaleFactor: 1,
+      mobile: false,
+    });
     await expect
       .poll(async () =>
         stage.evaluate((el) => ({

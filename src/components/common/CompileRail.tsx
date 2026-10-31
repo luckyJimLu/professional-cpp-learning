@@ -1,23 +1,22 @@
 import { STEP_DEFS, type Lesson, type StepKey } from "../../lib/course";
-
-function cx(...values: Array<string | false | undefined>) {
-  return values.filter(Boolean).join(" ");
-}
+import { cn } from "@/lib/utils";
 
 export function CompileRail({
   lesson,
   active,
   onSelect,
   isStepComplete,
+  className,
 }: {
   lesson: Lesson;
   active?: StepKey;
   onSelect?: (step: StepKey) => void;
   isStepComplete: (day: number, step: StepKey) => boolean;
+  className?: string;
 }) {
   return (
     <nav
-      className="compile-rail lesson-toc"
+      className={cn("compile-rail lesson-toc", className)}
       aria-label={`Day ${lesson.day} 学习阶段`}
     >
       {STEP_DEFS.map((step, index) => {
@@ -25,7 +24,7 @@ export function CompileRail({
         const current = active === step.key;
         return (
           <button
-            className={cx(
+            className={cn(
               "rail-step",
               complete && "is-complete",
               current && "is-current",
