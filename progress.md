@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 65**。下一课从 **Day 66** 继续。
+当前仓库课程已发布到 **Day 66**。下一课从 **Day 67** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -15,20 +15,21 @@
 | 63 | PMR、有界分配与内存资源策略 | 已发布 | [day-063](daily/day-063-pmr-bounded-allocation-resource-policy.md) |
 | 64 | 对象生命周期、placement 构造与固定存储复用 | 已发布 | [day-064](daily/day-064-object-lifetime-placement-construction-fixed-pool.md) |
 | 65 | optional 生命周期与固定池安全边界 | 已发布 | [day-065](daily/day-065-optional-fixed-pool-lifetime-boundaries.md) |
+| 66 | Memory Management 资源边界决策树 | 已发布 | [day-066](daily/day-066-memory-management-resource-boundary-decision-tree.md) |
 
 > Day 1–55 的完整逐日记录仍保留在 `daily/` 与 Git 历史中；本表仅展示 Day 56 起的最近课程摘要，避免进度文件承担完整目录职责。
 
 ## 最新发布详情
 
-- **日期**：2026-10-30
+- **日期**：2026-10-31
 - **章节**：Chapter 7 · Memory Management
-- **主题**：optional 生命周期与固定池安全边界
-- **关键知识点**：`std::optional<T>` 的内联对象 lifetime、`array<optional<T>,N>`、固定容量 pool、stale handle、bounded Acquire/WCET
-- **设计模式 / 稳定边界**：Object Pool（条件使用）+ Dependency Injection；优先标准 RAII/value semantics，pool 只解决真实 bounded reuse
-- **Lab**：[examples/day-065/main.cpp](examples/day-065/main.cpp)
-- **Runnable Exercise**：[examples/day-065/exercise-01.cpp](examples/day-065/exercise-01.cpp)
-- **上一课**：[Day 64 · 对象生命周期、placement 构造与固定存储复用](daily/day-064-object-lifetime-placement-construction-fixed-pool.md)
-- **下一课**：继续 Chapter 7，汇总所有权、RAII、智能指针、PMR、对象生命周期与有界分配的资源边界决策树
+- **主题**：Memory Management 资源边界决策树
+- **关键知识点**：ownership / borrow / allocation source / capacity / failure / thread context / teardown；value、RAII、smart pointer、PMR、optional/pool 的选择边界
+- **设计模式 / 稳定边界**：Dependency Injection + Object Pool / Strategy（条件使用）；Pattern 必须由真实变化轴驱动，固定系统优先 composition
+- **Lab**：[examples/day-066/main.cpp](examples/day-066/main.cpp)
+- **Runnable Exercise**：[examples/day-066/exercise-01.cpp](examples/day-066/exercise-01.cpp)
+- **上一课**：[Day 65 · optional 生命周期与固定池安全边界](daily/day-065-optional-fixed-pool-lifetime-boundaries.md)
+- **下一课**：按主教材顺序进入 Chapter 8 · Classes and Objects
 
 ## 规则
 
