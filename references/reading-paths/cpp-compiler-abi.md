@@ -8,22 +8,22 @@ summary: 从二进制观察出发，依次掌握 C++ 对象模型、现代编译
 
 ## 路线总览与准备
 
-| 阶段 | 前置知识 | 主要问题 | 阶段产出 |
-| --- | --- | --- | --- |
-| 1 · 破除黑盒 | 会写和编译小型 C/C++ 程序 | 源码如何成为 .o、库和可执行文件？ | 带注释的符号表、重定位与汇编记录 |
-| 2 · 核心基石 | 能区分编译、链接、装载与调用约定 | 对象、继承、虚调用和库包装怎样落到存储？ | 类布局图和资源生命周期图 |
-| 3 · 现代进阶 | 理解构造、析构、引用、模板与对象寿命 | 推导、闭包、约束和常量求值在哪一步发生？ | 源码、类型/AST、优化结果三栏对照 |
-| 4 · 工业实现 | 能解释语义与常见降低过程的区别 | ABI 如何规定跨模块契约，编译器如何实施？ | 一个最小程序贯穿前端、优化与后端的追踪记录 |
+| 阶段       | 前置知识               | 主要问题                   | 阶段产出                  |
+| -------- | ------------------ | ---------------------- | --------------------- |
+| 1 · 破除黑盒 | 会写和编译小型 C/C++ 程序   | 源码如何成为 .o、库和可执行文件？     | 带注释的符号表、重定位与汇编记录      |
+| 2 · 核心基石 | 能区分编译、链接、装载与调用约定   | 对象、继承、虚调用和库包装怎样落到存储？   | 类布局图和资源生命周期图          |
+| 3 · 现代进阶 | 理解构造、析构、引用、模板与对象寿命 | 推导、闭包、约束和常量求值在哪一步发生？   | 源码、类型/AST、优化结果三栏对照    |
+| 4 · 工业实现 | 能解释语义与常见降低过程的区别    | ABI 如何规定跨模块契约，编译器如何实施？ | 一个最小程序贯穿前端、优化与后端的追踪记录 |
 
 推荐使用 Linux + GCC/binutils 建立 ELF 实验基线，记录 `g++ --version`、`g++ -dumpmachine`、标准库版本和编译选项。Windows PE/MSVC ABI、macOS Mach-O 与此基线不同；先固定一个环境，之后再比较。
 
-已有练习可参考仓库 `booklets/implementation-lab.md`。每次只改变一个因素，例如继承方式、优化等级或异常说明。保留未经优化和优化后的产物；不要由一段汇编反推所有平台的标准行为。
+本仓库的[实现观察实验](../../booklets/implementation-lab.md)提供写好的最小源码与编译命令，覆盖类型、闭包、常量求值、原子操作与 optional 生命周期等观察点；任一阶段的实验不知如何入手时，可直接借用其对应小节再自行修改。原则不变：每次只改变一个因素，例如继承方式、优化等级或异常说明。保留未经优化和优化后的产物；不要由一段汇编反推所有平台的标准行为。
 
 ## 第一阶段：破除黑盒
 
 **目标：** 看懂编译器产出的汇编与 ELF，建立源码到目标文件、链接产物的具象映射。此阶段先不读 GCC 解析器。
 
-![从源码到运行：拆解 ELF 与链接的底层原理](elf-linking-overview.svg)
+![从源码到运行：拆解 ELF 与链接的底层原理](../../assets/references/reading-paths/elf-linking-overview.jpeg)
 
 这张图先建立一条主线：源码经编译形成带重定位信息的目标文件，链接器完成符号决议，装载器把 ELF 的装载段映射到进程地址空间，启动代码再进入全局对象初始化和 `main`。阅读本阶段的每本书时，都把新概念放回这五步中定位。
 
@@ -31,9 +31,11 @@ summary: 从二进制观察出发，依次掌握 C++ 对象模型、现代编译
 
 俞甲子、石凡、潘爱民著。作为第一阶段主线，按常见版本重点读第 3、4、7、11 章：目标文件、静态链接、动态链接与运行库；装载知识不足时补读对应装载章节。
 
-- 看 `.text`、`.rodata`、`.data`、`.bss`、符号表和重定位项，区分链接视角的 **section** 与装载视角的 **segment**。
-- 比较 C++ 符号修饰前后名称，解释未定义符号、强弱符号及库搜索顺序。不要把某 ELF 链接器的决议规则直接当成 C++ ODR 的完整定义。
-- 跟踪全局对象初始化与退出清理，查 `.init_array`、启动代码及 `__cxa_atexit` 等路径。`__libc_csu_init` 是特定 glibc/工具链历史实现中的入口，现代产物不一定保留同名路径；初始化也不宜概括为所有对象都在 main 前动态构造。
+- 读目标文件章节时，结合本阶段末尾实验的输出，用 `readelf -SW` 逐一辨认 `.text`、`.rodata`、`.data`、`.bss`、符号表和重定位项，把书上的定义落到真实字节上，并区分链接视角的 **section** 与装载视角的 **segment**。
+
+- 读静态链接章节前，先用 `nm` 与 `nm -C` 对比同一目标文件，弄清 C++ 符号修饰前后的名称差别；再解释未定义符号、强弱符号及库搜索顺序。不要把某 ELF 链接器的决议规则直接当成 C++ ODR 的完整定义。
+
+- 读运行库章节时，跟踪全局对象初始化与退出清理，查 `.init_array`、启动代码及 `__cxa_atexit` 等路径。`__libc_csu_init` 是特定 glibc/工具链历史实现中的入口，现代产物不一定保留同名路径；初始化也不宜概括为所有对象都在 main 前动态构造。
 
 **阅读问题：** `.o` 中为什么已经有指令却仍不能直接运行？调用一个外部函数时，地址在什么时候确定？
 
@@ -41,7 +43,7 @@ summary: 从二进制观察出发，依次掌握 C++ 对象模型、现代编译
 
 英文名 *Advanced C and C++ Compiling*，Milan Stevanovic 著。配合 `nm`、`objdump`、`readelf`、`ar` 阅读静态库、动态库与二进制接口。
 
-![高级 C/C++ 编译技术全景图：静态库、动态库与 ABI 兼容](advanced-cpp-compiling.svg)
+![高级 C/C++ 编译技术全景图：静态库、动态库与 ABI 兼容](../../assets/references/reading-paths/advanced-cpp-compiling.jpeg)
 
 图中先看三条线：静态库在链接时按未定义符号提取成员；动态库通过 PIC、GOT/PLT 和动态链接器延迟确定地址；ABI 兼容则需要同时核对名字修饰、调用约定、对象布局、异常/运行库和导出边界。
 
@@ -51,7 +53,7 @@ summary: 从二进制观察出发，依次掌握 C++ 对象模型、现代编译
 
 钱林松、赵海旭著。作为随查工具书，不必顺序读完。优先看函数栈帧、成员函数调用、虚调用及异常控制流。
 
-![C++ 反汇编与逆向分析核心原理](cpp-disassembly-reverse.svg)
+![C++ 反汇编与逆向分析核心原理](../../assets/references/reading-paths/cpp-disassembly-reverse.jpeg)
 
 图中四块内容对应本书的主要观察入口：先确认栈帧和调用约定，再跟踪 `this` 指针与对象偏移，随后观察 `vptr/vtable` 的间接调用，最后用 `.eh_frame` 与展开运行库理解异常控制流。实际寄存器、栈布局和异常节名必须以目标架构、ABI 与编译选项为准。
 
@@ -85,7 +87,7 @@ readelf -lW demo
 
 英文名 *Inside the C++ Object Model*，Stanley B. Lippman 著。它是连接汇编观察与语言机制的主线书。
 
-![深度探索 C++ 对象模型：从内存布局到编译期合成机制](cpp-object-model.svg)
+![深度探索 C++ 对象模型：从内存布局到编译期合成机制](../../assets/references/reading-paths/cpp-object-model.jpeg)
 
 图中把本书的重点串成一条线：编译器按需处理特殊成员函数，布局阶段安排继承、对齐和填充，虚表与 Thunk 负责多态调用，成员函数指针携带代码地址或虚表偏移及 `this` 调整。底部再用现代 C++ 的平凡性、移动抑制和五法则重新校正经典模型。
 
@@ -105,14 +107,15 @@ g++ -std=c++20 -O0 -fdump-lang-class -c layout.cpp -o layout.o
 
 侯捷著。重点学习二级空间配置器的池化思路、迭代器分类与 traits 萃取，再理解容器如何分离存储分配和对象构造。
 
-![STL 源码剖析与 GCC 内存/类型擦除底层机制](stl-source-gcc-overview.svg)
+![STL 源码剖析与 GCC 内存/类型擦除底层机制](../../assets/references/reading-paths/stl-source-gcc-overview.jpeg)
 
 图中按“原始存储 → 对象生命周期 → 类型能力 → 类型擦除”组织阅读：先区分 allocator 的存储责任和 `placement new` 的构造责任，再看 `shared_ptr` 控制块如何管理共同生命周期，最后用 `iterator_traits` 和 `std::function` 对照编译期类型分派与运行时调用分派。
 
-书中以历史 SGI STL 为主要背景；二级配置器不是今天所有 `std::allocator` 的规定实现。读完后选择**与本机版本一致**的 GCC libstdc++ 源码，对照：
+书中以历史 SGI STL 为主要背景；二级配置器不是今天所有 `std::allocator` 的规定实现。读完后选择**与本机版本一致**的 GCC libstdc++ 源码对照本阶段的三个主题：可直接从 [GCC 镜像](https://gcc.gnu.org/mirrors.html)下载与 `g++ -dumpversion` 主版本一致的源码包，只读两个头文件，不必编译整个库。
 
-- `libstdc++-v3/include/bits/shared_ptr_base.h`：对象与控制块、强弱计数、删除器、make_shared 的常见合并分配。
-- `libstdc++-v3/include/bits/std_function.h`：类型擦除、管理函数、调用分派和小对象优化（SBO，也常称 SOO）。缓冲大小与容纳条件是实现细节。
+- `libstdc++-v3/include/bits/shared_ptr_base.h`：对象与控制块、强弱计数、删除器、make_shared 的常见合并分配；观察书中存储分配与对象构造分离的思路在标准库里落在哪一行代码。
+
+- `libstdc++-v3/include/bits/std_function.h`：类型擦除、管理函数、调用分派和小对象优化（SBO，也常称 SOO）。缓冲大小与容纳条件是实现细节，不必当作标准行为记忆。
 
 ### 实验与进入下一阶段的条件
 
@@ -128,6 +131,8 @@ g++ -std=c++20 -O0 -fdump-lang-class -c layout.cpp -o layout.o
 
 Scott Meyers 著，主要面向 C++11/14。重点读第 1–5 章涉及的类型推导、auto、现代声明、智能指针、移动与完美转发；**lambda 专题在第 6 章**，需补读。
 
+![Effective Modern C++](<../../assets/references/reading-paths/Effective Modern C++.png>)
+
 把每条建议转成编译器问题：模板参数怎样推导？auto 怎样丢弃顶层限定？引用如何折叠？重载决议为何选择复制或移动？std::move/forward 是转换工具，资源转移由选中的函数实现，不能把整个移动操作统一称作零开销。
 
 书中 “universal reference” 常对应今天所称的 **forwarding reference（转发引用）**，并非所有 T&& 都满足其条件。Lambda 的按值捕获形成闭包状态，按引用捕获的物理表示由实现决定。
@@ -135,6 +140,8 @@ Scott Meyers 著，主要面向 C++11/14。重点读第 1–5 章涉及的类型
 ### 《Programming with C++20》
 
 Andreas Fertig 著，配合 [C++ Insights](https://cppinsights.io/) 及其[源码](https://github.com/andreasfertig/cppinsights)阅读。书以 C++20 为中心，工具可以帮助观察更早版本的结构化绑定（C++17）、范围 for（C++11）及 constexpr（C++11 起演进）。
+
+![Programming with C++20](<../../assets/references/reading-paths/Programming with C++20.jpeg>)
 
 观察源码中的隐式对象、范围变量、调用运算符与实例化结果。C++ Insights 提供基于 Clang 的教育性转换，不是标准强制的等价源代码，也不代表优化后的汇编；常量求值与协程降低还需要结合编译器文档。
 
@@ -144,10 +151,14 @@ Andreas Fertig 著，配合 [C++ Insights](https://cppinsights.io/) 及其[源�
 
 David Vandevoorde、Nicolai M. Josuttis、Douglas Gregor 著。接在推导与类型萃取之后读，不必一开始通读。
 
-原书单的“1016”“2128”在此理解为 **10–16、21–28 章**，并按第二版主题细化：
+![C++ Templates: The Complete Guide](<../../assets/references/reading-paths/C++ Templates: The Complete Guide.jpeg>)
+
+重点放在 **第 10–16 章、第 19 章与第 21–28 章**，并按第二版主题细化：
 
 - 第 10 章基础术语、第 12–16 章模板细节、名称查找、实例化、推导、特化与重载，构成机制主线；第 11 章补泛型库实践。
+
 - 第 19 章 traits 与 policy、第 21 章模板与继承、第 23–25 章元编程、typelist 与 tuple，适合继续深入；第 22、26–28 章按桥接、判别联合、表达式模板和调试需求选读。
+
 - 第二版以 C++17 时代内容为基础，不能当作 C++20 Concepts 最终规范。约束规范化、满足性与偏序另读 C++20 资料及[工作草案的约束章节](https://eel.is/c++draft/temp.constr)。
 
 理解依赖名称与两阶段查找、SFINAE 的立即上下文边界、变参展开。traits 并非都靠编译器内建：有的可用模板组合表达，有的依赖实现提供的类型信息。Concepts 改善约束表达与候选选择，不会证明业务语义公理。
@@ -164,11 +175,16 @@ David Vandevoorde、Nicolai M. Josuttis、Douglas Gregor 著。接在推导与�
 
 ### Itanium C++ ABI 官方规范
 
+![Itanium C++ ABI](<../../assets/references/reading-paths/Itanium C++ ABI 官方规范.jpeg>)
+
 [主规范](https://itanium-cxx-abi.github.io/cxx-abi/abi.html)是 ABI 规范，不是 ISO C++ 语言标准。GCC/Clang 在许多平台采用该 ABI 家族；Windows MSVC ABI 等目标不同，不能说两者所有目标共同遵循它。
 
 - 第 2 节数据布局：重点 2.3 成员指针、2.4 非 POD 类布局、2.5 虚表、2.6 构造期间虚表与 VTT。
+
 - 第 3 节调用与运行时接口：重点 3.3.2 一次性构造 API，观察 `__cxa_guard_acquire/release/abort`。守卫协议要求正确同步，但不规定所有实现都使用同一种锁。
+
 - 第 5.1 节符号修饰：把第一阶段 nm 的输出与文法对照。
+
 - [独立异常处理 ABI](https://itanium-cxx-abi.github.io/cxx-abi/abi-eh.html)：了解展开器、personality、handler 搜索和清理阶段。ELF/DWARF 实现常用 `.eh_frame` 和语言相关数据，但不能把某段名当作全部目标平台的统一要求。
 
 “零开销异常”通常指正常路径避免某些动态注册成本，不代表代码体积、元数据或抛出路径没有成本。
@@ -184,6 +200,10 @@ David Vandevoorde、Nicolai M. Josuttis、Douglas Gregor 著。接在推导与�
 ### 《编译器设计》（Engineering a Compiler）
 
 Keith D. Cooper、Linda Torczon 著。可用第 2 或第 3 版，按主题而非跨版章号定位：控制流图、支配关系、数据流分析、SSA、优化与寄存器分配。
+
+![编译器设计：CFG/SSA、中端优化、后端分配与教材对 GCC 的折中](../../assets/references/reading-paths/编译器设计.jpeg)
+
+图中四块对应本书主线：先在控制流图、支配树与 SSA 中理解基本块、支配关系和 phi 函数如何合并不同前驱的值；再看死代码消除、常量传播与循环变换等中端 pass 各依赖哪种分析；后端的指令选择、活跃性分析与寄存器分配（图着色、溢出到栈）决定代码的最终形态。图末还把教材算法对齐到 GCC 的 pass 命名（如 `pass_ccp`、`pass_ira/lra`），提示教材与工业实现之间存在编译时间与目标平台带来的折中——寄存器分配用 LRA 而非纯图着色、SSA 采用剪枝形式。
 
 先理解 phi 节点如何合并不同前驱的值，再看死代码消除、常量传播与循环变换；最后理解指令选择、活跃性、寄存器分配和溢出到栈。把理论与 GCC pass 对齐时，区分教材算法与实现为目标平台、编译时间作出的折中。
 
