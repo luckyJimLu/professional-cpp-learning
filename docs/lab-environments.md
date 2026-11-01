@@ -10,7 +10,7 @@
 | 设计模式书籍示例 | C++17；部分使用宿主机线程与异常 | `python3 tools/check-examples.py --patterns-only` | 与禁异常、禁堆或硬实时目标有不同约束 |
 | 浏览器 Lab | `@live-codes/clang-wasm` 0.2.0，C++23 | 站点 Lab；主机 `npm run build` 后执行浏览器测试 | 当前异常不可用；不能据此保证原生线程、网络或设备支持 |
 | Standalone Asio Echo | Asio **1.30.2**，C++20，CMake ≥3.20，Threads | `cmake -S frameworks/asio/examples -B build/asio`；`cmake --build build/asio` | 原生网络及协程实验，保留异常；不在浏览器 Lab 运行 |
-| Boost.Asio 迁移示例 | Boost **1.83.0**，C++20 | `npm run check:reference-cpp`；依赖见 [迁移说明](content-migration.md) | `boost::asio` 与 `asio` 的命名、版本和扩展 API 不能直接混用 |
+| Boost.Asio 迁移示例 | Boost **1.83.0**，C++20 | `npm run check:reference-cpp`；依赖见 [迁移说明](maint/archive/content-migration.md) | `boost::asio` 与 `asio` 的命名、版本和扩展 API 不能直接混用 |
 | RTOS 模拟器 | 仓库受限 C++ 子集；声明头 `include/rtos_sim.h` | Node.js 24：`node tools/check-rtos-examples.ts`；网页 `rtos.html` | 确定性解释执行；头文件没有提供可原生链接的 RTOS 实现 |
 | 内存预置轨迹 | 仓库 JSON 快照；实际运行事件另行标注 | 站点内存可视化；`npx playwright test tests/visualizer.spec.ts` | 地址、引用计数、容量变化用于特定案例，不是 ABI 或通用增长策略 |
 | OpenHarmony 资料 | `OpenHarmony-v5.0.0-Release` 来源基线 | 按 [首次构建手册](../frameworks/openharmony/07-first-build-lab.md) 固定板卡和 manifest | 现有来源核对不等于已构建完整系统；C++11 支持依目标工具链和库实测 |

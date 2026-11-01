@@ -27,7 +27,7 @@
 - [Day 1–67 逐课导航与前置知识](docs/beginner-course-map.md)
 - [完整学习进度](progress.md)
 - [章节里程碑与 16 周顺序参考](docs/learning-plan.md)
-- [可运行练习审计与契约](docs/runnable-exercise-audit.md)
+- [可运行练习审计与契约](docs/maint/runnable-exercise-audit.md)
 - [C++ Design Patterns · 工程化专题](patterns/)
 - [所有权与智能指针](patterns/ownership-and-smart-pointers.md)
 - [Embedded C++ 编码规范索引](guidelines/embedded-cpp-guideline-notes.md)
@@ -76,15 +76,27 @@
 ├── README.md
 ├── progress.md
 ├── daily/                       # 已发布课程 Day 1–67
-├── weekly/
-├── patterns/
-├── frameworks/
-├── docs/
-├── examples/
-│   └── day-XXX/                 # main.cpp 与独立 exercise-XX.cpp
-├── guidelines/
-├── tools/
-└── tests/
+├── weekly/                      # 周复盘
+├── patterns/                    # 设计模式专题（含书籍示例源码 examples/）
+├── examples/                    # 每日课程 main.cpp 与独立 exercise-XX.cpp
+│   └── day-XXX/
+├── booklets/                    # C / C++ 独立速查小册子（含配套源码 examples/）
+├── guidelines/                  # 编码规范与评审标准
+├── frameworks/                  # 平台专题：asio / openharmony / trace32
+├── references/                  # 迁移参考资料（system-design-notes 冻结基线；reading-paths 书单导读）
+├── assets/                      # 内容资源镜像树（正文目录仅允许 .md 文本）
+├── docs/                        # 内容区①文档 + design/（产品与设计规范）+ maint/（维护者文档与归档）
+├── slides/                      # Slidev 课件工程（lesson-01..03）
+├── PPT/                         # 课件大纲源
+├── include/                     # RTOS 模拟器声明头
+├── src/                         # 学习平台前端（React/Vite）
+├── public/                      # 运行时静态资源（clang-wasm、内存轨迹）
+├── scripts/                     # 内容管道（build-content.py）
+├── utils/                       # Windows 远程脚本运行器等工具
+├── books/                       # 参考书籍 PDF
+├── tools/                       # CI 检查器（check-course/check-examples/…）
+├── tests/                       # Playwright/单元测试
+└── .github/workflows/           # 构建、部署与内容路径过滤
 ```
 
 ## 编码规范基线

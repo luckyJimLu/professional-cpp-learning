@@ -104,7 +104,7 @@ examples/day-XXX/
 - 纯知识问答和纯架构设计题不强制生成额外 source；
 - Embedded 练习必须显式说明 ownership/lifetime、timeout、capacity、thread/ISR context 等边界。
 
-完整规范见 [可运行练习审计与契约](runnable-exercise-audit.md)。
+完整规范见 [可运行练习审计与契约](maint/runnable-exercise-audit.md)。
 
 ## 每 7 天复盘
 
