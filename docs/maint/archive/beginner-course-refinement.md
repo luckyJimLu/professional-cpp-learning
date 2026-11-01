@@ -6,7 +6,7 @@
 
 全部 64 课均补充：本课要解决的问题、前置 Day 链接、两个白话术语、对应主 Lab 的执行步骤、一项有预期或判断依据的小练习、理解／应用／辨析自测及辨析答案。原有课程正文、实验、错误路径和工程取舍继续保留。新增导读与进阶选读不虚报为原有 60 分钟内必然完成。
 
-新增入口：[新手入门手册](beginner-start.md)、[逐课前置导航](beginner-course-map.md)。README、内容总索引和章节路线已连接入口，并将过时的“下一章 Chapter 7”更新为当前 Chapter 7 进行中。后续内容按[课程模板](day-template.md)继续维护。
+新增入口：[新手入门手册](../../beginner-start.md)、[逐课前置导航](beginner-course-map.md)。README、内容总索引和章节路线已连接入口，并将过时的“下一章 Chapter 7”更新为当前 Chapter 7 进行中。后续内容按[课程模板](../../maint/day-template.md)继续维护。
 
 ## 使用的现有资料
 
