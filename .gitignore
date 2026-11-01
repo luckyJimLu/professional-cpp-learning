@@ -25,3 +25,5 @@ test-results/
 **/.impeccable/live/previews/
 **/.impeccable/live/annotations/
 **/.impeccable/live/cache/
+
+tsconfig.tsbuildinfo
