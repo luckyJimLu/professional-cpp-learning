@@ -116,10 +116,13 @@
 npm install
 npm run check:course
 npm run check:examples
-npm run build
+npm run build:content     # 内容契约校验 + manifest/搜索索引 + 内容镜像 public/content
+npm run build             # 前端构建（prebuild 自动执行 build:content，vite 复制到 dist/content）
 ```
 
-课程与专题正文以仓库 Markdown 为内容源，Web UI 负责导航、阅读、实验及复盘。
+课程与专题正文以仓库 Markdown 为内容源，经 `scripts/build-content.py` 生成 `manifest.json`、`search-index.json` 与内容镜像，Web 端在运行时按需读取：内容变更不再触发前端重构建。契约说明见 [docs/maint/content-contract.md](docs/maint/content-contract.md)。
+
+CI 发布分两条流水线：仅改内容（daily/weekly/booklets/docs 区① 等）时走 `content` 快速通道，只跑 Python 管道并用缓存的上一次 `dist/` 直接刷新内容子树；前端或公共资源变更则走全量 `app` 重建（`deploy.yml` 双 job 分流）。`web-build.yml` 对 `docs/maint/**`、`docs/design/**`、`README.md` 不触发。
 
 GitHub Pages 必须选择 **GitHub Actions** 作为发布来源，由 Vite 构建并部署 `dist/`。
 配置与故障排查见 [GitHub Pages 部署说明](docs/github-pages.md)。

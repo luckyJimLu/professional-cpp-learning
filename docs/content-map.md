@@ -58,7 +58,9 @@ summary: 从教材章节到工程专题、可运行实验和评审，按前置�
 
 入门与课程导航：[新手入门手册](beginner-start.md) · [逐课前置导航](beginner-course-map.md) · [16 周学习路线](learning-plan.md) · [课程模板](maint/day-template.md) · [Chapter 6 章末评审](chapter-06-review.md) · [参考资料导读](reference-reading-guide.md) · [学习体验规范](design/learning-ux.md)
 
-工程化与验证：[可运行练习审计与契约](maint/runnable-exercise-audit.md) · [内容契约](maint/content-contract.md) · [实验环境矩阵](lab-environments.md) · [迁移校验清单](migration-manifest.json) · [Pages 部署说明](github-pages.md)
+工程化与验证：[可运行练习审计与契约](maint/runnable-exercise-audit.md) · [内容契约](maint/content-contract.md) · [实验环境与工具链清单](lab-environments.md) · [迁移校验清单](migration-manifest.json) · [Pages 部署说明](github-pages.md)
+
+内容工程：本区① 的 md 与 `daily/weekly/patterns/booklets/guidelines/frameworks/references` 文本由 `scripts/build-content.py` 统一校验并生成 `manifest.json` + `search-index.json`，网站运行时读取（frontmatter 字段即网站数据的源，契约见 [内容契约](maint/content-contract.md)）。
 
 速查与专题深潜：[FAQ](faq.md) · [新特性速查](cpp-feature-standards.md) · [实现深潜](cpp-implementation-deep-dive.md) · [Mermaid 指南](mermaid.md) · [HarmonyOS Mini 兼容](harmonyos-mini-cpp11-compatibility.md) · [Zephyr / ZPP](zephyr-cpp20-zpp.md) · [RTOS 设计文档](rtos-simulator/DESIGN.md) · [RTOS 教学手册](rtos-simulator/LEARNING-GUIDE.md)
 
