@@ -1,6 +1,6 @@
 # 从语义到机器码：C / C++ 实现观察实验
 
-先阅读小册子对应条目的标准版本、实现机制和深入讨论，再用实验验证。这里不假设标准规定了某个汇编序列、闭包大小或控制块布局。示例在 `booklets/labs/`，C17 与 C++20 分开编译；C23 的增量讨论没有包含在这些自测中。
+先阅读小册子对应条目的标准版本、实现机制和深入讨论，再用实验验证。这里不假设标准规定了某个汇编序列、闭包大小或控制块布局。示例在 `booklets/examples/`，C17 与 C++20 分开编译；C23 的增量讨论没有包含在这些自测中。
 
 ## 1. 建立可重复的观察环境
 
@@ -11,8 +11,8 @@ gcc --version
 g++ --version
 gcc -dumpmachine
 lab_dir=$(mktemp -d)
-gcc -std=c17 -Wall -Wextra -Wpedantic -Werror booklets/labs/mechanisms.c -o "$lab_dir/c"
-g++ -std=c++20 -Wall -Wextra -Wpedantic -Werror booklets/labs/mechanisms.cpp -o "$lab_dir/cpp"
+gcc -std=c17 -Wall -Wextra -Wpedantic -Werror booklets/examples/mechanisms.c -o "$lab_dir/c"
+g++ -std=c++20 -Wall -Wextra -Wpedantic -Werror booklets/examples/mechanisms.cpp -o "$lab_dir/cpp"
 "$lab_dir/c"
 "$lab_dir/cpp"
 ```
@@ -26,7 +26,7 @@ C 示例 `kind(value++)` 不递增 value，说明 `_Generic` 控制表达式不�
 C++ 示例以 `static_assert` 验证 `decltype(x)` 为 int，而 `decltype((x))` 为 int&。这是前端规则，不是优化结果。若有 Clang，可查看 AST 中的类型和闭包：
 
 ```bash
-clang++ -std=c++20 -Xclang -ast-dump -fsyntax-only booklets/labs/mechanisms.cpp > "$lab_dir/ast.txt"
+clang++ -std=c++20 -Xclang -ast-dump -fsyntax-only booklets/examples/mechanisms.cpp > "$lab_dir/ast.txt"
 ```
 
 AST 包含标准库信息，输出可能很大；查 `lambda_probe` 附近的闭包、捕获成员及调用运算符。Clang 命令是可选观察方法，GCC 自测通过不等于已验证 Clang 输出。
@@ -34,10 +34,10 @@ AST 包含标准库信息，输出可能很大；查 `lambda_probe` 附近的闭
 ## 3. 降低与优化：为何源码不同而机器码相近
 
 ```bash
-g++ -std=c++20 -O0 -S booklets/labs/mechanisms.cpp -o "$lab_dir/cpp-O0.s"
-g++ -std=c++20 -O2 -S booklets/labs/mechanisms.cpp -o "$lab_dir/cpp-O2.s"
-gcc -std=c17 -O2 -S booklets/labs/mechanisms.c -o "$lab_dir/c-O2.s"
-g++ -std=c++20 -O0 -fdump-tree-original -c booklets/labs/mechanisms.cpp -o "$lab_dir/lowering.o"
+g++ -std=c++20 -O0 -S booklets/examples/mechanisms.cpp -o "$lab_dir/cpp-O0.s"
+g++ -std=c++20 -O2 -S booklets/examples/mechanisms.cpp -o "$lab_dir/cpp-O2.s"
+gcc -std=c17 -O2 -S booklets/examples/mechanisms.c -o "$lab_dir/c-O2.s"
+g++ -std=c++20 -O0 -fdump-tree-original -c booklets/examples/mechanisms.cpp -o "$lab_dir/lowering.o"
 ```
 
 比较 `lambda_probe`：未优化时可能有闭包成员访问和调用；优化后常只剩加法。捕获状态在语义上存在，不代表物理对象一定保留。
@@ -68,4 +68,4 @@ C++ 示例中，optional 的移动构造建立第二个 Item，源 optional 仍�
 
 ## 对象模型与虚调用进阶实验
 
-新增 `labs/object-model.cpp`，由 `npm run check:booklets` 编译运行。布局、虚表地址点、多继承 thunk、闭包与优化结果见[五维深度拆解](../docs/cpp-implementation-deep-dive.md)。测试只断言语言行为，打印尺寸作观察，不固定目标 ABI。
+新增 `examples/object-model.cpp`，由 `npm run check:booklets` 编译运行。布局、虚表地址点、多继承 thunk、闭包与优化结果见[五维深度拆解](../docs/cpp-implementation-deep-dive.md)。测试只断言语言行为，打印尺寸作观察，不固定目标 ABI。

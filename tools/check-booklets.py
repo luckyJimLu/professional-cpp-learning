@@ -71,7 +71,6 @@ with tempfile.TemporaryDirectory(prefix="c-booklet-") as temporary:
         path.write_text(program, encoding="utf-8")
         files.append(path)
     files += sorted((ROOT / "booklets/examples").glob("*.c"))
-    files += sorted((ROOT / "booklets/labs").glob("*.c"))
     for index, path in enumerate(files):
         binary = directory / f"example-{index}"
         subprocess.run(compiler + flags + [str(path), "-o", str(binary), "-lm"], check=True, timeout=30)
@@ -91,7 +90,6 @@ with tempfile.TemporaryDirectory(prefix="cpp-booklet-") as temporary:
         cpp_files.append((path, "c++20"))
     cpp_files += [(path, "c++23" if path.name.startswith("cpp23-") else "c++20")
                   for path in sorted((ROOT / "booklets/examples").glob("*.cpp"))]
-    cpp_files += [(path, "c++20") for path in sorted((ROOT / "booklets/labs").glob("*.cpp"))]
     for index, (path, standard) in enumerate(cpp_files):
         binary = directory / f"cpp-example-{index}"
         subprocess.run(cpp_compiler + [f"-std={standard}", "-Wall", "-Wextra", "-Wconversion", "-Wpedantic", "-Werror", "-pthread", str(path), "-o", str(binary)], check=True, timeout=60)

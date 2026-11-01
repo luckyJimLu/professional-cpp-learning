@@ -62,4 +62,4 @@
 
 C++ 的 47 个版本特性条目均补充实现机制与深入讨论；另补模块、比较、原子等主题。C 册补充 14 个相关条目的 C99/C11 实现解释，并在 C/C++ 差异条目列出 C23 重点增量，保持 C17 为主体。区分前端、后端、ABI 与标准库，不把常见布局或优化结果当作标准保证。
 
-[实现观察实验](implementation-lab.md) 提供类型、闭包、常量求值、原子与 optional 生命周期的观察步骤。`npm run check:booklets` 会编译运行 `labs/` 下的 C17/C++20 自测；C23 增量表和可选 Clang AST 命令不在这些自测的验证范围内。
+[实现观察实验](implementation-lab.md) 提供类型、闭包、常量求值、原子与 optional 生命周期的观察步骤。`npm run check:booklets` 会编译运行 `examples/` 下的 C17/C++20 自测；C23 增量表和可选 Clang AST 命令不在这些自测的验证范围内。
