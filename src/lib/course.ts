@@ -1,6 +1,5 @@
-import learningPlanRaw from "../../docs/learning-plan.md?raw";
-import guidelineRaw from "../../guidelines/embedded-cpp-guideline-notes.md?raw";
-import progressRaw from "../../progress.md?raw";
+import { fetchContentText, loadContentManifest } from "./contentRuntime";
+import type { ContentLesson } from "@/types/contentManifest";
 
 export const STEP_DEFS = [
   { key: "read", label: "READ", title: "阅读" },
@@ -43,31 +42,39 @@ export interface Lesson {
   nextSummary?: string;
 }
 
-type Frontmatter = Record<string, string | number | boolean | string[]>;
+const mainCppCache = new Map<string, string>();
+const headerCache = new Map<string, string>();
 
-const rawLessons = import.meta.glob("../../daily/*.md", {
-  query: "?raw",
-  import: "default",
-  eager: true,
-}) as Record<string, string>;
+async function fetchMainCpp(day: number): Promise<string | undefined> {
+  if (!mainCppCache.size) {
+    const manifest = await loadContentManifest();
+    await Promise.all(
+      manifest.lessons
+        .filter((entry) => entry.lab && entry.lab.endsWith("main.cpp"))
+        .map(async (entry) => {
+          mainCppCache.set(entry.lab, await fetchContentText(entry.lab));
+        }),
+    );
+  }
+  return mainCppCache.get(`examples/day-${String(day).padStart(3, "0")}/main.cpp`);
+}
 
-const rawExamples = import.meta.glob("../../examples/**/main.cpp", {
-  query: "?raw",
-  import: "default",
-  eager: true,
-}) as Record<string, string>;
+async function fetchHeader(headerPath: string): Promise<string | undefined> {
+  if (!headerCache.has(headerPath)) {
+    try {
+      headerCache.set(headerPath, await fetchContentText(headerPath));
+    } catch {
+      headerCache.set(headerPath, "");
+    }
+  }
+  const cached = headerCache.get(headerPath);
+  return cached || undefined;
+}
 
-// The browser compiler accepts one translation unit. Bundle the example's local
-// headers while retaining include guards and original filenames in diagnostics.
-const rawExampleHeaders = import.meta.glob("../../examples/**/*.{h,hpp}", {
-  query: "?raw",
-  import: "default",
-  eager: true,
-}) as Record<string, string>;
-
-function bundleExample(path: string, source: string, stack: string[] = []): string {
-  return source.replace(/^[ \t]*#include[ \t]+"([^"\n]+)"[^\n]*$/gm,
-    (directive, name: string, offset: number) => {
+async function bundleExample(path: string, source: string, stack: string[] = []): Promise<string> {
+  const replacements = await Promise.all(
+    [...source.matchAll(/[ \t]*#include[ \t]+"([^"\n]+)"[^\n]*$/gm)].map(async (match) => {
+      const name = match[1];
       const parts = `${path.slice(0, path.lastIndexOf("/"))}/${name}`.split("/");
       const normalized: string[] = [];
       for (const part of parts) {
@@ -75,52 +82,23 @@ function bundleExample(path: string, source: string, stack: string[] = []): stri
         else if (part !== ".") normalized.push(part);
       }
       const headerPath = normalized.join("/");
-      const header = rawExampleHeaders[headerPath];
-      if (header === undefined || stack.includes(headerPath)) return directive;
-      const line = source.slice(0, offset).split("\n").length;
-      const bundled = bundleExample(headerPath, header, [...stack, headerPath]);
-      return `#line 1 "${name}"\n${bundled}\n#line ${line + 1} "${path.split("/").at(-1)}"`;
-    });
-}
-
-function parseScalar(value: string): string | number | boolean | string[] {
-  const array = value.trim().match(/^\[(.*)\]$/);
-  if (array) return array[1].split(",").map((item) => item.trim().replace(/^["']|["']$/g, "")).filter(Boolean);
-  const clean = value.trim().replace(/^["']|["']$/g, "");
-  if (/^-?\d+(\.\d+)?$/.test(clean)) return Number(clean);
-  if (clean === "true") return true;
-  if (clean === "false") return false;
-  return clean;
-}
-
-function readFrontmatter(raw: string): { meta: Frontmatter; body: string } {
-  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
-  if (!match) return { meta: {}, body: raw };
-
-  const meta: Frontmatter = {};
-  let listKey: string | undefined;
-
-  for (const line of match[1].split(/\r?\n/)) {
-    const top = line.match(/^([A-Za-z_][\w-]*):\s*(.*)$/);
-    if (top) {
-      const [, key, value] = top;
-      listKey = undefined;
-      if (value.trim() === "") {
-        meta[key] = [];
-        listKey = key;
-      } else {
-        meta[key] = parseScalar(value);
+      const header = await fetchHeader(headerPath);
+      if (header === undefined || stack.includes(headerPath)) {
+        return { match, replacement: match[0] };
       }
-      continue;
-    }
-
-    const item = line.match(/^\s+-\s+(.+)$/);
-    if (item && listKey && Array.isArray(meta[listKey])) {
-      (meta[listKey] as string[]).push(String(parseScalar(item[1])));
-    }
-  }
-
-  return { meta, body: raw.slice(match[0].length) };
+      const line = source.slice(0, match.index!).split("\n").length;
+      const bundled = await bundleExample(headerPath, header, [...stack, headerPath]);
+      return {
+        match,
+        replacement: `#line 1 "${name}"\n${bundled}\n#line ${line + 1} "${path.split("/").at(-1)}"`,
+      };
+    }),
+  );
+  return replacements.reduceRight(
+    (text, { match, replacement }) =>
+      text.slice(0, match.index!) + replacement + text.slice(match.index! + match[0].length),
+    source,
+  );
 }
 
 function chapterToPart(chapter?: number): string | undefined {
@@ -216,70 +194,133 @@ function extractChecklist(section?: LessonSection): string[] {
     .slice(-6);
 }
 
-function exampleForDay(day: number, labPath?: string): string | undefined {
-  if (labPath) {
-    const normalized = labPath.replace(/^\.\//, "");
-    const direct = Object.entries(rawExamples).find(([path]) => path.endsWith(normalized));
-    if (direct) return bundleExample(direct[0], direct[1]);
+function readFrontmatter(raw: string): { meta: Record<string, string | number | boolean | string[]>; body: string } {
+  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
+  if (!match) return { meta: {}, body: raw };
+
+  const meta: Record<string, string | number | boolean | string[]> = {};
+  let listKey: string | undefined;
+
+  for (const line of match[1].split(/\r?\n/)) {
+    const top = line.match(/^([A-Za-z_][\w-]*):\s*(.*)$/);
+    if (top) {
+      const [, key, value] = top;
+      listKey = undefined;
+      if (value.trim() === "") {
+        meta[key] = [];
+        listKey = key;
+      } else {
+        const clean = value.trim().replace(/^["']|["']$/g, "");
+        if (/^-?\d+(\.\d+)?$/.test(clean)) meta[key] = Number(clean);
+        else if (clean === "true") meta[key] = true;
+        else if (clean === "false") meta[key] = false;
+        else meta[key] = clean;
+      }
+      continue;
+    }
+
+    const item = line.match(/^\s+-\s+(.+)$/);
+    if (item && listKey && Array.isArray(meta[listKey])) {
+      (meta[listKey] as string[]).push(item[1].trim().replace(/^["']|["']$/g, ""));
+    }
   }
 
-  const token = `/day-${String(day).padStart(3, "0")}/main.cpp`;
-  const example = Object.entries(rawExamples).find(([path]) => path.includes(token));
-  return example ? bundleExample(example[0], example[1]) : undefined;
+  return { meta, body: raw.slice(match[0].length) };
 }
 
-function buildLesson(path: string, raw: string): Lesson | undefined {
-  const day = Number(path.match(/day-(\d{3})-/)?.[1]);
-  if (!day) return undefined;
+function parseScalar(value: string): string | number | boolean | string[] {
+  const array = value.trim().match(/^\[(.*)\]$/);
+  if (array) return array[1].split(",").map((item) => item.trim().replace(/^["']|["']$/g, "")).filter(Boolean);
+  const clean = value.trim().replace(/^["']|["']$/g, "");
 
-  const { meta, body } = readFrontmatter(raw);
-  const chapter = Number(meta.chapter || chapterFromBody(body)) || undefined;
-  const nestedLabPath = raw.match(/^lab:\s*$[\s\S]*?^\s+path:\s*(.+)$/m)?.[1]?.trim();
-  const labMode = meta.lab === "rtos-sim" ? "rtos-sim" : undefined;
-  const rtosScenario = meta.rtos_scenario ? String(meta.rtos_scenario) : undefined;
-  const sections = splitSections(body);
-  const labSection = sections.find((section) => section.step === "lab");
-  const nextSection = sections.find((section) => /下一步|next/i.test(section.title));
-  const topics = Array.isArray(meta.topics) ? meta.topics : [];
-  const guidelines = Array.isArray(meta.guidelines) ? meta.guidelines : [];
-
-  return {
-    day,
-    week: Number(meta.week) || Math.ceil(day / 7),
-    part: String(meta.part || chapterToPart(chapter) || "").replace(/^Part\s+/i, "") || undefined,
-    chapter,
-    chapterTitle: meta.chapter_title ? String(meta.chapter_title) : undefined,
-    title: cleanChineseTitle(body, day),
-    duration: Number(meta.duration) || 60,
-    status: meta.status ? String(meta.status) : "published",
-    topics,
-    guidelines,
-    labPath: nestedLabPath,
-    labMode,
-    rtosScenario,
-    path: path.replace(/^\.\.\/\.\.\//, ""),
-    raw: body,
-    sections,
-    labCode: exampleForDay(day, nestedLabPath) ?? extractCode(labSection),
-    labChecklist: extractChecklist(labSection),
-    nextSummary: nextSection ? cleanInline(nextSection.body) : undefined,
-  };
+  return clean;
 }
 
-export const lessons = Object.entries(rawLessons)
-  .map(([path, raw]) => buildLesson(path, raw))
-  .filter((lesson): lesson is Lesson => Boolean(lesson))
-  .sort((a, b) => a.day - b.day);
+export const lessons: Lesson[] = [];
 
-export const repoCompletedDay =
-  Number(progressRaw.match(/已完成[^\n]*Day\s+(\d+)/i)?.[1]) ||
-  Number(progressRaw.match(/同步到\s+\*\*Day\s+(\d+)/i)?.[1]) ||
-  Number(progressRaw.match(/Day\s+(\d+)/i)?.[1]) ||
-  0;
+let repoCompletedDayValue = 0;
 
-export const nextPlannedDay = repoCompletedDay + 1;
-export const learningPlan = learningPlanRaw;
-export const guideline = guidelineRaw;
+export function repoCompletedDay(): number {
+  return repoCompletedDayValue;
+}
+export function nextPlannedDay(): number {
+  return repoCompletedDayValue + 1;
+}
+export function loadLearningPlan(): Promise<string> {
+  return fetchContentText("docs/learning-plan.md");
+}
+export function loadGuideline(): Promise<string> {
+  return fetchContentText("guidelines/embedded-cpp-guideline-notes.md");
+}
+export function loadProgress(): Promise<string> {
+  return fetchContentText("progress.md");
+}
+
+let hydrating: Promise<void> | null = null;
+
+export function hydrateCourses(): Promise<void> {
+  hydrating ??= (async () => {
+    const manifest = await loadContentManifest();
+    const raws = await Promise.all(
+      manifest.lessons.map(async (entry) => [entry, await fetchContentText(entry.path)] as const),
+    );
+    for (const [entry] of raws) {
+      if (entry.lab?.endsWith("main.cpp")) {
+        mainCppCache.set(entry.lab, await fetchContentText(entry.lab));
+      }
+    }
+    for (const [entry, raw] of raws) {
+      const day = entry.number;
+      const { meta, body } = readFrontmatter(raw);
+      const chapter = Number(meta.chapter || chapterFromBody(body)) || undefined;
+      const nestedLabPath =
+        raw.match(/^lab:\s*$[\s\S]*?^\s+path:\s*(.+)$/m)?.[1]?.trim() ??
+        (typeof meta.lab === "string" && meta.lab.endsWith(".cpp")
+          ? meta.lab.replace(/^\.\//, "")
+          : undefined);
+      const labMode = meta.lab === "rtos-sim" ? ("rtos-sim" as const) : undefined;
+      const rtosScenario = typeof meta.rtos_scenario === "string" ? meta.rtos_scenario : undefined;
+      const sections = splitSections(body);
+      const labSection = sections.find((section) => section.step === "lab");
+      const nextSection = sections.find((section) => /下一步|next/i.test(section.title));
+      const main = await fetchMainCpp(day);
+      const labCode = main
+        ? await bundleExample(`examples/day-${String(day).padStart(3, "0")}/main.cpp`, main)
+        : extractCode(labSection);
+      lessons.push({
+        day,
+        week: Number(meta.week) || Math.ceil(day / 7),
+        part: String(meta.part ?? chapterToPart(chapter) ?? "").replace(/^Part\s+/i, "") || undefined,
+        chapter,
+        chapterTitle: typeof meta.chapter_title === "string" ? meta.chapter_title : undefined,
+        title: entry.title || cleanChineseTitle(body, day),
+        duration: Number(meta.duration) || 60,
+        status: entry.status || "published",
+        topics: Array.isArray(meta.topics) ? (meta.topics as string[]) : entry.topics,
+        guidelines: Array.isArray(meta.guidelines) ? (meta.guidelines as string[]) : entry.guidelines,
+        labPath: nestedLabPath,
+        labMode,
+        rtosScenario,
+        path: entry.path,
+        raw: body,
+        sections,
+        labCode,
+        labChecklist: extractChecklist(labSection),
+        nextSummary: nextSection ? cleanInline(nextSection.body) : undefined,
+      });
+    }
+    lessons.sort((a, b) => a.day - b.day);
+    const progress = await loadProgress();
+    repoCompletedDayValue =
+      Number(progress.match(/已完成[^\n]*Day\s+(\d+)/i)?.[1]) ||
+      Number(progress.match(/同步到\s+\*\*Day\s+(\d+)/i)?.[1]) ||
+      Number(progress.match(/Day\s+(\d+)/i)?.[1]) ||
+      0;
+  })();
+  return hydrating;
+}
+
+export const courseReady = hydrateCourses();
 
 export function lessonByDay(day: number): Lesson | undefined {
   return lessons.find((lesson) => lesson.day === day);

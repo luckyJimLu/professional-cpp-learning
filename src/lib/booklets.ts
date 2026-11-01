@@ -1,5 +1,4 @@
-import cppSource from "../../booklets/cpp.md?raw";
-import cSource from "../../booklets/c.md?raw";
+import { contentUrl, fetchContentText } from "./contentRuntime";
 
 export interface BookletEntry {
   id: string;
@@ -15,6 +14,14 @@ export interface BookletSection {
   id: string;
   title: string;
   entries: BookletEntry[];
+}
+export interface Booklet {
+  id: string;
+  title: string;
+  standard: string;
+  sections: BookletSection[];
+  downloadUrl: string;
+  exampleUrl: string;
 }
 
 function parseSections(
@@ -56,31 +63,42 @@ function parseSections(
   });
 }
 
-const downloads = import.meta.glob("../../booklets/**/*.{md,c,cpp}", {
-  query: "?url&no-inline",
-  import: "default",
-  eager: true,
-}) as Record<string, string>;
-export const cBooklet = {
+export const cBooklet: Booklet = {
   id: "c",
   title: "C 语言速查",
   standard: "ISO C17",
-  sections: parseSections(cSource, "c", "C 语言"),
-  downloadUrl: downloads["../../booklets/c.md"],
-  exampleUrl: downloads["../../booklets/examples/c17-reference.c"],
+  sections: [],
+  downloadUrl: contentUrl("content/booklets/c.md"),
+  exampleUrl: contentUrl("content/booklets/examples/c17-reference.c"),
 };
-export const cppBooklet = {
+export const cppBooklet: Booklet = {
   id: "cpp",
   title: "C++ 语言速查",
   standard: "ISO C++98–C++23",
-  sections: parseSections(cppSource, "cpp", "C++"),
-  downloadUrl: downloads["../../booklets/cpp.md"],
-  exampleUrl: downloads["../../booklets/examples/cpp20-reference.cpp"],
+  sections: [],
+  downloadUrl: contentUrl("content/booklets/cpp.md"),
+  exampleUrl: contentUrl("content/booklets/examples/cpp20-reference.cpp"),
 };
 export const booklets = [cBooklet, cppBooklet];
-export const bookletEntries = cBooklet.sections.flatMap(
-  (section) => section.entries,
-);
+
+export function bookletEntries() {
+  return cBooklet.sections.flatMap((section) => section.entries);
+}
+
+let hydrating: Promise<void> | null = null;
+
+export function hydrateBooklets(): Promise<void> {
+  hydrating ??= (async () => {
+    const [cRaw, cppRaw] = await Promise.all([
+      fetchContentText("booklets/c.md"),
+      fetchContentText("booklets/cpp.md"),
+    ]);
+    cBooklet.sections = parseSections(cRaw, "c", "C 语言");
+    cppBooklet.sections = parseSections(cppRaw, "cpp", "C++");
+  })();
+  return hydrating;
+}
+
 const normalize = (value: string) => value.normalize("NFKC").toLowerCase();
 export function searchBooklet(query: string, booklet?: typeof cBooklet) {
   const terms = normalize(query).trim().split(/\s+/).filter(Boolean);

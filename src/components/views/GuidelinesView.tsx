@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { guideline } from "../../lib/course";
+import { loadGuideline } from "../../lib/course";
 import { PageHeader } from "../common/PageHeader";
 import { Markdown } from "../Markdown";
 
 export function GuidelinesView() {
   const articleRef = useRef<HTMLElement>(null);
   const indexRef = useRef<HTMLDetailsElement>(null);
+  const [guideline, setGuideline] = useState<string>("");
+  useEffect(() => {
+    loadGuideline().then(setGuideline).catch(() => setGuideline(""));
+  }, []);
   const [headings, setHeadings] = useState<
     { id: string; title: string; level: number }[]
   >([]);

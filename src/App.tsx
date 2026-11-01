@@ -54,7 +54,7 @@ export default function App() {
       : "today";
   const setView = (value: View) => navigate({ view: value });
   const selectedDay =
-    Number(params.get("day")) || latestLesson()?.day || repoCompletedDay;
+    Number(params.get("day")) || latestLesson()?.day || repoCompletedDay();
   const progress = useLearningProgress();
   const [lastLessonDay, setLastLessonDay] = useState<number | undefined>(() => {
     try {
@@ -73,7 +73,7 @@ export default function App() {
   }, [view, selectedDay]);
 
   const completedDay = Math.max(
-    repoCompletedDay,
+    repoCompletedDay(),
     ...progress.state.completedDays,
   );
   const currentLearningDay = completedDay + 1;
@@ -225,7 +225,7 @@ export default function App() {
     <Shell
       view={view}
       setView={setView}
-      publishedDay={repoCompletedDay}
+      publishedDay={repoCompletedDay()}
       onPreloadSearch={preloadCodeSearch}
     >
       {page}

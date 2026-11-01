@@ -18,7 +18,7 @@ test("content map links to environment and runnable cross-module labs", async ({
   await expect(article.locator("h1")).toContainText("贯穿实验");
   const starter = article.getByRole("link", { name: "starter", exact: true });
   const sourceUrl = await starter.getAttribute("href");
-  expect(sourceUrl).toMatch(/\/assets\/modem-channel-exercise.*\.cpp$/);
+  expect(sourceUrl).toMatch(/\/content\/examples\/modem-channel-exercise\.cpp$/);
   const response = await page.request.get(sourceUrl!);
   expect(response.ok()).toBe(true);
   expect(await response.text()).toContain("EXPECTED GAP");

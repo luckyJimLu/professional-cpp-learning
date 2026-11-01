@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  fetchTopicText,
   topics,
   referenceBooks,
   referenceGuides,
@@ -115,7 +116,7 @@ export function Topics() {
         </NativeSelect>
         <span className="topic-result-count" aria-live="polite">
           {category === "books"
-            ? `${referenceGuides.length} 篇导读 · ${referenceBooks.length} 本 PDF`
+            ? `${referenceGuides().length} 篇导读 · ${referenceBooks().length} 本 PDF`
             : `${collections.length} 个专题 · ${visible.length} 篇文章`}
         </span>
       </div>
@@ -141,7 +142,7 @@ export function Topics() {
             <p>先明确学习目标，再沿阶段阅读与实践。</p>
           </header>
           <div className="reference-guide-grid">
-            {referenceGuides.map((guide) => (
+            {referenceGuides().map((guide) => (
               <a href={topicUrl(guide.path, "books")} key={guide.path}>
                 <h3>{guide.title}</h3>
                 <p>{topicSummary(guide)}</p>
@@ -154,10 +155,10 @@ export function Topics() {
             <p>直接打开原书文件，在新标签页阅读。</p>
           </header>
           <div className="reference-pdf-grid">
-            {referenceBooks.length ? (
-              referenceBooks.map(([file, url]) => (
-                <a href={url} key={file} target="_blank" rel="noreferrer">
-                  {file.split("/").pop()}
+            {referenceBooks().length ? (
+              referenceBooks().map((book) => (
+                <a href={book.url} key={book.path} target="_blank" rel="noreferrer">
+                  {book.path.split("/").pop()}
                   <span>打开 PDF ↗</span>
                 </a>
               ))
@@ -232,6 +233,16 @@ function TopicReader({
   const articleRef = useRef<HTMLElement>(null);
   const directoryRef = useRef<HTMLDetailsElement>(null);
   const tocRef = useRef<HTMLDetailsElement>(null);
+  const [topicText, setTopicText] = useState(selected.body);
+  useEffect(() => {
+    let alive = true;
+    fetchTopicText(selected).then((text) => {
+      if (alive) setTopicText(text);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [selected]);
   const [headings, setHeadings] = useState<{ id: string; text: string }[]>([]);
   const [activeHeading, setActiveHeading] = useState("");
   const articles = seriesTopics(selected);
@@ -294,7 +305,7 @@ function TopicReader({
       window.removeEventListener("pagehide", persist);
       persist();
     };
-  }, [selected.path]);
+  }, [selected.path, topicText]);
 
   useEffect(() => {
     const desktop = window.matchMedia("(min-width: 1100px)");
@@ -419,7 +430,7 @@ function TopicReader({
                 return true;
               }}
             >
-              {selected.body}
+              {topicText}
             </Markdown>
             <footer className="source-path">来源：{selected.path}</footer>
           </article>

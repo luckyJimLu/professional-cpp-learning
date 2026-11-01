@@ -1,4 +1,4 @@
-import outlineRaw from "../../PPT/设计模式大纲.md?raw";
+import { fetchContentText } from "./contentRuntime";
 
 export interface SlideItem {
   index: number;
@@ -40,12 +40,7 @@ export interface SyllabusLesson {
   units: Record<number, SyllabusPptUnit>;
 }
 
-// Vite glob for all slide decks under slides/lesson-*.md
-const rawDecks = import.meta.glob("../../slides/lesson-*.md", {
-  query: "?raw",
-  import: "default",
-  eager: true,
-}) as Record<string, string>;
+const deckPaths = ["slides/lesson-01.md", "slides/lesson-02.md", "slides/lesson-03.md"];
 
 /**
  * Split a Slidev markdown file into frontmatter and body pairs.
@@ -260,16 +255,15 @@ export function parseSyllabus(raw: string): Record<number, SyllabusLesson> {
   return lessons;
 }
 
-export const syllabusLessons: Record<number, SyllabusLesson> =
-  parseSyllabus(outlineRaw);
+export const syllabusLessons: Record<number, SyllabusLesson> = {};
 
 /**
  * Parse all decks found in slides/lesson-*.md.
  */
-function loadAllDecks(): SlideDeck[] {
+function loadAllDecks(decksSource: Array<{ path: string; raw: string }>): SlideDeck[] {
   const decks: SlideDeck[] = [];
 
-  for (const [path, raw] of Object.entries(rawDecks)) {
+  for (const { path, raw } of decksSource) {
     const filenameMatch = /lesson-(\d+)\.md$/.exec(path);
     if (!filenameMatch) continue;
 
@@ -323,7 +317,21 @@ function loadAllDecks(): SlideDeck[] {
   return decks.sort((a, b) => a.lessonNumber - b.lessonNumber);
 }
 
-export const allSlideDecks: SlideDeck[] = loadAllDecks();
+export const allSlideDecks: SlideDeck[] = [];
+
+let hydrating: Promise<void> | null = null;
+
+export function hydrateSlides(): Promise<void> {
+  hydrating ??= (async () => {
+    const outlineRaw = await fetchContentText("PPT/设计模式大纲.md");
+    Object.assign(syllabusLessons, parseSyllabus(outlineRaw));
+    const deckSources = await Promise.all(
+      deckPaths.map(async (path) => ({ path, raw: await fetchContentText(path) })),
+    );
+    allSlideDecks.push(...loadAllDecks(deckSources));
+  })();
+  return hydrating;
+}
 
 export function getDeckById(id: string): SlideDeck | undefined {
   return (

@@ -11,6 +11,10 @@ function withBase(relative: string) {
   return `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}${relative}`;
 }
 
+export function contentUrl(relative: string) {
+  return withBase(relative);
+}
+
 export function loadContentManifest(): Promise<ContentManifest> {
   manifestPromise ??= (async () => {
     const response = await fetch(withBase("content/manifest.json"));

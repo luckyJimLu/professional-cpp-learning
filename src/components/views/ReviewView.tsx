@@ -19,7 +19,7 @@ export function ReviewView({
 }) {
   const completed = lessons.filter((lesson) => isDayComplete(lesson.day));
   const completedDay = Math.max(
-    repoCompletedDay,
+    repoCompletedDay(),
     ...completed.map((lesson) => lesson.day),
   );
   const currentChapter = Math.max(

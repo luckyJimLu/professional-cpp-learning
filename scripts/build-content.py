@@ -51,7 +51,7 @@ SLIDES_FILES = [
 
 IMAGE_EXTS = {".jpeg", ".jpg", ".png", ".svg", ".webp", ".gif"}
 BINARY_EXTS = IMAGE_EXTS | {".pdf", ".deb", ".zip", ".bin", ".exe"}
-CODE_EXTS = {".cpp", ".c", ".h", ".hpp", ".cmm"}
+CODE_EXTS = {".cpp", ".c", ".h", ".hpp", ".cmm", ".cc", ".cxx", ".ipp"}
 ALLOWED_BINARY_DIRS = (
     "assets/",
     "patterns/examples/",
@@ -73,6 +73,9 @@ def collect_sources():
                 pairs.append((f, f.relative_to(ROOT)))
     for d in ("daily", "weekly", "guidelines"):
         add_dir(f"{d}/*.md")
+    p_progress = ROOT / "progress.md"
+    if p_progress.is_file():
+        pairs.append((p_progress, p_progress.relative_to(ROOT)))
     add_dir("patterns/**/*.md")
     add_dir("booklets/**/*.md")
     add_dir("references/reading-paths/*.md")
@@ -143,6 +146,15 @@ def parse_frontmatter(text: str) -> dict[str, object]:
     return meta
 
 
+def reading_stats(text: str) -> dict[str, int]:
+    cjk = len(re.findall(r"[\u4e00-\u9fa5\u3040-\u30ff]", text))
+    prose = re.sub(r"```[\s\S]*?```", " ", text)
+    latin = len(re.findall(r"[a-zA-Z0-9_\-]+", prose))
+    code_lines = sum(block.count("\n") + 1 for block in re.findall(r"```[\s\S]*?```", text))
+    minutes = max(1, round(cjk / 320 + latin / 180 + code_lines / 35))
+    return {"minutes": minutes, "wordCount": cjk + latin}
+
+
 def extract_lab_path(text: str) -> str:
     m = re.search(r"^lab:\n\s+path:\s*(\S+)", text, re.M)
     return m.group(1).strip("'\"") if m else ""
@@ -189,6 +201,7 @@ def build_manifest(pairs):
         chapter = scalar_value(meta, "chapter")
         if chapter:
             entry["chapter"] = chapter
+        entry["stats"] = reading_stats(lesson_text)
         lessons.append(entry)
     lessons.sort(key=lambda e: e["number"])
 
@@ -199,10 +212,11 @@ def build_manifest(pairs):
         if rel_s in lesson_paths or not rel_s.endswith(".md"):
             continue
         if not (rel_s.startswith(("patterns/", "booklets/", "guidelines/", "frameworks/",
-                                  "references/reading-paths/", "docs/", "weekly/"))
+                                  "references/reading-paths/", "docs/", "weekly/",
+                                  "utils/", "references/system-design-notes/"))
                 or rel_s in ("PPT/设计模式大纲.md",) or rel_s.startswith("slides/")):
             continue
-        if "maint/" in rel_s or "archive/" in rel_s:
+        if "maint/" in rel_s or "archive/" in rel_s or rel_s == "progress.md":
             continue
         text = (ROOT / rel).read_text(encoding="utf-8", errors="replace")
         meta = parse_frontmatter(text)
@@ -237,6 +251,8 @@ def build_manifest(pairs):
         if rel_s.startswith("assets/"):
             content_rel = rel_s[len("assets/"):]
             assets["byPath"][content_rel] = f"content/assets/{content_rel}"
+        elif src.suffix in IMAGE_EXTS | {".pdf"} and rel_s.startswith("references/system-design-notes/"):
+            assets["byPath"][rel_s] = f"content/{rel_s}"
 
     digest = hashlib.sha256()
     for src, rel in sorted(pairs, key=lambda item: str(item[1])):
@@ -254,6 +270,24 @@ def build_manifest(pairs):
                    "lessons": ["content/slides/lesson-01.md", "content/slides/lesson-02.md", "content/slides/lesson-03.md"]},
         "assets": assets,
     }, lessons, topics
+
+
+def search_rank(rel: str) -> tuple[int, str]:
+    # 复刻旧 Web bundle 的 glob 插入顺序：代码区（examples→frameworks→patterns→references），
+    # 再跟 md 区（daily→weekly→guidelines→patterns→frameworks→references→docs→utils…），新增源共尾部。
+    code_ranks = {"examples/": 0, "frameworks/": 1, "patterns/": 2, "references/": 3}
+    md_ranks = {"daily/": 100, "weekly/": 101, "guidelines/": 102, "patterns/": 103,
+                "frameworks/": 104, "references/": 105, "docs/": 106, "booklets/": 108,
+                "utils/": 109, "slides/": 110, "PPT/": 110}
+    if rel.endswith((".cpp", ".c", ".h", ".hpp", ".cmm", ".cc", ".cxx", ".ipp")):
+        for prefix, rank in code_ranks.items():
+            if rel.startswith(prefix):
+                return (rank, rel)
+        return (112, rel)
+    for prefix, rank in md_ranks.items():
+        if rel.startswith(prefix):
+            return (rank, rel)
+    return (110, rel)
 
 
 def build_search_index(pairs, topics, lessons):
@@ -274,7 +308,7 @@ def build_search_index(pairs, topics, lessons):
             "content": text,
             "lines": text.count("\n") + (1 if text and not text.endswith("\n") else 0),
         })
-    files.sort(key=lambda f: f["path"])
+    files.sort(key=lambda f: search_rank(f["path"]))
     return {"files": files}
 
 

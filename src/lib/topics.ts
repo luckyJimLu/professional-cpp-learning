@@ -1,30 +1,17 @@
 import { resolveContentPath } from "./contentAssets";
-export { referenceBooks } from "./contentAssets";
-const sources = import.meta.glob(
-  [
-    "../../patterns/**/*.md",
-    "../../references/reading-paths/*.md",
-    "../../frameworks/**/*.md",
-    "../../docs/mermaid.md",
-    "../../docs/content-map.md",
-    "../../docs/beginner-start.md",
-    "../../docs/beginner-course-map.md",
-    "../../docs/lab-environments.md",
-    "../../docs/engineering-learning-path.md",
-    "../../docs/chapter-06-review.md",
-    "../../docs/reference-reading-guide.md",
-    "../../docs/cpp-implementation-deep-dive.md",
-    "../../docs/memory-visualizer-guide.md",
-    "../../docs/rtos-simulator/LEARNING-GUIDE.md",
-    "../../docs/learning-plan.md",
-    "../../docs/harmonyos-mini-cpp11-compatibility.md",
-    "../../docs/zephyr-cpp20-zpp.md",
-    "../../guidelines/*.md",
-    "../../utils/**/*.md",
-    "../../references/system-design-notes/content/**/*.md",
-  ],
-  { query: "?raw", import: "default", eager: true },
-) as Record<string, string>;
+import { contentUrl, fetchContentText, loadContentManifest } from "./contentRuntime";
+import type { ContentTopic } from "@/types/contentManifest";
+
+export interface Topic {
+  path: string;
+  title: string;
+  id?: string;
+  locale: string;
+  group: string;
+  summary?: string;
+  body: string;
+  raw: string;
+}
 
 export function topicGroup(path: string) {
   if (path.includes("references/reading-paths/")) return "参考书导读";
@@ -35,21 +22,50 @@ export function topicGroup(path: string) {
   if (/patterns|Cpp System/.test(path)) return "设计模式";
   return "框架与阅读指南";
 }
-export const topics = Object.entries(sources)
-  .map(([path, raw]) => {
-    const body = raw.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "");
-    return {
-      path: path.replace(/^\.\.\/\.\.\//, ""),
-      title: body.match(/^#\s+(.+)$/m)?.[1] ?? path.split("/").pop()!,
-      id: raw.match(/^id:\s*(.+)$/m)?.[1]?.trim(),
-      locale: /\.en\.md$/.test(path) ? "en" : "zh",
-      group: topicGroup(path),
-      summary: raw.match(/^summary:\s*["']?(.+?)["']?\s*$/m)?.[1],
-      body,
-      raw,
-    };
-  })
-  .sort((a, b) => a.path.localeCompare(b.path, "zh-CN", { numeric: true }));
+
+export const topics: Topic[] = [];
+
+const FRONTMATTER_RE = /^---\r?\n[\s\S]*?\r?\n---\r?\n/;
+
+let hydrating: Promise<void> | null = null;
+let rawInflight = new Map<string, Promise<string>>();
+
+export function hydrateTopics(): Promise<void> {
+  if (!hydrating) hydrating = (async () => {
+    const manifest = await loadContentManifest();
+    for (const entry of manifest.topics) {
+      topics.push({
+        path: entry.path,
+        title: entry.title || entry.path.split("/").pop()!,
+        id: (entry as ContentTopic & { id?: string }).id,
+        locale: entry.locale,
+        group: topicGroup(entry.path),
+        summary: entry.summary || undefined,
+        body: "",
+        raw: "",
+      });
+    }
+    topics.sort((a, b) => a.path.localeCompare(b.path, "zh-CN", { numeric: true }));
+  })();
+  return hydrating;
+}
+
+export async function fetchTopicText(topic: Topic): Promise<string> {
+  if (topic.raw) return topic.body;
+  let pending = rawInflight.get(topic.path);
+  if (!pending) {
+    pending = fetchContentText(topic.path);
+    rawInflight.set(topic.path, pending);
+  }
+  try {
+    const raw = await pending;
+    topic.raw = raw;
+    topic.body = raw.replace(FRONTMATTER_RE, "");
+  } finally {
+    rawInflight.delete(topic.path);
+  }
+  return topic.body;
+}
 
 export function resolveTopicLink(currentPath: string, href: string) {
   if (href.startsWith("#/chapter/")) {
@@ -64,8 +80,6 @@ export function resolveTopicLink(currentPath: string, href: string) {
       topic.path === `${path?.replace(/\/$/, "")}/README.md`,
   );
 }
-
-export type Topic = (typeof topics)[number];
 
 export function topicSeries(topic: Topic) {
   const path = topic.path;
@@ -117,7 +131,25 @@ export function seriesTopics(topic: Topic) {
     );
 }
 
-export const referenceGuides = topics.filter(
-  (topic) =>
-    topic.path.startsWith("references/reading-paths/") && topic.locale === "zh",
-);
+export function referenceGuides() {
+  return topics.filter(
+    (topic) =>
+      topic.path.startsWith("references/reading-paths/") &&
+      topic.locale === "zh",
+  );
+}
+
+let referenceBooksCache: Array<{ path: string; url: string }> = [];
+
+export function referenceBooks(): Array<{ path: string; url: string }> {
+  return referenceBooksCache;
+}
+
+export function hydrateReferenceBooks(): Promise<void> {
+  return hydrateTopics().then(async () => {
+    const manifest = await loadContentManifest();
+    referenceBooksCache = Object.entries(manifest.assets.byPath)
+      .filter(([key]) => key.endsWith(".pdf"))
+      .map(([path, value]) => ({ path, url: contentUrl(value) }));
+  });
+}

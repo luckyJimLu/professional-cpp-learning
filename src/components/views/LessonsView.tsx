@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  learningPlan,
+  loadLearningPlan,
   lessonByDay,
   lessons,
   roadmapByWeek,
@@ -45,6 +45,10 @@ export function LessonsView({
   const activeTab = params.get("courseTab") === "all" ? "all" : "roadmap";
   const target = lessonByDay(currentDay ?? 1) ?? lessons.at(-1);
   const weeks = roadmapByWeek();
+  const [learningPlan, setLearningPlan] = useState<string>("");
+  useEffect(() => {
+    loadLearningPlan().then(setLearningPlan).catch(() => setLearningPlan(""));
+  }, []);
   useEffect(() => setDraft(query), [query]);
   const setQuery = (value: string) =>
     navigate({ courseQuery: value || undefined }, true);

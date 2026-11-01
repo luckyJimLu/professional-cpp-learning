@@ -60,7 +60,7 @@ test("beginner guide, prerequisite navigation, and answer disclosure work on a p
     .locator("#section-lab")
     .getByRole("link", { name: "examples/day-064/main.cpp", exact: true });
   const sourceHref = await source.getAttribute("href");
-  expect(sourceHref).toMatch(/\/assets\/main-.*\.cpp$/);
+  expect(sourceHref).toMatch(/\/content\/examples\/day-\d+\/main\.cpp$/);
   const response = await page.request.get(sourceHref!);
   expect(response.ok()).toBe(true);
   expect(await response.text()).toContain("std::construct_at");

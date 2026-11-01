@@ -11,7 +11,7 @@ for (const width of [320, 390, 800, 1440]) {
     const preview = page.getByRole("region", { name: "代码预览" });
     await expect(preview.getByRole("heading", { level: 2 })).toBeFocused();
     await expect(preview.locator(".source-path")).toContainText(
-      "daily/day-031-",
+      "examples/day-056/",
     );
     await expect(preview.locator(".source-viewer-kind")).toContainText(/L\d+/);
     for (const button of await preview.getByRole("button").all()) {

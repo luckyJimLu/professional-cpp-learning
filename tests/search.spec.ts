@@ -82,6 +82,7 @@ test("migrated bilingual documents and images work on a narrow viewport", async 
 
 test("keyboard search shortcut and pagination", async ({ page }) => {
   await page.goto("/");
+  await page.waitForSelector("header"); // 等待内容导水完成后应用挂载
   await page.keyboard.press("Control+k");
   await expect(page.getByRole("searchbox")).toBeFocused();
   await page.getByRole("searchbox").fill("std::");

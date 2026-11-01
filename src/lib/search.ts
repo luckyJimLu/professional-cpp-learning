@@ -1,19 +1,6 @@
 import { lessonByDay } from "./course";
-const sourceFiles = import.meta.glob(
-  [
-    "../../examples/**/*.{cpp,h,hpp,cc,cxx,ipp}",
-    "../../frameworks/**/*.{cpp,h,hpp,cc,cxx,ipp}",
-    "../../patterns/**/*.{cpp,h,hpp,cc,cxx,ipp}",
-    "../../references/**/*.{cpp,h,hpp,cc,cxx,ipp}",
-    "../../daily/**/*.md",
-    "../../weekly/**/*.md",
-    "../../guidelines/**/*.md",
-    "../../patterns/**/*.md",
-    "../../frameworks/**/*.md",
-    "../../references/**/*.md",
-  ],
-  { query: "?raw", import: "default", eager: true },
-) as Record<string, string>;
+import { loadSearchIndex } from "./contentRuntime";
+import type { SearchIndexFile } from "@/types/contentManifest";
 
 export type CodeCategory = "all" | "daily" | "topics" | "examples" | "patterns";
 
@@ -40,10 +27,23 @@ function resolveCategory(
   return "topics";
 }
 
-export const codeEntries: CodeEntry[] = Object.entries(
-  sourceFiles,
-).flatMap<CodeEntry>(([sourcePath, raw]) => {
-  const path = sourcePath.slice(6);
+export const codeEntries: CodeEntry[] = [];
+
+let hydrating: Promise<void> | null = null;
+
+export function hydrateSearch(): Promise<void> {
+  hydrating ??= (async () => {
+    const index = await loadSearchIndex();
+    for (const file of index.files) {
+      codeEntries.push(...codeEntriesFromFile(file));
+    }
+  })();
+  return hydrating;
+}
+
+function codeEntriesFromFile(file: SearchIndexFile): CodeEntry[] {
+  const path = file.path;
+  const raw = file.content;
   const category = resolveCategory(path);
   const day = /day-(\d+)/.exec(path)?.[1];
   const heading = raw.match(/^#\s+(.+)$/m)?.[1];
@@ -69,7 +69,7 @@ export const codeEntries: CodeEntry[] = Object.entries(
 
   return [
     ...raw.matchAll(
-      /^(\x60{3,}|~{3,})(?:cpp|c\+\+|cxx|cc|c|hpp|h)(?:[ \t][^\n]*)?\r?\n([\s\S]*?)^\1\s*$/gm,
+      /^(`{3,}|~{3,})(?:cpp|c\+\+|cxx|cc|c|hpp|h)(?:[ \t][^\n]*)?\r?\n([\s\S]*?)^\1\s*$/gm,
     ),
   ].map((match) => {
     const line = raw
@@ -86,7 +86,7 @@ export const codeEntries: CodeEntry[] = Object.entries(
       lines: match[2].replace(/\n$/, "").split("\n"),
     };
   });
-});
+}
 
 export type SearchResult = { entry: CodeEntry; lineIndex: number };
 

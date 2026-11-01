@@ -1,17 +1,4 @@
-const assets = import.meta.glob(
-  [
-    "../../references/**/*.{svg,png,jpg,jpeg,gif,webp,pdf,cpp,hpp,py,sh,puml}",
-    "../../frameworks/trace32/**/*.{cmm,cpp}",
-    "../../examples/**/*.{cpp,h,hpp}",
-  ],
-  { query: "?url&no-inline", import: "default", eager: true },
-) as Record<string, string>;
-const assetUrls = Object.fromEntries(
-  Object.entries(assets).map(([path, url]) => [path.slice(6), url]),
-);
-export const referenceBooks = Object.entries(assetUrls).filter(([path]) =>
-  path.endsWith(".pdf"),
-);
+import { contentUrl } from "./contentRuntime";
 export function resolveContentPath(currentPath: string, href: string) {
   try {
     const url = new URL(href, `https://learning.local/${currentPath}`);
@@ -27,5 +14,7 @@ export function resolveAsset(currentPath: string, href: string) {
   const path = href.startsWith(localGithub)
     ? `references/system-design-notes/${decodeURIComponent(href.slice(localGithub.length))}`
     : resolveContentPath(currentPath, href);
-  return path ? assetUrls[path] : undefined;
+  if (!path) return undefined;
+  // 内容位于 dist/content 镜像布局（md 中已修复的 assets/ 相对链接与基线原路径一致）。
+  return contentUrl(`content/${path}`);
 }
