@@ -2,6 +2,10 @@ export interface ContentLesson {
   path: string;
   number: number;
   title: string;
+  week: string;
+  part: string;
+  chapter?: string;
+  chapterTitle: string;
   status: string;
   duration: string;
   topics: string[];
@@ -9,7 +13,7 @@ export interface ContentLesson {
   lab: string;
   previous: string;
   next: string;
-  chapter?: string;
+  rtosScenario?: string;
 }
 
 export interface ContentTopic {

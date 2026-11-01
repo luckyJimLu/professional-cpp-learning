@@ -194,49 +194,8 @@ function extractChecklist(section?: LessonSection): string[] {
     .slice(-6);
 }
 
-function readFrontmatter(raw: string): { meta: Record<string, string | number | boolean | string[]>; body: string } {
-  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
-  if (!match) return { meta: {}, body: raw };
-
-  const meta: Record<string, string | number | boolean | string[]> = {};
-  let listKey: string | undefined;
-
-  for (const line of match[1].split(/\r?\n/)) {
-    const top = line.match(/^([A-Za-z_][\w-]*):\s*(.*)$/);
-    if (top) {
-      const [, key, value] = top;
-      listKey = undefined;
-      if (value.trim() === "") {
-        meta[key] = [];
-        listKey = key;
-      } else {
-        const clean = value.trim().replace(/^["']|["']$/g, "");
-        if (/^-?\d+(\.\d+)?$/.test(clean)) meta[key] = Number(clean);
-        else if (clean === "true") meta[key] = true;
-        else if (clean === "false") meta[key] = false;
-        else meta[key] = clean;
-      }
-      continue;
-    }
-
-    const item = line.match(/^\s+-\s+(.+)$/);
-    if (item && listKey && Array.isArray(meta[listKey])) {
-      (meta[listKey] as string[]).push(item[1].trim().replace(/^["']|["']$/g, ""));
-    }
-  }
-
-  return { meta, body: raw.slice(match[0].length) };
-}
-
-function parseScalar(value: string): string | number | boolean | string[] {
-  const array = value.trim().match(/^\[(.*)\]$/);
-  if (array) return array[1].split(",").map((item) => item.trim().replace(/^["']|["']$/g, "")).filter(Boolean);
-  const clean = value.trim().replace(/^["']|["']$/g, "");
-
-  return clean;
-}
-
 export const lessons: Lesson[] = [];
+
 
 let repoCompletedDayValue = 0;
 
@@ -271,15 +230,11 @@ export function hydrateCourses(): Promise<void> {
     }
     for (const [entry, raw] of raws) {
       const day = entry.number;
-      const { meta, body } = readFrontmatter(raw);
-      const chapter = Number(meta.chapter || chapterFromBody(body)) || undefined;
-      const nestedLabPath =
-        raw.match(/^lab:\s*$[\s\S]*?^\s+path:\s*(.+)$/m)?.[1]?.trim() ??
-        (typeof meta.lab === "string" && meta.lab.endsWith(".cpp")
-          ? meta.lab.replace(/^\.\//, "")
-          : undefined);
-      const labMode = meta.lab === "rtos-sim" ? ("rtos-sim" as const) : undefined;
-      const rtosScenario = typeof meta.rtos_scenario === "string" ? meta.rtos_scenario : undefined;
+      const body = raw.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
+      const chapter = Number(entry.chapter || chapterFromBody(body)) || undefined;
+      const lab = typeof entry.lab === "string" ? entry.lab : "";
+      const labPath = lab && lab !== "rtos-sim" ? lab : undefined;
+      const labMode = lab === "rtos-sim" ? ("rtos-sim" as const) : undefined;
       const sections = splitSections(body);
       const labSection = sections.find((section) => section.step === "lab");
       const nextSection = sections.find((section) => /下一步|next/i.test(section.title));
@@ -289,18 +244,18 @@ export function hydrateCourses(): Promise<void> {
         : extractCode(labSection);
       lessons.push({
         day,
-        week: Number(meta.week) || Math.ceil(day / 7),
-        part: String(meta.part ?? chapterToPart(chapter) ?? "").replace(/^Part\s+/i, "") || undefined,
+        week: Number(entry.week) || Math.ceil(day / 7),
+        part: String(entry.part || chapterToPart(chapter) || "").replace(/^Part\s+/i, "") || undefined,
         chapter,
-        chapterTitle: typeof meta.chapter_title === "string" ? meta.chapter_title : undefined,
+        chapterTitle: typeof entry.chapterTitle === "string" ? entry.chapterTitle : undefined,
         title: entry.title || cleanChineseTitle(body, day),
-        duration: Number(meta.duration) || 60,
+        duration: Number(entry.duration) || 60,
         status: entry.status || "published",
-        topics: Array.isArray(meta.topics) ? (meta.topics as string[]) : entry.topics,
-        guidelines: Array.isArray(meta.guidelines) ? (meta.guidelines as string[]) : entry.guidelines,
-        labPath: nestedLabPath,
+        topics: entry.topics ?? [],
+        guidelines: entry.guidelines ?? [],
+        labPath,
         labMode,
-        rtosScenario,
+        rtosScenario: typeof entry.rtosScenario === "string" ? entry.rtosScenario : undefined,
         path: entry.path,
         raw: body,
         sections,
