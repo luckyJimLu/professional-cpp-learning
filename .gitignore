@@ -9,6 +9,7 @@ build/
 *.pdf
 
 public/clang/
+public/content/
 playwright-report/
 test-results/
 
