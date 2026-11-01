@@ -1,29 +1,3 @@
----
-day: 40
-week: 6
-part: II
-chapter: 5
-chapter_title: Designing with Classes
-title: "Mixin 类"
-duration: 60
-status: published
-date: 2026-10-06
-topics:
-  - mixin-classes
-  - behavior-composition
-  - templates
-  - inheritance
-  - embedded-design
-guidelines:
-  - keep-mixins-stateless-or-small
-  - make-mixin-requirements-explicit
-  - prefer-composition-when-runtime-substitution-is-needed
-lab:
-  path: examples/day-040/main.cpp
-previous: 39
-next: 41
----
-
 # Day 40 · Mixin 类
 
 <!-- cpp-standards:start -->

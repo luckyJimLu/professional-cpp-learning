@@ -1,29 +1,3 @@
----
-day: 31
-week: 5
-part: II
-chapter: 5
-chapter_title: Designing with Classes
-title: "对象所有权、生命周期与资源边界"
-duration: 60
-status: published
-
-topics:
-  - ownership
-  - lifetime
-  - raii
-  - resource-management
-
-guidelines:
-  - explicit-lifetime
-  - raii-ownership
-
-lab:
-  path: examples/day-031/main.cpp
-previous: 30
-next: 32
----
-
 # Day 31 · 对象所有权、生命周期与资源边界
 
 <!-- cpp-standards:start -->

@@ -1,30 +1,3 @@
----
-day: 7
-week: 1
-part: I
-chapter: 2
-chapter_title: Professional C++ Basics
-title: "第 1 周复盘：Modem 控制模块"
-duration: 60
-status: published
-
-topics:
-  - week-review
-  - modem-control
-  - initialization
-  - references
-  - pointers
-  - enum-class
-
-guidelines:
-  - review
-
-lab:
-  path: examples/day-007/main.cpp
-previous: 6
-next: 8
----
-
 # Day 07 · 第 1 周复盘：Modem 控制模块
 
 <!-- cpp-standards:start -->

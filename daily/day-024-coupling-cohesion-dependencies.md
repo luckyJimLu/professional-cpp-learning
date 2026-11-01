@@ -1,23 +1,3 @@
----
-day: 24
-week: 4
-part: II
-chapter: 4
-chapter_title: "Designing Professional C++ Programs"
-title: "耦合、内聚与依赖管理"
-duration: 60
-status: published
-topics:
-  - chapter-4
-  - coupling-cohesion-dependencies
-guidelines:
-  - explicit-contract
-  - boundary-validation
-lab:
-  path: examples/day-024/main.cpp
-previous: 23
-next: 25
----
 # Day 24 · 耦合、内聚与依赖管理
 
 <!-- cpp-standards:start -->

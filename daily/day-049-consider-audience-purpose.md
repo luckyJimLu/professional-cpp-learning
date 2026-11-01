@@ -1,33 +1,3 @@
----
-day: 49
-week: 7
-part: II
-chapter: 6
-chapter_title: Designing for Reuse
-title: Consider the Audience and Purpose
-duration: 60
-status: published
-date: 2026-10-15
-topics:
-  - usable-interfaces
-  - audience
-  - purpose
-  - interface-segregation
-  - stable-boundaries
-patterns:
-  - adapter
-  - dependency-injection
-  - interface-segregation
-guidelines:
-  - design-for-the-caller
-  - expose-intent-not-platform-details
-  - required-borrow-by-reference
-lab:
-  path: examples/day-049/main.cpp
-previous: 48
-next: 50
----
-
 # Day 49 · Consider the Audience and Purpose
 
 <!-- cpp-standards:start -->

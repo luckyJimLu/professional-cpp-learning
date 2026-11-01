@@ -1,23 +1,3 @@
----
-day: 42
-week: 6
-part: II
-chapter: 6
-chapter_title: Designing for Reuse
-title: "用抽象支撑复用"
-status: published
-date: 2026-10-08
-duration: 60
-lab:
-  path: examples/day-042/main.cpp
-previous: 41
-next: 43
-topics:
-  - use-abstraction-for-reuse
-guidelines:
-  - explicit-contract
----
-
 # Day 42 · 用抽象支撑复用
 
 <!-- cpp-standards:start -->

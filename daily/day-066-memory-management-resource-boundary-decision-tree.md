@@ -1,22 +1,3 @@
----
-day: 66
-week: 10
-part: III
-chapter: 7
-chapter_title: Memory Management
-title: Memory Management Resource Boundary Decision Tree
-duration: 60
-status: published
-date: 2026-10-31
-topics: [ownership, raii, smart-pointers, pmr, object-lifetime, bounded-allocation]
-patterns: [dependency-injection, object-pool, strategy]
-guidelines: [value-semantics-first, explicit-ownership, bounded-real-time-path]
-lab:
-  path: examples/day-066/main.cpp
-previous: 65
-next: 67
----
-
 # Day 66 · Memory Management 收束：资源边界决策树
 
 > **主教材主线**：Chapter 7 · Memory Management。今天不跳章，而是把本章已经学习的 ownership、RAII、smart pointer、PMR、object lifetime 与 bounded allocation 收束成工程决策流程；设计模式仍是辅线。

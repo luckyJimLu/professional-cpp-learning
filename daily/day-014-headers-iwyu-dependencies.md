@@ -1,23 +1,3 @@
----
-day: 14
-week: 2
-part: I
-chapter: 3
-chapter_title: "Coding with Style"
-title: "头文件、自包含与依赖边界"
-duration: 60
-status: published
-topics:
-  - chapter-3
-  - headers-iwyu-dependencies
-guidelines:
-  - explicit-contract
-  - boundary-validation
-lab:
-  path: examples/day-014/main.cpp
-previous: 13
-next: 15
----
 # Day 14 · 头文件、自包含与依赖边界
 
 <!-- cpp-standards:start -->

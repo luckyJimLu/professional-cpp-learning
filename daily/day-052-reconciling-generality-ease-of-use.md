@@ -1,22 +1,3 @@
----
-day: 52
-week: 8
-part: II
-chapter: 6
-chapter_title: Designing for Reuse
-title: Reconciling Generality and Ease of Use
-duration: 60
-status: published
-date: 2026-10-17
-topics: [generality, ease-of-use, layered-api, common-case, expert-interface]
-patterns: [facade, adapter, dependency-injection]
-guidelines: [safe-defaults, layered-interface, bounded-options]
-lab:
-  path: examples/day-052/main.cpp
-previous: 51
-next: 53
----
-
 # Day 52 · Reconciling Generality and Ease of Use
 
 <!-- cpp-standards:start -->

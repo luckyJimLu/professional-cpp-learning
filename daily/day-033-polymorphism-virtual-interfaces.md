@@ -1,32 +1,3 @@
----
-day: 33
-week: 5
-part: II
-chapter: 5
-chapter_title: Designing with Classes
-title: "多态与虚接口"
-duration: 60
-status: published
-
-topics:
-  - polymorphism
-  - virtual-functions
-  - interface-design
-  - embedded-cost
-
-guidelines:
-  - small-interface
-  - virtual-destructor
-  - explicit-lifetime
-  - avoid-realtime-allocation
-
-lab:
-  path: examples/day-033/main.cpp
-
-previous: 32
-next: 34
----
-
 # Day 33 · 多态与虚接口
 
 <!-- cpp-standards:start -->

@@ -1,22 +1,3 @@
----
-day: 62
-week: 9
-part: III
-chapter: 7
-chapter_title: Memory Management
-title: Smart Pointer Aliasing, Casts and Ownership API Boundaries
-duration: 60
-status: published
-date: 2026-10-27
-topics: [shared-ptr-aliasing, pointer-casts, ownership-api, resource-boundary]
-patterns: [adapter, dependency-injection]
-guidelines: [explicit-ownership, small-interface, avoid-cast-driven-design]
-lab:
-  path: examples/day-062/main.cpp
-previous: 61
-next: 63
----
-
 # Day 62 · Smart Pointer Aliasing / Cast / Ownership API：不要让 Pointer 技巧掩盖边界
 
 <!-- cpp-standards:start -->

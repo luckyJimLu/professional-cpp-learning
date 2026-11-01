@@ -1,30 +1,3 @@
----
-day: 35
-week: 5
-part: II
-chapter: 5
-chapter_title: Designing with Classes
-title: "对象切片、动态类型与生命周期边界"
-duration: 60
-status: published
-date: 2026-09-28
-topics:
-  - object-slicing
-  - dynamic-type
-  - base-reference
-  - base-pointer
-  - polymorphic-lifetime
-guidelines:
-  - avoid-slicing
-  - explicit-lifetime
-  - single-owner
-  - small-interface
-lab:
-  path: examples/day-035/main.cpp
-previous: 34
-next: 36
----
-
 # Day 35 · 对象切片、动态类型与生命周期边界
 
 <!-- cpp-standards:start -->

@@ -1,29 +1,3 @@
----
-day: 46
-week: 7
-part: II
-chapter: 6
-chapter_title: Designing for Reuse
-title: Provide Appropriate Checks and Safeguards
-duration: 60
-status: published
-date: 2026-10-12
-topics:
-  - preconditions
-  - validation
-  - invariants
-  - defensive-interfaces
-  - bounded-operations
-guidelines:
-  - validate-external-input
-  - recoverable-errors-not-assert
-  - explicit-bounds-and-timeouts
-lab:
-  path: examples/day-046/main.cpp
-previous: 45
-next: 47
----
-
 # Day 46 · Provide Appropriate Checks and Safeguards
 
 <!-- cpp-standards:start -->

@@ -1,29 +1,3 @@
----
-day: 45
-week: 7
-part: II
-chapter: 6
-chapter_title: Designing for Reuse
-title: Use Templates for Generic Data Structures and Algorithms
-duration: 60
-status: published
-date: 2026-10-11
-topics:
-  - templates
-  - generic-programming
-  - reusable-algorithms
-  - static-polymorphism
-  - bounded-containers
-guidelines:
-  - explicit-template-contracts
-  - bounded-storage
-  - avoid-unnecessary-instantiations
-lab:
-  path: examples/day-045/main.cpp
-previous: 44
-next: 46
----
-
 # Day 45 · Use Templates for Generic Data Structures and Algorithms
 
 <!-- cpp-standards:start -->

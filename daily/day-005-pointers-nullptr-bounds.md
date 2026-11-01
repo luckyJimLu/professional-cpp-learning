@@ -1,21 +1,3 @@
----
-day: 5
-week: 1
-part: I
-chapter: 1
-chapter_title: "A Crash Course in C++ and the Standard Library"
-title: "指针、nullptr 与数组边界"
-duration: 60
-status: published
-topics:
-  - pointers-nullptr-bounds
-guidelines:
-  - explicit-contract
-lab:
-  path: examples/day-005/main.cpp
-previous: 4
-next: 6
----
 # Day 05 · 指针、nullptr 与数组边界
 
 <!-- cpp-standards:start -->

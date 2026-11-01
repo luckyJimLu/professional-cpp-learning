@@ -1,21 +1,3 @@
----
-day: 26
-week: 4
-part: II
-chapter: 4
-chapter_title: "Designing Professional C++ Programs"
-title: "设计取舍、变化管理与稳定边界"
-duration: 60
-status: published
-topics:
-  - tradeoffs-change-stable-boundaries
-guidelines:
-  - explicit-contract
-lab:
-  path: examples/day-026/main.cpp
-previous: 25
-next: 27
----
 # Day 26 · 设计取舍、变化管理与稳定边界
 
 <!-- cpp-standards:start -->

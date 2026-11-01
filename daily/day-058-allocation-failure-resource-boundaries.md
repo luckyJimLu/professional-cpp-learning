@@ -1,22 +1,3 @@
----
-day: 58
-week: 9
-part: III
-chapter: 7
-chapter_title: Memory Management
-title: Allocation Failure · Arrays and Resource Boundaries
-duration: 60
-status: published
-date: 2026-10-23
-topics: [allocation-failure, nothrow-new, arrays, resource-boundaries, error-model]
-patterns: [raii, dependency-injection]
-guidelines: [bounded-allocation, explicit-errors, required-borrow]
-lab:
-  path: examples/day-058/main.cpp
-previous: 57
-next: 59
----
-
 # Day 58 · Allocation Failure：Arrays and Resource Boundaries
 
 <!-- cpp-standards:start -->

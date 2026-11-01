@@ -1,33 +1,3 @@
----
-day: 50
-week: 8
-part: II
-chapter: 6
-chapter_title: Designing for Reuse
-title: Design Interfaces That Are Easy to Use
-duration: 60
-status: published
-date: 2026-10-15
-topics:
-  - easy-to-use-interfaces
-  - familiar-conventions
-  - raii
-  - uncluttered-interfaces
-  - facade
-patterns:
-  - facade
-  - adapter
-  - dependency-injection
-guidelines:
-  - follow-familiar-cpp-idioms
-  - make-common-path-obvious
-  - avoid-fat-interfaces
-lab:
-  path: examples/day-050/main.cpp
-previous: 49
-next: 51
----
-
 # Day 50 · Design Interfaces That Are Easy to Use
 
 <!-- cpp-standards:start -->

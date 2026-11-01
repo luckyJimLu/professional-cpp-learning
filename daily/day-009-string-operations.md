@@ -1,21 +1,3 @@
----
-day: 9
-week: 2
-part: I
-chapter: 2
-chapter_title: "Working with Strings and String Views"
-title: "std::string 的构造、修改、搜索与数值转换"
-duration: 60
-status: published
-topics:
-  - string-operations
-guidelines:
-  - explicit-contract
-lab:
-  path: examples/day-009/main.cpp
-previous: 8
-next: 10
----
 # Day 09 · std::string 的构造、修改、搜索与数值转换
 
 <!-- cpp-standards:start -->

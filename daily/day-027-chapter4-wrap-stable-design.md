@@ -1,23 +1,3 @@
----
-day: 27
-week: 4
-part: II
-chapter: 4
-chapter_title: "Designing Professional C++ Programs"
-title: "Chapter 4 收束：稳定设计与变更验证"
-duration: 60
-status: published
-topics:
-  - chapter-4
-  - chapter4-wrap-stable-design
-guidelines:
-  - explicit-contract
-  - boundary-validation
-lab:
-  path: examples/day-027/main.cpp
-previous: 26
-next: 28
----
 # Day 27 · Chapter 4 收束：稳定设计与变更验证
 
 <!-- cpp-standards:start -->

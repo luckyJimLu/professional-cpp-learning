@@ -1,21 +1,3 @@
----
-day: 20
-week: 3
-part: II
-chapter: 4
-chapter_title: "Designing Professional C++ Programs"
-title: "Chapter 4：需求、用例与设计决策"
-duration: 60
-status: published
-topics:
-  - requirements-use-cases-decisions
-guidelines:
-  - explicit-contract
-lab:
-  path: examples/day-020/main.cpp
-previous: 19
-next: 21
----
 # Day 20 · Chapter 4：需求、用例与设计决策
 
 <!-- cpp-standards:start -->

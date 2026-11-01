@@ -1,23 +1,3 @@
----
-day: 18
-week: 3
-part: I
-chapter: 3
-chapter_title: "Coding with Style"
-title: "函数边界与可维护控制流"
-duration: 60
-status: published
-topics:
-  - chapter-3
-  - function-boundaries-control-flow
-guidelines:
-  - explicit-contract
-  - boundary-validation
-lab:
-  path: examples/day-018/main.cpp
-previous: 17
-next: 19
----
 # Day 18 · 函数边界与可维护控制流
 
 <!-- cpp-standards:start -->

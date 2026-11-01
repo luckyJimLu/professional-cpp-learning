@@ -1,29 +1,3 @@
----
-day: 39
-week: 6
-part: II
-chapter: 5
-chapter_title: Designing with Classes
-title: "多重继承与多重契约"
-duration: 60
-status: published
-date: 2026-10-05
-topics:
-  - multiple-inheritance
-  - interface-contracts
-  - ambiguity
-  - composition
-  - embedded-design
-guidelines:
-  - multiple-inheritance-only-for-clear-contracts
-  - avoid-stateful-multiple-inheritance
-  - prefer-composition-for-implementation-reuse
-lab:
-  path: examples/day-039/main.cpp
-previous: 38
-next: 40
----
-
 # Day 39 · 多重继承与多重契约
 
 <!-- cpp-standards:start -->

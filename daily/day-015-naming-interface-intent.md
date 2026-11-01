@@ -1,23 +1,3 @@
----
-day: 15
-week: 3
-part: I
-chapter: 3
-chapter_title: "Coding with Style"
-title: "命名与接口意图"
-duration: 60
-status: published
-topics:
-  - chapter-3
-  - naming-interface-intent
-guidelines:
-  - explicit-contract
-  - boundary-validation
-lab:
-  path: examples/day-015/main.cpp
-previous: 14
-next: 16
----
 # Day 15 · 命名与接口意图
 
 <!-- cpp-standards:start -->

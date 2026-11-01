@@ -1,22 +1,3 @@
----
-day: 54
-week: 8
-part: II
-chapter: 6
-chapter_title: Designing for Reuse
-title: The SOLID Principles
-duration: 60
-status: published
-date: 2026-10-19
-topics: [solid, srp, ocp, lsp, isp, dip, stable-boundaries]
-patterns: [adapter, dependency-injection]
-guidelines: [small-interface, explicit-dependency, composition-first]
-lab:
-  path: examples/day-054/main.cpp
-previous: 53
-next: 55
----
-
 # Day 54 · The SOLID Principles
 
 <!-- cpp-standards:start -->

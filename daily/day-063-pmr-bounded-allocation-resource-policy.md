@@ -1,22 +1,3 @@
----
-day: 63
-week: 9
-part: III
-chapter: 7
-chapter_title: Memory Management
-title: PMR, Bounded Allocation and Memory-Resource Policy
-duration: 60
-status: published
-date: 2026-10-28
-topics: [pmr, memory-resource, bounded-allocation, monotonic-buffer-resource]
-patterns: [dependency-injection, strategy]
-guidelines: [bounded-allocation, explicit-resource-policy, no-unbounded-hot-path-allocation]
-lab:
-  path: examples/day-063/main.cpp
-previous: 62
-next: 64
----
-
 # Day 63 · PMR / Bounded Allocation：把“从哪里分配”变成显式资源策略
 
 <!-- cpp-standards:start -->

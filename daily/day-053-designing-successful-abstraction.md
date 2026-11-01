@@ -1,22 +1,3 @@
----
-day: 53
-week: 8
-part: II
-chapter: 6
-chapter_title: Designing for Reuse
-title: Designing a Successful Abstraction
-duration: 60
-status: published
-date: 2026-10-18
-topics: [abstraction, contract, invariants, implementation-hiding, resource-bounds]
-patterns: [adapter, dependency-injection]
-guidelines: [small-interface, explicit-contract, bounded-resource]
-lab:
-  path: examples/day-053/main.cpp
-previous: 52
-next: 54
----
-
 # Day 53 · Designing a Successful Abstraction
 
 <!-- cpp-standards:start -->

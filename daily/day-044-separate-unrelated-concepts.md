@@ -1,23 +1,3 @@
----
-day: 44
-week: 7
-part: II
-chapter: 6
-chapter_title: Designing for Reuse
-title: "避免合并不相关或逻辑独立的概念"
-status: published
-date: 2026-10-10
-duration: 60
-lab:
-  path: examples/day-044/main.cpp
-previous: 43
-next: 45
-topics:
-  - separate-unrelated-concepts
-guidelines:
-  - explicit-contract
----
-
 # Day 44 · 避免合并不相关或逻辑独立的概念
 
 <!-- cpp-standards:start -->

@@ -1,21 +1,3 @@
----
-day: 12
-week: 2
-part: I
-chapter: 2
-chapter_title: "Working with Strings and String Views"
-title: "原始字符串字面量、文本常量与安全命令模板"
-duration: 60
-status: published
-topics:
-  - raw-strings-command-templates
-guidelines:
-  - explicit-contract
-lab:
-  path: examples/day-012/main.cpp
-previous: 11
-next: 13
----
 # Day 12 · 原始字符串字面量、文本常量与安全命令模板
 
 <!-- cpp-standards:start -->

@@ -1,23 +1,3 @@
----
-day: 29
-week: 5
-part: II
-chapter: 5
-chapter_title: "Designing with Classes"
-title: "构造、初始化与有效状态"
-duration: 60
-status: published
-topics:
-  - chapter-5
-  - constructors-initialization-valid-state
-guidelines:
-  - explicit-contract
-  - boundary-validation
-lab:
-  path: examples/day-029/main.cpp
-previous: 28
-next: 30
----
 # Day 29 · 构造、初始化与有效状态
 
 <!-- cpp-standards:start -->

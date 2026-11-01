@@ -1,29 +1,3 @@
----
-day: 38
-week: 6
-part: II
-chapter: 5
-chapter_title: Designing with Classes
-title: "继承层级"
-duration: 60
-status: published
-date: 2026-10-01
-topics:
-  - hierarchies
-  - abstract-base-class
-  - shallow-hierarchy
-  - stable-contract
-  - composition
-guidelines:
-  - keep-hierarchies-shallow
-  - stable-base-contract
-  - prefer-composition-for-orthogonal-behavior
-lab:
-  path: examples/day-038/main.cpp
-previous: 37
-next: 39
----
-
 # Day 38 · 继承层级
 
 <!-- cpp-standards:start -->

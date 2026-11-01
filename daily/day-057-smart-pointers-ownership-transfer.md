@@ -1,22 +1,3 @@
----
-day: 57
-week: 9
-part: III
-chapter: 7
-chapter_title: Memory Management
-title: Smart Pointers · Ownership Transfer and Borrowing
-duration: 60
-status: published
-date: 2026-10-22
-topics: [smart-pointers, unique-ptr, ownership-transfer, borrowing, move-semantics]
-patterns: [raii, dependency-injection]
-guidelines: [single-owner, explicit-borrow, bounded-allocation]
-lab:
-  path: examples/day-057/main.cpp
-previous: 56
-next: 58
----
-
 # Day 57 · Smart Pointers：Ownership Transfer and Borrowing
 
 <!-- cpp-standards:start -->

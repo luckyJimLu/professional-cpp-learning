@@ -1,29 +1,3 @@
----
-day: 32
-week: 5
-part: II
-chapter: 5
-chapter_title: Designing with Classes
-title: "is-a、继承层级与 Mixin：何时该继承"
-duration: 60
-status: published
-
-topics:
-  - inheritance
-  - is-a
-  - mixins
-  - hierarchies
-
-guidelines:
-  - prefer-composition
-  - stable-interface
-
-lab:
-  path: examples/day-032/main.cpp
-previous: 31
-next: 33
----
-
 # Day 32 · is-a、继承层级与 Mixin：何时该继承
 
 <!-- cpp-standards:start -->

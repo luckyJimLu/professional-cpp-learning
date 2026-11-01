@@ -1,23 +1,3 @@
----
-day: 28
-week: 4
-part: II
-chapter: 5
-chapter_title: "Designing with Classes"
-title: "类的不变量与最小公共接口"
-duration: 60
-status: published
-topics:
-  - chapter-5
-  - class-invariants-minimal-interface
-guidelines:
-  - explicit-contract
-  - boundary-validation
-lab:
-  path: examples/day-028/main.cpp
-previous: 27
-next: 29
----
 # Day 28 · 类的不变量与最小公共接口
 
 <!-- cpp-standards:start -->

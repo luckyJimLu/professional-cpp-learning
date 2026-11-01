@@ -1,23 +1,3 @@
----
-day: 23
-week: 4
-part: II
-chapter: 4
-chapter_title: "Designing Professional C++ Programs"
-title: "复用：标准库、第三方库或自研"
-duration: 60
-status: published
-topics:
-  - chapter-4
-  - reuse-stdlib-third-party-own
-guidelines:
-  - explicit-contract
-  - boundary-validation
-lab:
-  path: examples/day-023/main.cpp
-previous: 22
-next: 24
----
 # Day 23 · 复用：标准库、第三方库或自研
 
 <!-- cpp-standards:start -->

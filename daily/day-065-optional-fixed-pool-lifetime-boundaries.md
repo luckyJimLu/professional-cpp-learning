@@ -1,22 +1,3 @@
----
-day: 65
-week: 10
-part: III
-chapter: 7
-chapter_title: Memory Management
-title: Optional Lifetime and Fixed-Pool Safety Boundaries
-duration: 60
-status: published
-date: 2026-10-30
-topics: [optional, object-lifetime, fixed-pool, stale-handle, bounded-memory]
-patterns: [object-pool, dependency-injection]
-guidelines: [value-semantics-first, explicit-lifetime, bounded-storage]
-lab:
-  path: examples/day-065/main.cpp
-previous: 64
-next: 66
----
-
 # Day 65 · Optional Lifetime / Fixed Pool：先用标准 RAII 表达“有或无”，再决定是否需要手写 Pool
 
 > **主教材主线**：Chapter 7 · Memory Management。承接 Day 64 的 storage/object lifetime 分离，今天收束显式对象复用：比较手工 placement lifetime、`std::optional<T>`、固定容量 pool 与长期存活 value object。设计模式仅作为工程辅线。

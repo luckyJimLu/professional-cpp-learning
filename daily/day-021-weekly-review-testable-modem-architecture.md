@@ -1,23 +1,3 @@
----
-day: 21
-week: 3
-part: II
-chapter: 4
-chapter_title: "Designing Professional C++ Programs"
-title: "周复盘：可测试 Modem 架构"
-duration: 60
-status: published
-topics:
-  - chapter-4
-  - weekly-review-testable-modem-architecture
-guidelines:
-  - explicit-contract
-  - boundary-validation
-lab:
-  path: examples/day-021/main.cpp
-previous: 20
-next: 22
----
 # Day 21 · 周复盘：可测试 Modem 架构
 
 <!-- cpp-standards:start -->

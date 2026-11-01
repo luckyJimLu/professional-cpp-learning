@@ -1,0 +1,1628 @@
+{
+  "$comment": "Daily lesson metadata. Rendered by scripts/build-content.py into content/manifest.json; the site never reads this file directly.",
+  "lessons": [
+    {
+      "path": "daily/day-001-from-c-to-modern-cpp.md",
+      "week": 1,
+      "part": "I",
+      "chapter": 1,
+      "chapter_title": "A Crash Course in C++ and the Standard Library",
+      "title": "从 C 进入现代 C++",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "chapter-1",
+        "from-c-to-modern-cpp"
+      ],
+      "guidelines": [
+        "explicit-contract",
+        "boundary-validation"
+      ],
+      "lab": "examples/day-001/main.cpp",
+      "previous": -1,
+      "next": 2
+    },
+    {
+      "path": "daily/day-002-variables-initialization-casts.md",
+      "week": 1,
+      "part": "I",
+      "chapter": 1,
+      "chapter_title": "A Crash Course in C++ and the Standard Library",
+      "title": "变量、统一初始化与安全类型转换",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "chapter-1",
+        "variables-initialization-casts"
+      ],
+      "guidelines": [
+        "explicit-contract",
+        "boundary-validation"
+      ],
+      "lab": "examples/day-002/main.cpp",
+      "previous": 1,
+      "next": 3
+    },
+    {
+      "path": "daily/day-003-const-constexpr.md",
+      "week": 1,
+      "part": "I",
+      "chapter": 1,
+      "chapter_title": "A Crash Course in C++ and the Standard Library",
+      "title": "const、constexpr 与编译期思维",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "const-constexpr"
+      ],
+      "guidelines": [
+        "explicit-contract"
+      ],
+      "lab": "examples/day-003/main.cpp",
+      "previous": 2,
+      "next": 4
+    },
+    {
+      "path": "daily/day-004-references-parameter-passing.md",
+      "week": 1,
+      "part": "I",
+      "chapter": 1,
+      "chapter_title": "A Crash Course in C++ and the Standard Library",
+      "title": "引用、const 引用与参数传递",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "references-parameter-passing"
+      ],
+      "guidelines": [
+        "explicit-contract"
+      ],
+      "lab": "examples/day-004/main.cpp",
+      "previous": 3,
+      "next": 5
+    },
+    {
+      "path": "daily/day-005-pointers-nullptr-bounds.md",
+      "week": 1,
+      "part": "I",
+      "chapter": 1,
+      "chapter_title": "A Crash Course in C++ and the Standard Library",
+      "title": "指针、nullptr 与数组边界",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "pointers-nullptr-bounds"
+      ],
+      "guidelines": [
+        "explicit-contract"
+      ],
+      "lab": "examples/day-005/main.cpp",
+      "previous": 4,
+      "next": 6
+    },
+    {
+      "path": "daily/day-006-enum-class-state-machine.md",
+      "week": 1,
+      "part": "I",
+      "chapter": 1,
+      "chapter_title": "A Crash Course in C++ and the Standard Library",
+      "title": "enum class、结构化绑定与类型安全状态机",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "enum-class-state-machine"
+      ],
+      "guidelines": [
+        "explicit-contract"
+      ],
+      "lab": "examples/day-006/main.cpp",
+      "previous": 5,
+      "next": 7
+    },
+    {
+      "path": "daily/day-007-week1-review-modem-control.md",
+      "week": 1,
+      "part": "I",
+      "chapter": 2,
+      "chapter_title": "Professional C++ Basics",
+      "title": "第 1 周复盘：Modem 控制模块",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "week-review",
+        "modem-control",
+        "initialization",
+        "references",
+        "pointers",
+        "enum-class"
+      ],
+      "guidelines": [
+        "review"
+      ],
+      "lab": "examples/day-007/main.cpp",
+      "previous": 6,
+      "next": 8
+    },
+    {
+      "path": "daily/day-008-string-string-view.md",
+      "week": 2,
+      "part": "I",
+      "chapter": 2,
+      "chapter_title": "Working with Strings and String Views",
+      "title": "std::string 与 std::string_view：所有权、借用与零拷贝文本接口",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "string-string-view"
+      ],
+      "guidelines": [
+        "explicit-contract"
+      ],
+      "lab": "examples/day-008/main.cpp",
+      "previous": 7,
+      "next": 9
+    },
+    {
+      "path": "daily/day-009-string-operations.md",
+      "week": 2,
+      "part": "I",
+      "chapter": 2,
+      "chapter_title": "Working with Strings and String Views",
+      "title": "std::string 的构造、修改、搜索与数值转换",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "string-operations"
+      ],
+      "guidelines": [
+        "explicit-contract"
+      ],
+      "lab": "examples/day-009/main.cpp",
+      "previous": 8,
+      "next": 10
+    },
+    {
+      "path": "daily/day-010-string-view-lifetime.md",
+      "week": 2,
+      "part": "I",
+      "chapter": 2,
+      "chapter_title": "Working with Strings and String Views",
+      "title": "string_view 深入：生命周期、子视图与安全解析",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "string-view-lifetime"
+      ],
+      "guidelines": [
+        "explicit-contract"
+      ],
+      "lab": "examples/day-010/main.cpp",
+      "previous": 9,
+      "next": 11
+    },
+    {
+      "path": "daily/day-011-formatting-encoding.md",
+      "week": 2,
+      "part": "I",
+      "chapter": 2,
+      "chapter_title": "Working with Strings and String Views",
+      "title": "字符串格式化、字符编码与嵌入式文本边界",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "formatting-encoding"
+      ],
+      "guidelines": [
+        "explicit-contract"
+      ],
+      "lab": "examples/day-011/main.cpp",
+      "previous": 10,
+      "next": 12
+    },
+    {
+      "path": "daily/day-012-raw-strings-command-templates.md",
+      "week": 2,
+      "part": "I",
+      "chapter": 2,
+      "chapter_title": "Working with Strings and String Views",
+      "title": "原始字符串字面量、文本常量与安全命令模板",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "raw-strings-command-templates"
+      ],
+      "guidelines": [
+        "explicit-contract"
+      ],
+      "lab": "examples/day-012/main.cpp",
+      "previous": 11,
+      "next": 13
+    },
+    {
+      "path": "daily/day-013-coding-with-style-foundations.md",
+      "week": 2,
+      "part": "I",
+      "chapter": 3,
+      "chapter_title": "Coding with Style",
+      "title": "可读性、命名与接口契约",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "readability",
+        "naming",
+        "interface-contracts"
+      ],
+      "guidelines": [
+        "small-interface",
+        "naming-intent"
+      ],
+      "lab": "examples/day-013/main.cpp",
+      "previous": 12,
+      "next": 14
+    },
+    {
+      "path": "daily/day-014-headers-iwyu-dependencies.md",
+      "week": 2,
+      "part": "I",
+      "chapter": 3,
+      "chapter_title": "Coding with Style",
+      "title": "头文件、自包含与依赖边界",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "chapter-3",
+        "headers-iwyu-dependencies"
+      ],
+      "guidelines": [
+        "explicit-contract",
+        "boundary-validation"
+      ],
+      "lab": "examples/day-014/main.cpp",
+      "previous": 13,
+      "next": 15
+    },
+    {
+      "path": "daily/day-015-naming-interface-intent.md",
+      "week": 3,
+      "part": "I",
+      "chapter": 3,
+      "chapter_title": "Coding with Style",
+      "title": "命名与接口意图",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "chapter-3",
+        "naming-interface-intent"
+      ],
+      "guidelines": [
+        "explicit-contract",
+        "boundary-validation"
+      ],
+      "lab": "examples/day-015/main.cpp",
+      "previous": 14,
+      "next": 16
+    },
+    {
+      "path": "daily/day-016-format-tidy-warnings.md",
+      "week": 3,
+      "part": "I",
+      "chapter": 3,
+      "chapter_title": "Coding with Style",
+      "title": "clang-format、clang-tidy 与编译告警",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "chapter-3",
+        "format-tidy-warnings"
+      ],
+      "guidelines": [
+        "explicit-contract",
+        "boundary-validation"
+      ],
+      "lab": "examples/day-016/main.cpp",
+      "previous": 15,
+      "next": 17
+    },
+    {
+      "path": "daily/day-017-errors-assert-control-flow.md",
+      "week": 3,
+      "part": "I",
+      "chapter": 3,
+      "chapter_title": "Coding with Style",
+      "title": "错误处理、断言与清晰的控制流",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "error-handling",
+        "assert",
+        "control-flow",
+        "early-return"
+      ],
+      "guidelines": [
+        "no-assert-for-recoverable-errors",
+        "early-return",
+        "strong-error-types",
+        "nodiscard-status"
+      ],
+      "lab": "examples/day-017/main.cpp",
+      "previous": 16,
+      "next": 18
+    },
+    {
+      "path": "daily/day-018-function-boundaries-control-flow.md",
+      "week": 3,
+      "part": "I",
+      "chapter": 3,
+      "chapter_title": "Coding with Style",
+      "title": "函数边界与可维护控制流",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "chapter-3",
+        "function-boundaries-control-flow"
+      ],
+      "guidelines": [
+        "explicit-contract",
+        "boundary-validation"
+      ],
+      "lab": "examples/day-018/main.cpp",
+      "previous": 17,
+      "next": 19
+    },
+    {
+      "path": "daily/day-019-requirements-architecture-boundaries.md",
+      "week": 3,
+      "part": "II",
+      "chapter": 4,
+      "chapter_title": "Designing Professional C++ Programs",
+      "title": "Designing Professional C++ Programs：从需求到架构边界",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "requirements-architecture-boundaries"
+      ],
+      "guidelines": [
+        "explicit-contract"
+      ],
+      "lab": "examples/day-019/main.cpp",
+      "previous": 18,
+      "next": 20
+    },
+    {
+      "path": "daily/day-020-requirements-use-cases-decisions.md",
+      "week": 3,
+      "part": "II",
+      "chapter": 4,
+      "chapter_title": "Designing Professional C++ Programs",
+      "title": "Chapter 4：需求、用例与设计决策",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "requirements-use-cases-decisions"
+      ],
+      "guidelines": [
+        "explicit-contract"
+      ],
+      "lab": "examples/day-020/main.cpp",
+      "previous": 19,
+      "next": 21
+    },
+    {
+      "path": "daily/day-021-weekly-review-testable-modem-architecture.md",
+      "week": 3,
+      "part": "II",
+      "chapter": 4,
+      "chapter_title": "Designing Professional C++ Programs",
+      "title": "周复盘：可测试 Modem 架构",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "chapter-4",
+        "weekly-review-testable-modem-architecture"
+      ],
+      "guidelines": [
+        "explicit-contract",
+        "boundary-validation"
+      ],
+      "lab": "examples/day-021/main.cpp",
+      "previous": 20,
+      "next": 22
+    },
+    {
+      "path": "daily/day-022-abstraction-stable-interface.md",
+      "week": 4,
+      "part": "II",
+      "chapter": 4,
+      "chapter_title": "Designing Professional C++ Programs",
+      "title": "抽象：稳定接口与隐藏实现",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "abstraction-stable-interface"
+      ],
+      "guidelines": [
+        "explicit-contract"
+      ],
+      "lab": "examples/day-022/main.cpp",
+      "previous": 21,
+      "next": 23
+    },
+    {
+      "path": "daily/day-023-reuse-stdlib-third-party-own.md",
+      "week": 4,
+      "part": "II",
+      "chapter": 4,
+      "chapter_title": "Designing Professional C++ Programs",
+      "title": "复用：标准库、第三方库或自研",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "chapter-4",
+        "reuse-stdlib-third-party-own"
+      ],
+      "guidelines": [
+        "explicit-contract",
+        "boundary-validation"
+      ],
+      "lab": "examples/day-023/main.cpp",
+      "previous": 22,
+      "next": 24
+    },
+    {
+      "path": "daily/day-024-coupling-cohesion-dependencies.md",
+      "week": 4,
+      "part": "II",
+      "chapter": 4,
+      "chapter_title": "Designing Professional C++ Programs",
+      "title": "耦合、内聚与依赖管理",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "chapter-4",
+        "coupling-cohesion-dependencies"
+      ],
+      "guidelines": [
+        "explicit-contract",
+        "boundary-validation"
+      ],
+      "lab": "examples/day-024/main.cpp",
+      "previous": 23,
+      "next": 25
+    },
+    {
+      "path": "daily/day-025-design-doc-contract-prototype.md",
+      "week": 4,
+      "part": "II",
+      "chapter": 4,
+      "chapter_title": "Designing Professional C++ Programs",
+      "title": "设计文档、接口契约与原型验证",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "design-doc-contract-prototype"
+      ],
+      "guidelines": [
+        "explicit-contract"
+      ],
+      "lab": "examples/day-025/main.cpp",
+      "previous": 24,
+      "next": 26
+    },
+    {
+      "path": "daily/day-026-tradeoffs-change-stable-boundaries.md",
+      "week": 4,
+      "part": "II",
+      "chapter": 4,
+      "chapter_title": "Designing Professional C++ Programs",
+      "title": "设计取舍、变化管理与稳定边界",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "tradeoffs-change-stable-boundaries"
+      ],
+      "guidelines": [
+        "explicit-contract"
+      ],
+      "lab": "examples/day-026/main.cpp",
+      "previous": 25,
+      "next": 27
+    },
+    {
+      "path": "daily/day-027-chapter4-wrap-stable-design.md",
+      "week": 4,
+      "part": "II",
+      "chapter": 4,
+      "chapter_title": "Designing Professional C++ Programs",
+      "title": "Chapter 4 收束：稳定设计与变更验证",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "chapter-4",
+        "chapter4-wrap-stable-design"
+      ],
+      "guidelines": [
+        "explicit-contract",
+        "boundary-validation"
+      ],
+      "lab": "examples/day-027/main.cpp",
+      "previous": 26,
+      "next": 28
+    },
+    {
+      "path": "daily/day-028-class-invariants-minimal-interface.md",
+      "week": 4,
+      "part": "II",
+      "chapter": 5,
+      "chapter_title": "Designing with Classes",
+      "title": "类的不变量与最小公共接口",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "chapter-5",
+        "class-invariants-minimal-interface"
+      ],
+      "guidelines": [
+        "explicit-contract",
+        "boundary-validation"
+      ],
+      "lab": "examples/day-028/main.cpp",
+      "previous": 27,
+      "next": 29
+    },
+    {
+      "path": "daily/day-029-constructors-initialization-valid-state.md",
+      "week": 5,
+      "part": "II",
+      "chapter": 5,
+      "chapter_title": "Designing with Classes",
+      "title": "构造、初始化与有效状态",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "chapter-5",
+        "constructors-initialization-valid-state"
+      ],
+      "guidelines": [
+        "explicit-contract",
+        "boundary-validation"
+      ],
+      "lab": "examples/day-029/main.cpp",
+      "previous": 28,
+      "next": 30
+    },
+    {
+      "path": "daily/day-030-composition-object-responsibilities.md",
+      "week": 5,
+      "part": "II",
+      "chapter": 5,
+      "chapter_title": "Designing with Classes",
+      "title": "Composition：用对象组合分配职责",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "composition-object-responsibilities"
+      ],
+      "guidelines": [
+        "explicit-contract"
+      ],
+      "lab": "examples/day-030/main.cpp",
+      "previous": 29,
+      "next": 31
+    },
+    {
+      "path": "daily/day-031-ownership-lifetime-resource-boundaries.md",
+      "week": 5,
+      "part": "II",
+      "chapter": 5,
+      "chapter_title": "Designing with Classes",
+      "title": "对象所有权、生命周期与资源边界",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "ownership",
+        "lifetime",
+        "raii",
+        "resource-management"
+      ],
+      "guidelines": [
+        "explicit-lifetime",
+        "raii-ownership"
+      ],
+      "lab": "examples/day-031/main.cpp",
+      "previous": 30,
+      "next": 32
+    },
+    {
+      "path": "daily/day-032-inheritance-is-a-hierarchies-mixins.md",
+      "week": 5,
+      "part": "II",
+      "chapter": 5,
+      "chapter_title": "Designing with Classes",
+      "title": "is-a、继承层级与 Mixin：何时该继承",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "inheritance",
+        "is-a",
+        "mixins",
+        "hierarchies"
+      ],
+      "guidelines": [
+        "prefer-composition",
+        "stable-interface"
+      ],
+      "lab": "examples/day-032/main.cpp",
+      "previous": 31,
+      "next": 33
+    },
+    {
+      "path": "daily/day-033-polymorphism-virtual-interfaces.md",
+      "week": 5,
+      "part": "II",
+      "chapter": 5,
+      "chapter_title": "Designing with Classes",
+      "title": "多态与虚接口",
+      "duration": 60,
+      "status": "published",
+      "topics": [
+        "polymorphism",
+        "virtual-functions",
+        "interface-design",
+        "embedded-cost"
+      ],
+      "guidelines": [
+        "small-interface",
+        "virtual-destructor",
+        "explicit-lifetime",
+        "avoid-realtime-allocation"
+      ],
+      "lab": "examples/day-033/main.cpp",
+      "previous": 32,
+      "next": 34
+    },
+    {
+      "path": "daily/day-034-override-final-safe-polymorphic-destruction.md",
+      "week": 5,
+      "part": "II",
+      "chapter": 5,
+      "chapter_title": "Designing with Classes",
+      "title": "override、final 与安全的多态析构",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-09-27",
+      "topics": [
+        "override",
+        "final",
+        "virtual-destructor",
+        "driver-interface"
+      ],
+      "guidelines": [
+        "override-explicitly",
+        "virtual-destructor",
+        "small-interface"
+      ],
+      "lab": "examples/day-034/main.cpp",
+      "previous": 33,
+      "next": 35
+    },
+    {
+      "path": "daily/day-035-object-slicing-dynamic-type-lifetime.md",
+      "week": 5,
+      "part": "II",
+      "chapter": 5,
+      "chapter_title": "Designing with Classes",
+      "title": "对象切片、动态类型与生命周期边界",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-09-28",
+      "topics": [
+        "object-slicing",
+        "dynamic-type",
+        "base-reference",
+        "base-pointer",
+        "polymorphic-lifetime"
+      ],
+      "guidelines": [
+        "avoid-slicing",
+        "explicit-lifetime",
+        "single-owner",
+        "small-interface"
+      ],
+      "lab": "examples/day-035/main.cpp",
+      "previous": 34,
+      "next": 36
+    },
+    {
+      "path": "daily/day-036-has-a-vs-is-a-boundary.md",
+      "week": 6,
+      "part": "II",
+      "chapter": 5,
+      "chapter_title": "Designing with Classes",
+      "title": "has-a 与 is-a 的边界",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-09-29",
+      "topics": [
+        "has-a",
+        "is-a",
+        "composition",
+        "inheritance",
+        "delegation"
+      ],
+      "guidelines": [
+        "prefer-composition-when-ambiguous",
+        "small-interface",
+        "explicit-ownership"
+      ],
+      "lab": "examples/day-036/main.cpp",
+      "previous": 35,
+      "next": 37
+    },
+    {
+      "path": "daily/day-037-not-a-relationship.md",
+      "week": 6,
+      "part": "II",
+      "chapter": 5,
+      "chapter_title": "Designing with Classes",
+      "title": "not-a 关系：既非 is-a 也非 has-a",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-09-30",
+      "topics": [
+        "not-a",
+        "over-classification",
+        "functional-relationships",
+        "hierarchy-design"
+      ],
+      "guidelines": [
+        "avoid-artificial-hierarchies",
+        "single-responsibility",
+        "reader-first"
+      ],
+      "lab": "examples/day-037/main.cpp",
+      "previous": 36,
+      "next": 38
+    },
+    {
+      "path": "daily/day-038-hierarchies.md",
+      "week": 6,
+      "part": "II",
+      "chapter": 5,
+      "chapter_title": "Designing with Classes",
+      "title": "继承层级",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-01",
+      "topics": [
+        "hierarchies",
+        "abstract-base-class",
+        "shallow-hierarchy",
+        "stable-contract",
+        "composition"
+      ],
+      "guidelines": [
+        "keep-hierarchies-shallow",
+        "stable-base-contract",
+        "prefer-composition-for-orthogonal-behavior"
+      ],
+      "lab": "examples/day-038/main.cpp",
+      "previous": 37,
+      "next": 39
+    },
+    {
+      "path": "daily/day-039-multiple-inheritance-contracts.md",
+      "week": 6,
+      "part": "II",
+      "chapter": 5,
+      "chapter_title": "Designing with Classes",
+      "title": "多重继承与多重契约",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-05",
+      "topics": [
+        "multiple-inheritance",
+        "interface-contracts",
+        "ambiguity",
+        "composition",
+        "embedded-design"
+      ],
+      "guidelines": [
+        "multiple-inheritance-only-for-clear-contracts",
+        "avoid-stateful-multiple-inheritance",
+        "prefer-composition-for-implementation-reuse"
+      ],
+      "lab": "examples/day-039/main.cpp",
+      "previous": 38,
+      "next": 40
+    },
+    {
+      "path": "daily/day-040-mixin-classes.md",
+      "week": 6,
+      "part": "II",
+      "chapter": 5,
+      "chapter_title": "Designing with Classes",
+      "title": "Mixin 类",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-06",
+      "topics": [
+        "mixin-classes",
+        "behavior-composition",
+        "templates",
+        "inheritance",
+        "embedded-design"
+      ],
+      "guidelines": [
+        "keep-mixins-stateless-or-small",
+        "make-mixin-requirements-explicit",
+        "prefer-composition-when-runtime-substitution-is-needed"
+      ],
+      "lab": "examples/day-040/main.cpp",
+      "previous": 39,
+      "next": 41
+    },
+    {
+      "path": "daily/day-041-reuse-contracts-components.md",
+      "week": 6,
+      "part": "II",
+      "chapter": 6,
+      "chapter_title": "Designing for Reuse",
+      "title": "复用始于稳定契约",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-07",
+      "topics": [
+        "reuse-contracts-components"
+      ],
+      "guidelines": [
+        "explicit-contract"
+      ],
+      "lab": "examples/day-041/main.cpp",
+      "previous": 40,
+      "next": 42
+    },
+    {
+      "path": "daily/day-042-use-abstraction-for-reuse.md",
+      "week": 6,
+      "part": "II",
+      "chapter": 6,
+      "chapter_title": "Designing for Reuse",
+      "title": "用抽象支撑复用",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-08",
+      "topics": [
+        "use-abstraction-for-reuse"
+      ],
+      "guidelines": [
+        "explicit-contract"
+      ],
+      "lab": "examples/day-042/main.cpp",
+      "previous": 41,
+      "next": 43
+    },
+    {
+      "path": "daily/day-043-structure-code-for-optimal-reuse.md",
+      "week": 7,
+      "part": "II",
+      "chapter": 6,
+      "chapter_title": "Designing for Reuse",
+      "title": "为高效复用组织代码结构",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-09",
+      "topics": [
+        "structure-code-for-optimal-reuse"
+      ],
+      "guidelines": [
+        "explicit-contract"
+      ],
+      "lab": "examples/day-043/main.cpp",
+      "previous": 42,
+      "next": 44
+    },
+    {
+      "path": "daily/day-044-separate-unrelated-concepts.md",
+      "week": 7,
+      "part": "II",
+      "chapter": 6,
+      "chapter_title": "Designing for Reuse",
+      "title": "避免合并不相关或逻辑独立的概念",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-10",
+      "topics": [
+        "separate-unrelated-concepts"
+      ],
+      "guidelines": [
+        "explicit-contract"
+      ],
+      "lab": "examples/day-044/main.cpp",
+      "previous": 43,
+      "next": 45
+    },
+    {
+      "path": "daily/day-045-templates-generic-data-structures-algorithms.md",
+      "week": 7,
+      "part": "II",
+      "chapter": 6,
+      "chapter_title": "Designing for Reuse",
+      "title": "Use Templates for Generic Data Structures and Algorithms",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-11",
+      "topics": [
+        "templates",
+        "generic-programming",
+        "reusable-algorithms",
+        "static-polymorphism",
+        "bounded-containers"
+      ],
+      "guidelines": [
+        "explicit-template-contracts",
+        "bounded-storage",
+        "avoid-unnecessary-instantiations"
+      ],
+      "lab": "examples/day-045/main.cpp",
+      "previous": 44,
+      "next": 46
+    },
+    {
+      "path": "daily/day-046-checks-safeguards.md",
+      "week": 7,
+      "part": "II",
+      "chapter": 6,
+      "chapter_title": "Designing for Reuse",
+      "title": "Provide Appropriate Checks and Safeguards",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-12",
+      "topics": [
+        "preconditions",
+        "validation",
+        "invariants",
+        "defensive-interfaces",
+        "bounded-operations"
+      ],
+      "guidelines": [
+        "validate-external-input",
+        "recoverable-errors-not-assert",
+        "explicit-bounds-and-timeouts"
+      ],
+      "lab": "examples/day-046/main.cpp",
+      "previous": 45,
+      "next": 47
+    },
+    {
+      "path": "daily/day-047-design-for-extensibility.md",
+      "week": 7,
+      "part": "II",
+      "chapter": 6,
+      "chapter_title": "Designing for Reuse",
+      "title": "Design for Extensibility",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-13",
+      "topics": [
+        "extensibility",
+        "open-closed-principle",
+        "customization-points",
+        "dependency-injection",
+        "stable-contracts"
+      ],
+      "guidelines": [
+        "prefer-explicit-customization-points",
+        "inject-dependencies",
+        "bound-runtime-extensibility"
+      ],
+      "lab": "examples/day-047/main.cpp",
+      "previous": 46,
+      "next": 48
+    },
+    {
+      "path": "daily/day-048-design-usable-interfaces.md",
+      "week": 7,
+      "part": "II",
+      "chapter": 6,
+      "chapter_title": "Designing for Reuse",
+      "title": "Design Usable Interfaces",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-14",
+      "topics": [
+        "usable-interfaces",
+        "contracts",
+        "type-safety",
+        "explicit-units",
+        "timeout"
+      ],
+      "guidelines": [
+        "make-invalid-states-hard",
+        "express-units-in-types",
+        "keep-interfaces-small"
+      ],
+      "lab": "examples/day-048/main.cpp",
+      "previous": 47,
+      "next": 49
+    },
+    {
+      "path": "daily/day-049-consider-audience-purpose.md",
+      "week": 7,
+      "part": "II",
+      "chapter": 6,
+      "chapter_title": "Designing for Reuse",
+      "title": "Consider the Audience and Purpose",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-15",
+      "patterns": [
+        "adapter",
+        "dependency-injection",
+        "interface-segregation"
+      ],
+      "topics": [
+        "usable-interfaces",
+        "audience",
+        "purpose",
+        "interface-segregation",
+        "stable-boundaries"
+      ],
+      "guidelines": [
+        "design-for-the-caller",
+        "expose-intent-not-platform-details",
+        "required-borrow-by-reference"
+      ],
+      "lab": "examples/day-049/main.cpp",
+      "previous": 48,
+      "next": 50
+    },
+    {
+      "path": "daily/day-050-easy-to-use-interfaces.md",
+      "week": 8,
+      "part": "II",
+      "chapter": 6,
+      "chapter_title": "Designing for Reuse",
+      "title": "Design Interfaces That Are Easy to Use",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-15",
+      "patterns": [
+        "facade",
+        "adapter",
+        "dependency-injection"
+      ],
+      "topics": [
+        "easy-to-use-interfaces",
+        "familiar-conventions",
+        "raii",
+        "uncluttered-interfaces",
+        "facade"
+      ],
+      "guidelines": [
+        "follow-familiar-cpp-idioms",
+        "make-common-path-obvious",
+        "avoid-fat-interfaces"
+      ],
+      "lab": "examples/day-050/main.cpp",
+      "previous": 49,
+      "next": 51
+    },
+    {
+      "path": "daily/day-051-general-purpose-interfaces.md",
+      "week": 8,
+      "part": "II",
+      "chapter": 6,
+      "chapter_title": "Designing for Reuse",
+      "title": "Design General-Purpose Interfaces",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-16",
+      "patterns": [
+        "strategy",
+        "dependency-injection"
+      ],
+      "topics": [
+        "general-purpose-interfaces",
+        "policy-mechanism",
+        "customization-points",
+        "bounded-generality"
+      ],
+      "guidelines": [
+        "bounded-customization",
+        "explicit-policy",
+        "no-hidden-allocation"
+      ],
+      "lab": "examples/day-051/main.cpp",
+      "previous": 50,
+      "next": 52
+    },
+    {
+      "path": "daily/day-052-reconciling-generality-ease-of-use.md",
+      "week": 8,
+      "part": "II",
+      "chapter": 6,
+      "chapter_title": "Designing for Reuse",
+      "title": "Reconciling Generality and Ease of Use",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-17",
+      "patterns": [
+        "facade",
+        "adapter",
+        "dependency-injection"
+      ],
+      "topics": [
+        "generality",
+        "ease-of-use",
+        "layered-api",
+        "common-case",
+        "expert-interface"
+      ],
+      "guidelines": [
+        "safe-defaults",
+        "layered-interface",
+        "bounded-options"
+      ],
+      "lab": "examples/day-052/main.cpp",
+      "previous": 51,
+      "next": 53
+    },
+    {
+      "path": "daily/day-053-designing-successful-abstraction.md",
+      "week": 8,
+      "part": "II",
+      "chapter": 6,
+      "chapter_title": "Designing for Reuse",
+      "title": "Designing a Successful Abstraction",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-18",
+      "patterns": [
+        "adapter",
+        "dependency-injection"
+      ],
+      "topics": [
+        "abstraction",
+        "contract",
+        "invariants",
+        "implementation-hiding",
+        "resource-bounds"
+      ],
+      "guidelines": [
+        "small-interface",
+        "explicit-contract",
+        "bounded-resource"
+      ],
+      "lab": "examples/day-053/main.cpp",
+      "previous": 52,
+      "next": 54
+    },
+    {
+      "path": "daily/day-054-solid-principles.md",
+      "week": 8,
+      "part": "II",
+      "chapter": 6,
+      "chapter_title": "Designing for Reuse",
+      "title": "The SOLID Principles",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-19",
+      "patterns": [
+        "adapter",
+        "dependency-injection"
+      ],
+      "topics": [
+        "solid",
+        "srp",
+        "ocp",
+        "lsp",
+        "isp",
+        "dip",
+        "stable-boundaries"
+      ],
+      "guidelines": [
+        "small-interface",
+        "explicit-dependency",
+        "composition-first"
+      ],
+      "lab": "examples/day-054/main.cpp",
+      "previous": 53,
+      "next": 55
+    },
+    {
+      "path": "daily/day-055-chapter6-review-exercises.md",
+      "week": 8,
+      "part": "II",
+      "chapter": 6,
+      "chapter_title": "Designing for Reuse",
+      "title": "Chapter 6 Summary and Engineering Exercises",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-20",
+      "patterns": [
+        "adapter",
+        "dependency-injection",
+        "composition"
+      ],
+      "topics": [
+        "reuse",
+        "abstraction",
+        "extensibility",
+        "usable-interfaces",
+        "solid",
+        "review"
+      ],
+      "guidelines": [
+        "bounded-resources",
+        "explicit-timeout",
+        "explicit-dependency"
+      ],
+      "lab": "examples/day-055/main.cpp",
+      "previous": 54,
+      "next": 56
+    },
+    {
+      "path": "daily/day-056-memory-management-ownership-raii.md",
+      "week": 8,
+      "part": "III",
+      "chapter": 7,
+      "chapter_title": "Memory Management",
+      "title": "Memory Management Foundations · Ownership and RAII",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-21",
+      "patterns": [
+        "raii",
+        "dependency-injection"
+      ],
+      "topics": [
+        "memory-management",
+        "ownership",
+        "raii",
+        "heap",
+        "lifetime"
+      ],
+      "guidelines": [
+        "single-owner",
+        "no-naked-owning-pointer",
+        "bounded-allocation"
+      ],
+      "lab": "examples/day-056/main.cpp",
+      "previous": 55,
+      "next": 57
+    },
+    {
+      "path": "daily/day-057-smart-pointers-ownership-transfer.md",
+      "week": 9,
+      "part": "III",
+      "chapter": 7,
+      "chapter_title": "Memory Management",
+      "title": "Smart Pointers · Ownership Transfer and Borrowing",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-22",
+      "patterns": [
+        "raii",
+        "dependency-injection"
+      ],
+      "topics": [
+        "smart-pointers",
+        "unique-ptr",
+        "ownership-transfer",
+        "borrowing",
+        "move-semantics"
+      ],
+      "guidelines": [
+        "single-owner",
+        "explicit-borrow",
+        "bounded-allocation"
+      ],
+      "lab": "examples/day-057/main.cpp",
+      "previous": 56,
+      "next": 58
+    },
+    {
+      "path": "daily/day-058-allocation-failure-resource-boundaries.md",
+      "week": 9,
+      "part": "III",
+      "chapter": 7,
+      "chapter_title": "Memory Management",
+      "title": "Allocation Failure · Arrays and Resource Boundaries",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-23",
+      "patterns": [
+        "raii",
+        "dependency-injection"
+      ],
+      "topics": [
+        "allocation-failure",
+        "nothrow-new",
+        "arrays",
+        "resource-boundaries",
+        "error-model"
+      ],
+      "guidelines": [
+        "bounded-allocation",
+        "explicit-errors",
+        "required-borrow"
+      ],
+      "lab": "examples/day-058/main.cpp",
+      "previous": 57,
+      "next": 59
+    },
+    {
+      "path": "daily/day-059-custom-deleters-non-memory-resources.md",
+      "week": 9,
+      "part": "III",
+      "chapter": 7,
+      "chapter_title": "Memory Management",
+      "title": "Custom Deleters · Non-Memory Resources and RAII Boundaries",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-24",
+      "patterns": [
+        "raii",
+        "adapter",
+        "dependency-injection"
+      ],
+      "topics": [
+        "custom-deleter",
+        "unique-ptr",
+        "raii",
+        "resource-handle",
+        "teardown"
+      ],
+      "guidelines": [
+        "single-owner",
+        "explicit-teardown",
+        "required-borrow"
+      ],
+      "lab": "examples/day-059/main.cpp",
+      "previous": 58,
+      "next": 60
+    },
+    {
+      "path": "daily/day-060-shared-ptr-weak-ptr-lifetime.md",
+      "week": 9,
+      "part": "III",
+      "chapter": 7,
+      "chapter_title": "Memory Management",
+      "title": "Shared Ownership · shared_ptr, weak_ptr and Lifetime Cycles",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-25",
+      "patterns": [
+        "observer",
+        "dependency-injection"
+      ],
+      "topics": [
+        "shared-ptr",
+        "weak-ptr",
+        "control-block",
+        "ownership-cycle",
+        "lifetime"
+      ],
+      "guidelines": [
+        "prefer-single-owner",
+        "explicit-shared-ownership",
+        "break-cycles"
+      ],
+      "lab": "examples/day-060/main.cpp",
+      "previous": 59,
+      "next": 61
+    },
+    {
+      "path": "daily/day-061-enable-shared-from-this-callback-lifetime.md",
+      "week": 9,
+      "part": "III",
+      "chapter": 7,
+      "chapter_title": "Memory Management",
+      "title": "enable_shared_from_this · Async Callback Lifetime and Teardown",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-26",
+      "patterns": [
+        "observer",
+        "dependency-injection"
+      ],
+      "topics": [
+        "enable-shared-from-this",
+        "weak-from-this",
+        "callback-lifetime",
+        "teardown",
+        "shared-ownership"
+      ],
+      "guidelines": [
+        "explicit-lifetime",
+        "weak-callback",
+        "deterministic-teardown"
+      ],
+      "lab": "examples/day-061/main.cpp",
+      "previous": 60,
+      "next": 62
+    },
+    {
+      "path": "daily/day-062-smart-pointer-aliasing-casts-ownership-api.md",
+      "week": 9,
+      "part": "III",
+      "chapter": 7,
+      "chapter_title": "Memory Management",
+      "title": "Smart Pointer Aliasing, Casts and Ownership API Boundaries",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-27",
+      "patterns": [
+        "adapter",
+        "dependency-injection"
+      ],
+      "topics": [
+        "shared-ptr-aliasing",
+        "pointer-casts",
+        "ownership-api",
+        "resource-boundary"
+      ],
+      "guidelines": [
+        "explicit-ownership",
+        "small-interface",
+        "avoid-cast-driven-design"
+      ],
+      "lab": "examples/day-062/main.cpp",
+      "previous": 61,
+      "next": 63
+    },
+    {
+      "path": "daily/day-063-pmr-bounded-allocation-resource-policy.md",
+      "week": 9,
+      "part": "III",
+      "chapter": 7,
+      "chapter_title": "Memory Management",
+      "title": "PMR, Bounded Allocation and Memory-Resource Policy",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-28",
+      "patterns": [
+        "dependency-injection",
+        "strategy"
+      ],
+      "topics": [
+        "pmr",
+        "memory-resource",
+        "bounded-allocation",
+        "monotonic-buffer-resource"
+      ],
+      "guidelines": [
+        "bounded-allocation",
+        "explicit-resource-policy",
+        "no-unbounded-hot-path-allocation"
+      ],
+      "lab": "examples/day-063/main.cpp",
+      "previous": 62,
+      "next": 64
+    },
+    {
+      "path": "daily/day-064-object-lifetime-placement-construction-fixed-pool.md",
+      "week": 10,
+      "part": "III",
+      "chapter": 7,
+      "chapter_title": "Memory Management",
+      "title": "Object Lifetime, Placement Construction and Fixed Storage Reuse",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-29",
+      "patterns": [
+        "object-pool",
+        "dependency-injection"
+      ],
+      "topics": [
+        "object-lifetime",
+        "placement-construction",
+        "construct-at",
+        "destroy-at",
+        "fixed-storage"
+      ],
+      "guidelines": [
+        "explicit-lifetime",
+        "bounded-storage",
+        "no-dangling-borrow"
+      ],
+      "lab": "examples/day-064/main.cpp",
+      "previous": 63,
+      "next": 65
+    },
+    {
+      "path": "daily/day-065-optional-fixed-pool-lifetime-boundaries.md",
+      "week": 10,
+      "part": "III",
+      "chapter": 7,
+      "chapter_title": "Memory Management",
+      "title": "Optional Lifetime and Fixed-Pool Safety Boundaries",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-30",
+      "patterns": [
+        "object-pool",
+        "dependency-injection"
+      ],
+      "topics": [
+        "optional",
+        "object-lifetime",
+        "fixed-pool",
+        "stale-handle",
+        "bounded-memory"
+      ],
+      "guidelines": [
+        "value-semantics-first",
+        "explicit-lifetime",
+        "bounded-storage"
+      ],
+      "lab": "examples/day-065/main.cpp",
+      "previous": 64,
+      "next": 66
+    },
+    {
+      "path": "daily/day-066-memory-management-resource-boundary-decision-tree.md",
+      "week": 10,
+      "part": "III",
+      "chapter": 7,
+      "chapter_title": "Memory Management",
+      "title": "Memory Management Resource Boundary Decision Tree",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-10-31",
+      "patterns": [
+        "dependency-injection",
+        "object-pool",
+        "strategy"
+      ],
+      "topics": [
+        "ownership",
+        "raii",
+        "smart-pointers",
+        "pmr",
+        "object-lifetime",
+        "bounded-allocation"
+      ],
+      "guidelines": [
+        "value-semantics-first",
+        "explicit-ownership",
+        "bounded-real-time-path"
+      ],
+      "lab": "examples/day-066/main.cpp",
+      "previous": 65,
+      "next": 67
+    },
+    {
+      "path": "daily/day-067-class-encapsulation-member-functions.md",
+      "week": 10,
+      "part": "III",
+      "chapter": 8,
+      "chapter_title": "Gaining Proficiency with Classes and Objects",
+      "title": "Class Encapsulation and Member Functions",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-01",
+      "patterns": [
+        "encapsulation",
+        "information-hiding",
+        "composition"
+      ],
+      "topics": [
+        "classes",
+        "access-control",
+        "member-functions",
+        "in-class-initializers",
+        "invariants",
+        "value-semantics"
+      ],
+      "guidelines": [
+        "private-state",
+        "explicit-invariants",
+        "in-class-member-initializers"
+      ],
+      "lab": "examples/day-067/main.cpp",
+      "previous": 66,
+      "next": 68
+    }
+  ]
+}

@@ -1,22 +1,3 @@
----
-day: 51
-week: 8
-part: II
-chapter: 6
-chapter_title: Designing for Reuse
-title: Design General-Purpose Interfaces
-duration: 60
-status: published
-date: 2026-10-16
-topics: [general-purpose-interfaces, policy-mechanism, customization-points, bounded-generality]
-patterns: [strategy, dependency-injection]
-guidelines: [bounded-customization, explicit-policy, no-hidden-allocation]
-lab:
-  path: examples/day-051/main.cpp
-previous: 50
-next: 52
----
-
 # Day 51 · Design General-Purpose Interfaces
 
 <!-- cpp-standards:start -->

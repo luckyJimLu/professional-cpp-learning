@@ -1,29 +1,3 @@
----
-day: 47
-week: 7
-part: II
-chapter: 6
-chapter_title: Designing for Reuse
-title: Design for Extensibility
-duration: 60
-status: published
-date: 2026-10-13
-topics:
-  - extensibility
-  - open-closed-principle
-  - customization-points
-  - dependency-injection
-  - stable-contracts
-guidelines:
-  - prefer-explicit-customization-points
-  - inject-dependencies
-  - bound-runtime-extensibility
-lab:
-  path: examples/day-047/main.cpp
-previous: 46
-next: 48
----
-
 # Day 47 · Design for Extensibility
 
 <!-- cpp-standards:start -->

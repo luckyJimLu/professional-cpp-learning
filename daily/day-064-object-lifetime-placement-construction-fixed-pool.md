@@ -1,22 +1,3 @@
----
-day: 64
-week: 10
-part: III
-chapter: 7
-chapter_title: Memory Management
-title: Object Lifetime, Placement Construction and Fixed Storage Reuse
-duration: 60
-status: published
-date: 2026-10-29
-topics: [object-lifetime, placement-construction, construct-at, destroy-at, fixed-storage]
-patterns: [object-pool, dependency-injection]
-guidelines: [explicit-lifetime, bounded-storage, no-dangling-borrow]
-lab:
-  path: examples/day-064/main.cpp
-previous: 63
-next: 65
----
-
 # Day 64 · Object Lifetime / Placement Construction：固定存储不等于对象一直存在
 
 <!-- cpp-standards:start -->

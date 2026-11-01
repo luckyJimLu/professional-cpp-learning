@@ -1,32 +1,3 @@
----
-day: 17
-week: 3
-part: I
-chapter: 3
-chapter_title: Coding with Style
-title: "错误处理、断言与清晰的控制流"
-duration: 60
-status: published
-
-topics:
-  - error-handling
-  - assert
-  - control-flow
-  - early-return
-
-guidelines:
-  - no-assert-for-recoverable-errors
-  - early-return
-  - strong-error-types
-  - nodiscard-status
-
-lab:
-  path: examples/day-017/main.cpp
-
-previous: 16
-next: 18
----
-
 # Day 17 · Coding with Style：错误处理、断言与清晰的控制流
 
 <!-- cpp-standards:start -->

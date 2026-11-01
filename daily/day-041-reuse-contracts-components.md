@@ -1,23 +1,3 @@
----
-day: 41
-week: 6
-part: II
-chapter: 6
-chapter_title: Designing for Reuse
-title: "复用始于稳定契约"
-status: published
-date: 2026-10-07
-duration: 60
-lab:
-  path: examples/day-041/main.cpp
-previous: 40
-next: 42
-topics:
-  - reuse-contracts-components
-guidelines:
-  - explicit-contract
----
-
 # Day 41 · 复用始于稳定契约
 
 <!-- cpp-standards:start -->

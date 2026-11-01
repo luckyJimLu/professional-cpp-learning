@@ -1,23 +1,3 @@
----
-day: 43
-week: 7
-part: II
-chapter: 6
-chapter_title: Designing for Reuse
-title: "为高效复用组织代码结构"
-status: published
-date: 2026-10-09
-duration: 60
-lab:
-  path: examples/day-043/main.cpp
-previous: 42
-next: 44
-topics:
-  - structure-code-for-optimal-reuse
-guidelines:
-  - explicit-contract
----
-
 # Day 43 · 为高效复用组织代码结构
 
 <!-- cpp-standards:start -->

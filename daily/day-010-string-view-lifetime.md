@@ -1,21 +1,3 @@
----
-day: 10
-week: 2
-part: I
-chapter: 2
-chapter_title: "Working with Strings and String Views"
-title: "string_view 深入：生命周期、子视图与安全解析"
-duration: 60
-status: published
-topics:
-  - string-view-lifetime
-guidelines:
-  - explicit-contract
-lab:
-  path: examples/day-010/main.cpp
-previous: 9
-next: 11
----
 # Day 10 · string_view 深入：生命周期、子视图与安全解析
 
 <!-- cpp-standards:start -->

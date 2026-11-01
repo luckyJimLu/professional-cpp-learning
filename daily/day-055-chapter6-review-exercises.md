@@ -1,22 +1,3 @@
----
-day: 55
-week: 8
-part: II
-chapter: 6
-chapter_title: Designing for Reuse
-title: Chapter 6 Summary and Engineering Exercises
-duration: 60
-status: published
-date: 2026-10-20
-topics: [reuse, abstraction, extensibility, usable-interfaces, solid, review]
-patterns: [adapter, dependency-injection, composition]
-guidelines: [bounded-resources, explicit-timeout, explicit-dependency]
-lab:
-  path: examples/day-055/main.cpp
-previous: 54
-next: 56
----
-
 # Day 55 · Chapter 6 Summary and Engineering Exercises
 
 <!-- cpp-standards:start -->

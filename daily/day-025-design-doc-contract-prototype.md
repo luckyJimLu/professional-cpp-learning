@@ -1,21 +1,3 @@
----
-day: 25
-week: 4
-part: II
-chapter: 4
-chapter_title: "Designing Professional C++ Programs"
-title: "设计文档、接口契约与原型验证"
-duration: 60
-status: published
-topics:
-  - design-doc-contract-prototype
-guidelines:
-  - explicit-contract
-lab:
-  path: examples/day-025/main.cpp
-previous: 24
-next: 26
----
 # Day 25 · 设计文档、接口契约与原型验证
 
 <!-- cpp-standards:start -->

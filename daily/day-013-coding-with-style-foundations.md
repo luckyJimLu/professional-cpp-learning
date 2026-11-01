@@ -1,28 +1,3 @@
----
-day: 13
-week: 2
-part: I
-chapter: 3
-chapter_title: Coding with Style
-title: "可读性、命名与接口契约"
-duration: 60
-status: published
-
-topics:
-  - readability
-  - naming
-  - interface-contracts
-
-guidelines:
-  - small-interface
-  - naming-intent
-
-lab:
-  path: examples/day-013/main.cpp
-previous: 12
-next: 14
----
-
 # Day 13 · Coding with Style：可读性、命名与接口契约
 
 <!-- cpp-standards:start -->

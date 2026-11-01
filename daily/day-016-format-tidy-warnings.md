@@ -1,23 +1,3 @@
----
-day: 16
-week: 3
-part: I
-chapter: 3
-chapter_title: "Coding with Style"
-title: "clang-format、clang-tidy 与编译告警"
-duration: 60
-status: published
-topics:
-  - chapter-3
-  - format-tidy-warnings
-guidelines:
-  - explicit-contract
-  - boundary-validation
-lab:
-  path: examples/day-016/main.cpp
-previous: 15
-next: 17
----
 # Day 16 · clang-format、clang-tidy 与编译告警
 
 <!-- cpp-standards:start -->

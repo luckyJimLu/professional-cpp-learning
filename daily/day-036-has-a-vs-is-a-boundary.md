@@ -1,29 +1,3 @@
----
-day: 36
-week: 6
-part: II
-chapter: 5
-chapter_title: Designing with Classes
-title: "has-a 与 is-a 的边界"
-duration: 60
-status: published
-date: 2026-09-29
-topics:
-  - has-a
-  - is-a
-  - composition
-  - inheritance
-  - delegation
-guidelines:
-  - prefer-composition-when-ambiguous
-  - small-interface
-  - explicit-ownership
-lab:
-  path: examples/day-036/main.cpp
-previous: 35
-next: 37
----
-
 # Day 36 · has-a 与 is-a 的边界
 
 <!-- cpp-standards:start -->

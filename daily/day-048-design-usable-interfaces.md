@@ -1,29 +1,3 @@
----
-day: 48
-week: 7
-part: II
-chapter: 6
-chapter_title: Designing for Reuse
-title: Design Usable Interfaces
-duration: 60
-status: published
-date: 2026-10-14
-topics:
-  - usable-interfaces
-  - contracts
-  - type-safety
-  - explicit-units
-  - timeout
-guidelines:
-  - make-invalid-states-hard
-  - express-units-in-types
-  - keep-interfaces-small
-lab:
-  path: examples/day-048/main.cpp
-previous: 47
-next: 49
----
-
 # Day 48 · Design Usable Interfaces
 
 <!-- cpp-standards:start -->

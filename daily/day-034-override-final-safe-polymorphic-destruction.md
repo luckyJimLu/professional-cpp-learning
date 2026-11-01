@@ -1,21 +1,3 @@
----
-day: 34
-week: 5
-part: II
-chapter: 5
-chapter_title: Designing with Classes
-title: "override、final 与安全的多态析构"
-duration: 60
-status: published
-date: 2026-09-27
-topics: [override, final, virtual-destructor, driver-interface]
-guidelines: [override-explicitly, virtual-destructor, small-interface]
-lab:
-  path: examples/day-034/main.cpp
-previous: 33
-next: 35
----
-
 # Day 34 · override、final 与安全的多态析构
 
 <!-- cpp-standards:start -->

@@ -1,28 +1,3 @@
----
-day: 37
-week: 6
-part: II
-chapter: 5
-chapter_title: Designing with Classes
-title: "not-a 关系：既非 is-a 也非 has-a"
-duration: 60
-status: published
-date: 2026-09-30
-topics:
-  - not-a
-  - over-classification
-  - functional-relationships
-  - hierarchy-design
-guidelines:
-  - avoid-artificial-hierarchies
-  - single-responsibility
-  - reader-first
-lab:
-  path: examples/day-037/main.cpp
-previous: 36
-next: 38
----
-
 # Day 37 · not-a 关系：既非 is-a 也非 has-a
 
 <!-- cpp-standards:start -->

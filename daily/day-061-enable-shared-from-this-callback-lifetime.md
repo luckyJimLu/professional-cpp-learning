@@ -1,22 +1,3 @@
----
-day: 61
-week: 9
-part: III
-chapter: 7
-chapter_title: Memory Management
-title: enable_shared_from_this · Async Callback Lifetime and Teardown
-duration: 60
-status: published
-date: 2026-10-26
-topics: [enable-shared-from-this, weak-from-this, callback-lifetime, teardown, shared-ownership]
-patterns: [observer, dependency-injection]
-guidelines: [explicit-lifetime, weak-callback, deterministic-teardown]
-lab:
-  path: examples/day-061/main.cpp
-previous: 60
-next: 62
----
-
 # Day 61 · `enable_shared_from_this`：异步 Callback Lifetime 与 Teardown
 
 <!-- cpp-standards:start -->

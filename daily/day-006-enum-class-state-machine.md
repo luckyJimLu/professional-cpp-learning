@@ -1,21 +1,3 @@
----
-day: 6
-week: 1
-part: I
-chapter: 1
-chapter_title: "A Crash Course in C++ and the Standard Library"
-title: "enum class、结构化绑定与类型安全状态机"
-duration: 60
-status: published
-topics:
-  - enum-class-state-machine
-guidelines:
-  - explicit-contract
-lab:
-  path: examples/day-006/main.cpp
-previous: 5
-next: 7
----
 # Day 06 · enum class、结构化绑定与类型安全状态机
 
 <!-- cpp-standards:start -->

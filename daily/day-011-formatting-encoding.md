@@ -1,21 +1,3 @@
----
-day: 11
-week: 2
-part: I
-chapter: 2
-chapter_title: "Working with Strings and String Views"
-title: "字符串格式化、字符编码与嵌入式文本边界"
-duration: 60
-status: published
-topics:
-  - formatting-encoding
-guidelines:
-  - explicit-contract
-lab:
-  path: examples/day-011/main.cpp
-previous: 10
-next: 12
----
 # Day 11 · 字符串格式化、字符编码与嵌入式文本边界
 
 <!-- cpp-standards:start -->

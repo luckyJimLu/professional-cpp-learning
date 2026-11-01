@@ -1,22 +1,3 @@
----
-day: 60
-week: 9
-part: III
-chapter: 7
-chapter_title: Memory Management
-title: Shared Ownership · shared_ptr, weak_ptr and Lifetime Cycles
-duration: 60
-status: published
-date: 2026-10-25
-topics: [shared-ptr, weak-ptr, control-block, ownership-cycle, lifetime]
-patterns: [observer, dependency-injection]
-guidelines: [prefer-single-owner, explicit-shared-ownership, break-cycles]
-lab:
-  path: examples/day-060/main.cpp
-previous: 59
-next: 61
----
-
 # Day 60 · Shared Ownership：`shared_ptr`、`weak_ptr` 与 Lifetime Cycles
 
 <!-- cpp-standards:start -->

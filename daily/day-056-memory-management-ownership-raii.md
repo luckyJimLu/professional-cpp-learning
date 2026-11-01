@@ -1,22 +1,3 @@
----
-day: 56
-week: 8
-part: III
-chapter: 7
-chapter_title: Memory Management
-title: Memory Management Foundations · Ownership and RAII
-duration: 60
-status: published
-date: 2026-10-21
-topics: [memory-management, ownership, raii, heap, lifetime]
-patterns: [raii, dependency-injection]
-guidelines: [single-owner, no-naked-owning-pointer, bounded-allocation]
-lab:
-  path: examples/day-056/main.cpp
-previous: 55
-next: 57
----
-
 # Day 56 · Memory Management Foundations：Ownership and RAII
 
 <!-- cpp-standards:start -->

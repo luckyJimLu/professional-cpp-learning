@@ -1,22 +1,3 @@
----
-day: 59
-week: 9
-part: III
-chapter: 7
-chapter_title: Memory Management
-title: Custom Deleters · Non-Memory Resources and RAII Boundaries
-duration: 60
-status: published
-date: 2026-10-24
-topics: [custom-deleter, unique-ptr, raii, resource-handle, teardown]
-patterns: [raii, adapter, dependency-injection]
-guidelines: [single-owner, explicit-teardown, required-borrow]
-lab:
-  path: examples/day-059/main.cpp
-previous: 58
-next: 60
----
-
 # Day 59 · Custom Deleters：Non-Memory Resources and RAII Boundaries
 
 <!-- cpp-standards:start -->
