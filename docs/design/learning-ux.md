@@ -31,13 +31,13 @@
 
 路线图是按周分组的纵向执行路径，由课程索引生成，而不是手工维护的卡片。
 
-仅在缺失 frontmatter 时，Part 才作为兼容降级由 Chapter 推断；新课程必须提供完整 frontmatter。
+仅在 `daily/lessons.meta.json` 缺条目时，Part 才作为兼容降级由 Chapter 推断；新课程必须提供完整元数据条目。
 
 ## 实验提取
 
 解析顺序：
 
-1. frontmatter 中的 `lab.path`；
+1. 课程元数据中的 `lab` 路径；
 2. `examples/day-XXX/main.cpp`；
 3. Day ⑥ 实验小节中的第一个 C++ 代码块。
 

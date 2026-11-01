@@ -6,7 +6,7 @@ This document is the contract for future UI changes made by ChatGPT, OpenCode, o
 
 - Course content MUST come from repository Markdown.
 - The frontend MUST NOT maintain a duplicate hard-coded list of Day lessons.
-- Adding a valid `daily/day-XXX-*.md` file MUST make the lesson discoverable without editing UI code.
+- Adding a valid `daily/day-XXX-*.md` file plus its `daily/lessons.meta.json` entry MUST make the lesson discoverable without editing UI code.
 - Existing historical lessons MUST remain readable without frontmatter.
 
 ## 2. Primary learning path
@@ -86,37 +86,27 @@ otherwise the existing source/output switcher becomes the sole visible pane.
 Long C++ lines wrap inside the Lab editor, and fenced source code must never be
 rendered as experiment prose.
 
-## 7. Daily frontmatter
+## 7. Daily metadata
 
-New lessons SHOULD use:
+New lessons carry NO frontmatter in the markdown. Metadata goes into
+`daily/lessons.meta.json` as one entry per day:
 
-```yaml
----
-day: 33
-week: 5
-part: II
-chapter: 5
-chapter_title: Designing with Classes
-title: Polymorphism and Virtual Interfaces
-duration: 60
-status: published
-
-topics:
-  - polymorphism
-  - virtual-functions
-  - interface-design
-
-guidelines:
-  - small-interface
-  - explicit-lifetime
-  - avoid-realtime-allocation
-
-lab:
-  path: examples/day-033/main.cpp
-
-previous: 32
-next: 34
----
+```json
+{
+  "path": "daily/day-033-polymorphism-virtual-interfaces.md",
+  "week": 5,
+  "part": "II",
+  "chapter": 5,
+  "chapter_title": "Designing with Classes",
+  "title": "Polymorphism and Virtual Interfaces",
+  "duration": 60,
+  "status": "published",
+  "topics": ["polymorphism", "virtual-functions", "interface-design"],
+  "guidelines": ["small-interface", "explicit-lifetime", "avoid-realtime-allocation"],
+  "lab": "examples/day-033/main.cpp",
+  "previous": 32,
+  "next": 34
+}
 ```
 
 ## 8. Time budget

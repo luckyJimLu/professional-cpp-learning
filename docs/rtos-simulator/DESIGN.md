@@ -50,7 +50,7 @@ RTOS 可视化界面需同时展示 5 个视图与 1 个编辑器，信息量较
 
 ```mermaid
 flowchart LR
-    LESSON["课程页 / Lab (frontmatter lab: rtos-sim)"] -->|"在模拟器中打开 ↗"| PAGE["rtos.html?scenario=...&day=..."]
+    LESSON["课程页 / Lab (metadata lab: rtos-sim)"] -->|"在模拟器中打开 ↗"| PAGE["rtos.html?scenario=...&day=..."]
     NAV["主站 Shell 导航: RTOS 模拟器"] --> PAGE
     VIS["现有 visualizer 页面"] -.不再处理 RTOS 代码.-> VIS
     PAGE -->|"← 返回课程"| LESSON
@@ -398,10 +398,10 @@ GitHub Pages 的 `base` 对两个入口同样生效。`dist/404.html` 的 SPA �
 导航里加一个外链项“RTOS 模拟器 ↗”，指向 `${BASE_URL}rtos.html`。
 
 #### [MODIFY] [LabView.tsx](file:///home/lujingjing/Project/professional-cpp-learning/src/components/views/LabView.tsx)
-lesson frontmatter 写了 `lab: rtos-sim` 时，隐藏 Clang 的“编译运行”，改为显示“在模拟器中打开 ↗”（带上 `scenario` 和 `day`），并提示“本章只支持模拟执行”。
+`daily/lessons.meta.json` 条目写 `"lab": "rtos-sim"` 时，隐藏 Clang 的“编译运行”，改为显示“在模拟器中打开 ↗”（带上 `scenario` 和 `day`），并提示“本章只支持模拟执行”。
 
 #### [MODIFY] [course.ts](file:///home/lujingjing/Project/professional-cpp-learning/src/lib/course.ts)
-frontmatter 解析新增可选字段 `lab: rtos-sim`、`rtos_scenario: <id>`。
+课程元数据新增可选字段 `"lab": "rtos-sim"`、`"rtos_scenario": "<id>"`。
 
 > [!NOTE]
 > 现有的 [useTraceSession.ts](file:///home/lujingjing/Project/professional-cpp-learning/src/visualizer/useTraceSession.ts)、[types.ts](file:///home/lujingjing/Project/professional-cpp-learning/src/visualizer/types.ts)、[VisualizerView.tsx](file:///home/lujingjing/Project/professional-cpp-learning/src/components/views/VisualizerView.tsx) **保持不变**。RTOS 的类型和导入导出（`VisualizerTraceV3`）都放在 `src/rtos-sim/` 里，两条链路互相隔离。

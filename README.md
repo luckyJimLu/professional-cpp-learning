@@ -16,7 +16,7 @@
 - **已发布：Day 1–67**
 - **下一课：Day 68 · Chapter 8 · Gaining Proficiency with Classes and Objects**
 - 当前主线：**Chapter 8 已开始；Day 67 完成 class 封装与成员函数基础**
-- 更新方式：**GitHub Markdown only**
+- 更新方式：**GitHub Markdown only**（每日课程正文 + `daily/lessons.meta.json` 元数据条目，两者同步提交）
 
 ## 快速入口
 
