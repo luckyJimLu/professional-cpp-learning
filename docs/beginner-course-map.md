@@ -2,7 +2,7 @@
 
 返回[新手入门手册](beginner-start.md)。按 Day 顺序是默认主线；前置列用于查缺补漏，不是要求阅读每篇进阶资料。所有链接只指向已存在的课程。
 
-本轮覆盖已发布的 Day 1–64，后续新增课程按[课程模板](day-template.md)补齐导读。练习栏以各课第⑥节为准；每课第③节提供术语和执行步骤，第⑧节提供辨析答案与资料库入口。
+本轮覆盖已发布的 Day 1–67，后续新增课程按[课程模板](day-template.md)补齐导读。练习栏以各课第⑥节为准；每课第③节提供术语和执行步骤，第⑧节提供辨析答案与资料库入口。
 
 | 课程 | 建议先掌握 | 首先理解什么 |
 | --- | --- | --- |
@@ -70,6 +70,10 @@
 | [Day 62 · 智能指针别名、类型转换与所有权 API 边界](../daily/day-062-smart-pointer-aliasing-casts-ownership-api.md) | Day 4、Day 33、Day 60、Day 61 | 别名共享指针；类型转换 |
 | [Day 63 · PMR、有界分配与内存资源策略](../daily/day-063-pmr-bounded-allocation-resource-policy.md) | Day 5、Day 28、Day 56、Day 58 | PMR；arena |
 | [Day 64 · 对象生命周期、placement 构造与固定存储复用](../daily/day-064-object-lifetime-placement-construction-fixed-pool.md) | Day 5、Day 28、Day 56、Day 57、Day 63 | 原始存储；构造就地对象 |
+
+| [Day 65 · Optional 生命周期与固定池安全边界](../daily/day-065-optional-fixed-pool-lifetime-boundaries.md) | Day 64、Day 63 | optional；固定容量与 stale handle |
+| [Day 66 · Memory Management 资源边界决策树](../daily/day-066-memory-management-resource-boundary-decision-tree.md) | Day 56–65 | ownership；allocation；teardown |
+| [Day 67 · class 封装、成员函数与对象不变量](../daily/day-067-class-encapsulation-member-functions.md) | Day 28、Day 30、Day 66 | access control；member functions；in-class initializers |
 
 ## 资料与验证约定
 

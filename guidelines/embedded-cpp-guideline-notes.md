@@ -121,6 +121,14 @@
 - runtime polymorphism 与 ownership 是两个独立设计问题，不应因为需要 virtual dispatch 就默认使用 `shared_ptr`。
 - 多态基类应有明确析构策略，所有 override 显式使用 `override`。
 
+## 类封装与对象不变量
+
+- MUST：可变对象状态默认放在 private；公共成员函数负责校验输入和维护状态转换，不让调用者绕过 invariant 直接写字段。
+- MUST：所有标量成员都要有明确初始化来源；简单默认状态优先使用 in-class member initializer，避免依赖未初始化值。
+- SHOULD：公共 API 表达调用者意图（Configure / Start / Stop），不要把一组 public getter/setter 当作封装完成。
+- MUST：private 不等于线程安全；共享对象仍需明确 owner task、同步策略、IRQ 上下文与 teardown。
+- SHOULD：class 不意味着 heap allocation 或 runtime polymorphism；固定类型优先 value semantics，只有真实运行时变化轴才增加 virtual interface。
+
 ## 类关系与层级
 
 - has-a / uses-a 与 is-a 必须表达真实语义，不为了复用实现而继承。
