@@ -69,7 +69,7 @@ find examples/day-* -maxdepth 1 -type f -name '*.cpp'
 
 - 每个已发布 Day 是否存在 `examples/day-XXX/main.cpp`；
 - 每个 standalone `.cpp` 是否包含 `int main()`；
-- frontmatter lab path 是否存在；
+- frontmatter 已迁移：`daily/lessons.meta.json` 中的 `lab` 路径是否存在；
 - 主 Lab 是否被课程引用。
 
 ## 历史迁移策略

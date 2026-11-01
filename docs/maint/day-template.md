@@ -1,38 +1,37 @@
 # 每日课程模板（Day Template）
 
-所有 `daily/day-XXX-*.md` 必须遵循本模板。确保每篇课程在结构、篇幅与语气上保持一致；网站渲染和 CI 检查均依赖 frontmatter 字段。
+所有 `daily/day-XXX-*.md` 必须遵循本模板。确保每篇课程在结构、篇幅与语气上保持一致；网站渲染依赖正文八阶段结构，课程元数据依赖 `lessons.meta.json`（见内容契约）。
 
 ---
 
-## Frontmatter（YAML，必须）
+## 课程元数据（daily/lessons.meta.json，必须）
 
-```yaml
----
-day: 17                  # 数字，无前导零
-week: 3                  # 第几周
-part: I                  # 卷：I / II / III
-chapter: 3               # 章节号
-chapter_title: Coding with Style
-title: Errors, Assert and Clear Control Flow   # 英文标题
-duration: 60             # 分钟
-status: published        # draft | published
+`daily/*.md` 只写正文，**不再携带 frontmatter**。新课程的元数据追加到 `daily/lessons.meta.json` 的 `lessons` 数组（与正文同时提交）：
 
-topics:                  # 3~6 个 kebab-case 主题标签
-  - error-handling
-  - assert
-  - control-flow
-
-guidelines:              # 关联的编码规范条目（kebab-case）
-  - no-assert-for-recoverable-errors
-  - early-return
-
-lab:
-  path: examples/day-017/main.cpp   # 可选；若填写则必须存在且可编译
-
-previous: 16
-next: 18
----
+```json
+{
+  "path": "daily/day-017-errors-assert-control-flow.md",
+  "week": 3,
+  "part": "I",
+  "chapter": 3,
+  "chapter_title": "Coding with Style",
+  "title": "Errors, Assert and Clear Control Flow",
+  "duration": 60,
+  "status": "published",
+  "topics": ["error-handling", "assert", "control-flow"],
+  "guidelines": ["no-assert-for-recoverable-errors", "early-return"],
+  "lab": "examples/day-017/main.cpp",
+  "previous": 16,
+  "next": 18
+}
 ```
+
+约束：
+
+- `path` 与 md 文件名一一对应；每个 day 文件必须恰好有一条条目。
+- `previous` 为前一天编号，首课填 `-1`；`next` 允许指向尚未发布的后一天。
+- RTOS 模拟课程：`lab` 填 `"rtos-sim"`，另加 `"rtos_scenario": "<id>"`。
+- 可选字段：`date`（发布日期）、`patterns`（设计模式标签数组）。
 
 ## 正文结构（固定 8 节 + 下一步）
 
@@ -63,7 +62,7 @@ next: 18
 
 ## 内容与验证附卡
 
-保持上面的八阶段、frontmatter 和约 60 分钟结构；以下信息放在阅读、实验和检查题中，不创建另一套前端必须解析的字段。
+保持上面的八阶段、lessons.meta.json 元数据和约 60 分钟结构；以下信息放在阅读、实验和检查题中，不创建另一套前端必须解析的字段。
 
 - 阅读开头：本课一个核心问题、两至三个可观察学习目标、前置 Day／专题。
 - 实验开头：源码路径、语言标准、依赖与运行环境；使用 [环境卡](../lab-environments.md) 记录版本。

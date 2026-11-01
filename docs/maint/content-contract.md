@@ -16,9 +16,23 @@
 | 设计规范 | `docs/design/` + 根 `PRODUCT.md` | `.md` + `.impeccable/` 配置 | PRODUCT.md 置根目录由 impeccable 技能约定决定 |
 | 维护者文档 | `docs/maint/`（含 `archive/`） | `.md` + `.json` | 不加载进网站；**改动不触发站点构建** |
 
-## 2. 文本契约（frontmatter）
+## 2. 文本契约（课程内容与元数据分离）
 
-`daily/*.md` 必须携带 `check-course.py` 校验的全字段（details/status/topics/guidelines/lab/previous/next/duration）。区① 专题文档应有 `summary` 字段（站点列表摘要使用）。
+`daily/*.md` 只承载正文，一律以 `# Day NN · 标题` 开头，**禁止写 frontmatter（YAML 头部块）**。课程元数据统一存放于 `daily/lessons.meta.json`，每个 `daily/day-*.md` 必须有且仅有一条按 `path` 对应的条目：
+
+| 字段 | 必填 | 说明 |
+| --- | --- | --- |
+| `path` | 是 | `daily/day-XXX-<slug>.md`，与实际文件一一对应 |
+| `week` / `part` / `chapter` / `chapter_title` / `title` | 是 | 周次、卷、章节号、章节名、课程标题 |
+| `duration` / `status` | 是 | 分钟数字段；`status` 为 `draft \| published` |
+| `topics` / `guidelines` | 是 | 各 1~6 个 kebab-case 标签 |
+| `lab` | 是 | `examples/day-XXX/main.cpp` 等可编译路径；RTOS 模拟课程填 `rtos-sim` 并附 `rtos_scenario` |
+| `previous` / `next` | 是 | 前一天编号（首课为 `-1`）；`next` 允许指向尚未发布的后一天 |
+| `date` / `patterns` | 否 | 发布日期、关联设计模式标签 |
+
+**提交者与 AI 执行者指引：** 新增每日课程时拆成两步——先只写正文 md（不动其他文件），再到 `daily/lessons.meta.json` 追加对应条目并维护 `previous/next`；后续若只改正文（改写、补导读），无需触碰元数据。不要把元数据写回正文，也不要再引入 frontmatter 或新的侧车文件。机器校验由 `scripts/build-content.py --check` 与 `tools/check-course.py` 实现，两者都按本节读取 `lessons.meta.json`；正文渲染时元数据通过 manifest 注入站点。
+
+区① 专题文档（daily 以外的 weekly/patterns/docs/booklets/frameworks 等）仍保留 frontmatter，至少含 `summary` 字段（站点列表摘要使用）。
 
 ## 3. 资源引用规则
 
