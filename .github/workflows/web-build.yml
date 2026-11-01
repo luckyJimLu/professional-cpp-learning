@@ -6,9 +6,17 @@ on:
       - main
       - "feat/**"
       - "improve/**"
+    paths-ignore:
+      - "docs/maint/**"
+      - "docs/design/**"
+      - "README.md"
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - "docs/maint/**"
+      - "docs/design/**"
+      - "README.md"
 
 jobs:
   build:
@@ -33,6 +41,9 @@ jobs:
 
       - name: Verify migrated content
         run: npm run check:migration
+
+      - name: Check content contract
+        run: python3 scripts/build-content.py --check
 
       - name: Check Slidev course decks
         run: npm run ppt:check

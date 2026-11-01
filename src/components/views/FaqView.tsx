@@ -1,19 +1,37 @@
 import { useEffect, useRef, useState } from "react";
-import faqRaw from "../../../docs/faq.md?raw";
+import { fetchContentText } from "@/lib/contentRuntime";
 import { Markdown } from "../Markdown";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 
-const faqBody = faqRaw
-  .replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "")
-  .replace(/^[\s\S]*?(?=^## Q1:)/m, "");
+const FAQ_PATH = "docs/faq.md";
 
 export function FaqView() {
   const articleRef = useRef<HTMLElement>(null);
+  const [topicText, setTopicText] = useState("");
   const [headings, setHeadings] = useState<
     { id: string; title: string; level: number }[]
   >([]);
   const [activeId, setActiveId] = useState("");
+
+  useEffect(() => {
+    let alive = true;
+    fetchContentText(FAQ_PATH)
+      .then((raw) => {
+        if (!alive) return;
+        setTopicText(
+          raw
+            .replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "")
+            .replace(/^[\s\S]*?(?=^## Q1:)/m, ""),
+        );
+      })
+      .catch(() => {
+        if (alive) setTopicText("");
+      });
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   useEffect(() => {
     const nodes = Array.from(
@@ -38,7 +56,7 @@ export function FaqView() {
     updateActive();
     window.addEventListener("scroll", updateActive, { passive: true });
     return () => window.removeEventListener("scroll", updateActive);
-  }, []);
+  }, [topicText]);
 
   return (
     <div className="docs-layout today-layout faq-page">
@@ -74,7 +92,7 @@ export function FaqView() {
         </Card>
 
         <div ref={articleRef as React.RefObject<HTMLDivElement>} className="document-card faq-document">
-          <Markdown embedDocument>{faqBody}</Markdown>
+          <Markdown embedDocument>{topicText}</Markdown>
         </div>
       </article>
 

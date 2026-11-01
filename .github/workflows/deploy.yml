@@ -16,7 +16,42 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  changes:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      app: ${{ steps.select.outputs.app }}
+      content: ${{ steps.select.outputs.content }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+
+      - name: Select pipeline (app rebuild vs content refresh)
+        id: select
+        run: |
+          set -eu
+          app_re='^(src/|public/|vite\.config\.ts|package\.json$|package-lock\.json|playwright\.config\.ts|index\.html|rtos\.html|scripts/build-content\.py|include/)'
+          content_re='^(daily/|weekly/|patterns/|booklets/|guidelines/|frameworks/|references/|docs/|assets/|progress\.md|README\.md)'
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            app=true; content=true
+          else
+            changed="$(git diff --name-only HEAD^ HEAD | tr '\n' ' ')"
+            echo "changed: $changed"
+            match() { echo "$changed" | grep -Eq "$1" && echo true || echo false; }
+            app="$(match "$app_re")"
+            content="$(match "$content_re")"
+          fi
+          # 应用侧文件变更时全量重建即可覆盖内容；仅内容变更走快速通道
+          if [ "$app" = "true" ]; then content="false"; fi
+          echo "app=$app" >> "$GITHUB_OUTPUT"
+          echo "content=$content" >> "$GITHUB_OUTPUT"
+
+  app-deploy:
+    name: Full rebuild and deploy
+    if: needs.changes.outputs.app == 'true'
+    needs: changes
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -53,10 +88,13 @@ jobs:
       - name: Verify migrated content
         run: npm run check:migration
 
+      - name: Check content contract
+        run: python3 scripts/build-content.py --check
+
       - name: Check Slidev course decks
         run: npm run ppt:check
 
-      - name: Build web application
+      - name: Build web application (content pipeline included)
         env:
           GITHUB_PAGES: "true"
         run: npm run build
@@ -70,6 +108,98 @@ jobs:
           if [ -f ./dist/index.html ]; then
             echo "=== index.html head ==="
             head -n 20 ./dist/index.html
+          else
+            echo "ERROR: ./dist/index.html missing!"
+            exit 1
+          fi
+
+      - name: Save dist for the content fast lane
+        uses: actions/cache/save@v4
+        with:
+          path: ./dist
+          key: pages-dist-${{ github.sha }}
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "./dist"
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          timeout: 1200000
+          error_count: 20
+
+  content-deploy:
+    name: Content-only refresh and deploy
+    if: needs.changes.outputs.content == 'true'
+    needs: changes
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Verify Pages deployment source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          build_type="$(gh api "repos/${GITHUB_REPOSITORY}/pages" --jq '.build_type')"
+          if [ "$build_type" != "workflow" ]; then
+            echo "::error::Set Settings > Pages > Build and deployment > Source to GitHub Actions. Branch publishing runs Jekyll against the C++ lesson sources instead of deploying dist/."
+            exit 1
+          fi
+
+      - name: Check content contract
+        run: python3 scripts/build-content.py --check
+
+      - name: Restore last deployed dist
+        id: dist_cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ./dist
+          key: pages-dist-not-exists
+          restore-keys: |
+            pages-dist-
+
+      - name: Build content tree
+        if: steps.dist_cache.outputs.cache-hit
+        run: python3 scripts/build-content.py --out dist/content
+
+      - name: Fallback full build when cache missing
+        if: ${{ !steps.dist_cache.outputs.cache-hit }}
+        run: echo "No cached dist found; falling back to a full application build."
+
+      - name: Setup Node.js 24
+        if: ${{ !steps.dist_cache.outputs.cache-hit }}
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Install dependencies (fallback)
+        if: ${{ !steps.dist_cache.outputs.cache-hit }}
+        run: npm install --no-audit --no-fund
+
+      - name: Build web application (fallback)
+        if: ${{ !steps.dist_cache.outputs.cache-hit }}
+        env:
+          GITHUB_PAGES: "true"
+        run: npm run build
+
+      - name: Show dist diagnostics
+        run: |
+          echo "=== Dist directory size ==="
+          du -sh ./dist || true
+          if [ -f ./dist/index.html ]; then
+            echo "=== index.html head ==="
+            head -n 5 ./dist/index.html
           else
             echo "ERROR: ./dist/index.html missing!"
             exit 1
