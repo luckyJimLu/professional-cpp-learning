@@ -19,6 +19,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+LESSON_META = ROOT / "daily" / "lessons.meta.json"
 
 ZONE1_DOCS = [
     "content-map.md",
@@ -155,11 +156,6 @@ def reading_stats(text: str) -> dict[str, int]:
     return {"minutes": minutes, "wordCount": cjk + latin}
 
 
-def extract_lab_path(text: str) -> str:
-    m = re.search(r"^lab:\n\s+path:\s*(\S+)", text, re.M)
-    return m.group(1).strip("'\"") if m else ""
-
-
 def list_value(meta: dict[str, object], key: str) -> list[str]:
     value = meta.get(key)
     if value is None or value == "":
@@ -179,31 +175,47 @@ def first_heading(text: str) -> str:
     return m.group(1).strip() if m else ""
 
 
+def load_lesson_meta() -> list[dict]:
+    """Lesson metadata lives in daily/lessons.meta.json, never in the markdown."""
+    data = json.loads(LESSON_META.read_text(encoding="utf-8"))
+    entries = []
+    for item in data.get("lessons", []):
+        entry = dict(item)
+        rel = str(entry.get("path", ""))
+        match = re.match(r"daily/day-(\d{3})-", rel)
+        if not match:
+            raise SystemExit(f"{LESSON_META.name}: bad lesson path {rel!r}")
+        entry["day"] = int(match.group(1))
+        entries.append(entry)
+    entries.sort(key=lambda e: e["day"])
+    return entries
+
+
 def build_manifest(pairs):
-    lesson_meta = [(rel, parse_frontmatter((ROOT / rel).read_text(encoding="utf-8", errors="replace")))
-                   for rel in [str(rel) for _, rel in pairs] if re.match(r"day-\d{3}-", rel.split("/", 1)[-1]) and rel.startswith("daily/")]
     lessons = []
-    for rel, meta in sorted(lesson_meta):
-        number = int(re.match(r"day-(\d{3})-", rel.rsplit("/", 1)[-1]).group(1))
+    for meta in load_lesson_meta():
+        rel = meta["path"]
         lesson_text = (ROOT / rel).read_text(encoding="utf-8", errors="replace")
         entry = {
             "path": rel,
-            "number": number,
+            "number": meta["day"],
             "title": first_heading(lesson_text),
+            "week": scalar_value(meta, "week"),
+            "part": scalar_value(meta, "part"),
+            "chapter": scalar_value(meta, "chapter"),
+            "chapterTitle": scalar_value(meta, "chapter_title"),
             "status": scalar_value(meta, "status"),
             "duration": scalar_value(meta, "duration"),
             "topics": list_value(meta, "topics"),
             "guidelines": list_value(meta, "guidelines"),
-            "lab": extract_lab_path(lesson_text),
+            "lab": scalar_value(meta, "lab"),
             "previous": scalar_value(meta, "previous"),
             "next": scalar_value(meta, "next"),
+            "stats": reading_stats(lesson_text),
         }
-        chapter = scalar_value(meta, "chapter")
-        if chapter:
-            entry["chapter"] = chapter
-        entry["stats"] = reading_stats(lesson_text)
+        if meta.get("rtos_scenario"):
+            entry["rtosScenario"] = scalar_value(meta, "rtos_scenario")
         lessons.append(entry)
-    lessons.sort(key=lambda e: e["number"])
 
     lesson_paths = {e["path"] for e in lessons}
     topics = []
@@ -259,6 +271,8 @@ def build_manifest(pairs):
         digest.update(f"{rel}:".encode())
         digest.update(hashlib.sha256(src.read_bytes()).digest())
         digest.update(b"\n")
+    digest.update(f"{LESSON_META.relative_to(ROOT).as_posix()}:".encode())
+    digest.update(hashlib.sha256(LESSON_META.read_bytes()).digest())
 
     return {
         "contentVersion": digest.hexdigest()[:8],
@@ -340,21 +354,36 @@ def validate(pairs):
         rel_s = str(rel)
         if src.suffix in BINARY_EXTS and not rel_s.startswith(ALLOWED_BINARY_DIRS):
             problems.append(f"non-text file in content zone: {rel_s}")
-    daily = sorted((ROOT / "daily").glob("*.md"))
-    lowest, highest = daily[0], daily[-1]
+    daily = sorted((ROOT / "daily").glob("day-*.md"))
+    meta_entries = load_lesson_meta()
+    meta_paths = {entry["path"] for entry in meta_entries}
+    meta_days = {entry["day"] for entry in meta_entries}
+    required = ("week", "part", "chapter", "chapter_title", "title", "duration",
+                "status", "topics", "guidelines", "lab", "previous", "next")
+    for entry in meta_entries:
+        rel = entry["path"]
+        if not (ROOT / rel).is_file():
+            problems.append(f"{LESSON_META.name}: {rel} has no markdown file")
+        missing = [key for key in required if entry.get(key) in ("", None, [])]
+        if missing:
+            problems.append(f"{LESSON_META.name}: {rel} empty metadata fields {missing}")
+        lab = entry.get("lab", "")
+        if lab and lab != "rtos-sim" and not (ROOT / lab).is_file():
+            problems.append(f"{LESSON_META.name}: {rel} lab path does not exist: {lab}")
+        previous = entry.get("previous")
+        if previous not in (-1, *meta_days):
+            problems.append(f"{LESSON_META.name}: {rel} previous={previous} has no lesson")
+        following = entry.get("next")
+        if not isinstance(following, int) or (following != -1 and following <= entry["day"]):
+            problems.append(f"{LESSON_META.name}: {rel} next={following} is not a later day")
     for md in daily:
         if not re.match(r"day-\d{3}-", md.name):
             continue
-        lesson_text = md.read_text(encoding="utf-8", errors="replace")
-        meta = parse_frontmatter(lesson_text)
-        values = {"status": scalar_value(meta, "status"), "duration": scalar_value(meta, "duration"),
-                  "topics": list_value(meta, "topics"), "lab": extract_lab_path(lesson_text)}
-        missing = [k for k in values if not values[k]]
-        if missing:
-            problems.append(f"{md.relative_to(ROOT).as_posix()}: empty frontmatter fields {missing}")
-        if md != lowest and md != highest and (not meta.get("previous") or not meta.get("next")):
-            problems.append(f"{md.relative_to(ROOT).as_posix()}: previous/next required outside boundaries")
-    print(f"PASS: content contract ({len(md_targets)} md scanned, {checked_links} links checked)")
+        rel_md = md.relative_to(ROOT).as_posix()
+        if rel_md not in meta_paths:
+            problems.append(f"{rel_md}: missing entry in {LESSON_META.name}")
+    print(f"PASS: content contract ({len(md_targets)} md scanned, {checked_links} links checked, "
+          f"{len(meta_entries)} lesson metadata entries)")
     return problems
 
 
