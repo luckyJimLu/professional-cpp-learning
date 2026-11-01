@@ -1,22 +1,3 @@
----
-day: 67
-week: 10
-part: III
-chapter: 8
-chapter_title: Gaining Proficiency with Classes and Objects
-title: Class Encapsulation and Member Functions
-duration: 60
-status: published
-date: 2026-11-01
-topics: [classes, access-control, member-functions, in-class-initializers, invariants, value-semantics]
-patterns: [encapsulation, information-hiding, composition]
-guidelines: [private-state, explicit-invariants, in-class-member-initializers]
-lab:
-  path: examples/day-067/main.cpp
-previous: 66
-next: 68
----
-
 # Day 67 · 从数据结构到封装：class、成员函数与对象不变量
 
 > **主教材**：Marc Gregoire，《Professional C++》，Sixth Edition，Chapter 8 · *Gaining Proficiency with Classes and Objects*。
@@ -153,7 +134,7 @@ private:
 
 **结论**：C++ class 的优势是把合法操作收敛到类型接口；不是所有 C struct 都必须改成 class，也不是所有 class 都需要继承。
 
-## ⑤ 设计模式映射：今天不套 GoF 模式（8 分钟）
+## 设计模式映射：今天不套 GoF 模式（8 分钟）
 
 ### 真实变化轴
 
@@ -184,7 +165,7 @@ private:
 - 其他模块若只需同步调用，可借用 UartPort&；borrower 不得活得比 owner 更久。
 - 今天没有 callback，因此没有 unsubscribe；未来加入异步 DMA/callback 时，必须先定义 buffer owner、完成回调的线程上下文、取消与 drain 顺序，再设计 API。
 
-## ⑥ Embedded / System Design 场景：UART Driver 的状态边界（6 分钟）
+## Embedded / System Design 场景：UART Driver 的状态边界（6 分钟）
 
 一个真实 Driver 可以按以下层次理解：
 
@@ -210,7 +191,7 @@ Application / Modem Middleware
 - **错误传播**：InvalidArgument、Busy、NotReady 等可恢复错误进入 Status；不要用 assert 处理外设输入错误。
 - **可测试性**：今天的状态逻辑可在 host 上测试；寄存器访问应留在 HAL/BSP 层，以便替换 Fake。
 
-## ⑦ 今日编码规范（6 分钟）
+## ⑤ 今日编码规范（6 分钟）
 
 ### MUST 1：可变状态默认 private，所有状态转换经过成员函数
 
@@ -256,7 +237,7 @@ class UartPort {
 
 推荐写法：用 UartState、Status 等强类型枚举；函数参数按真实语义命名。沿用仓库既定命名：类型/函数 PascalCase，变量 snake_case，成员 snake_case_，常量 kPascalCase。
 
-## ⑧ 可编译 Lab / 练习（8 分钟）
+## ⑥ 可编译 Lab / 练习（8 分钟）
 
 ### 主 Lab：封装 UART 配置与状态不变量
 
@@ -310,13 +291,13 @@ Starter 是**逻辑/设计违规但可编译运行**的完整程序，包含 mai
 
 这是一个可独立运行的重构练习，不依赖主 Lab，也不需要把两个 main() 合并。
 
-## ⑨ 3 个常见坑（2 分钟）
+## ⑦ 3 个常见坑（2 分钟）
 
 1. **混淆 class 与 struct**：两者都能有成员函数和访问控制；主要语法差异是默认访问级别，不是一个“面向对象”、另一个“只能存数据”。
 2. **以为 private 自动保证线程安全**：private 防止外部直接访问，不会自动提供 mutex、IRQ 保护或原子性；线程/中断约束仍要显式设计。
 3. **把 class 等同于 heap/virtual**：一个 class 可以是固定大小、自动存储期、无动态分配、无虚函数的普通值对象；不要为“面向对象”引入不必要运行时成本。
 
-## ⑩ 检查题（2 分钟）
+## ⑧ 检查题（2 分钟）
 
 ### 知识 / 代码检查
 
