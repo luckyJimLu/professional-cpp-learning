@@ -102,6 +102,7 @@ test("topics catalog consolidates domains and renames books option to 参考书�
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/?view=topics");
+  await expect(page.locator("#topic-category option")).toHaveCount(7); // 等待内容导水完成后应用挂载
   const options = await page
     .locator("#topic-category option")
     .allInnerTexts();

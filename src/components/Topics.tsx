@@ -277,6 +277,7 @@ function TopicReader({
     let y = 0;
     let timer: ReturnType<typeof setTimeout> | undefined;
     const update = () => {
+      if (!topicText) return; // 正文尚未就绪：高度不足，避免短滚动态覆盖阅读位置
       y = window.scrollY;
       const current =
         [...nodes]
@@ -291,12 +292,14 @@ function TopicReader({
     };
     const savedY = Number(readSaved(positionKey(selected.path)) ?? 0);
     const frame = requestAnimationFrame(() => {
-      if (!window.location.hash && Number.isFinite(savedY) && savedY > 0)
+      if (!window.location.hash && topicText && Number.isFinite(savedY) && savedY > 0)
         window.scrollTo({ top: savedY, behavior: "instant" });
       update();
     });
     window.addEventListener("scroll", update, { passive: true });
-    const persist = () => save(positionKey(selected.path), String(y));
+    const persist = () => {
+      if (topicText) save(positionKey(selected.path), String(y));
+    };
     window.addEventListener("pagehide", persist);
     return () => {
       cancelAnimationFrame(frame);

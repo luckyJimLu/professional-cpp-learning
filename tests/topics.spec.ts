@@ -102,6 +102,9 @@ test("topic reader resumes position and supports storage failures", async ({
     "/?view=topics&topic=frameworks/openharmony/02-kernel-interfaces.md",
   );
   await expect(page.locator(".topic-document-centered h1")).toBeVisible();
+  await expect(
+    page.locator(".topic-document-centered h2").first(),
+  ).toBeVisible(); // 正文就绪后再滚动，否则高度不足导致滚动态只有 header
   await page.evaluate(() => window.scrollTo({ top: 900, behavior: "instant" }));
   await expect
     .poll(() =>
