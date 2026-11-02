@@ -8,7 +8,7 @@
 
 **学习目标**：能区分 class 与 object、自动存储期与动态存储期；能正确使用点/箭头运算符、this、*this；理解 C++23 explicit object parameter 的语法与真实适用边界；在 Embedded 系统中明确对象 owner、borrower 和异步回调 teardown。
 
-**60 分钟安排**：阅读 8 分钟 → 昨日复习 5 分钟 → 核心概念 14 分钟 → C/C++ 对照 6 分钟 → 设计映射 7 分钟 → Embedded 场景 6 分钟 → 规范 4 分钟 → Lab/练习 7 分钟 → 常见坑与检查 3 分钟。
+**60 分钟安排**：阅读 8 分钟 → 昨日复习 5 分钟 → 核心概念与进阶选读 27 分钟 → C/C++ 对照 6 分钟 → 规范 4 分钟 → Lab/练习 7 分钟 → 常见坑与检查 3 分钟。
 
 ## ① 今日章节与建议阅读范围（8 分钟）
 
@@ -41,7 +41,7 @@
 
 复习检查点：class 是类型定义；对象是该类型的实例；访问控制用于保护普通 API 边界；默认成员初始化器让初始状态可见。private 不等于并发同步，也不等于资源所有权。
 
-## ③ 核心概念：对象实例、存储期、成员访问与对象参数（14 分钟）
+## ③ 核心概念：对象实例、存储期、成员访问与对象参数（27 分钟，含进阶选读）
 
 ### 1. class 是蓝图，object 才是实例
 
@@ -153,6 +153,63 @@ cell.SetValue(6.0);  // 不需要显式传 self
 | 隐式 this | 成员函数签名包含对象语义 | 调用时指向当前对象 |
 | explicit object parameter | C++23 语法、重载与类型检查 | 本身不要求额外 heap 或虚分派；通常与普通对象参数调用机制相近 |
 
+### 7. 设计模式映射：今天不使用 GoF Pattern（进阶选读）
+
+#### 需求变化 → 变化轴 → 稳定边界
+
+今天真正讨论的变化轴是**对象实例的存储期和 owner 生命周期**，不是算法变化、产品族变化或事件订阅变化。
+
+稳定边界是：
+
+- Cell 的公开操作负责维护自己的状态；
+- 创建对象的上层负责决定其存储期；
+- 借用者只能在 owner 保证的生命周期内访问对象；
+- this 只是成员函数执行期间访问当前对象的借用别名。
+
+#### Pattern 判断
+
+- **不使用 Strategy**：今天没有需要运行时切换的算法。
+- **不使用 Factory**：当前只有一种 Cell 类型；把 new 包装进 Factory 并不会自动解决 owner 问题。
+- **不使用 Observer**：没有事件广播需求；如果未来把 this 注册为回调上下文，首先要解决 unregister/drain/lifetime，而不是先画 Observer 类图。
+- **不使用 Adapter**：今天没有不兼容的第三方 API；真正包装 vendor C API 时再评估。
+- **不增加 virtual hierarchy**：对象访问方式和存储期选择都不要求运行时多态。若未来有 UART/USB 运行时替换，再比较 runtime interface 与 template/concept 的成本。
+
+今天采用的是 **Encapsulation + Value Semantics + RAII**。它们是设计原则和 C++ 技术，不是必须套用的 GoF 模式。
+
+#### Ownership / borrow / lifetime
+
+- Cell local_cell;：local_cell 是 owner，作用域决定其生命周期。
+- std::unique_ptr<Cell>：unique_ptr 是唯一 owner；裸 Cell* 或 Cell& 若从它取得，只是 borrow。
+- this：当前对象的非拥有别名；*this 是对当前对象的引用。
+- 同步 helper 可以短暂借用 const Cell&；异步 callback 不得默认保存 this。
+
+Pattern 的滥用表现：为了“面向对象”给单个固定对象增加 Factory、Service Locator、共享所有权和虚接口，却没有真实变化轴；结果是 owner 隐藏、初始化顺序复杂、运行时成本上升。
+
+### 8. Embedded / System Design 场景：Modem Driver 的对象放置与回调边界（进阶选读）
+
+以 RTOS Modem 系统为例：
+
+~~~text
+Application Composition Root
+        │ owns (static / long-lived)
+        ▼
+    UartPort Driver
+        ▲
+        │ borrows by reference
+        │
+  ModemController / AT Parser
+~~~
+
+建议判断：
+
+1. **长期硬件对象**：UART Driver 通常由 board/application composition root 持有，生命周期覆盖使用它的 Middleware；固定硬件不需要为了“统一管理”而动态 new。
+2. **短期临时对象**：解析一条 AT 行的局部结果、短期状态快照，优先 automatic storage/value semantics；不要为几毫秒的局部工作制造 heap ownership。
+3. **确需动态模块**：在启动/配置阶段创建，由单一 unique_ptr 或明确的静态 owner 管理；分配失败必须进入项目错误模型。若项目禁异常，不能把可能失败的 make_unique 当成实时路径无失败的保证。
+4. **实时路径**：ISR、DMA completion 和高优先级任务不应执行无界分配、阻塞等待或复杂析构；固定容量和初始化期分配更容易审计 RAM 与 WCET。
+5. **this 与 callback**：把 this 作为 void* context 注册给 HAL/RTOS callback 时，它仍然只是借用。必须保证 owner 活得足够久，并明确 callback 所在线程/中断上下文。
+6. **teardown**：先停止 IRQ/event producer → unregister callback → drain/in-flight callback → 停止 worker/task → 最后销毁对象。不能先析构对象，再期待 callback 自己不再到来。
+7. **线程安全**：this 和 private 都不提供同步。若 Driver 由多个 task 访问，应明确 single-owner task、消息队列或锁边界；不要在 ISR 中随意拿阻塞锁。
+
 ## ④ C 写法 vs Modern C++（6 分钟）
 
 ### C：对象指针和函数调用分离
@@ -199,64 +256,7 @@ owned_cell->SetValue(3.7);
 
 **结论**：Modern C++ 不是把所有 C 指针都换成 shared_ptr。先判断对象是否需要动态存储期，再表达 owner 与 borrow；固定生命周期对象优先直接作为值成员或局部对象。
 
-## ⑤ 设计模式映射：今天不使用 GoF Pattern（7 分钟）
-
-### 需求变化 → 变化轴 → 稳定边界
-
-今天真正讨论的变化轴是**对象实例的存储期和 owner 生命周期**，不是算法变化、产品族变化或事件订阅变化。
-
-稳定边界是：
-
-- Cell 的公开操作负责维护自己的状态；
-- 创建对象的上层负责决定其存储期；
-- 借用者只能在 owner 保证的生命周期内访问对象；
-- this 只是成员函数执行期间访问当前对象的借用别名。
-
-### Pattern 判断
-
-- **不使用 Strategy**：今天没有需要运行时切换的算法。
-- **不使用 Factory**：当前只有一种 Cell 类型；把 new 包装进 Factory 并不会自动解决 owner 问题。
-- **不使用 Observer**：没有事件广播需求；如果未来把 this 注册为回调上下文，首先要解决 unregister/drain/lifetime，而不是先画 Observer 类图。
-- **不使用 Adapter**：今天没有不兼容的第三方 API；真正包装 vendor C API 时再评估。
-- **不增加 virtual hierarchy**：对象访问方式和存储期选择都不要求运行时多态。若未来有 UART/USB 运行时替换，再比较 runtime interface 与 template/concept 的成本。
-
-今天采用的是 **Encapsulation + Value Semantics + RAII**。它们是设计原则和 C++ 技术，不是必须套用的 GoF 模式。
-
-### Ownership / borrow / lifetime
-
-- Cell local_cell;：local_cell 是 owner，作用域决定其生命周期。
-- std::unique_ptr<Cell>：unique_ptr 是唯一 owner；裸 Cell* 或 Cell& 若从它取得，只是 borrow。
-- this：当前对象的非拥有别名；*this 是对当前对象的引用。
-- 同步 helper 可以短暂借用 const Cell&；异步 callback 不得默认保存 this。
-
-Pattern 的滥用表现：为了“面向对象”给单个固定对象增加 Factory、Service Locator、共享所有权和虚接口，却没有真实变化轴；结果是 owner 隐藏、初始化顺序复杂、运行时成本上升。
-
-## ⑥ Embedded / System Design 场景：Modem Driver 的对象放置与回调边界（6 分钟）
-
-以 RTOS Modem 系统为例：
-
-~~~text
-Application Composition Root
-        │ owns (static / long-lived)
-        ▼
-    UartPort Driver
-        ▲
-        │ borrows by reference
-        │
-  ModemController / AT Parser
-~~~
-
-建议判断：
-
-1. **长期硬件对象**：UART Driver 通常由 board/application composition root 持有，生命周期覆盖使用它的 Middleware；固定硬件不需要为了“统一管理”而动态 new。
-2. **短期临时对象**：解析一条 AT 行的局部结果、短期状态快照，优先 automatic storage/value semantics；不要为几毫秒的局部工作制造 heap ownership。
-3. **确需动态模块**：在启动/配置阶段创建，由单一 unique_ptr 或明确的静态 owner 管理；分配失败必须进入项目错误模型。若项目禁异常，不能把可能失败的 make_unique 当成实时路径无失败的保证。
-4. **实时路径**：ISR、DMA completion 和高优先级任务不应执行无界分配、阻塞等待或复杂析构；固定容量和初始化期分配更容易审计 RAM 与 WCET。
-5. **this 与 callback**：把 this 作为 void* context 注册给 HAL/RTOS callback 时，它仍然只是借用。必须保证 owner 活得足够久，并明确 callback 所在线程/中断上下文。
-6. **teardown**：先停止 IRQ/event producer → unregister callback → drain/in-flight callback → 停止 worker/task → 最后销毁对象。不能先析构对象，再期待 callback 自己不再到来。
-7. **线程安全**：this 和 private 都不提供同步。若 Driver 由多个 task 访问，应明确 single-owner task、消息队列或锁边界；不要在 ISR 中随意拿阻塞锁。
-
-## ⑦ 今日编码规范（4 分钟）
+## ⑤ 今日编码规范（4 分钟）
 
 ### MUST 1：固定生命周期对象优先 value/automatic storage；确需动态 owner 时用 RAII
 
@@ -289,7 +289,7 @@ cell.SetValue(1.0);
 
 推荐写法：普通成员函数继续使用隐式 this；当后续模板/const-ref overload 需要统一实现时，再评估 this auto&& self 等 C++23 能力。成员变量沿用 snake_case_，减少名字遮蔽，不依赖 this-> 掩盖命名问题。
 
-## ⑧ 可编译 Lab / 练习（7 分钟）
+## ⑥ 可编译 Lab / 练习（7 分钟）
 
 ### 主 Lab：同一个类型的自动对象、动态对象、this 与显式对象参数
 
@@ -342,13 +342,13 @@ Starter 是**设计违规但可独立编译运行**的完整程序：CreateReadi
 
 **Code Review 验收**：owner 必须从 API 类型或明确契约中看得出来；所有路径都能安全释放；动态分配不得进入硬实时路径。
 
-## ⑨ 3 个常见坑（2 分钟）
+## ⑦ 3 个常见坑（2 分钟）
 
 1. **把 stack/free store 当作硬件内存布局承诺**：标准层面应区分 automatic 与 dynamic storage duration；具体物理布局由实现与目标 ABI 决定。
 2. **把 this 当成 owner**：this 不拥有对象，*this 也不会延长生命周期。把它传给同步 helper 通常没问题；保存到异步 callback 则必须证明 owner 生命周期和 teardown。
 3. **为了使用 C++23 新语法而改写一切**：简单 setter 使用 explicit object parameter 只会增加冗余。它的价值在后续模板/ref-qualified member function 等场景；今天应理解，不应滥用。
 
-## ⑩ 检查题（1 分钟）
+## ⑧ 检查题（1 分钟）
 
 ### 知识 / 代码检查
 
