@@ -143,6 +143,8 @@ cell.SetValue(6.0);  // 不需要显式传 self
 
 它的价值主要出现在后续更高级的用法：统一 const/non-const 重载、ref-qualified member function、模板中推导对象 cv/ref 类型，以及递归 lambda。今天只掌握语法和边界，不提前展开模板章节。
 
+**编译器支持**：GCC 14+ 或 Clang 18+ 已实现该特性，GCC 13 及更早版本没有。代码可用 `__cpp_explicit_this_parameter` 特性测试宏判断；本课 Lab 在旧编译器上会打印跳过原因，其余示例照常运行。
+
 ### 6. 编译期与运行期影响
 
 | 机制 | 编译期 | 运行期 |
@@ -304,7 +306,7 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-068/main.cpp -
 
 - 自动存储期对象通过点运算符调用成员函数；
 - 普通成员函数通过 this 更新当前对象，并用 *this 同步借用给 helper；
-- C++23 explicit object parameter 用 self 访问当前对象，调用点不变；
+- C++23 explicit object parameter 用 self 访问当前对象，调用点不变（需要 GCC 14+ 或 Clang 18+；旧编译器打印跳过原因）；
 - std::unique_ptr 作为动态对象的唯一 owner，通过 -> 访问，reset() 后 owner 为空。
 
 预期输出：
@@ -318,6 +320,8 @@ dynamic object owned by unique_ptr:
 cell value=3.7
 unique_ptr reset: empty
 ~~~
+
+若编译器不支持该特性，`explicit object parameter:` 下一行会输出 `skipped: compiler lacks C++23 explicit object parameter (requires GCC 14+ or Clang 18+)`，其余输出相同。
 
 注意：主 Lab 使用 make_unique 展示 RAII 语义，不代表真实硬实时收发路径应该动态分配。
 
