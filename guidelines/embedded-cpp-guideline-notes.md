@@ -129,6 +129,15 @@
 - MUST：private 不等于线程安全；共享对象仍需明确 owner task、同步策略、IRQ 上下文与 teardown。
 - SHOULD：class 不意味着 heap allocation 或 runtime polymorphism；固定类型优先 value semantics，只有真实运行时变化轴才增加 virtual interface。
 
+## 对象存储期与 this 指针
+
+- MUST：先根据真实生命周期选择对象存放方式。固定、局部或可由上层直接组合的对象优先 value/automatic/static storage；只有确需独立动态生命周期时才引入动态分配。
+- MUST：动态对象必须有明确 owner；优先 RAII 与 std::unique_ptr。裸指针/引用默认表示 borrow，不应通过返回裸指针隐式转移 ownership。
+- SHOULD：在课程和设计文档中把教材常用的 stack/free store 分别映射到 automatic/dynamic storage duration；不要把常见实现布局误写成 C++ 标准保证。
+- MUST：this 与 *this 都不拥有当前对象。同步调用可以短暂借用；异步 callback 若保存 this，必须定义 owner 生命周期、unregister/cancel、in-flight drain 与 teardown 顺序。
+- SHOULD：普通成员函数优先使用隐式 this；C++23 explicit object parameter 仅在 ref-qualified overload、模板复用或递归 lambda 等真实场景能减少重复/改善表达时采用，不机械改写简单成员函数。
+- MUST：private、this 和成员函数都不自动提供线程安全；明确 owner task、IRQ context、同步策略和对象销毁顺序。
+
 ## 类关系与层级
 
 - has-a / uses-a 与 is-a 必须表达真实语义，不为了复用实现而继承。

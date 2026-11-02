@@ -13,9 +13,9 @@
 
 ## 当前进度
 
-- **已发布：Day 1–67**
-- **下一课：Day 68 · Chapter 8 · Gaining Proficiency with Classes and Objects**
-- 当前主线：**Chapter 8 已开始；Day 67 完成 class 封装与成员函数基础**
+- **已发布：Day 1–68**
+- **下一课：Day 69 · Chapter 8 · Understanding Object Life Cycles / Object Creation**
+- 当前主线：**Chapter 8 进行中；Day 68 完成对象存储期、this 与 C++23 显式对象参数**
 - 更新方式：**GitHub Markdown only**（每日课程正文 + `daily/lessons.meta.json` 元数据条目，两者同步提交）
 
 ## 快速入口
@@ -44,6 +44,7 @@
 
 ## 最近课程
 
+- [Day 68 · 对象存储期、this 与 C++23 显式对象参数](daily/day-068-object-storage-this-explicit-object-parameter.md)
 - [Day 67 · class 封装、成员函数与对象不变量](daily/day-067-class-encapsulation-member-functions.md)
 - [Day 66 · Memory Management 资源边界决策树](daily/day-066-memory-management-resource-boundary-decision-tree.md)
 - [Day 65 · optional 生命周期与固定池安全边界](daily/day-065-optional-fixed-pool-lifetime-boundaries.md)
@@ -75,7 +76,7 @@
 .
 ├── README.md
 ├── progress.md
-├── daily/                       # 已发布课程 Day 1–67
+├── daily/                       # 已发布课程 Day 1–68
 ├── weekly/                      # 周复盘
 ├── patterns/                    # 设计模式专题（含书籍示例源码 examples/）
 ├── examples/                    # 每日课程 main.cpp 与独立 exercise-XX.cpp

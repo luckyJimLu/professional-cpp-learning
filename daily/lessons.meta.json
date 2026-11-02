@@ -1623,6 +1623,38 @@
       "lab": "examples/day-067/main.cpp",
       "previous": 66,
       "next": 68
+    },
+    {
+      "path": "daily/day-068-object-storage-this-explicit-object-parameter.md",
+      "week": 10,
+      "part": "III",
+      "chapter": 8,
+      "chapter_title": "Gaining Proficiency with Classes and Objects",
+      "title": "Object Storage Duration, this and C++23 Explicit Object Parameters",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-02",
+      "patterns": [
+        "encapsulation",
+        "value-semantics",
+        "raii"
+      ],
+      "topics": [
+        "object-storage-duration",
+        "automatic-storage",
+        "dynamic-storage",
+        "this-pointer",
+        "explicit-object-parameter",
+        "borrow-lifetime"
+      ],
+      "guidelines": [
+        "automatic-storage-first",
+        "raii-ownership",
+        "this-is-borrow"
+      ],
+      "lab": "examples/day-068/main.cpp",
+      "previous": 67,
+      "next": 69
     }
   ]
 }
