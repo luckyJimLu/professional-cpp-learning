@@ -175,6 +175,12 @@ def first_heading(text: str) -> str:
     return m.group(1).strip() if m else ""
 
 
+def lesson_title(text: str, day: int) -> str:
+    """Manifest title excludes the "Day N" prefix — the UI adds that itself."""
+    title = first_heading(text)
+    return re.sub(rf"^\s*Day\s+0*{day}\s*[·:-]\s*", "", title, count=1, flags=re.I) or title
+
+
 def load_lesson_meta() -> list[dict]:
     """Lesson metadata lives in daily/lessons.meta.json, never in the markdown."""
     data = json.loads(LESSON_META.read_text(encoding="utf-8"))
@@ -199,7 +205,7 @@ def build_manifest(pairs):
         entry = {
             "path": rel,
             "number": meta["day"],
-            "title": first_heading(lesson_text),
+            "title": lesson_title(lesson_text, meta["day"]),
             "week": scalar_value(meta, "week"),
             "part": scalar_value(meta, "part"),
             "chapter": scalar_value(meta, "chapter"),
