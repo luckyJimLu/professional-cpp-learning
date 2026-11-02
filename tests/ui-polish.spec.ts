@@ -28,6 +28,15 @@ test("published lessons are not presented as learner completion", async ({
   await expect(page.locator(".sidebar-progress-pill")).toContainText(/已发布 · Day \d+/);
 });
 
+test("course resume card states the lesson day once", async ({ page }) => {
+  await page.goto("/?view=lessons");
+  const card = page.locator(".course-resume.guide-current-lesson");
+  const heading = card.locator("strong");
+  await expect(heading).toHaveText(/^Day \d+ · /);
+  expect((await heading.innerText()).match(/Day \d+/g)).toHaveLength(1);
+  await expect(card.locator(".guide-current-badge")).not.toContainText(/Day \d+/);
+});
+
 test("primary navigation moves focus into the destination", async ({ page }) => {
   await page.goto("/");
   await page

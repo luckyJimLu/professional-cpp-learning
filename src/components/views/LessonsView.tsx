@@ -124,7 +124,7 @@ export function LessonsView({
                       : "继续学习"}
                   </span>
                   <Badge variant="outline" className="guide-current-badge mono font-normal">
-                    课程 {target.day} / {lessons.length} 节 · 第 {target.week} 周
+                    第 {target.week} 周 · 课程共 {lessons.length} 节
                   </Badge>
                 </div>
                 <strong>

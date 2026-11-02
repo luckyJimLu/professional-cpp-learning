@@ -144,10 +144,16 @@ const CHINESE_TITLES: Record<number, string> = {
   50: "防呆接口设计：让正确使用变得自然，让错误使用无法编译",
 };
 
+function stripDayPrefix(title: string, day: number): string {
+  return title
+    .replace(new RegExp(`^Day\\s+0*${day}\\s*[·:-]\\s*`, "i"), "")
+    .replace(/^Day\s+\d+\s*[·:-]\s*/i, "");
+}
+
 function titleFromBody(body: string, day: number): string {
   const h1 = body.match(/^#\s+(.+)$/m)?.[1]?.trim();
   if (!h1) return `Day ${day}`;
-  return h1.replace(new RegExp(`^Day\\s+${day}\\s*[·:-]\\s*`, "i"), "").replace(/^Day\s+\d+\s*[·:-]\s*/i, "");
+  return stripDayPrefix(h1, day);
 }
 
 function cleanChineseTitle(body: string, day: number): string {
@@ -248,7 +254,7 @@ export function hydrateCourses(): Promise<void> {
         part: String(entry.part || chapterToPart(chapter) || "").replace(/^Part\s+/i, "") || undefined,
         chapter,
         chapterTitle: typeof entry.chapterTitle === "string" ? entry.chapterTitle : undefined,
-        title: entry.title || cleanChineseTitle(body, day),
+        title: stripDayPrefix(entry.title || cleanChineseTitle(body, day), day),
         duration: Number(entry.duration) || 60,
         status: entry.status || "published",
         topics: entry.topics ?? [],
