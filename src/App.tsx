@@ -18,8 +18,17 @@ import { LabView } from "./components/views/LabView";
 import { ReviewView } from "./components/views/ReviewView";
 import { GuidelinesView } from "./components/views/GuidelinesView";
 import { FaqView } from "./components/views/FaqView";
-import { VisualizerView } from "./components/views/VisualizerView";
-import { SlidesView } from "./components/views/SlidesView";
+
+const VisualizerView = lazy(() =>
+  import("./components/views/VisualizerView").then((module) => ({
+    default: module.VisualizerView,
+  })),
+);
+const SlidesView = lazy(() =>
+  import("./components/views/SlidesView").then((module) => ({
+    default: module.SlidesView,
+  })),
+);
 
 const BookletsView = lazy(() =>
   import("./components/views/BookletsView").then((module) => ({
@@ -146,7 +155,11 @@ export default function App() {
       );
       break;
     case "slides":
-      page = <SlidesView />;
+      page = (
+        <DeferredContent key="slides" label="课件">
+          <SlidesView />
+        </DeferredContent>
+      );
       break;
     case "search":
       page = (
@@ -163,7 +176,11 @@ export default function App() {
       );
       break;
     case "visualizer":
-      page = <VisualizerView />;
+      page = (
+        <DeferredContent key="visualizer" label="内存可视化">
+          <VisualizerView />
+        </DeferredContent>
+      );
       break;
     case "lab":
       page = selectedLesson ? (

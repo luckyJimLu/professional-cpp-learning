@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
-import hljs from "highlight.js";
+import { hljs } from "../../lib/hljs";
 import { preprocessSlideContent, type SlideItem } from "../../lib/slides";
 
 export function SlideRenderer({ slide }: { slide: SlideItem }) {
