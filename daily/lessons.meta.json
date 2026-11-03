@@ -1655,6 +1655,37 @@
       "lab": "examples/day-068/main.cpp",
       "previous": 67,
       "next": 69
+    },
+    {
+      "path": "daily/day-069-object-creation-constructors.md",
+      "week": 10,
+      "part": "III",
+      "chapter": 8,
+      "chapter_title": "Gaining Proficiency with Classes and Objects",
+      "title": "Object Creation and Constructors · Establishing Valid Objects",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-03",
+      "patterns": [
+        "composition",
+        "dependency-injection"
+      ],
+      "topics": [
+        "object-lifetime",
+        "object-creation",
+        "constructors",
+        "default-constructor",
+        "constructor-overload",
+        "valid-invariant"
+      ],
+      "guidelines": [
+        "constructor-valid-invariant",
+        "no-fallible-constructor-side-effects",
+        "explicit-initialization"
+      ],
+      "lab": "examples/day-069/main.cpp",
+      "previous": 68,
+      "next": 70
     }
   ]
 }

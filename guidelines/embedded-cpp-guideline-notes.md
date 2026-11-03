@@ -138,6 +138,16 @@
 - SHOULD：普通成员函数优先使用隐式 this；C++23 explicit object parameter 仅在 ref-qualified overload、模板复用或递归 lambda 等真实场景能减少重复/改善表达时采用，不机械改写简单成员函数。
 - MUST：private、this 和成员函数都不自动提供线程安全；明确 owner task、IRQ context、同步策略和对象销毁顺序。
 
+## 对象创建与构造函数
+
+- MUST：构造函数正常返回时，对象必须已经满足 class invariant；不得让半初始化或无效对象逃逸。
+- MUST：所有成员必须有明确初始化来源。若类声明了其他构造函数，只有在合法默认状态存在时才显式声明默认构造函数；不要依赖隐式生成规则的猜测。
+- MUST：构造函数不得隐藏可失败的硬件 I/O、无 timeout 等待、阻塞锁、实时路径动态分配或 callback 注册。将可失败资源获取放到显式 Start/Init，返回统一 Status 并定义 timeout 与失败回滚。
+- MUST：不得在构造过程中把 this 发布给外部事件源；callback 注册应在对象完全构造后进行，并定义 unregister/cancel、in-flight drain 与析构顺序。
+- SHOULD：构造重载只表达少数真实、合法的创建模式；多个入口必须建立相同 invariant。避免多个 bool 参数，优先 enum class 或具名 Config。
+- SHOULD：required dependency 显式注入；引用成员表示 borrow，被借用依赖必须比当前对象活得更久。由 composition root 负责构造顺序和 teardown。
+- SHOULD：测试默认构造和每个重载，并覆盖非法配置、启动失败与清理路径；不要只验证“能创建对象”。
+
 ## 类关系与层级
 
 - has-a / uses-a 与 is-a 必须表达真实语义，不为了复用实现而继承。

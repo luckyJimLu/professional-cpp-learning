@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 68**。下一课从 **Day 69** 继续。
+当前仓库课程已发布到 **Day 69**。下一课从 **Day 70** 继续。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -18,20 +18,22 @@
 | 66 | Memory Management 资源边界决策树 | 已发布 | [day-066](daily/day-066-memory-management-resource-boundary-decision-tree.md) |
 | 67 | class 封装、成员函数与对象不变量 | 已发布 | [day-067](daily/day-067-class-encapsulation-member-functions.md) |
 | 68 | 对象存储期、this 与 C++23 显式对象参数 | 已发布 | [day-068](daily/day-068-object-storage-this-explicit-object-parameter.md) |
+| 69 | 对象创建与构造函数：让对象从出生起就有效 | 已发布 | [day-069](daily/day-069-object-creation-constructors.md) |
 
 > Day 1–55 的完整逐日记录仍保留在 `daily/` 与 Git 历史中；本表仅展示 Day 56 起的最近课程摘要，避免进度文件承担完整目录职责。
 
 ## 最新发布详情
 
-- **日期**：2026-11-02
-- **章节**：Chapter 8 · Gaining Proficiency with Classes and Objects，pp.265–268
-- **主题**：对象实例、automatic/dynamic storage duration、成员访问、this 与 C++23 explicit object parameter
-- **关键知识点**：class 与 object 的区别、stack/free store 对应的标准存储期术语、点/箭头运算符、this 与 *this、explicit object parameter 的语法与适用边界
-- **设计模式 / 稳定边界**：Encapsulation + Value Semantics + RAII；今天不使用 GoF Pattern。存储期与 ownership 是 C++ 对象模型问题，不通过 Factory/Strategy/Observer 解决
-- **Lab**：[examples/day-068/main.cpp](examples/day-068/main.cpp)
-- **Runnable Exercise**：[examples/day-068/exercise-01.cpp](examples/day-068/exercise-01.cpp)
-- **上一课**：[Day 67 · class 封装、成员函数与对象不变量](daily/day-067-class-encapsulation-member-functions.md)
-- **下一课**：Chapter 8 · Understanding Object Life Cycles 与 Object Creation（p.269 起）
+- **日期**：2026-11-03
+- **章节**：Chapter 8 · Gaining Proficiency with Classes and Objects，pp.269–275
+- **主题**：Understanding Object Life Cycles、Object Creation、构造函数、构造重载与默认构造函数
+- **关键知识点**：storage duration 与 object lifetime 的区别；constructor 建立 invariant；默认构造函数的隐式生成规则；多个构造入口保持同一合法状态；构造与可失败硬件启动分离
+- **设计模式 / 稳定边界**：构造函数是对象创建边界，不等同于 Factory Pattern；required dependency 可通过 Constructor Injection 显式表达。固定 Driver 类型优先 composition，不增加运行时 Factory/Strategy
+- **Lab**：[examples/day-069/main.cpp](examples/day-069/main.cpp)
+- **Runnable Exercise**：[examples/day-069/exercise-01.cpp](examples/day-069/exercise-01.cpp)
+- **上一课**：[Day 68 · 对象存储期、this 与 C++23 显式对象参数](daily/day-068-object-storage-this-explicit-object-parameter.md)
+- **下一课**：Chapter 8 · Constructor Initializers aka Ctor-Initializers（p.276 起）
+
 
 ## 规则
 
