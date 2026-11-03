@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { codeEntries, searchCode, type CodeEntry } from "../lib/search";
+import { codeEntries, hydrateSearch, searchCode, useSearchHydrated, type CodeEntry } from "../lib/search";
 import { navigate, useLocationParams } from "../lib/navigation";
 import { PageHeader } from "./common/PageHeader";
 import { Icon } from "./common/Icon";
@@ -34,8 +34,10 @@ export function CodeSearch() {
   const inputRef = useRef<HTMLInputElement>(null);
   const composingRef = useRef(false);
   const debounceTimerRef = useRef<number | null>(null);
+  const isSearchReady = useSearchHydrated();
 
   useEffect(() => {
+    void hydrateSearch();
     inputRef.current?.focus();
   }, []);
 
@@ -47,8 +49,8 @@ export function CodeSearch() {
   const results = useMemo(() => {
     const trimmed = query.trim();
     if (!trimmed) return [];
-    return searchCode(trimmed, "all");
-  }, [query]);
+    return isSearchReady ? searchCode(trimmed, "all") : [];
+  }, [query, isSearchReady]);
 
   const pageSize = 30;
   const totalPages = Math.max(1, Math.ceil(results.length / pageSize));
@@ -57,7 +59,10 @@ export function CodeSearch() {
     totalPages,
   );
 
-  const selected = codeEntries.find((entry) => entry.id === params.get("code"));
+  const selected = useMemo(
+    () => codeEntries.find((entry) => entry.id === params.get("code")),
+    [params, isSearchReady],
+  );
   const matchLine = Number(params.get("line")) || selected?.line || 1;
 
   useEffect(() => {
@@ -254,13 +259,20 @@ export function CodeSearch() {
         </div>
       )}
 
-      {query.trim() && results.length === 0 && (
+      {isSearchReady && query.trim() && results.length === 0 && (
         <section className="search-empty">
           <h2>没有找到匹配代码</h2>
           <p>
             没有找到与 &quot;{query}&quot;
             匹配的代码片段。试试更短的函数名、类型名，或清空搜索重新查找。
           </p>
+        </section>
+      )}
+
+      {!isSearchReady && query.trim() && (
+        <section className="search-empty" role="status">
+          <h2>搜索索引加载中…</h2>
+          <p>全站索引较大，正在后台构建，稍候片刻即可搜索。</p>
         </section>
       )}
 

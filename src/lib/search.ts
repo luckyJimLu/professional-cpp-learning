@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from "react";
 import { lessonByDay } from "./course";
 import { loadSearchIndex } from "./contentRuntime";
 import type { SearchIndexFile } from "@/types/contentManifest";
@@ -29,7 +30,9 @@ function resolveCategory(
 
 export const codeEntries: CodeEntry[] = [];
 
+let hydrated = false;
 let hydrating: Promise<void> | null = null;
+const hydrationListeners = new Set<() => void>();
 
 export function hydrateSearch(): Promise<void> {
   hydrating ??= (async () => {
@@ -37,8 +40,24 @@ export function hydrateSearch(): Promise<void> {
     for (const file of index.files) {
       codeEntries.push(...codeEntriesFromFile(file));
     }
+    hydrated = true;
+    for (const listener of hydrationListeners) listener();
   })();
   return hydrating;
+}
+
+export function isSearchHydrated(): boolean {
+  // Handle React 18+ StrictMode double-render safely: reading stable boolean.
+  return hydrated;
+}
+
+function subscribeSearchHydration(listener: () => void): () => void {
+  hydrationListeners.add(listener);
+  return () => hydrationListeners.delete(listener);
+}
+
+export function useSearchHydrated(): boolean {
+  return useSyncExternalStore(subscribeSearchHydration, isSearchHydrated);
 }
 
 function codeEntriesFromFile(file: SearchIndexFile): CodeEntry[] {
@@ -157,7 +176,7 @@ export function searchCode(
 const defaultCountsByKind: Record<string, Record<string, number>> = {};
 
 function getDefaultCounts(kind: string): Record<string, number> {
-  if (defaultCountsByKind[kind]) return defaultCountsByKind[kind];
+  if (isSearchHydrated() && defaultCountsByKind[kind]) return defaultCountsByKind[kind];
   const counts: Record<string, number> = {
     all: 0,
     daily: 0,
@@ -176,12 +195,12 @@ function getDefaultCounts(kind: string): Record<string, number> {
   return counts;
 }
 
-export const totalFileCount = codeEntries.filter(
-  (entry) => entry.kind === "file",
-).length;
-export const totalSnippetCount = codeEntries.filter(
-  (entry) => entry.kind === "snippet",
-).length;
+export function totalFileCount(): number {
+  return codeEntries.filter((entry) => entry.kind === "file").length;
+}
+export function totalSnippetCount(): number {
+  return codeEntries.filter((entry) => entry.kind === "snippet").length;
+}
 
 export function getCategoryCounts(
   query: string,

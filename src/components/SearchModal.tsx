@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { codeEntries, searchCode, type CodeEntry } from "../lib/search";
+import { hydrateSearch, searchCode, useSearchHydrated, type CodeEntry } from "../lib/search";
 import { navigate, useLocationParams } from "../lib/navigation";
 
 function Highlight({ text, query }: { text: string; query: string }) {
@@ -31,9 +31,11 @@ export function SearchModal({
   const inputRef = useRef<HTMLInputElement>(null);
   const composingRef = useRef(false);
   const listRef = useRef<HTMLDivElement>(null);
+  const isSearchReady = useSearchHydrated();
 
   useEffect(() => {
     if (isOpen) {
+      void hydrateSearch();
       setQuery(params.get("q") ?? "");
       setSelectedIndex(0);
       setPage(1);
@@ -56,8 +58,8 @@ export function SearchModal({
   const results = useMemo(() => {
     const trimmed = query.trim();
     if (!trimmed) return [];
-    return searchCode(trimmed, "all");
-  }, [query]);
+    return isSearchReady ? searchCode(trimmed, "all") : [];
+  }, [query, isSearchReady]);
 
   const pageSize = 30;
   const totalPages = Math.max(1, Math.ceil(results.length / pageSize));
@@ -237,12 +239,18 @@ export function SearchModal({
           </div>
         )}
 
-        {query.trim() && results.length === 0 && (
+        {isSearchReady && query.trim() && results.length === 0 && (
           <div className="search-modal-empty-state">
             <h2 className="visually-hidden">没有找到匹配代码</h2>
             <p className="search-modal-no-results">
               没有找到与 &quot;{query}&quot; 匹配的内容
             </p>
+          </div>
+        )}
+
+        {!isSearchReady && query.trim() && (
+          <div className="search-modal-empty-state" role="status">
+            <p className="search-modal-no-results">索引加载中…</p>
           </div>
         )}
 
