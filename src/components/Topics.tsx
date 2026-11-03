@@ -207,7 +207,8 @@ export function Topics() {
                 <summary>
                   <span>查看文章目录</span>
                   <span className="topic-dir-toggle" aria-hidden="true">
-                    {articles.length} 篇 ▾
+                    {articles.length} 篇{" "}
+                    <span className="topic-dir-arrow">▾</span>
                   </span>
                 </summary>
                 <nav aria-label={`${title}文章目录`}>

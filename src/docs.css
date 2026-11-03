@@ -905,8 +905,12 @@ body {
 .topic-collection-directory summary::-webkit-details-marker {
   display: none;
 }
-.topic-collection-directory[open] summary span {
-  transform: rotate(45deg);
+.topic-dir-arrow {
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+.topic-collection-directory[open] summary .topic-dir-arrow {
+  transform: rotate(180deg);
 }
 .topic-collection-directory nav,
 .topic-reader-tools nav {
