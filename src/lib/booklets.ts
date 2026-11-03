@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from "react";
 import { contentUrl, fetchContentText } from "./contentRuntime";
 
 export interface BookletEntry {
@@ -86,6 +87,18 @@ export function bookletEntries() {
 }
 
 let hydrating: Promise<void> | null = null;
+let isBookletsReady = false;
+const readyListeners = new Set<() => void>();
+
+export function useBookletsReady(): boolean {
+  return useSyncExternalStore(
+    (listener) => {
+      readyListeners.add(listener);
+      return () => readyListeners.delete(listener);
+    },
+    () => isBookletsReady,
+  );
+}
 
 export function hydrateBooklets(): Promise<void> {
   hydrating ??= (async () => {
@@ -95,6 +108,8 @@ export function hydrateBooklets(): Promise<void> {
     ]);
     cBooklet.sections = parseSections(cRaw, "c", "C 语言");
     cppBooklet.sections = parseSections(cppRaw, "cpp", "C++");
+    isBookletsReady = true;
+    for (const listener of readyListeners) listener();
   })();
   return hydrating;
 }

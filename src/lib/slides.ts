@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from "react";
 import { fetchContentText } from "./contentRuntime";
 
 export interface SlideItem {
@@ -320,6 +321,18 @@ function loadAllDecks(decksSource: Array<{ path: string; raw: string }>): SlideD
 export const allSlideDecks: SlideDeck[] = [];
 
 let hydrating: Promise<void> | null = null;
+let isSlidesReady = false;
+const readyListeners = new Set<() => void>();
+
+export function useSlidesReady(): boolean {
+  return useSyncExternalStore(
+    (listener) => {
+      readyListeners.add(listener);
+      return () => readyListeners.delete(listener);
+    },
+    () => isSlidesReady,
+  );
+}
 
 export function hydrateSlides(): Promise<void> {
   hydrating ??= (async () => {
@@ -329,6 +342,8 @@ export function hydrateSlides(): Promise<void> {
       deckPaths.map(async (path) => ({ path, raw: await fetchContentText(path) })),
     );
     allSlideDecks.push(...loadAllDecks(deckSources));
+    isSlidesReady = true;
+    for (const listener of readyListeners) listener();
   })();
   return hydrating;
 }

@@ -8,7 +8,13 @@ import {
   useLocationParams,
   type View,
 } from "./lib/navigation";
-import { latestLesson, lessonByDay, repoCompletedDay } from "./lib/course";
+import {
+  ensureLessonBody,
+  latestLesson,
+  lessonByDay,
+  repoCompletedDay,
+  useCourseVersion,
+} from "./lib/course";
 import { useLearningProgress } from "./lib/progress";
 
 import { TodayView } from "./components/views/TodayView";
@@ -65,6 +71,8 @@ export default function App() {
   const selectedDay =
     Number(params.get("day")) || latestLesson()?.day || repoCompletedDay();
   const progress = useLearningProgress();
+  // 课程正文为后台异步填充:订阅版本号让各视图在正文到达时刷新
+  const courseVersion = useCourseVersion();
   const [lastLessonDay, setLastLessonDay] = useState<number | undefined>(() => {
     try {
       const day = Number(localStorage.getItem("professional-cpp:last-lesson"));
@@ -89,8 +97,18 @@ export default function App() {
 
   const selectedLesson = useMemo(
     () => lessonByDay(selectedDay) ?? latestLesson(),
-    [selectedDay],
+    // courseVersion 变化时骨架/正文可能已更新,需要重算
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selectedDay, courseVersion],
   );
+
+  useEffect(() => {
+    const viewNeedsBody =
+      view === "lesson" || view === "lab" || view === "review";
+    if (viewNeedsBody && selectedLesson && !selectedLesson.raw) {
+      void ensureLessonBody(selectedLesson.day);
+    }
+  }, [view, selectedLesson]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {

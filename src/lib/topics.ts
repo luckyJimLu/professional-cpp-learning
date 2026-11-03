@@ -1,5 +1,6 @@
 import { resolveContentPath } from "./contentAssets";
 import { contentUrl, fetchContentText, loadContentManifest } from "./contentRuntime";
+import { useSyncExternalStore } from "react";
 import type { ContentTopic } from "@/types/contentManifest";
 
 export interface Topic {
@@ -28,7 +29,19 @@ export const topics: Topic[] = [];
 const FRONTMATTER_RE = /^---\r?\n[\s\S]*?\r?\n---\r?\n/;
 
 let hydrating: Promise<void> | null = null;
+let isTopicsReady = false;
+const readyListeners = new Set<() => void>();
 let rawInflight = new Map<string, Promise<string>>();
+
+export function useTopicsReady(): boolean {
+  return useSyncExternalStore(
+    (listener) => {
+      readyListeners.add(listener);
+      return () => readyListeners.delete(listener);
+    },
+    () => isTopicsReady,
+  );
+}
 
 export function hydrateTopics(): Promise<void> {
   if (!hydrating) hydrating = (async () => {
@@ -46,6 +59,8 @@ export function hydrateTopics(): Promise<void> {
       });
     }
     topics.sort((a, b) => a.path.localeCompare(b.path, "zh-CN", { numeric: true }));
+    isTopicsReady = true;
+    for (const listener of readyListeners) listener();
   })();
   return hydrating;
 }

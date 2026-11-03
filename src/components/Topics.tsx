@@ -7,6 +7,9 @@ import {
   topicSeries,
   topicSummary,
   seriesTopics,
+  hydrateTopics,
+  hydrateReferenceBooks,
+  useTopicsReady,
   type Topic,
 } from "../lib/topics";
 import { navigate, useLocationParams } from "../lib/navigation";
@@ -47,8 +50,15 @@ function topicUrl(path?: string, category?: string) {
 
 export function Topics() {
   const params = useLocationParams();
+  const isTopicsReady = useTopicsReady();
   const path = params.get("topic");
-  const selected = topics.find((topic) => topic.path === path);
+  const selected = isTopicsReady
+    ? topics.find((topic) => topic.path === path)
+    : undefined;
+  useEffect(() => {
+    if (isTopicsReady) return;
+    void hydrateTopics().then(hydrateReferenceBooks);
+  }, [isTopicsReady]);
   const groupNames = [
     ...new Set(
       topics

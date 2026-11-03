@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from "react";
 import { fetchContentText, loadContentManifest } from "./contentRuntime";
 import type { ContentLesson } from "@/types/contentManifest";
 
@@ -202,6 +203,72 @@ function extractChecklist(section?: LessonSection): string[] {
 
 export const lessons: Lesson[] = [];
 
+const manifestLessons: ContentLesson[] = [];
+const lessonBodyTasks = new Map<number, Promise<void>>();
+
+let courseVersion = 0;
+const courseListeners = new Set<() => void>();
+
+function bumpCourseVersion() {
+  courseVersion += 1;
+  for (const listener of courseListeners) listener();
+}
+
+function subscribeCourseVersion(listener: () => void): () => void {
+  courseListeners.add(listener);
+  return () => courseListeners.delete(listener);
+}
+
+export function useCourseVersion(): number {
+  return useSyncExternalStore(subscribeCourseVersion, () => courseVersion);
+}
+
+async function loadLessonBody(entry: ContentLesson): Promise<void> {
+  const day = entry.number;
+  const raw = await fetchContentText(entry.path);
+  const body = raw.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
+  const chapter = Number(entry.chapter || chapterFromBody(body)) || undefined;
+  const lab = typeof entry.lab === "string" ? entry.lab : "";
+  const labPath = lab && lab !== "rtos-sim" ? lab : undefined;
+  const labMode = lab === "rtos-sim" ? ("rtos-sim" as const) : undefined;
+  const sections = splitSections(body);
+  const labSection = sections.find((section) => section.step === "lab");
+  const nextSection = sections.find((section) => /下一步|next/i.test(section.title));
+  const main = await fetchMainCpp(day);
+  const labCode = main
+    ? await bundleExample(`examples/day-${String(day).padStart(3, "0")}/main.cpp`, main)
+    : extractCode(labSection);
+  const lesson = lessons.find((item) => item.day === day);
+  if (!lesson) return;
+  Object.assign(lesson, {
+    chapter,
+    chapterTitle: typeof entry.chapterTitle === "string" ? entry.chapterTitle : undefined,
+    title:
+      lesson.title === `Day ${day}`
+        ? stripDayPrefix(cleanChineseTitle(body, day) || `Day ${day}`, day)
+        : lesson.title,
+    labPath,
+    labMode,
+    rtosScenario: typeof entry.rtosScenario === "string" ? entry.rtosScenario : undefined,
+    raw: body,
+    sections,
+    labCode,
+    labChecklist: extractChecklist(labSection),
+    nextSummary: nextSection ? cleanInline(nextSection.body) : undefined,
+  });
+  bumpCourseVersion();
+}
+
+export function ensureLessonBody(day: number): Promise<void> {
+  const existing = lessonBodyTasks.get(day);
+  if (existing) return existing;
+  const entry = manifestLessons.find((item) => item.number === day);
+  const task = entry
+    ? loadLessonBody(entry).catch(() => undefined)
+    : Promise.resolve();
+  lessonBodyTasks.set(day, task);
+  return task;
+}
 
 let repoCompletedDayValue = 0;
 
@@ -226,35 +293,20 @@ let hydrating: Promise<void> | null = null;
 export function hydrateCourses(): Promise<void> {
   hydrating ??= (async () => {
     const manifest = await loadContentManifest();
-    const raws = await Promise.all(
-      manifest.lessons.map(async (entry) => [entry, await fetchContentText(entry.path)] as const),
-    );
-    for (const [entry] of raws) {
-      if (entry.lab?.endsWith("main.cpp")) {
-        mainCppCache.set(entry.lab, await fetchContentText(entry.lab));
-      }
-    }
-    for (const [entry, raw] of raws) {
+    manifestLessons.push(...manifest.lessons);
+    for (const entry of manifest.lessons) {
       const day = entry.number;
-      const body = raw.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
-      const chapter = Number(entry.chapter || chapterFromBody(body)) || undefined;
+      const chapter = Number(entry.chapter) || undefined;
       const lab = typeof entry.lab === "string" ? entry.lab : "";
       const labPath = lab && lab !== "rtos-sim" ? lab : undefined;
       const labMode = lab === "rtos-sim" ? ("rtos-sim" as const) : undefined;
-      const sections = splitSections(body);
-      const labSection = sections.find((section) => section.step === "lab");
-      const nextSection = sections.find((section) => /下一步|next/i.test(section.title));
-      const main = await fetchMainCpp(day);
-      const labCode = main
-        ? await bundleExample(`examples/day-${String(day).padStart(3, "0")}/main.cpp`, main)
-        : extractCode(labSection);
       lessons.push({
         day,
         week: Number(entry.week) || Math.ceil(day / 7),
         part: String(entry.part || chapterToPart(chapter) || "").replace(/^Part\s+/i, "") || undefined,
         chapter,
         chapterTitle: typeof entry.chapterTitle === "string" ? entry.chapterTitle : undefined,
-        title: stripDayPrefix(entry.title || cleanChineseTitle(body, day), day),
+        title: stripDayPrefix(entry.title || `Day ${day}`, day),
         duration: Number(entry.duration) || 60,
         status: entry.status || "published",
         topics: entry.topics ?? [],
@@ -263,20 +315,26 @@ export function hydrateCourses(): Promise<void> {
         labMode,
         rtosScenario: typeof entry.rtosScenario === "string" ? entry.rtosScenario : undefined,
         path: entry.path,
-        raw: body,
-        sections,
-        labCode,
-        labChecklist: extractChecklist(labSection),
-        nextSummary: nextSection ? cleanInline(nextSection.body) : undefined,
+        raw: "",
+        sections: [],
+        labCode: undefined,
+        labChecklist: [],
+        nextSummary: undefined,
       });
     }
     lessons.sort((a, b) => a.day - b.day);
+    bumpCourseVersion();
     const progress = await loadProgress();
     repoCompletedDayValue =
       Number(progress.match(/已完成[^\n]*Day\s+(\d+)/i)?.[1]) ||
       Number(progress.match(/同步到\s+\*\*Day\s+(\d+)/i)?.[1]) ||
       Number(progress.match(/Day\s+(\d+)/i)?.[1]) ||
       0;
+    bumpCourseVersion();
+    // 各课正文在后台并行加载,不阻塞 courseReady;正在阅读的课由 ensureLessonBody 按需优先拉取
+    void Promise.allSettled(
+      manifestLessons.map((entry) => ensureLessonBody(entry.number)),
+    );
   })();
   return hydrating;
 }

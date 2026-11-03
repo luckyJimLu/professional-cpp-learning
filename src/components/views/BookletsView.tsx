@@ -2,8 +2,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   cBooklet,
   booklets,
+  hydrateBooklets,
   searchBooklet,
   bookletHref,
+  useBookletsReady,
   type BookletEntry,
 } from "../../lib/booklets";
 import { navigate, useLocationParams } from "../../lib/navigation";
@@ -13,6 +15,10 @@ import "../../booklets.css";
 
 export function BookletsView() {
   const params = useLocationParams();
+  const isReady = useBookletsReady();
+  useEffect(() => {
+    void hydrateBooklets();
+  }, [isReady]);
   const booklet =
     booklets.find((book) => book.id === params.get("book")) ?? cBooklet;
   const query = params.get("bq") ?? "";
@@ -279,6 +285,13 @@ export function BookletsView() {
     Boolean(query.trim()) ||
     Boolean(requestedEntry) ||
     activeSection !== "all";
+  if (!isReady) {
+    return (
+      <section className="product-loading" role="status">
+        正在加载小册子…
+      </section>
+    );
+  }
   return (
     <div className="booklets-page">
       <div className="booklet-heading mb-3 flex items-center justify-between gap-3">

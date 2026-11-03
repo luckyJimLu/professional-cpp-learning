@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Icon } from "../common/Icon";
 import { moveTabFocus } from "../../lib/keyboardTabs";
 import { PageHeader } from "../common/PageHeader";
-import { allSlideDecks, getDeckById, syllabusLessons } from "../../lib/slides";
+import { allSlideDecks, getDeckById, hydrateSlides, syllabusLessons, useSlidesReady } from "../../lib/slides";
 import { navigate, useLocationParams } from "../../lib/navigation";
 import { SlideStage } from "../slides/SlideStage";
 import { SlideGrid } from "../slides/SlideGrid";
@@ -24,6 +24,7 @@ const resolveSlide = (value: string | null, total: number) => {
 
 export function SlidesView() {
   const params = useLocationParams();
+  const isSlidesReady = useSlidesReady();
 
   // Read deck and slide parameters from URL
   const requestedDeckId = params.get("deck") || "lesson-01";
@@ -32,7 +33,9 @@ export function SlidesView() {
 
   const selectedDeck = useMemo(
     () => getDeckById(requestedDeckId) || allSlideDecks[0],
-    [requestedDeckId],
+    // isSlidesReady 触发重算
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [requestedDeckId, isSlidesReady],
   );
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(() => {
@@ -44,10 +47,28 @@ export function SlidesView() {
   // Sync state if URL changes
   useEffect(() => {
     setCurrentSlideIndex(
-      resolveSlide(params.get("slide"), selectedDeck.totalSlides),
+      resolveSlide(params.get("slide"), selectedDeck?.totalSlides || 1),
     );
     setActiveTab(resolveTab(params.get("tab")));
-  }, [params, selectedDeck.totalSlides]);
+  }, [params, selectedDeck?.totalSlides]);
+
+  useEffect(() => {
+    void hydrateSlides();
+  }, [isSlidesReady]);
+
+  if (!isSlidesReady || !selectedDeck) {
+    return (
+      <div className="slides-page reading-page">
+        <PageHeader
+          title="架构与设计模式课件"
+          description="配套工程蓝图风格的交互式幻灯片，深入剖析 C++ 语言机制、依赖管理、设计模式与架构权衡。"
+        />
+        <section className="product-loading" role="status">
+          正在加载课件…
+        </section>
+      </div>
+    );
+  }
 
   const goToSlide = (index: number, tab: TabMode = "presenter") => {
     setCurrentSlideIndex(index);
