@@ -16,7 +16,7 @@
 - 能写默认构造函数、参数化构造函数和多个构造路径，并理解编译器何时生成默认构造函数。
 - 让构造函数建立有效不变量，把可失败的硬件初始化留给显式、可返回 Status 的操作。
 
-**60 分钟安排**：阅读 8 分钟 → 昨日复习 5 分钟 → 核心概念 17 分钟 → C/C++ 对照 6 分钟 → 设计映射 6 分钟 → Embedded 场景 5 分钟 → 规范 4 分钟 → Lab/练习 6 分钟 → 坑与检查 3 分钟。
+**60 分钟安排**：阅读 8 分钟 → 昨日复习 5 分钟 → 核心概念（含设计模式映射与 Embedded 场景）23 分钟 → C/C++ 对照 6 分钟 → 规范 4 分钟 → Lab/练习 11 分钟 → 坑 3 分钟。
 
 ---
 
@@ -51,7 +51,7 @@
 
 复习检查点：存储期不负责表达 ownership；this 不拥有对象；一旦声明了其他构造函数，不能再假设编译器会自动生成默认构造函数。
 
-## ③ 核心概念：构造函数是对象不变量的第一道边界（17 分钟）
+## ③ 核心概念：构造函数是对象不变量的第一道边界（23 分钟）
 
 ### 1. Storage Duration 与 Object Lifetime
 
@@ -193,31 +193,29 @@ private:
 
 **不要过度**：不是所有 C struct 都要改成 class。若数据只是跨 C ABI 的简单布局，保持 struct 可能更合适；若状态需要不变量保护，才建立 class 创建边界。
 
-## ⑤ 设计模式映射：构造函数不是 Factory Pattern（6 分钟）
-
-### 需求变化 → 变化轴 → 稳定边界
+### 7. 设计模式映射：构造函数不是 Factory Pattern
 
 今天的真实变化轴是“对象以哪种合法初始配置创建”，不是“运行时替换哪种算法”。稳定边界是 UartPort 的创建入口和构造完成后的状态不变量。
 
-### Pattern 决策
+#### Pattern 决策
 
 - **不使用 Strategy**：波特率预设是配置数据，不是需要运行时替换的算法。
 - **不使用 Factory / Abstract Factory**：当前只有一个具体 UartPort 类型，创建过程简单；直接构造比额外工厂层更清楚。
 - **可以使用 Constructor Injection（依赖注入）**：真实 Driver 需要 HAL 时，把 required dependency 显式交给构造函数，而不是从全局 service locator 取。它是依赖边界，不要求建立一套工厂继承体系。
 - **不使用 Observer**：今天没有事件订阅需求；更不能为了“对象创建时注册 callback”而提前引入 Observer。
 
-### Ownership / Borrow / Lifetime
+#### Ownership / Borrow / Lifetime
 
 - UartPort local_port：对象由当前作用域直接拥有，优先值语义。
 - std::unique_ptr<UartPort>：只有需要动态存储期和单一 owner 时才使用。
 - IUartHal& 若由 Driver 保存，表示 required borrow；HAL owner 必须比 Driver 活得更久。
 - 如果 callback 捕获 this，必须明确 owner、unsubscribe/cancel、in-flight drain 与销毁顺序；构造期间不要发布 this。
 
-### 什么时候才需要 Factory？
+#### 什么时候才需要 Factory？
 
 当产品配置、平台选择或运行时插件确实决定创建不同具体类型时，Factory 才可能隔离创建变化。若 UART 类型在固件编译期固定，composition root 直接创建具体对象通常更简单。Pattern 是识别变化后的结果，不是今天的作业目标。
 
-## ⑥ Embedded / System Design 场景：Modem 启动路径（5 分钟）
+### 8. Embedded / System Design 场景：Modem 启动路径
 
 推荐把对象创建与硬件启动拆开：
 
@@ -241,7 +239,7 @@ Board Composition Root
 - **内存与 WCET**：初始化阶段和实时路径分别评估。构造函数应有界；热路径的 allocation、lock、blocking、callback 数量和执行上界都要可审计。
 - **测试**：host 测试可以验证构造后的默认状态、非法配置不改变状态、Start 失败传播；硬件访问由 Fake HAL 替代。
 
-## ⑦ 今日编码规范（4 分钟）
+## ⑤ 今日编码规范（4 分钟）
 
 ### MUST 1：构造完成时对象必须满足 invariant
 
@@ -290,7 +288,7 @@ Start 的实现必须定义线程上下文、timeout 和失败后的回滚；停
 
 推荐写法：使用 enum class 或具名 Config/Options。只有确实存在合法默认状态时才保留默认构造函数；声明其他构造函数后，若仍需要无参创建，显式写出 Device() = default;。
 
-## ⑧ 可编译 Lab / 练习（6 分钟）
+## ⑥ 可编译 Lab / 练习（11 分钟）
 
 ### 主 Lab：两种构造路径与状态不变量
 
@@ -352,13 +350,13 @@ connect: invalid argument
 
 验收重点：先运行基线，再重构；每个阶段都能单独编译运行。不要用 assert 代替可恢复配置错误。
 
-## ⑨ 3 个常见坑
+## ⑦ 3 个常见坑
 
 1. **声明参数化构造函数后仍假设存在默认构造函数**：编译器不会自动补上无参构造函数；只有合法默认状态时才显式 = default。
 2. **把 storage duration 当成 object lifetime**：存储地址存在不代表对象已经完成初始化，也不代表原对象生命周期尚未结束；不要访问未构造或已销毁对象。
 3. **在构造函数中做硬件启动、阻塞等待或注册 this**：构造函数没有 Status 返回通道，还可能让半构造对象逃逸；把可失败动作移到有 timeout 的 Start/Init，并定义 teardown。
 
-## ⑩ 检查题（3 分钟）
+## ⑧ 检查题（3 分钟）
 
 ### Q1 · 知识 / 编译判断
 
