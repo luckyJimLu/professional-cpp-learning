@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 69**。下一课从 **Day 70** 继续。
+当前仓库课程已发布到 **Day 70**。下一课从 **Day 71** 继续.
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -19,22 +19,21 @@
 | 67 | class 封装、成员函数与对象不变量 | 已发布 | [day-067](daily/day-067-class-encapsulation-member-functions.md) |
 | 68 | 对象存储期、this 与 C++23 显式对象参数 | 已发布 | [day-068](daily/day-068-object-storage-this-explicit-object-parameter.md) |
 | 69 | 对象创建与构造函数：让对象从出生起就有效 | 已发布 | [day-069](daily/day-069-object-creation-constructors.md) |
+| 70 | 构造函数成员初始化列表：直接初始化与成员顺序 | 已发布 | [day-070](daily/day-070-constructor-initializer-list-member-order.md) |
 
 > Day 1–55 的完整逐日记录仍保留在 `daily/` 与 Git 历史中；本表仅展示 Day 56 起的最近课程摘要，避免进度文件承担完整目录职责。
 
 ## 最新发布详情
 
-- **日期**：2026-11-03
-- **章节**：Chapter 8 · Gaining Proficiency with Classes and Objects，pp.269–275
-- **主题**：Understanding Object Life Cycles、Object Creation、构造函数、构造重载与默认构造函数
-- **关键知识点**：storage duration 与 object lifetime 的区别；constructor 建立 invariant；默认构造函数的隐式生成规则；多个构造入口保持同一合法状态；构造与可失败硬件启动分离
-- **设计模式 / 稳定边界**：构造函数是对象创建边界，不等同于 Factory Pattern；required dependency 可通过 Constructor Injection 显式表达。固定 Driver 类型优先 composition，不增加运行时 Factory/Strategy
-- **Lab**：[examples/day-069/main.cpp](examples/day-069/main.cpp)
-- **Runnable Exercise**：[examples/day-069/exercise-01.cpp](examples/day-069/exercise-01.cpp)
-- **上一课**：[Day 68 · 对象存储期、this 与 C++23 显式对象参数](daily/day-068-object-storage-this-explicit-object-parameter.md)
-- **下一课**：Chapter 8 · Constructor Initializers aka Ctor-Initializers（p.276 起）
-
-
+- **日期**：2026-11-04
+- **章节**：Chapter 8 · Gaining Proficiency with Classes and Objects，pp.276–278
+- **主题**：Constructor Initializers aka Ctor-Initializers、直接成员初始化、成员声明顺序
+- **关键知识点**：initializer list 与 constructor body assignment 的区别；base/member 初始化顺序；default member initializer 的覆盖规则；const/reference/non-default-constructible member 的初始化约束；成员声明顺序同时决定构造和析构顺序
+- **设计模式 / 稳定边界**：Composition + 显式依赖注入；固件构建期固定 HAL 时使用 template/concept；厂商 C API 不匹配稳定 contract 时才使用 Adapter。HAL borrow 与内部 owner/borrower member 的声明顺序必须明确；不引入不必要的 Factory/shared_ptr
+- **Lab**：[examples/day-070/main.cpp](examples/day-070/main.cpp)
+- **Runnable Exercise**：[examples/day-070/exercise-01.cpp](examples/day-070/exercise-01.cpp)
+- **上一课**：[Day 69 · 对象创建与构造函数](daily/day-069-object-creation-constructors.md)
+- **下一课**：Chapter 8 · Copy Constructors（p.279 起）
 ## 规则
 
 - 每次新增课程前先读取本文件与 `daily/`，取现有最大 Day + 1。

@@ -13,9 +13,9 @@
 
 ## 当前进度
 
-- **已发布：Day 1–69**
-- **下一课：Day 70 · Chapter 8 · Constructor Initializers aka Ctor-Initializers**
-- 当前主线：**Chapter 8 进行中；Day 69 完成对象生命周期导读、对象创建与构造函数基础**
+- **已发布：Day 1–70**
+- **下一课：Day 71 · Chapter 8 · Copy Constructors**
+- 当前主线：**Chapter 8 进行中；Day 70 完成对象创建、构造函数与成员初始化列表**
 - 更新方式：**GitHub Markdown only**（每日课程正文 + `daily/lessons.meta.json` 元数据条目，两者同步提交）
 
 ## 快速入口
@@ -44,6 +44,7 @@
 
 ## 最近课程
 
+- [Day 70 · 构造函数成员初始化列表：直接初始化与成员顺序](daily/day-070-constructor-initializer-list-member-order.md)
 - [Day 69 · 对象创建与构造函数：让对象从出生起就有效](daily/day-069-object-creation-constructors.md)
 - [Day 68 · 对象存储期、this 与 C++23 显式对象参数](daily/day-068-object-storage-this-explicit-object-parameter.md)
 - [Day 67 · class 封装、成员函数与对象不变量](daily/day-067-class-encapsulation-member-functions.md)
@@ -77,7 +78,7 @@
 .
 ├── README.md
 ├── progress.md
-├── daily/                       # 已发布课程 Day 1–69
+├── daily/                       # 已发布课程 Day 1–70
 ├── weekly/                      # 周复盘
 ├── patterns/                    # 设计模式专题（含书籍示例源码 examples/）
 ├── examples/                    # 每日课程 main.cpp 与独立 exercise-XX.cpp

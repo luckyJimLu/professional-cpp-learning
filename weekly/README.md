@@ -27,3 +27,4 @@
 | 第 07 周 | Day 43–49 | 可复用代码结构、概念模板、扩展性设计与易用接口原则 | [week-07-review.md](week-07-review.md) |
 | 第 08 周 | Day 50–56 | 复用边界收束、分层 API、设计模式审查与内存所有权基础 | [week-08-review.md](week-08-review.md) |
 | 第 09 周 | Day 57–63 | 智能指针所有权转移、回调生命周期拆除、PMR 与资源分配策略 | [week-09-review.md](week-09-review.md) |
+| 第 10 周 | Day 64–70 | 对象生命周期、固定存储、class invariant、构造函数与成员初始化顺序 | [week-10-review.md](week-10-review.md) |

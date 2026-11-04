@@ -1686,6 +1686,40 @@
       "lab": "examples/day-069/main.cpp",
       "previous": 68,
       "next": 70
+    },
+    {
+      "path": "daily/day-070-constructor-initializer-list-member-order.md",
+      "week": 10,
+      "part": "III",
+      "chapter": 8,
+      "chapter_title": "Gaining Proficiency with Classes and Objects",
+      "title": "Constructor Initializer Lists and Member Initialization Order",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-04",
+      "patterns": [
+        "composition",
+        "dependency-injection",
+        "adapter"
+      ],
+      "topics": [
+        "constructor-initializer-list",
+        "direct-member-initialization",
+        "member-initialization-order",
+        "default-member-initializer",
+        "reference-member",
+        "const-member",
+        "owner-borrow-lifetime"
+      ],
+      "guidelines": [
+        "direct-member-initialization",
+        "declaration-order",
+        "owner-before-borrower",
+        "no-fallible-constructor-side-effects"
+      ],
+      "lab": "examples/day-070/main.cpp",
+      "previous": 69,
+      "next": 71
     }
   ]
 }

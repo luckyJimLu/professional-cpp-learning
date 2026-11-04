@@ -148,6 +148,16 @@
 - SHOULD：required dependency 显式注入；引用成员表示 borrow，被借用依赖必须比当前对象活得更久。由 composition root 负责构造顺序和 teardown。
 - SHOULD：测试默认构造和每个重载，并覆盖非法配置、启动失败与清理路径；不要只验证“能创建对象”。
 
+## 构造函数成员初始化列表与成员顺序
+
+- MUST：所有 const member、reference member、没有可用默认构造函数的成员，以及需要直接建立资源状态的成员，都应在 constructor initializer list 中初始化；不得先默认构造再在 constructor body 中赋值。
+- MUST：non-static data members 按 class 中的声明顺序初始化，不按 initializer list 的书写顺序初始化；initializer list 必须与声明顺序一致并清除 -Wreorder warning。
+- MUST：成员声明顺序必须表达内部依赖与 teardown：owner member 先声明、先构造、后销毁；borrower member 后声明、后构造、先销毁。
+- SHOULD：对合法且稳定的默认状态使用 in-class default member initializer；constructor initializer list 显式指定同一成员时覆盖该默认值。
+- SHOULD：构造函数只完成对象状态与依赖绑定；可失败硬件初始化仍放在显式 Start/Initialize，返回 Status 并定义 timeout、线程上下文与失败回滚。
+- MAY：当固定固件构建期选择 HAL 且没有 runtime replacement 需求时，使用 template/concept 表达 compile-time dependency injection；不要为固定配置机械引入 virtual interface、Factory 或 shared_ptr。
+- REVIEW：检查 base/member 初始化顺序、引用绑定对象的生命周期、成员析构顺序、构造期间是否发布 this，以及固定容量/分配/锁/阻塞的实时上界。
+
 ## 类关系与层级
 
 - has-a / uses-a 与 is-a 必须表达真实语义，不为了复用实现而继承。

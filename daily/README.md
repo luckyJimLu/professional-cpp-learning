@@ -1,6 +1,6 @@
 # 每日课程（Daily Lessons）
 
-本目录存放每日 C++ 工程化课程正文。课程基于 *Professional C++, 6th Edition* 的章节顺序展开，目前已发布 Day 1–69，单篇学习时间建议控制在 60 分钟左右。
+本目录存放每日 C++ 工程化课程正文。课程基于 *Professional C++, 6th Edition* 的章节顺序展开，目前已发布 Day 1–70，单篇学习时间建议控制在 60 分钟左右。
 
 ## 文件命名与规范
 
@@ -35,6 +35,6 @@
 | Chapter 5 | Day 36–40 | Has-a / Is-a 关系边界、多继承契约、Mixin 类与类关系收束 |
 | Chapter 6 | Day 41–55 | 面向复用设计、模板与概念、防护边界、可用接口设计与 SOLID 原则 |
 | Chapter 7 | Day 56–66 | 内存所有权、智能指针、自定义删除器、PMR 分配器与资源决策树 |
-| Chapter 8 | Day 67–69（进行中） | class 封装、成员函数、对象存储期、this、对象创建与构造函数 |
+| Chapter 8 | Day 67–70（进行中） | class 封装、成员函数、对象存储期、this、对象创建与构造函数 |
 
-下一课为 **Day 70 · Chapter 8 · Constructor Initializers aka Ctor-Initializers（p.276 起）**。
+下一课为 **Day 71 · Chapter 8 · Copy Constructors（p.279 起）**。
