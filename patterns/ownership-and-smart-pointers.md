@@ -1320,3 +1320,138 @@ All ownership checks passed
 - Command：队列拥有命令，不代表命令必然拥有其接收者；接收者的存活需要单独约定。
 
 **先判断是否需要间接访问，再确认谁拥有，最后检查延迟使用能否跨越对象生命周期。**
+
+
+---
+
+# 28. 阅读三大标准库的 shared_ptr 实现
+
+> 本节是 Smart Pointer 实现原理扩展，不改变《Professional C++》主教材顺序。通过真实 STL 源码理解控制块、强弱引用计数、类型擦除、删除器与分配策略。标准规定 shared_ptr 的可观察语义，不规定具体控制块类层次、内存布局或原子指令。
+
+## 28.1 三个开源实现入口
+
+| 实现 | 仓库 | 主要源码 | 阅读重点 |
+|---|---|---|---|
+| **libc++**（LLVM） | [llvm/llvm-project](https://github.com/llvm/llvm-project) | [libcxx/include/memory](https://github.com/llvm/llvm-project/blob/main/libcxx/include/memory) | shared_ptr / weak_ptr、控制块与引用计数 helper |
+| **libstdc++**（GCC） | [gcc-mirror/gcc](https://github.com/gcc-mirror/gcc) | [shared_ptr.h](https://github.com/gcc-mirror/gcc/blob/master/libstdc++-v3/include/bits/shared_ptr.h) · [shared_ptr_base.h](https://github.com/gcc-mirror/gcc/blob/master/libstdc++-v3/include/bits/shared_ptr_base.h) | _Sp_counted_base、派生控制块、deleter/allocator 类型擦除 |
+| **MSVC STL** | [microsoft/STL](https://github.com/microsoft/STL) | [stl/inc/memory](https://github.com/microsoft/STL/blob/main/stl/inc/memory) | _Ref_count 家族、make_shared 合并分配、注释与实现分层 |
+
+链接指向默认分支，源码会演进。正式引用时应固定具体 commit SHA；内部符号和路径不属于 C++ 标准保证。
+
+## 28.2 推荐阅读顺序
+
+### A. MSVC STL：先建立控制块整体图景
+
+打开 stl/inc/memory，搜索以下符号（名称可能随版本变化）：
+
+- _Ref_count：引用计数控制块的基础抽象。
+- _Ref_count_obj：与对象存储/合并分配相关的控制块实现。
+- _Ref_count_resource 及相关派生类型：观察不同资源销毁方式如何复用控制块协议。
+- make_shared / allocate_shared：比较对象与控制块的分配路径。
+
+重点回答：
+
+1. 强引用计数归零时，谁调用对象析构？
+2. 弱引用仍存在时，控制块为什么不能立即释放？
+3. shared_ptr(new T) 与 make_shared<T>() 的分配布局有什么区别？
+4. 删除器和分配器如何保存在控制块中，而不成为 shared_ptr<T> 的模板参数？
+
+不要把 make_shared 一定只有一次分配理解为所有实现、allocator 和类型场景下都无条件成立；要跟踪具体分支。
+
+### B. libc++：理解引用计数与内存序
+
+在 libcxx/include/memory 中，从公开 shared_ptr / weak_ptr 操作跟踪内部 count/control-block helper。重点搜索：
+
+- __shared_count
+- __shared_weak_count
+- __libcpp_atomic_refcount
+
+观察递增、递减与最后释放之间的同步关系。常见策略是递增采用较弱内存序（例如 relaxed），递减采用 release，并在最后释放路径配合 acquire 同步；但必须以当前 libc++ 版本的具体函数为准，不能将某个 helper 概括成所有操作的统一规则。
+
+必须画出两条时间线：
+
+- 对象生命周期：最后一个 strong owner 释放 → 对象析构。
+- 控制块生命周期：最后一个 weak owner（包含实现内部为 strong owner 保留的弱计数部分）释放 → 控制块存储回收。
+
+对象已析构，不代表控制块已释放。weak_ptr 需要控制块继续存在，才能安全判断对象能否提升为强引用。
+
+### C. libstdc++：理解类型擦除与控制块多态
+
+在 shared_ptr_base.h 中跟踪：
+
+- _Sp_counted_base：统一的引用计数与销毁协议。
+- _Sp_counted_ptr：管理特定指针形态的控制块实现。
+- _Sp_counted_deleter：将自定义 deleter 及相关 allocator 状态纳入控制块。
+
+再回到 shared_ptr.h，追踪公开构造、复制/移动、reset、weak promotion 与控制块创建调用链。
+
+关键不是“所有 deleter 都变成同一个类型”，而是公开 shared_ptr<T> 不必把 deleter 类型写进模板参数；控制块可以通过运行时多态/类型擦除保存销毁行为及其状态。具体继承树和压缩存储方式属于实现细节。
+
+## 28.3 shared_ptr 对象模型
+
+    shared_ptr<T> handle
+      ├── stored pointer ───────────> T / alias target
+      └── control block
+            ├── strong owner count
+            ├── weak observer count
+            ├── destroy-object operation
+            ├── deallocate-control-block operation
+            ├── deleter state (when needed)
+            └── allocator state (when needed)
+
+stored pointer 与控制块所管理的对象地址不总是相同：aliasing constructor 可以保存子对象/成员地址，同时共享另一个 owner 的控制块。因此不能仅凭 get() 推断控制块最终销毁哪个对象。
+
+## 28.4 三家实现对照
+
+| 维度 | libc++ | libstdc++ | MSVC STL |
+|---|---|---|---|
+| 控制块抽象 | count/weak-count helper 与控制块层次 | _Sp_counted_base 派生层次 | _Ref_count 家族 |
+| 引用计数 | 原子 helper 与释放路径 | 控制块成员及原子操作 | 控制块成员及原子操作 |
+| 自定义删除器 | 控制块保存销毁策略 | _Sp_counted_deleter 等路径 | 对应资源/删除器控制块实现 |
+| 合并分配 | 跟踪 make_shared / allocate_shared | 检查 _Sp_counted_ptr_inplace 等版本对应实现 | 检查 _Ref_count_obj 等版本对应实现 |
+| 最适合回答 | 引用计数内存序 | 类型擦除和控制块多态 | 对象/控制块布局与实现分层 |
+
+表格用于导航，不表示三家内部类可以一一等价映射。
+
+## 28.5 从源码提炼工程结论
+
+1. shared_ptr 复制的是 handle，并参与同一控制块的强引用计数协议，不是复制对象。
+2. weak_ptr 不拥有对象，但需要控制块存活；对象析构与控制块释放是两个事件。
+3. deleter 是资源销毁策略，可以让控制块管理普通 delete 之外的资源；这不意味着 shared_ptr 是通用资源句柄的首选。
+4. make_shared 合并分配可能减少分配次数；但对象析构后若弱引用仍存活，合并分配块通常要等控制块释放才能整体回收。
+5. 引用计数线程安全不等于对象线程安全；它不会自动保护 T 的可变成员，也不会解决业务关闭、回调排空或线程 join。
+6. 标准不承诺具体内存序、类名和控制块继承树；这些是实现策略，不应写成跨平台业务假设。
+
+## 28.6 许可证与源码使用边界
+
+- LLVM libc++：仓库采用 Apache-2.0 WITH LLVM-exception 等许可文件；分发或摘录应以对应目录和文件头声明为准。
+- MSVC STL：仓库主要采用 Apache-2.0 WITH LLVM-exception；仍需核对具体文件头和仓库许可说明。
+- GCC libstdc++：GCC 运行库相关源码通常受 GPLv3-or-later 与 GCC Runtime Library Exception 等条款约束，不能简单写成“只有 GPLv3”。引用或复制代码前阅读文件头及 [GCC Runtime Library Exception](https://www.gnu.org/licenses/gcc-exception-3.1.html)。
+
+阅读开源实现不等于可以忽略许可证复制实现代码。本专题以链接、符号导航和原理解释为主，不复制大段第三方实现源码。
+
+## 28.7 源码阅读 Lab：控制块追踪表
+
+这是源码分析任务，不复制 STL 内部代码，也不新增每日 Day 编号。对三个实现分别记录：
+
+| 追踪问题 | 需要记录的证据 |
+|---|---|
+| strong count 在哪里增加/减少？ | 函数/符号名与源码链接 |
+| weak count 如何参与控制块释放？ | 最后释放路径 |
+| 对象析构由谁触发？ | destroy/dispose 路径 |
+| 控制块存储由谁释放？ | delete/deallocate 路径 |
+| 自定义 deleter 保存在哪里？ | 控制块类型与成员 |
+| make_shared 如何创建对象？ | 分配函数与对象构造位置 |
+| 最后一个 weak owner 何时释放？ | weak release 路径 |
+
+最终画一张时序图，区分 strong count 2→1→0、对象析构、weak observer 仍存在、weak count 最终归零、控制块释放。
+
+## 28.8 源码阅读检查题
+
+1. 为什么 weak_ptr::lock() 必须与强引用计数增加形成一个不能被销毁竞态打断的操作？
+2. 为什么强引用归零后可以析构对象，却不能在弱观察者仍存在时立即释放控制块？
+3. 为什么 shared_ptr<T> 不把 deleter 类型写成第二个模板参数，而 unique_ptr<T, Deleter> 会？
+4. make_shared 合并分配后，若对象析构但 weak_ptr 长期不释放，可能产生什么内存占用现象？
+5. 三家 STL 的原子内存序或控制块类名不同，为什么不影响符合标准的业务代码使用同一套 shared_ptr API？
+
+**工程落点：** 在 RTOS/Driver 实时路径中，即使某家 STL 的引用计数实现很高效，也不能因此默认引入 shared ownership。先明确 owner、borrow、teardown 和最坏执行时间；固定生命周期对象图仍优先考虑值语义、引用借用和显式关闭协议。
