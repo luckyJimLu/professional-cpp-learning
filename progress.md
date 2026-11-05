@@ -1,6 +1,6 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 70**。下一课从 **Day 71** 继续.
+当前仓库课程已发布到 **Day 71**。下一课从 **Day 72** 继续.
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
@@ -20,6 +20,7 @@
 | 68 | 对象存储期、this 与 C++23 显式对象参数 | 已发布 | [day-068](daily/day-068-object-storage-this-explicit-object-parameter.md) |
 | 69 | 对象创建与构造函数：让对象从出生起就有效 | 已发布 | [day-069](daily/day-069-object-creation-constructors.md) |
 | 70 | 构造函数成员初始化列表：直接初始化与成员顺序 | 已发布 | [day-070](daily/day-070-constructor-initializer-list-member-order.md) |
+| 71 | Copy Constructors：复制语义与独立对象边界 | 已发布 | [day-071](daily/day-071-copy-constructors-value-semantics.md) |
 
 > Day 1–55 的完整逐日记录仍保留在 `daily/` 与 Git 历史中；本表仅展示 Day 56 起的最近课程摘要，避免进度文件承担完整目录职责。
 
