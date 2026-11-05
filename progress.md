@@ -1,44 +1,54 @@
 # 学习进度
 
-当前仓库课程已发布到 **Day 71**。下一课从 **Day 72** 继续.
+当前已完成 **Day 32**。**Day 33 已发布，待学习**。
 
 | Day | 主题 | 状态 | 文件 |
 |---:|---|---|---|
-| 1–55 | 历史课程 | 已发布 | [daily/](daily/) |
-| 56 | 内存管理基础：所有权与 RAII | 已发布 | [day-056](daily/day-056-memory-management-ownership-raii.md) |
-| 57 | 智能指针：所有权转移与借用 | 已发布 | [day-057](daily/day-057-smart-pointers-ownership-transfer.md) |
-| 58 | 分配失败：数组与资源边界 | 已发布 | [day-058](daily/day-058-allocation-failure-resource-boundaries.md) |
-| 59 | 自定义删除器：非内存资源与 RAII 边界 | 已发布 | [day-059](daily/day-059-custom-deleters-non-memory-resources.md) |
-| 60 | 共享所有权：shared_ptr、weak_ptr 与生命周期环 | 已发布 | [day-060](daily/day-060-shared-ptr-weak-ptr-lifetime.md) |
-| 61 | enable_shared_from_this：异步回调生命周期与拆除 | 已发布 | [day-061](daily/day-061-enable-shared-from-this-callback-lifetime.md) |
-| 62 | 智能指针别名、类型转换与所有权 API 边界 | 已发布 | [day-062](daily/day-062-smart-pointer-aliasing-casts-ownership-api.md) |
-| 63 | PMR、有界分配与内存资源策略 | 已发布 | [day-063](daily/day-063-pmr-bounded-allocation-resource-policy.md) |
-| 64 | 对象生命周期、placement 构造与固定存储复用 | 已发布 | [day-064](daily/day-064-object-lifetime-placement-construction-fixed-pool.md) |
-| 65 | optional 生命周期与固定池安全边界 | 已发布 | [day-065](daily/day-065-optional-fixed-pool-lifetime-boundaries.md) |
-| 66 | Memory Management 资源边界决策树 | 已发布 | [day-066](daily/day-066-memory-management-resource-boundary-decision-tree.md) |
-| 67 | class 封装、成员函数与对象不变量 | 已发布 | [day-067](daily/day-067-class-encapsulation-member-functions.md) |
-| 68 | 对象存储期、this 与 C++23 显式对象参数 | 已发布 | [day-068](daily/day-068-object-storage-this-explicit-object-parameter.md) |
-| 69 | 对象创建与构造函数：让对象从出生起就有效 | 已发布 | [day-069](daily/day-069-object-creation-constructors.md) |
-| 70 | 构造函数成员初始化列表：直接初始化与成员顺序 | 已发布 | [day-070](daily/day-070-constructor-initializer-list-member-order.md) |
-| 71 | Copy Constructors：复制语义与独立对象边界 | 已发布 | [day-071](daily/day-071-copy-constructors-value-semantics.md) |
+| 1 | 从 C 进入现代 C++ | 历史邮件迁移 | [day-001](daily/day-001-from-c-to-modern-cpp.md) |
+| 2 | 变量、统一初始化与安全类型转换 | 历史邮件迁移 | [day-002](daily/day-002-variables-initialization-casts.md) |
+| 3 | const、constexpr 与编译期思维 | 历史邮件迁移 | [day-003](daily/day-003-const-constexpr.md) |
+| 4 | 引用、const 引用与参数传递 | 历史邮件迁移 | [day-004](daily/day-004-references-parameter-passing.md) |
+| 5 | 指针、nullptr 与数组边界 | 历史邮件迁移 | [day-005](daily/day-005-pointers-nullptr-bounds.md) |
+| 6 | enum class、结构化绑定与类型安全状态机 | 历史邮件迁移 | [day-006](daily/day-006-enum-class-state-machine.md) |
+| 7 | 第一周复盘：Modem 控制模块 | 历史重建 | [day-007](daily/day-007-week1-review-modem-control.md) |
+| 8 | std::string 与 std::string_view：所有权、借用与零拷贝文本接口 | 历史邮件迁移 | [day-008](daily/day-008-string-string-view.md) |
+| 9 | std::string 的构造、修改、搜索与数值转换 | 历史邮件迁移 | [day-009](daily/day-009-string-operations.md) |
+| 10 | string_view 深入：生命周期、子视图与安全解析 | 历史邮件迁移 | [day-010](daily/day-010-string-view-lifetime.md) |
+| 11 | 字符串格式化、字符编码与嵌入式文本边界 | 历史邮件迁移 | [day-011](daily/day-011-formatting-encoding.md) |
+| 12 | 原始字符串字面量、文本常量与安全命令模板 | 历史邮件迁移 | [day-012](daily/day-012-raw-strings-command-templates.md) |
+| 13 | Coding with Style：可读性、命名与接口契约 | 历史重建 | [day-013](daily/day-013-coding-with-style-foundations.md) |
+| 14 | Coding with Style：头文件、自包含与依赖边界 | 历史邮件迁移 | [day-014](daily/day-014-headers-iwyu-dependencies.md) |
+| 15 | Coding with Style：命名让接口自己说话 | 历史邮件迁移 | [day-015](daily/day-015-naming-interface-intent.md) |
+| 16 | 把编码规范变成自动化约束：clang-format、clang-tidy 与编译告警 | 历史邮件迁移 | [day-016](daily/day-016-format-tidy-warnings.md) |
+| 17 | Coding with Style：错误处理、断言与清晰控制流 | 历史邮件迁移 | [day-017](daily/day-017-errors-assert-control-flow.md) |
+| 18 | Coding with Style 收官：函数边界、控制流与可维护性 | 历史邮件迁移 | [day-018](daily/day-018-function-boundaries-control-flow.md) |
+| 19 | Designing Professional C++ Programs：从需求到架构边界 | 历史邮件迁移 | [day-019](daily/day-019-requirements-architecture-boundaries.md) |
+| 20 | Chapter 4：需求、用例与设计决策 | 历史邮件迁移 | [day-020](daily/day-020-requirements-use-cases-decisions.md) |
+| 21 | 周复盘：从代码规范到可测试的 Modem 架构 | 历史邮件迁移 | [day-021](daily/day-021-weekly-review-testable-modem-architecture.md) |
+| 22 | 抽象：稳定接口与隐藏实现 | 历史邮件迁移 | [day-022](daily/day-022-abstraction-stable-interface.md) |
+| 23 | 复用：标准库、第三方库还是自己实现 | 历史邮件迁移 | [day-023](daily/day-023-reuse-stdlib-third-party-own.md) |
+| 24 | 耦合、内聚与依赖管理 | 历史邮件迁移 | [day-024](daily/day-024-coupling-cohesion-dependencies.md) |
+| 25 | 设计文档、接口契约与原型验证 | 历史邮件迁移 | [day-025](daily/day-025-design-doc-contract-prototype.md) |
+| 26 | 设计取舍、变化管理与稳定边界 | 历史邮件迁移 | [day-026](daily/day-026-tradeoffs-change-stable-boundaries.md) |
+| 27 | Chapter 4 收束：从需求到稳定设计 | 历史邮件迁移 | [day-027](daily/day-027-chapter4-wrap-stable-design.md) |
+| 28 | Designing with Classes：类的不变量与最小公共接口 | 历史邮件迁移 | [day-028](daily/day-028-class-invariants-minimal-interface.md) |
+| 29 | 构造函数、初始化与让非法状态难以表示 | 历史邮件迁移 | [day-029](daily/day-029-constructors-initialization-valid-state.md) |
+| 30 | Composition：用对象组合分配职责 | 历史邮件迁移 | [day-030](daily/day-030-composition-object-responsibilities.md) |
+| 31 | 对象所有权、生命周期与资源管理边界 | 历史重建 | [day-031](daily/day-031-ownership-lifetime-resource-boundaries.md) |
+| 32 | is-a、not-a、类层次与 Mixin：什么时候才应该继承 | 历史重建 | [day-032](daily/day-032-inheritance-is-a-hierarchies-mixins.md) |
+| 33 | Polymorphism and Virtual Interfaces | 已发布 / 待学习 | [day-033](daily/day-033-polymorphism-virtual-interfaces.md) |
 
-> Day 1–55 的完整逐日记录仍保留在 `daily/` 与 Git 历史中；本表仅展示 Day 56 起的最近课程摘要，避免进度文件承担完整目录职责。
+## 专题
 
-## 最新发布详情
+不占用 Day 编号的深挖内容（正文 + 可编译实验自成目录）：
 
-- **日期**：2026-11-05
-- **章节**：Chapter 8 · Gaining Proficiency with Classes and Objects，pp.279–280
-- **主题**：Copy Constructors、memberwise copy、value semantics 与自引用指针复制边界
-- **关键知识点**：copy constructor 与 copy assignment 的区别；隐式 copy constructor 逐成员复制；raw pointer / span / unique_ptr / shared_ptr 的不同复制语义；自引用成员指针默认复制后仍指向 source；固定容量值类型的独立复制与有界成本
-- **设计模式 / 稳定边界**：默认使用 value semantics + composition；Prototype 仅在运行时多态克隆且必须保留动态类型时考虑；固定协议集合优先 std::variant / template / concept。先定义复制后独立值、共享 owner 或 borrow view，再决定成员类型；不因普通复制引入 Factory/shared_ptr
-- **Lab**：[examples/day-071/main.cpp](examples/day-071/main.cpp)
-- **Runnable Exercise**：[examples/day-071/exercise-01.cpp](examples/day-071/exercise-01.cpp)
-- **上一课**：[Day 70 · 构造函数成员初始化列表与成员顺序](daily/day-070-constructor-initializer-list-member-order.md)
-- **下一课**：Chapter 8 · Initializer-List Constructors（p.281 起）
+| 编号 | 主题 | 文件 |
+|---|---|---|
+| 001 | 用 libc++ 源码读懂 `shared_ptr`：引用计数、控制块与内存序 | [topic-001](topics/topic-001-libcxx-shared-ptr/) |
 
 ## 规则
 
 - 每次新增课程前先读取本文件与 `daily/`，取现有最大 Day + 1。
 - 禁止重复覆盖已有 Day，除非明确进行修订。
 - 每 7 天增加周复盘。
-- 课程正文与实验源码统一维护在本仓库。
+- 后续课程不再发送 Gmail，只写入本仓库。
