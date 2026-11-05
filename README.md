@@ -13,9 +13,9 @@
 
 ## 当前进度
 
-- **已发布：Day 1–70**
-- **下一课：Day 71 · Chapter 8 · Copy Constructors**
-- 当前主线：**Chapter 8 进行中；Day 70 完成对象创建、构造函数与成员初始化列表**
+- **已发布：Day 1–71**
+- **下一课：Day 72 · Chapter 8 · Initializer-List Constructors**
+- 当前主线：**Chapter 8 进行中；Day 71 完成 Copy Constructors 与 value semantics**
 - 更新方式：**GitHub Markdown only**（每日课程正文 + `daily/lessons.meta.json` 元数据条目，两者同步提交）
 
 ## 快速入口
@@ -44,6 +44,7 @@
 
 ## 最近课程
 
+- [Day 71 · Copy Constructors：复制语义与独立对象边界](daily/day-071-copy-constructors-value-semantics.md)
 - [Day 70 · 构造函数成员初始化列表：直接初始化与成员顺序](daily/day-070-constructor-initializer-list-member-order.md)
 - [Day 69 · 对象创建与构造函数：让对象从出生起就有效](daily/day-069-object-creation-constructors.md)
 - [Day 68 · 对象存储期、this 与 C++23 显式对象参数](daily/day-068-object-storage-this-explicit-object-parameter.md)
