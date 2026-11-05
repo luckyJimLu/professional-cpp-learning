@@ -158,6 +158,19 @@
 - MAY：当固定固件构建期选择 HAL 且没有 runtime replacement 需求时，使用 template/concept 表达 compile-time dependency injection；不要为固定配置机械引入 virtual interface、Factory 或 shared_ptr。
 - REVIEW：检查 base/member 初始化顺序、引用绑定对象的生命周期、成员析构顺序、构造期间是否发布 this，以及固定容量/分配/锁/阻塞的实时上界。
 
+## Copy constructors and value semantics
+
+> 本节是本项目的 Embedded 工程补充，不代表 Google C++ Style Guide 对所有项目的逐字强制条款。
+
+- MUST：普通 value type 的 copy constructor 优先接受 const T&，保证可以从 const source 复制且不修改源对象。
+- MUST：先定义复制后的语义：独立值、共享所有权或继续借用；不得把 raw pointer 的地址复制误称为 payload 深复制。
+- MUST：类成员若指向自身其他成员（self pointer / cached internal address），必须审查默认 copy 后的指向；优先删除可推导的冗余指针，确需保留时提供并测试重新绑定语义。
+- MUST：raw owning pointer 不得直接依赖隐式 memberwise copy；应重新设计为值成员/RAII owner，或显式定义 clone 与资源释放契约。
+- SHOULD：当所有成员的 memberwise copy 正好满足 class invariant 时，使用显式 = default 的 copy constructor；不要为每个类机械手写复制逻辑。
+- SHOULD：固定容量对象优先使用 std::array 等值成员，并明确复制上界；std::span 复制只复制 borrow view，不延长底层 buffer lifetime。
+- MUST：仅当所有成员复制都满足项目错误模型时才声明 noexcept；std::string/std::vector 等动态复制的分配成本与失败语义必须单独审查。
+- REVIEW：覆盖复制后独立修改、source 先销毁、borrow lifetime、unique_ptr 不可复制、shared_ptr 共享而非深复制、队列按值复制的 WCET，以及 ISR/线程上下文。
+
 ## 类关系与层级
 
 - has-a / uses-a 与 is-a 必须表达真实语义，不为了复用实现而继承。
