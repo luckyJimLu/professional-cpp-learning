@@ -1720,6 +1720,39 @@
       "lab": "examples/day-070/main.cpp",
       "previous": 69,
       "next": 71
+    },
+    {
+      "path": "daily/day-071-copy-constructors-value-semantics.md",
+      "week": 11,
+      "part": "III",
+      "chapter": 8,
+      "chapter_title": "Gaining Proficiency with Classes and Objects",
+      "title": "Copy Constructors and Value Semantics",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-05",
+      "patterns": [
+        "composition",
+        "value-semantics",
+        "prototype"
+      ],
+      "topics": [
+        "copy-constructor",
+        "memberwise-copy",
+        "value-semantics",
+        "pointer-aliasing",
+        "borrowed-view",
+        "copy-elision"
+      ],
+      "guidelines": [
+        "copy-constructor-const-reference",
+        "prefer-value-members",
+        "no-self-pointer-members",
+        "explicit-copy-semantics"
+      ],
+      "lab": "examples/day-071/main.cpp",
+      "previous": 70,
+      "next": 72
     }
   ]
 }
