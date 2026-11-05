@@ -26,15 +26,16 @@
 
 ## 最新发布详情
 
-- **日期**：2026-11-04
-- **章节**：Chapter 8 · Gaining Proficiency with Classes and Objects，pp.276–278
-- **主题**：Constructor Initializers aka Ctor-Initializers、直接成员初始化、成员声明顺序
-- **关键知识点**：initializer list 与 constructor body assignment 的区别；base/member 初始化顺序；default member initializer 的覆盖规则；const/reference/non-default-constructible member 的初始化约束；成员声明顺序同时决定构造和析构顺序
-- **设计模式 / 稳定边界**：Composition + 显式依赖注入；固件构建期固定 HAL 时使用 template/concept；厂商 C API 不匹配稳定 contract 时才使用 Adapter。HAL borrow 与内部 owner/borrower member 的声明顺序必须明确；不引入不必要的 Factory/shared_ptr
-- **Lab**：[examples/day-070/main.cpp](examples/day-070/main.cpp)
-- **Runnable Exercise**：[examples/day-070/exercise-01.cpp](examples/day-070/exercise-01.cpp)
-- **上一课**：[Day 69 · 对象创建与构造函数](daily/day-069-object-creation-constructors.md)
-- **下一课**：Chapter 8 · Copy Constructors（p.279 起）
+- **日期**：2026-11-05
+- **章节**：Chapter 8 · Gaining Proficiency with Classes and Objects，pp.279–280
+- **主题**：Copy Constructors、memberwise copy、value semantics 与自引用指针复制边界
+- **关键知识点**：copy constructor 与 copy assignment 的区别；隐式 copy constructor 逐成员复制；raw pointer / span / unique_ptr / shared_ptr 的不同复制语义；自引用成员指针默认复制后仍指向 source；固定容量值类型的独立复制与有界成本
+- **设计模式 / 稳定边界**：默认使用 value semantics + composition；Prototype 仅在运行时多态克隆且必须保留动态类型时考虑；固定协议集合优先 std::variant / template / concept。先定义复制后独立值、共享 owner 或 borrow view，再决定成员类型；不因普通复制引入 Factory/shared_ptr
+- **Lab**：[examples/day-071/main.cpp](examples/day-071/main.cpp)
+- **Runnable Exercise**：[examples/day-071/exercise-01.cpp](examples/day-071/exercise-01.cpp)
+- **上一课**：[Day 70 · 构造函数成员初始化列表与成员顺序](daily/day-070-constructor-initializer-list-member-order.md)
+- **下一课**：Chapter 8 · Initializer-List Constructors（p.281 起）
+
 ## 规则
 
 - 每次新增课程前先读取本文件与 `daily/`，取现有最大 Day + 1。
