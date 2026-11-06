@@ -1368,6 +1368,8 @@ All ownership checks passed
 
 观察递增、递减与最后释放之间的同步关系。常见策略是递增采用较弱内存序（例如 relaxed），递减采用 release，并在最后释放路径配合 acquire 同步；但必须以当前 libc++ 版本的具体函数为准，不能将某个 helper 概括成所有操作的统一规则。
 
+固定版本、完整调用链、`weak_ptr::lock()` 竞态分析和配套实验见 [libc++ shared_ptr 源码导读](libcxx-shared-ptr-reading.md)。
+
 必须画出两条时间线：
 
 - 对象生命周期：最后一个 strong owner 释放 → 对象析构。

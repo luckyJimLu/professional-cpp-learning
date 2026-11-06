@@ -28,6 +28,7 @@
 不占用 Day 编号的深挖内容，自成目录（含正文与可编译实验）：
 
 - [专题 001 · 用 libc++ 源码读懂 `shared_ptr`：引用计数、控制块与内存序](topics/topic-001-libcxx-shared-ptr/)（衔接 Day 31 所有权主题）
+- [libc++ shared_ptr 源码导读（patterns 扩展）](patterns/libcxx-shared-ptr-reading.md)（固定 LLVM commit，补充内存序、`weak_ptr::lock()` 竞态与可运行实验）
 
 ## 最近课程
 

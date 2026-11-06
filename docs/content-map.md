@@ -62,7 +62,7 @@ summary: 从教材章节到工程专题、可运行实验和评审，按前置�
 
 内容工程：本区① 的 md 与 `daily/weekly/patterns/booklets/guidelines/frameworks/references` 文本由 `scripts/build-content.py` 统一校验并生成 `manifest.json` + `search-index.json`，网站运行时读取（课程元数据来自 `daily/lessons.meta.json`，条目文档来自各自 frontmatter，契约见 [内容契约](maint/content-contract.md)）。
 
-速查与专题深潜：[FAQ](faq.md) · [新特性速查](cpp-feature-standards.md) · [实现深潜](cpp-implementation-deep-dive.md) · [Mermaid 指南](mermaid.md) · [HarmonyOS Mini 兼容](harmonyos-mini-cpp11-compatibility.md) · [Zephyr / ZPP](zephyr-cpp20-zpp.md) · [RTOS 设计文档](rtos-simulator/DESIGN.md) · [RTOS 教学手册](rtos-simulator/LEARNING-GUIDE.md)
+速查与专题深潜：[FAQ](faq.md) · [新特性速查](cpp-feature-standards.md) · [实现深潜](cpp-implementation-deep-dive.md) · [libc++ shared_ptr 源码导读](../patterns/libcxx-shared-ptr-reading.md) · [Mermaid 指南](mermaid.md) · [HarmonyOS Mini 兼容](harmonyos-mini-cpp11-compatibility.md) · [Zephyr / ZPP](zephyr-cpp20-zpp.md) · [RTOS 设计文档](rtos-simulator/DESIGN.md) · [RTOS 教学手册](rtos-simulator/LEARNING-GUIDE.md)
 
 设计规范：[DESIGN.md](design/DESIGN.md)（视觉决策）· [UX-CONTRACT.md](design/UX-CONTRACT.md)（交互行为）· [PRODUCT.md](../PRODUCT.md)（受众与学习语义，impeccable 技能约定置于根目录）· [Impeccable 集成](design/impeccable.md)
 
