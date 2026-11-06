@@ -46,8 +46,7 @@ struct AllocationSnapshot {
 }
 
 void Report(const char* name, const AllocationSnapshot& before) {
-  std::cout << name << "：new +" << NewDelta(before)
-            << "，delete +" << DeleteDelta(before) << '\n';
+  std::cout << name << "：new +" << NewDelta(before) << "，delete +" << DeleteDelta(before) << '\n';
 }
 
 }  // namespace
@@ -93,7 +92,7 @@ void operator delete[](void* ptr, std::size_t) noexcept {
 // ---------- 被管理的对象：构造/析构打点 ----------
 
 class Widget {
- public:
+public:
   explicit Widget(int id) : id_(id) {
     std::cout << "  [ctor] Widget " << id_ << '\n';
   }
@@ -105,11 +104,27 @@ class Widget {
   Widget(const Widget&) = delete;
   Widget& operator=(const Widget&) = delete;
 
-  [[nodiscard]] int Id() const { return id_; }
+  [[nodiscard]] int Id() const {
+    return id_;
+  }
 
- private:
+private:
   int id_;
 };
+
+struct Pair {
+  static int destroyed;
+
+  Pair(int first_value, int second_value) : first(first_value), second(second_value) {}
+  ~Pair() {
+    ++destroyed;
+  }
+
+  int first;
+  int second;
+};
+
+int Pair::destroyed = 0;
 
 // ---------- 实验 ----------
 
@@ -128,8 +143,8 @@ void ExperimentNewTwiceAllocation() {
   std::cout << "实验 2：shared_ptr(new Widget) 有 2 次分配\n";
   const auto before = TakeSnapshot();
   {
-    // 注意：new Widget 先执行，若随后控制块分配抛异常，Widget 会泄漏；
-    // 这正是正文推荐优先用 make_shared 的原因之一。
+    // 注意：new Widget 先执行；若控制块分配抛异常，shared_ptr 构造函数会用删除器
+    // 释放 Widget，不会泄漏。make_shared 的优势是少一次分配和更好的局部性。
     std::shared_ptr<Widget> sp(new Widget(2));
     std::cout << "  use_count = " << sp.use_count() << '\n';
   }
@@ -149,7 +164,7 @@ void ExperimentWeakHoldsControlBlock() {
     std::cout << "  sp.reset() 后：expired = " << wp.expired() << '\n';
     Report("  此时分配统计", before);  // 预期：new +1，delete +0（控制块还在）
   }
-  wp.reset();  // 弱计数归零 -> 控制块内存释放
+  wp.reset();                         // 弱计数归零 -> 控制块内存释放
   Report("  wp.reset() 后", before);  // 预期：new +1，delete +1
   std::cout << '\n';
 }
@@ -171,12 +186,11 @@ void ExperimentDeleterTypeErasure() {
     // 两个 lambda 类型不同，但 shared_ptr<void> 类型相同：
     // deleter 的具体类型只活在控制块里，对外不可见。
     static_assert(std::is_same_v<decltype(a), decltype(b)>);
-    std::cout << "  a.use_count = " << a.use_count()
-              << "，b.use_count = " << b.use_count() << '\n';
+    std::cout << "  a.use_count = " << a.use_count() << "，b.use_count = " << b.use_count() << '\n';
   }
   Report("  分配统计", before);  // 预期：new +4（2 个对象 + 2 个含 deleter 的控制块）
-  std::cout << "  deleter A 调用 " << deleter_a_calls
-            << " 次，deleter B 调用 " << deleter_b_calls << " 次\n\n";
+  std::cout << "  deleter A 调用 " << deleter_a_calls << " 次，deleter B 调用 " << deleter_b_calls
+            << " 次\n\n";
 }
 
 void ExperimentWeakLock() {
@@ -187,8 +201,7 @@ void ExperimentWeakLock() {
     wp = sp;
     if (auto locked = wp.lock()) {
       // lock() 成功 = 原子地把强计数加一，对象在此期间不可能被销毁。
-      std::cout << "  对象存活时 lock 成功，use_count = " << locked.use_count()
-                << '\n';
+      std::cout << "  对象存活时 lock 成功，use_count = " << locked.use_count() << '\n';
     }
   }
   if (auto locked = wp.lock()) {
@@ -201,6 +214,22 @@ void ExperimentWeakLock() {
   std::cout << '\n';
 }
 
+void ExperimentAliasingConstructor() {
+  std::cout << "实验 6：aliasing constructor 共享控制块，但不改变销毁对象\n";
+  const auto before = TakeSnapshot();
+  {
+    auto owner = std::make_shared<Pair>(1, 2);
+    std::shared_ptr<int> alias(owner, &owner->second);
+    std::cout << "  alias.use_count = " << alias.use_count() << '\n';
+    owner.reset();
+    std::cout << "  owner.reset() 后 Pair::destroyed = " << Pair::destroyed << '\n';
+    std::cout << "  *alias = " << *alias << '\n';
+  }
+  Report("  分配统计", before);  // 预期：new +1，delete +1
+  std::cout << "  alias 释放后 Pair::destroyed = " << Pair::destroyed << '\n';
+  std::cout << '\n';
+}
+
 int main() {
   // 先触发一次 iostream 内部初始化，使其分配不计入各实验的快照。
   std::cout << "专题 001 实验：shared_ptr 实现模型的可观测验证\n\n";
@@ -210,6 +239,7 @@ int main() {
   ExperimentWeakHoldsControlBlock();
   ExperimentDeleterTypeErasure();
   ExperimentWeakLock();
+  ExperimentAliasingConstructor();
 
   std::cout << "全部实验结束。\n";
   return 0;

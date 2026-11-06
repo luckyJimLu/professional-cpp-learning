@@ -16,6 +16,7 @@ export interface Topic {
 
 export function topicGroup(path: string) {
   if (path.includes("references/reading-paths/")) return "参考书导读";
+  if (path.startsWith("topics/")) return "专题精读";
   if (/C\+\+ Concurrency/.test(path)) return "C++ 并发编程";
   if (/Boost[. ]Asio|frameworks\/asio/.test(path)) return "网络与异步";
   if (/embedded-systems|frameworks\/(trace32|openharmony)/.test(path))

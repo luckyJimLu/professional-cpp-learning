@@ -18,6 +18,7 @@
 | `daily/` | 每日课程(day-001 ~ day-068),元数据在 `lessons.meta.json` |
 | `examples/day-XXX/` | 每课可编译源码(`main.cpp` + `exercise-XX.cpp`),CI 会全部编译运行 |
 | `weekly/` / `patterns/` / `booklets/` / `guidelines/` | 周复盘、设计模式、速查册、Embedded C++ 规范 |
+| `topics/` | 独立专题(正文 `README.md` + `lab/` 可编译实验),不占用 Day 编号 |
 | `frameworks/` | asio / openharmony / trace32 平台专题 |
 | `references/` | 参考资料(system-design-notes、reading-paths 书单) |
 | `src/` | 学习平台前端(React 19 + TS + TailwindCSS 4 + shadcn/Radix) |
@@ -50,7 +51,7 @@ npm run ppt:check:strict    # 课件严格校验
 
 ## 修改内容时必须遵守
 
-1. **改了 `daily/`、`weekly/`、`patterns/` 等 Markdown 后,必须重新 `npm run build:content`**;
+1. **改了 `daily/`、`weekly/`、`patterns/`、`topics/` 等 Markdown 后,必须重新 `npm run build:content`**;
    平台运行时读取的是 `public/content` 的编译产物,而不是原始 Markdown。
 2. 新增/修改 C++ 示例代码须保证在
    `-Wall -Wextra -Wconversion -Wpedantic` 下编译通过,并通过 `npm run check:examples`。

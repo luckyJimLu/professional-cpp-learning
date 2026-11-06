@@ -63,7 +63,7 @@ ALLOWED_BINARY_DIRS = (
     "references/system-design-notes/",
 )
 SCANNED_TEXT_DIRS = ("daily", "weekly", "patterns", "booklets", "guidelines",
-                     "frameworks", "docs", "references/reading-paths")
+                     "frameworks", "docs", "topics", "references/reading-paths")
 
 
 def collect_sources():
@@ -78,13 +78,14 @@ def collect_sources():
     if p_progress.is_file():
         pairs.append((p_progress, p_progress.relative_to(ROOT)))
     add_dir("patterns/**/*.md")
+    add_dir("topics/**/*.md")
     add_dir("booklets/**/*.md")
     add_dir("references/reading-paths/*.md")
     for name in ZONE1_DOCS:
         p = ROOT / "docs" / name
         if p.is_file():
             pairs.append((p, p.relative_to(ROOT)))
-    for tree in ("patterns/examples", "booklets/examples", "examples",
+    for tree in ("patterns/examples", "booklets/examples", "examples", "topics",
                  "frameworks/trace32", "frameworks/openharmony",
                  "frameworks/asio", "frameworks/trace32/examples",
                  "references/system-design-notes"):
@@ -229,7 +230,7 @@ def build_manifest(pairs):
         rel_s = str(rel)
         if rel_s in lesson_paths or not rel_s.endswith(".md"):
             continue
-        if not (rel_s.startswith(("patterns/", "booklets/", "guidelines/", "frameworks/",
+        if not (rel_s.startswith(("patterns/", "topics/", "booklets/", "guidelines/", "frameworks/",
                                   "references/reading-paths/", "docs/", "weekly/",
                                   "utils/", "references/system-design-notes/"))
                 or rel_s in ("PPT/设计模式大纲.md",) or rel_s.startswith("slides/")):
@@ -297,8 +298,8 @@ def search_rank(rel: str) -> tuple[int, str]:
     # 再跟 md 区（daily→weekly→guidelines→patterns→frameworks→references→docs→utils…），新增源共尾部。
     code_ranks = {"examples/": 0, "frameworks/": 1, "patterns/": 2, "references/": 3}
     md_ranks = {"daily/": 100, "weekly/": 101, "guidelines/": 102, "patterns/": 103,
-                "frameworks/": 104, "references/": 105, "docs/": 106, "booklets/": 108,
-                "utils/": 109, "slides/": 110, "PPT/": 110}
+                "frameworks/": 104, "references/": 105, "docs/": 106, "topics/": 107,
+                "booklets/": 108, "utils/": 109, "slides/": 110, "PPT/": 110}
     if rel.endswith((".cpp", ".c", ".h", ".hpp", ".cmm", ".cc", ".cxx", ".ipp")):
         for prefix, rank in code_ranks.items():
             if rel.startswith(prefix):
