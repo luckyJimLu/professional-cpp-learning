@@ -85,13 +85,16 @@ int main() {
 一个构造函数满足以下条件时，属于 initializer-list constructor：第一个参数是 `std::initializer_list<E>`（或其 cv 限定引用），并且没有其他参数，或者其余参数都有默认值。
 
 ```cpp
+#include <cstdint>
+#include <initializer_list>
+
 class ByteSet {
 public:
     explicit ByteSet(std::initializer_list<std::uint8_t> bytes);
 };
 ```
 
-它常用于“容器/集合从一组同类型元素构造”的 API，例如 `std::vector<int> values{1, 2, 3};`。它并不适合所有类；一旦加入这个重载，花括号调用的含义可能发生变化。
+`explicit` 不会阻止直接列表初始化，所以 `ByteSet values{1, 2, 3};` 可以调用它；如果该 explicit 构造函数被选中，复制列表初始化 `ByteSet values = {1, 2, 3};` 则是 ill-formed。\n\n它常用于“容器/集合从一组同类型元素构造”的 API，例如 `std::vector<int> values{1, 2, 3};`。它并不适合所有类；一旦加入这个重载，花括号调用的含义可能发生变化。
 
 ### 3. `{}` 会优先考虑 initializer-list constructors
 
@@ -168,6 +171,9 @@ private:
 ### C：通过函数名表达不同语义
 
 ```c
+#include <stddef.h>
+#include <stdint.h>
+
 typedef struct {
     uint8_t bytes[8];
     size_t size;

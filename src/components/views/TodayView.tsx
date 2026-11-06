@@ -79,8 +79,11 @@ export function TodayView({
   const completedSteps = target
     ? activeSteps.filter((s) => isStepComplete(target.day, s.key)).length
     : 0;
+  const activeStageKey = activeSteps.some((s) => s.key === activeStage)
+    ? activeStage
+    : firstIncompleteStep;
   const activeStageDef =
-    activeSteps.find((s) => s.key === activeStage) ?? activeSteps[0];
+    activeSteps.find((s) => s.key === activeStageKey) ?? activeSteps[0];
   const activeStageMeta = STAGE_DESCRIPTIONS[activeStageDef.key];
 
   return (
@@ -267,7 +270,7 @@ export function TodayView({
             <div className="guide-pipeline">
               <CompileRail
                 lesson={target}
-                active={activeStage}
+                active={activeStageKey}
                 isStepComplete={isStepComplete}
                 onSelect={(step) => {
                   setActiveStage(step);

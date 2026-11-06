@@ -31,7 +31,7 @@ function loadState(): SavedProgress {
       parsed.version === 2
         ? (parsed.completedDays ?? [])
         : Object.entries(steps)
-            .filter(([, completed]) =>
+            .filter(([day, completed]) =>
               stepDefsForDay(Number(day)).every((step) => completed.includes(step.key)),
             )
             .map(([day]) => Number(day))
