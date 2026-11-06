@@ -774,6 +774,7 @@ mark {
   .mobile-menu nav a {
     display: flex;
     align-items: center;
+    gap: 12px;
     width: 100%;
     min-height: 44px;
     padding: 0 14px;
