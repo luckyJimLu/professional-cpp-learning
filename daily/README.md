@@ -35,6 +35,6 @@
 | Chapter 5 | Day 36–40 | Has-a / Is-a 关系边界、多继承契约、Mixin 类与类关系收束 |
 | Chapter 6 | Day 41–55 | 面向复用设计、模板与概念、防护边界、可用接口设计与 SOLID 原则 |
 | Chapter 7 | Day 56–66 | 内存所有权、智能指针、自定义删除器、PMR 分配器与资源决策树 |
-| Chapter 8 | Day 67–72（进行中） | class 封装、成员函数、对象存储期、this、对象创建、构造函数、Copy Constructors |
+| Chapter 8 | Day 67–72（进行中） | class 封装、成员函数、对象存储期、this、对象创建、构造函数、Copy Constructors、Initializer-List Constructors |
 
 下一课为 **Day 73 · Chapter 8 · Delegating Constructors（p.283 起）**。

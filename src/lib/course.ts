@@ -7,6 +7,8 @@ export const STEP_DEFS = [
   { key: "recall", label: "RECALL", title: "回忆" },
   { key: "concept", label: "CONCEPT", title: "概念" },
   { key: "refactor", label: "REFACTOR", title: "C → C++" },
+  { key: "design", label: "DESIGN", title: "设计模式" },
+  { key: "embedded", label: "EMBEDDED", title: "Embedded" },
   { key: "rules", label: "RULES", title: "规范" },
   { key: "lab", label: "LAB", title: "实验" },
   { key: "review", label: "REVIEW", title: "常见坑" },
@@ -14,6 +16,25 @@ export const STEP_DEFS = [
 ] as const;
 
 export type StepKey = (typeof STEP_DEFS)[number]["key"];
+
+export interface StepDefinition {
+  key: StepKey;
+  label: string;
+  title: string;
+}
+
+export const LEGACY_STEP_DEFS: readonly StepDefinition[] = [
+  { key: "read", label: "READ", title: "阅读" },
+  { key: "recall", label: "RECALL", title: "回忆" },
+  { key: "concept", label: "CONCEPT", title: "概念" },
+  { key: "refactor", label: "REFACTOR", title: "C → C++" },
+  { key: "rules", label: "RULES", title: "规范" },
+  { key: "lab", label: "LAB", title: "实验" },
+  { key: "review", label: "REVIEW", title: "常见坑" },
+  { key: "pass", label: "PASS", title: "Quiz" },
+];
+
+const TEN_STAGE_START_DAY = 67;
 
 export interface LessonSection {
   title: string;
@@ -38,6 +59,7 @@ export interface Lesson {
   path: string;
   raw: string;
   sections: LessonSection[];
+  steps: readonly StepDefinition[];
   labCode?: string;
   labChecklist: string[];
   nextSummary?: string;
@@ -111,18 +133,28 @@ function chapterToPart(chapter?: number): string | undefined {
   return "V";
 }
 
-function sectionStep(title: string): StepKey | undefined {
+function sectionStep(
+  title: string,
+  steps: readonly StepDefinition[],
+): StepKey | undefined {
   const marker = title.trim()[0];
-  const index = "①②③④⑤⑥⑦⑧".indexOf(marker);
-  return index >= 0 ? STEP_DEFS[index].key : undefined;
+  const index = "①②③④⑤⑥⑦⑧⑨⑩".indexOf(marker);
+  return index >= 0 ? steps[index]?.key : undefined;
 }
 
-function splitSections(body: string): LessonSection[] {
+function splitSections(body: string): {
+  sections: LessonSection[];
+  steps: readonly StepDefinition[];
+} {
   const heading = /^##\s+(.+)$/gm;
   const matches = [...body.matchAll(heading)];
-  if (!matches.length) return [];
+  const hasTenStages = matches.some((match) =>
+    /^[⑨⑩]/.test(match[1].trim()),
+  );
+  const steps = hasTenStages ? STEP_DEFS : LEGACY_STEP_DEFS;
+  if (!matches.length) return { sections: [], steps };
 
-  return matches.map((match, index) => {
+  const sections = matches.map((match, index) => {
     const start = (match.index ?? 0) + match[0].length;
     const end = matches[index + 1]?.index ?? body.length;
     const title = match[1].trim();
@@ -130,9 +162,10 @@ function splitSections(body: string): LessonSection[] {
     return {
       title,
       body: body.slice(start, end).trim(),
-      step: sectionStep(title),
+      step: sectionStep(title, steps),
     };
   });
+  return { sections, steps };
 }
 
 const CHINESE_TITLES: Record<number, string> = {
@@ -203,6 +236,13 @@ function extractChecklist(section?: LessonSection): string[] {
 
 export const lessons: Lesson[] = [];
 
+export function stepDefsForDay(day: number): readonly StepDefinition[] {
+  return (
+    lessons.find((lesson) => lesson.day === day)?.steps ??
+    (day >= TEN_STAGE_START_DAY ? STEP_DEFS : LEGACY_STEP_DEFS)
+  );
+}
+
 const manifestLessons: ContentLesson[] = [];
 const lessonBodyTasks = new Map<number, Promise<void>>();
 
@@ -231,7 +271,9 @@ async function loadLessonBody(entry: ContentLesson): Promise<void> {
   const lab = typeof entry.lab === "string" ? entry.lab : "";
   const labPath = lab && lab !== "rtos-sim" ? lab : undefined;
   const labMode = lab === "rtos-sim" ? ("rtos-sim" as const) : undefined;
-  const sections = splitSections(body);
+  const parsed = splitSections(body);
+  const sections = parsed.sections;
+  const steps = parsed.steps;
   const labSection = sections.find((section) => section.step === "lab");
   const nextSection = sections.find((section) => /下一步|next/i.test(section.title));
   const main = await fetchMainCpp(day);
@@ -252,6 +294,7 @@ async function loadLessonBody(entry: ContentLesson): Promise<void> {
     rtosScenario: typeof entry.rtosScenario === "string" ? entry.rtosScenario : undefined,
     raw: body,
     sections,
+    steps,
     labCode,
     labChecklist: extractChecklist(labSection),
     nextSummary: nextSection ? cleanInline(nextSection.body) : undefined,
@@ -317,6 +360,7 @@ export function hydrateCourses(): Promise<void> {
         path: entry.path,
         raw: "",
         sections: [],
+        steps: day >= TEN_STAGE_START_DAY ? STEP_DEFS : LEGACY_STEP_DEFS,
         labCode: undefined,
         labChecklist: [],
         nextSummary: undefined,

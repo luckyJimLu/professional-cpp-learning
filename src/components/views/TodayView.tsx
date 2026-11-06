@@ -17,31 +17,39 @@ const STAGE_DESCRIPTIONS: Record<StepKey, { budget: number; desc: string }> = {
     desc: "定位本章工程背景与核心问题，明确要解决的系统边界。",
   },
   recall: {
-    budget: 5,
+    budget: 4,
     desc: "检索前置知识与上一课的关键契约，建立知识连接。",
   },
   concept: {
-    budget: 12,
+    budget: 10,
     desc: "拆解 C++ 语言机制、对象模型与零成本抽象底层原理。",
   },
   refactor: {
-    budget: 8,
+    budget: 5,
     desc: "对比脆弱的 C 写法与现代 C++ 重构方案，消除资源与类型隐患。",
   },
+  design: {
+    budget: 6,
+    desc: "识别真实变化轴与稳定边界，判断是否需要 Pattern，并明确 owner、borrow 与 lifetime。",
+  },
+  embedded: {
+    budget: 6,
+    desc: "映射到 RTOS、Driver、Modem 或 Embedded Linux，检查线程、IRQ、WCET、内存与 teardown。",
+  },
   rules: {
-    budget: 8,
+    budget: 5,
     desc: "提炼可落地的 Embedded C++ 编码规范与代码评审检查项。",
   },
   lab: {
-    budget: 15,
+    budget: 9,
     desc: "在浏览器工作区编译运行真实源码，结合输出与内存轨迹验证。",
   },
   review: {
-    budget: 3,
+    budget: 4,
     desc: "盘点常见误用与边界陷阱，防患未然。",
   },
   pass: {
-    budget: 4,
+    budget: 6,
     desc: "完成自测检验，能够独立解释并写出等价实现后再标记通过。",
   },
 };
@@ -62,16 +70,17 @@ export function TodayView({
   const recent = lastLessonDay ? lessonByDay(lastLessonDay) : undefined;
   const target = recent ?? planned ?? latest;
 
+  const activeSteps = target?.steps ?? STEP_DEFS;
   const firstIncompleteStep =
-    STEP_DEFS.find((s) => target && !isStepComplete(target.day, s.key))?.key ??
+    activeSteps.find((s) => target && !isStepComplete(target.day, s.key))?.key ??
     "read";
   const [activeStage, setActiveStage] = useState<StepKey>(firstIncompleteStep);
 
   const completedSteps = target
-    ? STEP_DEFS.filter((s) => isStepComplete(target.day, s.key)).length
+    ? activeSteps.filter((s) => isStepComplete(target.day, s.key)).length
     : 0;
   const activeStageDef =
-    STEP_DEFS.find((s) => s.key === activeStage) ?? STEP_DEFS[0];
+    activeSteps.find((s) => s.key === activeStage) ?? activeSteps[0];
   const activeStageMeta = STAGE_DESCRIPTIONS[activeStageDef.key];
 
   return (
@@ -114,19 +123,19 @@ export function TodayView({
                   {target.chapter ? ` · 第 ${target.chapter} 章` : ""}
                   {target.chapterTitle ? ` (${target.chapterTitle})` : ""} · 预计{" "}
                   {target.duration} 分钟 · 已完成 {completedSteps} /{" "}
-                  {STEP_DEFS.length} 阶段
+                  {activeSteps.length} 阶段
                 </p>
                 <div
                   className="mini-progress guide-progress-bar"
                   role="progressbar"
                   aria-label={`Day ${target.day} 学习阶段`}
                   aria-valuemin={0}
-                  aria-valuemax={STEP_DEFS.length}
+                  aria-valuemax={activeSteps.length}
                   aria-valuenow={completedSteps}
                 >
                   <i
                     style={{
-                      width: `${Math.round((completedSteps / STEP_DEFS.length) * 100)}%`,
+                      width: `${Math.round((completedSteps / activeSteps.length) * 100)}%`,
                     }}
                   />
                 </div>
@@ -248,11 +257,11 @@ export function TodayView({
           <div className="guide-section-header">
             <h2>每天一小时 · 学习闭环</h2>
             <Badge variant="secondary" className="guide-section-badge font-normal">
-              8 阶段 · 60 分钟标准节奏
+              10 阶段 · 60 分钟标准节奏
             </Badge>
           </div>
           <p>
-            通过八个阶段完成一次扎实的学习：阅读、回忆、理解、重构、规范、实验、避坑与自测。点击任一阶段可查看任务说明，或直接进入对应章节。
+            通过十个阶段完成一次扎实的学习：阅读、回忆、概念、C/C++ 对照、设计模式、Embedded 场景、规范、实验、避坑与自测。点击任一阶段可查看任务说明，或直接进入对应章节。
           </p>
           {target && (
             <div className="guide-pipeline">

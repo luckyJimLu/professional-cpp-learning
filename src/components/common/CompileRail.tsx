@@ -1,4 +1,4 @@
-import { STEP_DEFS, type Lesson, type StepKey } from "../../lib/course";
+import { type Lesson, type StepKey } from "../../lib/course";
 import { cn } from "@/lib/utils";
 
 export function CompileRail({
@@ -19,7 +19,7 @@ export function CompileRail({
       className={cn("compile-rail lesson-toc", className)}
       aria-label={`Day ${lesson.day} 学习阶段`}
     >
-      {STEP_DEFS.map((step, index) => {
+      {lesson.steps.map((step, index) => {
         const complete = isStepComplete(lesson.day, step.key);
         const current = active === step.key;
         return (
@@ -41,7 +41,7 @@ export function CompileRail({
               <span className="rail-dot">
                 {complete ? "●" : current ? "◐" : "○"}
               </span>
-              {index < STEP_DEFS.length - 1 && <span className="rail-line" />}
+              {index < lesson.steps.length - 1 && <span className="rail-line" />}
             </span>
           </button>
         );

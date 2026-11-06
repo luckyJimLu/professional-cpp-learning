@@ -408,6 +408,6 @@ intended count=4, intended fill=170
 
 - [Day 71 · Copy Constructors and Value Semantics](day-071-copy-constructors-value-semantics.md)
 - [Embedded C++ Coding Guideline 学习索引](../guidelines/embedded-cpp-guideline-notes.md)
-- [Wiley · Professional C++ Chapter 8](https://onlinelibrary.wiley.com/doi/10.1002/9781394193202)
+- [Wiley · Professional C++ Chapter 8](https://onlinelibrary.wiley.com/doi/10.1002/9781394193202.ch8)
 - [C++ draft · List-initialization](https://eel.is/c++draft/dcl.init.list)
 - [cppreference · std::initializer_list](https://en.cppreference.com/w/cpp/utility/initializer_list)

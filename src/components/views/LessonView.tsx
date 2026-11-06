@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import {
-  STEP_DEFS,
   lessonByDay,
   type Lesson,
   type StepKey,
@@ -31,17 +30,21 @@ export function LessonView({
   isDayComplete: (day: number) => boolean;
   addWeakPoint: (value: string) => void;
 }) {
+  const steps = lesson.steps;
   const firstIncomplete =
-    STEP_DEFS.find((step) => !isStepComplete(lesson.day, step.key))?.key ??
+    steps.find((step) => !isStepComplete(lesson.day, step.key))?.key ??
     "pass";
   const [active, setActive] = useState<StepKey>(firstIncomplete);
   const [queuedReview, setQueuedReview] = useState<Set<StepKey>>(new Set());
-  const completedSteps = STEP_DEFS.filter((step) =>
+  const completedSteps = steps.filter((step) =>
     isStepComplete(lesson.day, step.key),
   ).length;
   const activeStep =
-    STEP_DEFS.find((step) => step.key === active) ?? STEP_DEFS[0];
-  useEffect(() => setQueuedReview(new Set()), [lesson.day]);
+    steps.find((step) => step.key === active) ?? steps[0];
+  useEffect(() => {
+    setQueuedReview(new Set());
+    setActive(firstIncomplete);
+  }, [lesson.day, firstIncomplete]);
 
   useEffect(() => {
     const hash = window.location.hash.slice(1);
@@ -49,7 +52,7 @@ export function LessonView({
       document.getElementById(hash)?.scrollIntoView();
     }
 
-    const sections = STEP_DEFS.flatMap((step) => {
+    const sections = steps.flatMap((step) => {
       const element = document.getElementById(`section-${step.key}`);
       return element ? [{ key: step.key, element }] : [];
     });
@@ -88,7 +91,7 @@ export function LessonView({
       window.removeEventListener("resize", schedule);
       observer.disconnect();
     };
-  }, [lesson.day]);
+  }, [lesson.day, lesson.sections.length, steps.length]);
 
   const navigate = (step: StepKey) => {
     setActive(step);
@@ -102,8 +105,8 @@ export function LessonView({
 
   const completeStep = (step: StepKey) => {
     markStep(lesson.day, step);
-    const index = STEP_DEFS.findIndex((item) => item.key === step);
-    const next = STEP_DEFS[index + 1]?.key;
+    const index = steps.findIndex((item) => item.key === step);
+    const next = steps[index + 1]?.key;
     if (next) {
       window.setTimeout(() => navigate(next), 120);
     }
@@ -146,7 +149,7 @@ export function LessonView({
                   </strong>
                 </span>
                 <span className="lesson-stage-progress mono">
-                  {completedSteps} / {STEP_DEFS.length}
+                  {completedSteps} / {steps.length}
                 </span>
               </summary>
               <div className="lesson-stage-panel">
@@ -163,7 +166,7 @@ export function LessonView({
 
         {lesson.sections.map((section) => {
           if (!section.step) return null;
-          const definition = STEP_DEFS.find(
+          const definition = steps.find(
             (step) => step.key === section.step,
           )!;
           const complete = isStepComplete(lesson.day, section.step);

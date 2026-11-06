@@ -10,6 +10,7 @@
 
 - **已发布：Day 1–72**
 - **当前课程：Day 72（已发布 / 待学习）**
+- **下一课：Day 73 · Delegating Constructors（p.283 起）**
 - 当前主线：**Chapter 8 · Gaining Proficiency with Classes and Objects**
 - 更新方式：**GitHub Markdown only**
 - Gmail 邮件投递：**已停止**
@@ -134,7 +135,7 @@ npm run preview
 - Today：根据 `progress.md` 和现有 Day 自动确定当前位置
 - Roadmap：按 Week / Part 生成纵向课程路径
 - Lessons：从 `daily/*.md` 自动建立课程索引
-- Lesson：Compile Rail + 8 阶段学习流
+- Lesson：Compile Rail + 10 阶段学习流
 - Lab：可编辑 C++ 代码 + 浏览器内 Clang/WASM Compile & Run
 - Review：每 7 天复盘入口
 - Guidelines：直接渲染 Embedded C++ Guideline Markdown

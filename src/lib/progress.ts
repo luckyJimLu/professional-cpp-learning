@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { STEP_DEFS, type StepKey } from "./course";
+import { stepDefsForDay, type StepKey } from "./course";
 
 const STORAGE_KEY = "professional-cpp-learning-console:v1";
 
@@ -26,13 +26,13 @@ function loadState(): SavedProgress {
     const parsed = JSON.parse(raw) as Partial<SavedProgress>;
     const steps = parsed.steps ?? {};
     // v1 prefilled every published repository day as "complete". Completion is
-    // learning evidence, so migrate only days whose eight stages were recorded.
+    // learning evidence, so migrate only days whose required stages were recorded.
     const completedDays =
       parsed.version === 2
         ? (parsed.completedDays ?? [])
         : Object.entries(steps)
             .filter(([, completed]) =>
-              STEP_DEFS.every((step) => completed.includes(step.key)),
+              stepDefsForDay(Number(day)).every((step) => completed.includes(step.key)),
             )
             .map(([day]) => Number(day))
             .filter((day) => Number.isFinite(day));
@@ -65,7 +65,7 @@ export function useLearningProgress() {
       current.add(step);
       const steps = { ...state.steps, [String(day)]: [...current] };
       const completedDays = new Set(state.completedDays);
-      if (STEP_DEFS.every((item) => current.has(item.key))) completedDays.add(day);
+      if (stepDefsForDay(day).every((item) => current.has(item.key))) completedDays.add(day);
       persist({
         ...state,
         version: 2,
@@ -88,7 +88,7 @@ export function useLearningProgress() {
   );
 
   const completedStepCount = useCallback(
-    (day: number) => STEP_DEFS.filter((step) => isStepComplete(day, step.key)).length,
+    (day: number) => stepDefsForDay(day).filter((step) => isStepComplete(day, step.key)).length,
     [isStepComplete],
   );
 
