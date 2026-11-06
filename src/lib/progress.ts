@@ -47,7 +47,7 @@ function loadState(): SavedProgress {
               .map(Number)
               .filter((day) => Number.isFinite(day) && isRecordedComplete(day));
     return {
-      version: 2,
+      version: 3,
       completedDays: Array.from(new Set(completedDays)).sort((a, b) => a - b),
       steps,
       weakPoints: parsed.weakPoints ?? [],
