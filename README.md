@@ -8,9 +8,9 @@
 
 ## 当前进度
 
-- **已发布：Day 1–72**
-- **当前课程：Day 72（已发布 / 待学习）**
-- **下一课：Day 73 · Delegating Constructors（p.283 起）**
+- **已发布：Day 1–73**
+- **当前课程：Day 73（已发布 / 待学习）**
+- **下一课：Day 74 · Converting Constructors and Explicit Constructors（p.284 起）**
 - 当前主线：**Chapter 8 · Gaining Proficiency with Classes and Objects**
 - 更新方式：**GitHub Markdown only**
 - Gmail 邮件投递：**已停止**
@@ -32,6 +32,7 @@
 
 ## 最近课程
 
+- [Day 73 · Delegating Constructors：统一构造入口与类不变量](daily/day-073-delegating-constructors.md)
 - [Day 72 · Initializer-List Constructors：花括号初始化的重载规则与边界](daily/day-072-initializer-list-constructors.md)
 - [Day 71 · Copy Constructors and Value Semantics](daily/day-071-copy-constructors-value-semantics.md)
 - [Day 70 · 构造函数成员初始化列表与成员顺序](daily/day-070-constructor-initializer-list-member-order.md)
@@ -67,7 +68,7 @@
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-072-*.md
+│   └── day-073-*.md
 ├── examples/
 │   └── day-XXX/
 ├── topics/

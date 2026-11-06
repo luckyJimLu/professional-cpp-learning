@@ -1785,6 +1785,36 @@
       "lab": "examples/day-072/main.cpp",
       "previous": 71,
       "next": 73
+    },
+    {
+      "path": "daily/day-073-delegating-constructors.md",
+      "week": 11,
+      "part": "III",
+      "chapter": 8,
+      "chapter_title": "Gaining Proficiency with Classes and Objects",
+      "title": "Delegating Constructors · Canonical Initialization Path",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-06",
+      "patterns": [
+        "composition",
+        "value-semantics"
+      ],
+      "topics": [
+        "delegating-constructors",
+        "canonical-constructor",
+        "constructor-invariants",
+        "initializer-order",
+        "embedded-startup-lifecycle"
+      ],
+      "guidelines": [
+        "delegate-to-canonical-constructor",
+        "constructor-purity",
+        "explicit-single-argument-constructor"
+      ],
+      "lab": "examples/day-073/main.cpp",
+      "previous": 72,
+      "next": 74
     }
   ]
 }

@@ -180,6 +180,18 @@
 - MUST：运行期外部数据使用 `std::span<const T>` / pointer+length 等显式 borrow API，并校验长度、容量和错误状态；跨任务或异步使用时必须转为明确 owner 或 pool handle。
 - REVIEW：检查 initializer-list 元素的 `const` 属性、move-only 类型限制、backing array 生命周期、列表长度上界、构造函数内部动态分配，以及 ISR/WCET 约束。
 
+## Delegating constructors 与 canonical initialization path
+
+> 本节是本项目针对构造函数委托的 Embedded 工程规则补充。
+
+- MUST：多个 convenience constructors 若建立同一组类不变量，应委托给一个 canonical constructor；成员核心初始化逻辑只保留一份，避免默认值与新增成员在重载间漂移。
+- MUST：delegating constructor 的 mem-initializer 只写委托目标，不要同时初始化成员或 base；真正的 base/member 初始化由目标构造函数完成。
+- MUST：禁止直接或间接的构造函数委托环；重载参数应有明确类型，避免目标选择歧义。
+- SHOULD：单参数构造函数默认声明为 explicit；单位、枚举与配置字段使用强类型，避免把 baud rate、timeout、retry count 混为整数。
+- MUST：构造函数只建立对象不变量。UART open、DMA start、RTOS task 创建、callback 注册等可能失败或依赖调度器的操作放入显式 Start(timeout) / Stop() 生命周期 API，并返回统一错误状态。
+- MUST：若外部运行期输入可能非法，先在 boundary/factory 校验并返回 Status / std::expected；不要用异常、半有效对象或构造期硬件副作用表达可恢复失败。
+- REVIEW：检查目标构造函数是否引入 heap allocation、锁、阻塞、I/O 或 callback 注册；检查 required dependency 的 owner/borrow/lifetime、失败回滚、注销与 in-flight drain 顺序，以及 ISR/WCET 上界。
+
 ## 类关系与层级
 
 - has-a / uses-a 与 is-a 必须表达真实语义，不为了复用实现而继承。
