@@ -7,7 +7,7 @@ summary: 从教材章节到工程专题、可运行实验和评审，按前置�
 
 ## 如何开始
 
-1. 首次学习：从[新手入门手册](beginner-start.md)与 [Day 1–72 前置导航](beginner-course-map.md)开始；当前主线已发布至 Day 72，正在 Chapter 8。
+1. 首次学习：从[新手入门手册](beginner-start.md)与 [Day 1–73 前置导航](beginner-course-map.md)开始；当前主线已发布至 Day 73，正在 Chapter 8。
 2. 做实验前：阅读 [实验环境矩阵](lab-environments.md)，确认浏览器、主机、模拟器和板端的边界。
 3. 学过接口与复用：完成 [Chapter 6 章末评审](chapter-06-review.md)。
 4. 串联模块：进入 [Modem 数据通道贯穿实验](engineering-learning-path.md)。

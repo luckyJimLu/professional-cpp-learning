@@ -2,7 +2,7 @@
 
 返回[新手入门手册](beginner-start.md)。按 Day 顺序是默认主线；前置列用于查缺补漏，不是要求阅读每篇进阶资料。所有链接只指向已存在的课程。
 
-本轮覆盖已发布的 Day 1–72，后续新增课程按[课程模板](maint/day-template.md)补齐导读。练习栏以各课第⑥节为准；每课第③节提供术语和执行步骤，第⑧节提供辨析答案与资料库入口。
+本轮覆盖已发布的 Day 1–73，后续新增课程按[课程模板](maint/day-template.md)补齐导读。练习栏以各课第⑥节为准；每课第③节提供术语和执行步骤，第⑧节提供辨析答案与资料库入口。
 
 | 课程 | 建议先掌握 | 首先理解什么 |
 | --- | --- | --- |
@@ -78,6 +78,7 @@
 | [Day 70 · 构造函数成员初始化列表：直接初始化与成员顺序](../daily/day-070-constructor-initializer-list-member-order.md) | Day 68、Day 69 | 成员初始化列表；声明顺序；必须初始化成员 |
 | [Day 71 · Copy Constructors：复制语义与独立对象边界](../daily/day-071-copy-constructors-value-semantics.md) | Day 70、Day 31 | copy constructor；memberwise copy；value semantics |
 | [Day 72 · Initializer-List Constructors：花括号初始化的重载规则与边界](../daily/day-072-initializer-list-constructors.md) | Day 70、Day 71 | initializer-list constructor；重载决议；窄化与 backing array |
+| [Day 73 · Delegating Constructors：让所有构造入口汇聚到同一条不变量路径](../daily/day-073-delegating-constructors.md) | Day 70、Day 71、Day 72 | delegating constructor；canonical constructor；构造顺序 |
 
 ## 资料与验证约定
 
