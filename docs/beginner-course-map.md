@@ -2,7 +2,7 @@
 
 返回[新手入门手册](beginner-start.md)。按 Day 顺序是默认主线；前置列用于查缺补漏，不是要求阅读每篇进阶资料。所有链接只指向已存在的课程。
 
-本轮覆盖已发布的 Day 1–67，后续新增课程按[课程模板](maint/day-template.md)补齐导读。练习栏以各课第⑥节为准；每课第③节提供术语和执行步骤，第⑧节提供辨析答案与资料库入口。
+本轮覆盖已发布的 Day 1–72，后续新增课程按[课程模板](maint/day-template.md)补齐导读。练习栏以各课第⑥节为准；每课第③节提供术语和执行步骤，第⑧节提供辨析答案与资料库入口。
 
 | 课程 | 建议先掌握 | 首先理解什么 |
 | --- | --- | --- |
@@ -73,6 +73,11 @@
 | [Day 65 · Optional 生命周期与固定池安全边界](../daily/day-065-optional-fixed-pool-lifetime-boundaries.md) | Day 64、Day 63 | optional；固定容量与 stale handle |
 | [Day 66 · Memory Management 资源边界决策树](../daily/day-066-memory-management-resource-boundary-decision-tree.md) | Day 56–65 | ownership；allocation；teardown |
 | [Day 67 · class 封装、成员函数与对象不变量](../daily/day-067-class-encapsulation-member-functions.md) | Day 28、Day 30、Day 66 | access control；member functions；in-class initializers |
+| [Day 68 · 对象如何被使用：存储期、this 与 C++23 显式对象参数](../daily/day-068-object-storage-this-explicit-object-parameter.md) | Day 28、Day 67 | 自动／动态存储期；this；explicit object parameter |
+| [Day 69 · 对象创建与构造函数：让对象从出生起就有效](../daily/day-069-object-creation-constructors.md) | Day 67、Day 68 | storage duration；构造函数；有效不变量 |
+| [Day 70 · 构造函数成员初始化列表：直接初始化与成员顺序](../daily/day-070-constructor-initializer-list-member-order.md) | Day 68、Day 69 | 成员初始化列表；声明顺序；必须初始化成员 |
+| [Day 71 · Copy Constructors：复制语义与独立对象边界](../daily/day-071-copy-constructors-value-semantics.md) | Day 70、Day 31 | copy constructor；memberwise copy；value semantics |
+| [Day 72 · Initializer-List Constructors：花括号初始化的重载规则与边界](../daily/day-072-initializer-list-constructors.md) | Day 70、Day 71 | initializer-list constructor；重载决议；窄化与 backing array |
 
 ## 资料与验证约定
 
