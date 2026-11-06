@@ -37,7 +37,6 @@ ZONE1_DOCS = [
     "mermaid.md",
     "faq.md",
     "cpp-feature-standards.md",
-    "rtos-simulator/DESIGN.md",
     "rtos-simulator/LEARNING-GUIDE.md",
 ]
 
@@ -64,6 +63,16 @@ ALLOWED_BINARY_DIRS = (
 )
 SCANNED_TEXT_DIRS = ("daily", "weekly", "patterns", "booklets", "guidelines",
                      "frameworks", "docs", "topics", "references/reading-paths")
+
+# 专题目录按知识领域分组：topics/<domain>/<topic-slug>/README.md。
+# 新增领域时在这里登记中文名，未登记的领域直接显示目录名。
+TOPIC_DOMAINS = {
+    "stdlib": "标准库实现",
+    "language": "语言语义",
+    "concurrency": "并发与内存模型",
+    "embedded": "嵌入式与系统",
+    "tooling": "工具链与性能",
+}
 
 
 def collect_sources():
@@ -247,6 +256,9 @@ def build_manifest(pairs):
             else "周复盘" if rel_s.startswith("weekly/")
             else "专题"
         )
+        if rel_s.startswith("topics/"):
+            parts = rel_s.split("/")
+            category = TOPIC_DOMAINS.get(parts[1], "专题") if len(parts) > 2 else "专题"
         topics.append({
             "path": rel_s,
             "category": category,

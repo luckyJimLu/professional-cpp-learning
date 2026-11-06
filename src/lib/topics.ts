@@ -53,7 +53,12 @@ export function hydrateTopics(): Promise<void> {
         title: entry.title || entry.path.split("/").pop()!,
         id: (entry as ContentTopic & { id?: string }).id,
         locale: entry.locale,
-        group: topicGroup(entry.path),
+        // topics/<domain>/<slug>/ 的来源分类即知识领域，直接作为分组名；
+        // 其余路径沿用原有规则，保持既有目录结构不变。
+        group:
+          entry.path.startsWith("topics/") && entry.category !== "专题"
+            ? entry.category
+            : topicGroup(entry.path),
         summary: entry.summary || undefined,
         body: "",
         raw: "",

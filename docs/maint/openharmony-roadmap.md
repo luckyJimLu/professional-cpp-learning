@@ -1,11 +1,11 @@
 # OpenHarmony 轻量系统 · 内容规划
 
-返回 [模块首页](README.md)。下表区分已整理资料与后续实操教程；现有资料均未完成板端验证。
+返回 [模块首页](../../frameworks/openharmony/README.md)。下表区分已整理资料与后续实操教程；现有资料均未完成板端验证。
 选定版本和开发板后，再确定实际支持的组件与实验方法。
 
 | 顺序 | 主题 | 后续文档应交付的内容 | 状态 |
 | --- | --- | --- | --- |
-| 01 | 系统定位与源码地图 | [系统概览](01-system-overview.md)、[官方来源](05-sources.md) | 已整理／静态核对 |
+| 01 | 系统定位与源码地图 | [系统概览](../../frameworks/openharmony/01-system-overview.md)、[官方来源](../../frameworks/openharmony/05-sources.md) | 已整理／静态核对 |
 | 02 | 开发环境与首次构建 | 主机/工具链/板卡信息、获取源码、构建日志、产物说明 | 待编写 |
 | 03 | 启动流程与板级移植 | 从复位到应用入口的调用链、链接布局、板级配置 | 待编写 |
 | 04 | LiteOS-M 任务与调度 | 任务状态、优先级、调度路径及最小可复现实验 | 待编写 |
@@ -24,11 +24,11 @@
 
 ## 本轮已归档资料
 
-- [核心接口与契约](02-kernel-interfaces.md)：覆盖任务、IPC、内存、时间、中断及 CMSIS 适配差异。
-- [系统组件接口](03-system-components.md)：覆盖初始化、SAMGR、IoT 外设、日志与基础存储。
-- [逐符号索引](API-INDEX.md)：提供固定源码位置；不替代后续逐主题实操教程。
-- [工程核对指南](04-engineering-guide.md)：给出资源边界与回归矩阵；表中其余主题仍待完整教程与实验。
+- [核心接口与契约](../../frameworks/openharmony/02-kernel-interfaces.md)：覆盖任务、IPC、内存、时间、中断及 CMSIS 适配差异。
+- [系统组件接口](../../frameworks/openharmony/03-system-components.md)：覆盖初始化、SAMGR、IoT 外设、日志与基础存储。
+- [逐符号索引](../../frameworks/openharmony/API-INDEX.md)：提供固定源码位置；不替代后续逐主题实操教程。
+- [工程核对指南](../../frameworks/openharmony/04-engineering-guide.md)：给出资源边界与回归矩阵；表中其余主题仍待完整教程与实验。
 
 ## 操作手册补充
 
-[首次构建与启动手册](07-first-build-lab.md) 已提供输入卡、操作顺序、证据清单与失败分支；状态为资料整理／待执行。上表开发环境、启动移植等条目在真实构建和板端验收前不改为已验证。启动分析已有 [调用链文章](06-mini-system-boot-flow.md)，应与工程实操分开记录。
+[首次构建与启动手册](../../frameworks/openharmony/07-first-build-lab.md) 已提供输入卡、操作顺序、证据清单与失败分支；状态为资料整理／待执行。上表开发环境、启动移植等条目在真实构建和板端验收前不改为已验证。启动分析已有 [调用链文章](../../frameworks/openharmony/06-mini-system-boot-flow.md)，应与工程实操分开记录。

@@ -18,7 +18,7 @@ summary: 从教材章节到工程专题、可运行实验和评审，按前置�
 | 模块 | 前置知识 | 推荐顺序及现有入口 | 本轮交付／学习证据 | 后续缺口 |
 | --- | --- | --- | --- | --- |
 | 每日课程 | 可从编译运行起步，按课补齐函数与类型基础 | Ch1–3 → Ch4–6 → Ch7；以已发布课程为准 | 运行主 Lab、解释边界、完成章末评审 | Ch7 以后仍随教材逐课发布，不预设完成日期 |
-| 历史练习 | 对应 Day 的概念与主 Lab | [迁移清单](maint/archive/historical-exercises.md) | 优先补齐借用、容量、契约、所有权四组；独立题型区分运行示范与修改练习 | 清单中的历史 starter 尚未全部落地 |
+| 历史练习 | 对应 Day 的概念与主 Lab | 按已发布课程补齐 | 优先补齐借用、容量、契约、所有权四组；独立题型区分运行示范与修改练习 | 清单中的历史 starter 尚未全部落地 |
 | 设计模式 | value semantics、composition、小接口 | [分类索引](../patterns/book-examples.md) → [选型工作坊](../patterns/engineering-workshop.md) | 33 个 C++17 程序；比较无模式方案、变化轴和成本 | 多模式综合场景按真实需求补充 |
 | Asio | 生命周期、回调、错误处理；协程需 C++20 | [模块首页](../frameworks/asio/README.md) → 生命周期 → Handler → Runner → [异步契约实验](../frameworks/asio/ASYNC_WORKSHOP.md) | Echo 主机烟测；超时、取消、背压、关闭的实验步骤和判断标准 | 故障注入扩展的实际运行结果须逐项补记录 |
 | OpenHarmony | 任务／ISR、C 接口、交叉编译 | [源码与接口](../frameworks/openharmony/README.md) → [首次构建手册](../frameworks/openharmony/07-first-build-lab.md) | 固定版本资料与源码核对；构建／启动证据清单 | 具体板卡、完整构建与启动尚待验证 |
@@ -41,7 +41,7 @@ summary: 从教材章节到工程专题、可运行实验和评审，按前置�
 | 模拟验证 | 所选模型和配置生成了指定事件 | 真实 RTOS 的调度细节和硬件中断延迟 |
 | 板端验证 | 指定固件、配置和硬件上有实际证据 | 其他板卡、版本或配置同样成立 |
 
-每条验证记录包含：版本／commit、日期、命令与目录、环境、输入、实际结果、证据位置和未验证项。没有日志时只给操作与预期，不填写“已通过”。新增内容的验证入口汇总于 [整改验收记录](maint/archive/content-refinement-validation.md)。
+每条验证记录包含：版本／commit、日期、命令与目录、环境、输入、实际结果、证据位置和未验证项。没有日志时只给操作与预期，不填写“已通过”。
 
 ## 章节与专题的双向联系
 
@@ -54,23 +54,10 @@ summary: 从教材章节到工程专题、可运行实验和评审，按前置�
 | 多线程与并发 | RTOS、Asio Runner | 声明共享状态、执行上下文和关闭协议 |
 | 测试与调试 | TRACE32、构建同步工具 | 符号匹配、复现输入、失败证据和修复回归 |
 
-## 文档索引（docs 区①与维护文档）
+## 文档索引
 
-入门与课程导航：[新手入门手册](beginner-start.md) · [逐课前置导航](beginner-course-map.md) · [16 周学习路线](learning-plan.md) · [课程模板](maint/day-template.md) · [Chapter 6 章末评审](chapter-06-review.md) · [参考资料导读](reference-reading-guide.md) · [学习体验规范](design/learning-ux.md)
+入门与课程导航：[新手入门手册](beginner-start.md) · [逐课前置导航](beginner-course-map.md) · [16 周学习路线](learning-plan.md) · [Chapter 6 章末评审](chapter-06-review.md) · [参考资料导读](reference-reading-guide.md)
 
-工程化与验证：[可运行练习审计与契约](maint/runnable-exercise-audit.md) · [内容契约](maint/content-contract.md) · [实验环境与工具链清单](lab-environments.md) · [迁移校验清单](migration-manifest.json) · [Pages 部署说明](github-pages.md)
+环境与证据：[实验环境与工具链清单](lab-environments.md) · [Modem 数据通道贯穿实验](engineering-learning-path.md)
 
-内容工程：本区① 的 md 与 `daily/weekly/patterns/topics/booklets/guidelines/frameworks/references` 文本由 `scripts/build-content.py` 统一校验并生成 `manifest.json` + `search-index.json`，网站运行时读取（课程元数据来自 `daily/lessons.meta.json`，条目文档来自各自 frontmatter，契约见 [内容契约](maint/content-contract.md)）。
-
-速查与专题深潜：[FAQ](faq.md) · [新特性速查](cpp-feature-standards.md) · [实现深潜](cpp-implementation-deep-dive.md) · [专题 001：libc++ shared_ptr 源码导读](../topics/topic-001-libcxx-shared-ptr/README.md) · [Mermaid 指南](mermaid.md) · [HarmonyOS Mini 兼容](harmonyos-mini-cpp11-compatibility.md) · [Zephyr / ZPP](zephyr-cpp20-zpp.md) · [RTOS 设计文档](rtos-simulator/DESIGN.md) · [RTOS 教学手册](rtos-simulator/LEARNING-GUIDE.md)
-
-设计规范：[DESIGN.md](design/DESIGN.md)（视觉决策）· [UX-CONTRACT.md](design/UX-CONTRACT.md)（交互行为）· [PRODUCT.md](../PRODUCT.md)（受众与学习语义，impeccable 技能约定置于根目录）· [Impeccable 集成](design/impeccable.md)
-
-过程记录与归档：`docs/maint/archive/`——课程导学修订（beginner-course-refinement）、两轮 UI 精修、Impeccable UI 记录（impeccable-ui-refinement）、编译修复、整改验收、参考资料迁移；`docs/historical-exercises.md` 已并入 archive。
-
-## 维护约定
-
-- 每篇深入文章只保留一个主要维护位置；其他模块添加导读和交叉链接。
-- `references/system-design-notes/` 保留迁移清单和校验基线；纠错写在导读或本项目专题，引用原文件及适用版本。
-- 新增 Day 不覆盖旧 Day，不用专题补齐进度数字。周复盘在对应 7 天结束后编写；章末评审不必等待周末。
-- 发布前同时检查文档入口、完整源码、预期结果、失败分支和验证范围。
+速查与专题深潜：[FAQ](faq.md) · [新特性速查](cpp-feature-standards.md) · [实现深潜](cpp-implementation-deep-dive.md) · [shared_ptr 实现原理](../topics/stdlib/shared-ptr-internals/README.md) · [Mermaid 指南](mermaid.md) · [HarmonyOS Mini 兼容](harmonyos-mini-cpp11-compatibility.md) · [Zephyr / ZPP](zephyr-cpp20-zpp.md) · [RTOS 教学手册](rtos-simulator/LEARNING-GUIDE.md)

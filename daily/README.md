@@ -4,7 +4,7 @@
 
 ## 文件命名与规范
 
-课程文件统一采用 `day-XXX-slug.md` 命名，其中 `XXX` 为三位数字序号（如 `day-001-from-c-to-modern-cpp.md`）。格式细节可参考 [每日课程模板](../docs/maint/day-template.md)。
+课程文件统一采用 `day-XXX-slug.md` 命名，其中 `XXX` 为三位数字序号（如 `day-001-from-c-to-modern-cpp.md`）。
 
 ## 10 段式固化结构
 

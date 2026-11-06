@@ -20,7 +20,7 @@ def main() -> int:
                         help='check only the book-based C++17 design pattern examples')
     args = parser.parse_args()
     pattern_sources = sorted((ROOT / 'patterns' / 'examples').glob('*/*.cpp'))
-    topic_sources = sorted((ROOT / 'topics').glob('*/lab/*.cpp'))
+    topic_sources = sorted((ROOT / 'topics').glob('**/lab/*.cpp'))
     sources = [] if args.patterns_only else sorted((ROOT / 'examples').glob('day-*/*.cpp'))
     if not args.patterns_only:
         sources += sorted((ROOT / 'examples').glob('*.cpp'))

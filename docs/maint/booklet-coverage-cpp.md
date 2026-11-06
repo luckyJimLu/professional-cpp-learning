@@ -1,11 +1,11 @@
 # C++ 小册子内容覆盖与校核
 
-正文：[C++ 语言速查](cpp.md)。网页：`?view=booklets&book=cpp`。与 C17 小册子独立，不混用语言规则。
+正文：[C++ 语言速查](../../booklets/cpp.md)。网页：`?view=booklets&book=cpp`。与 C17 小册子独立，不混用语言规则。
 
 ## 内容来源
 
 - 用户提供的《Cpp Comprehensive Cheatsheet.md》：用于主题覆盖与初学者查找需求，整合其 11 个模块；不将其中的绝对化说法直接当成标准保证。
-- 仓库 [C++ 标准来源索引](../docs/cpp-feature-standards.md)：沿用并核对首次标准化版本及后续增强。
+- 仓库 [C++ 标准来源索引](../cpp-feature-standards.md)：沿用并核对首次标准化版本及后续增强。
 - [cppreference C++](https://en.cppreference.com/w/cpp.html)、[编译器支持](https://en.cppreference.com/w/cpp/compiler_support.html)、[特性测试宏](https://en.cppreference.com/w/cpp/feature_test.html)：进一步核对的公开参考入口。
 - [WG21 标准入口](https://isocpp.org/std/the-standard)：精确规则以相应版本标准为准；工作草案、提案及实现扩展不能直接等同于已发布标准。
 
@@ -62,4 +62,4 @@
 
 C++ 的 47 个版本特性条目均补充实现机制与深入讨论；另补模块、比较、原子等主题。C 册补充 14 个相关条目的 C99/C11 实现解释，并在 C/C++ 差异条目列出 C23 重点增量，保持 C17 为主体。区分前端、后端、ABI 与标准库，不把常见布局或优化结果当作标准保证。
 
-[实现观察实验](implementation-lab.md) 提供类型、闭包、常量求值、原子与 optional 生命周期的观察步骤。`npm run check:booklets` 会编译运行 `examples/` 下的 C17/C++20 自测；C23 增量表和可选 Clang AST 命令不在这些自测的验证范围内。
+[实现观察实验](../../booklets/implementation-lab.md) 提供类型、闭包、常量求值、原子与 optional 生命周期的观察步骤。`npm run check:booklets` 会编译运行 `examples/` 下的 C17/C++20 自测；C23 增量表和可选 Clang AST 命令不在这些自测的验证范围内。

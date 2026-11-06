@@ -104,7 +104,7 @@
 
 不占用 Day 编号的源码精读与扩展：
 
-- [专题 001 · 用 libc++ 源码读懂 shared_ptr：引用计数、控制块与内存序](topics/topic-001-libcxx-shared-ptr/)
+- [shared_ptr 实现原理：控制块、引用计数与内存序](topics/stdlib/shared-ptr-internals/)
 
 ## 发布规则
 

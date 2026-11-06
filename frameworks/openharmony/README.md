@@ -29,8 +29,6 @@ OpenHarmony 项目及其轻量系统相关源码可从官方开源仓库获取�
 | [06 · samgr_lite 服务与通信机制](06-samgr-lite-service-communication.md) | Service/Feature/IUnknown、TaskPool、异步消息、Pub/Sub 与死锁边界 | PDF 内容整理／待固定版本源码复核 |
 | [逐符号接口索引](API-INDEX.md) | 声明、宏与函数表成员的源码定位 | 311 项／所选头文件 |
 | [来源清单](sources.json) / [接口清单](api-index.json) | SHA-256、固定链接与机器可读元数据 | 已入模块 |
-| [内容规划与学习路线](ROADMAP.md) | 后续教程和板端实验路线 | 持续维护 |
-| [文档模板与收录约定](DOCUMENT-TEMPLATE.md) | 适用版本、证据和复现步骤 | 可直接复制 |
 
 本轮以 `OpenHarmony-v5.0.0-Release` 固定版本收集 30 篇官方文档，并核对核心头文件和关键实现。
 资料采集日期为 2026-10-17；此版本是研究基线，不表示当前最新发行版。
@@ -54,15 +52,11 @@ OpenHarmony 项目及其轻量系统相关源码可从官方开源仓库获取�
 - [TRACE32 · RTOS 稳定性分析](../trace32/README.md)：复用现场保全与证据分析方法；具体 RTOS 结构、命令和脚本需针对 LiteOS-M 单独验证。
 - [Embedded C++ 编码规范](../../guidelines/embedded-cpp-guideline-notes.md)：审查堆分配、阻塞、ISR 上下文与资源上界。
 
-## 后续添加方式
+## 阅读顺序
 
-1. 从 [路线](ROADMAP.md) 选择主题，复制 [模板](DOCUMENT-TEMPLATE.md) 为本目录下的 `NN-topic.md`。
-2. 写明 release/tag/commit、目标板与工具链；区分官方依据、源码推导和实际验证结果。
-3. 把文章链接及真实状态加入本页；有依赖时补充前置阅读。
-4. 示例随文章说明构建与运行方式。依赖开发板或交叉工具链的程序放在本模块后续的
-   `examples/` 中，并标明目标环境，不能当作宿主机 standalone Lab 使用。
-
-本目录 Markdown 会被现有 Learning Console 的专题与搜索机制自动收录。
+1. 先读 [系统定位与源码地图](01-system-overview.md)，再按内核接口 → 组件接口 → 工程核对推进。
+2. 需要定位符号时查 [逐符号接口索引](API-INDEX.md)，需要官方出处时查 [官方资料索引](05-sources.md)。
+3. 准备实机时按 [首次构建与启动实验手册](07-first-build-lab.md) 记录环境、输入与结果；未验证项如实保留。
 
 ## 首次构建与跨模块实验
 

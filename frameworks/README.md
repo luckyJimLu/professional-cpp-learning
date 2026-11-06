@@ -26,7 +26,7 @@ frameworks/
 
 [OpenHarmony 专题入口](openharmony/README.md) 专注于资源受限设备（L0 / Mini 系统）的源码阅读与架构分析。基于 `OpenHarmony-v5.0.0-Release` 基线，详细剖析 LiteOS-M 内核契约（任务、中断、内存与 IPC）、系统组件与 SAMGR 轻量级服务框架 IPC/PubSub 机制。
 
-- **文档映射**：[01·系统定位与源码地图](openharmony/01-system-overview.md) | [02·内核接口](openharmony/02-kernel-interfaces.md) | [03·组件接口](openharmony/03-system-components.md) | [04·工程指南](openharmony/04-engineering-guide.md) | [05·官方资料](openharmony/05-sources.md) | [06·SAMGR 通信机制](openharmony/06-samgr-lite-service-communication.md) | [06·系统启动链](openharmony/06-mini-system-boot-flow.md) | [07·构建实验](openharmony/07-first-build-lab.md) | [接口索引](openharmony/API-INDEX.md) | [ROADMAP](openharmony/ROADMAP.md)
+- **文档映射**：[01·系统定位与源码地图](openharmony/01-system-overview.md) | [02·内核接口](openharmony/02-kernel-interfaces.md) | [03·组件接口](openharmony/03-system-components.md) | [04·工程指南](openharmony/04-engineering-guide.md) | [05·官方资料](openharmony/05-sources.md) | [06·SAMGR 通信机制](openharmony/06-samgr-lite-service-communication.md) | [06·系统启动链](openharmony/06-mini-system-boot-flow.md) | [07·构建实验](openharmony/07-first-build-lab.md) | [接口索引](openharmony/API-INDEX.md)
 
 ---
 

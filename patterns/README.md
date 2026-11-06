@@ -718,7 +718,7 @@ Decorator 独占拥有下一层
 进一步说明见：
 
 - [Ownership & Smart Pointers in Design Patterns](ownership-and-smart-pointers.md)：包含三问决策流程、独占/借用/异步关系的 UML 类图与时序图。
-- [libc++ shared_ptr 源码导读](../topics/topic-001-libcxx-shared-ptr/README.md)：固定 LLVM commit，沿 `make_shared`、控制块、强弱计数、内存序与 `weak_ptr::lock()` 逐段阅读。
+- [shared_ptr 实现原理](../topics/stdlib/shared-ptr-internals/README.md)：固定 LLVM commit，沿 `make_shared`、控制块、强弱计数、内存序与 `weak_ptr::lock()` 逐段阅读。
 - [三大标准库 shared_ptr 源码导读](ownership-and-smart-pointers.md#28-阅读三大标准库的-shared_ptr-实现)：libc++、libstdc++、MSVC STL 的控制块、引用计数内存序、类型擦除与 make_shared 分配策略。
 - [可运行指针选择实验](../examples/pointer-choice.cpp)：验证所有权转移、借用、强捕获与弱捕获的销毁时机。
 

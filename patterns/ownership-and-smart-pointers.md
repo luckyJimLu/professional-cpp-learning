@@ -1368,7 +1368,7 @@ All ownership checks passed
 
 观察递增、递减与最后释放之间的同步关系。常见策略是递增采用较弱内存序（例如 relaxed），递减采用 release，并在最后释放路径配合 acquire 同步；但必须以当前 libc++ 版本的具体函数为准，不能将某个 helper 概括成所有操作的统一规则。
 
-固定版本、完整调用链、`weak_ptr::lock()` 竞态分析和配套实验见 [专题 001：用 libc++ 源码读懂 shared_ptr](../topics/topic-001-libcxx-shared-ptr/README.md)。
+固定版本、完整调用链、`weak_ptr::lock()` 竞态分析和配套实验见 [shared_ptr 实现原理](../topics/stdlib/shared-ptr-internals/README.md)。
 
 必须画出两条时间线：
 

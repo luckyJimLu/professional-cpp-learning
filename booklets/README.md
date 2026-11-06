@@ -23,7 +23,7 @@
 
 ## 内容与来源
 
-范围与校核依据见[内容覆盖清单](coverage.md)，含全部 C17 关键字和标准头文件索引。
+正文覆盖全部 C17 关键字和 29 个标准头文件，按主题直接查即可。
 
 主题组织参考 [Coddy · C Cheat Sheet](https://coddy.tech/cheat-sheets/c)，参考日期 2026-10-29。中文解释和示例重新编写；语言和标准库规则交叉查阅 [cppreference · C](https://en.cppreference.com/w/c.html)。
 
@@ -35,7 +35,7 @@ C17 是默认标准。C23、POSIX、平台扩展及 C++ 的差异单独提醒。
 
 [C++ 语言速查](cpp.md) 结合用户提供的《Cpp Comprehensive Cheatsheet.md》，扩充为 **17 章、108 个条目**，覆盖关键字、编译、类型、函数、类、内存、容器算法、流、文件和并发；现代功能逐条标注标准版本；按版本分类的新特性说明引入原因、应用场景及使用边界。保留原有条目 ID，不破坏已有定位链接。
 
-[覆盖与校核说明](cpp-coverage.md) 记录附件各主题的落点、修正点及验证范围。无需记住版本目录：搜索 explicit、try_emplace、jthread、constinit 等可直接找到主题用法。
+无需记住版本目录：搜索 explicit、try_emplace、jthread、constinit 等可直接找到主题用法。
 
 ## C17 与 C++ 主机自测
 

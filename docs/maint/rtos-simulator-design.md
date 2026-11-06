@@ -1,6 +1,6 @@
 # RTOS 并发可视化模拟器 · 实施方案
 
-当前学习入口：[9 场景教学手册](LEARNING-GUIDE.md)。本文含历史分期设计；场景列表与实际配置以 `src/rtos-sim/scenarios.ts` 为准，独立文件以 `examples/rtos/` 为准。
+当前学习入口：[9 场景教学手册](../../docs/rtos-simulator/LEARNING-GUIDE.md)。本文含历史分期设计；场景列表与实际配置以 `src/rtos-sim/scenarios.ts` 为准，独立文件以 `examples/rtos/` 为准。
 
 ## 目标
 
@@ -304,8 +304,8 @@ export interface VisualizerTraceV3 {      // 导出/预置轨迹
 | **TaskStateMachine** | 固定布局的 SVG 状态图，当前步骤里发生的转移边会高亮动画；可以选择看哪个任务 |
 | **KernelObjectsPanel** | 队列：环形槽位 + head/tail；信号量：令牌圆点；Mutex：owner 徽标 + 等待队列 chips；CondVar/事件组：位图；定时器：倒计时 |
 | **WaitForGraph** | 任务和对象作为节点、等待关系作为边，环用红色高亮；节点少（一般 < 12），用简单的分层布局，不引入新依赖 |
-| **栈视图** | 解释器的作用域按任务转换成 `StackFrame[]`，复用 [MemoryCanvas](file:///home/lujingjing/Project/professional-cpp-learning/src/visualizer/MemoryCanvas.tsx)，每个任务一列 |
-| **编辑器** | 给 [CodeMirrorEditor](file:///home/lujingjing/Project/professional-cpp-learning/src/visualizer/CodeMirrorEditor.tsx) 加 `activeLines` 多色装饰，每个任务固定一种颜色 |
+| **栈视图** | 解释器的作用域按任务转换成 `StackFrame[]`，复用 [MemoryCanvas](../../src/visualizer/MemoryCanvas.tsx)，每个任务一列 |
+| **编辑器** | 给 [CodeMirrorEditor](../../src/visualizer/CodeMirrorEditor.tsx) 加 `activeLines` 多色装饰，每个任务固定一种颜色 |
 
 ---
 
@@ -352,7 +352,7 @@ Ready 队列、抢占、时间片、tick 推进、Idle/Timer service/Main 任务
 #### [NEW] `rtos.html`
 第二个 HTML 入口，挂载 `src/rtos-sim/main.tsx`；标题为“RTOS 并发模拟器 · Professional C++”。
 
-#### [MODIFY] [vite.config.ts](file:///home/lujingjing/Project/professional-cpp-learning/vite.config.ts)
+#### [MODIFY] [vite.config.ts](../../vite.config.ts)
 ```diff
      build: {
        target: "es2022",
@@ -384,27 +384,27 @@ GitHub Pages 的 `base` 对两个入口同样生效。`dist/404.html` 的 SPA �
 #### [NEW] `src/rtos-sim/ui/{TaskTimeline,TaskStateMachine,KernelObjectsPanel,WaitForGraph,TaskStacksView,RtosConfigPopover,ScenarioPicker}.tsx` + `rtos.css`
 
 #### [NEW] `src/visualizer/useSplitPane.ts`
-从 [VisualizerWorkbench.tsx](file:///home/lujingjing/Project/professional-cpp-learning/src/visualizer/VisualizerWorkbench.tsx) 抽出拖拽分栏逻辑，两个工作台共用（只做重构，现有行为不变）。
+从 [VisualizerWorkbench.tsx](../../src/visualizer/VisualizerWorkbench.tsx) 抽出拖拽分栏逻辑，两个工作台共用（只做重构，现有行为不变）。
 
-#### [MODIFY] [VCRControls.tsx](file:///home/lujingjing/Project/professional-cpp-learning/src/visualizer/VCRControls.tsx)
+#### [MODIFY] [VCRControls.tsx](../../src/visualizer/VCRControls.tsx)
 改为泛型（只依赖 `length / current / onStep`），新增可选按钮“下一次切换 / 下一 tick”。
 
-#### [MODIFY] [CodeMirrorEditor.tsx](file:///home/lujingjing/Project/professional-cpp-learning/src/visualizer/CodeMirrorEditor.tsx)
+#### [MODIFY] [CodeMirrorEditor.tsx](../../src/visualizer/CodeMirrorEditor.tsx)
 新增可选属性 `activeLines?: Record<string, {line:number; color:string}>`。
 
 ### 主站集成（改动最小）
 
-#### [MODIFY] [Shell.tsx](file:///home/lujingjing/Project/professional-cpp-learning/src/components/Shell.tsx)
+#### [MODIFY] [Shell.tsx](../../src/components/Shell.tsx)
 导航里加一个外链项“RTOS 模拟器 ↗”，指向 `${BASE_URL}rtos.html`。
 
-#### [MODIFY] [LabView.tsx](file:///home/lujingjing/Project/professional-cpp-learning/src/components/views/LabView.tsx)
+#### [MODIFY] [LabView.tsx](../../src/components/views/LabView.tsx)
 `daily/lessons.meta.json` 条目写 `"lab": "rtos-sim"` 时，隐藏 Clang 的“编译运行”，改为显示“在模拟器中打开 ↗”（带上 `scenario` 和 `day`），并提示“本章只支持模拟执行”。
 
-#### [MODIFY] [course.ts](file:///home/lujingjing/Project/professional-cpp-learning/src/lib/course.ts)
+#### [MODIFY] [course.ts](../../src/lib/course.ts)
 课程元数据新增可选字段 `"lab": "rtos-sim"`、`"rtos_scenario": "<id>"`。
 
 > [!NOTE]
-> 现有的 [useTraceSession.ts](file:///home/lujingjing/Project/professional-cpp-learning/src/visualizer/useTraceSession.ts)、[types.ts](file:///home/lujingjing/Project/professional-cpp-learning/src/visualizer/types.ts)、[VisualizerView.tsx](file:///home/lujingjing/Project/professional-cpp-learning/src/components/views/VisualizerView.tsx) **保持不变**。RTOS 的类型和导入导出（`VisualizerTraceV3`）都放在 `src/rtos-sim/` 里，两条链路互相隔离。
+> 现有的 [useTraceSession.ts](../../src/visualizer/useTraceSession.ts)、[types.ts](../../src/visualizer/types.ts)、[VisualizerView.tsx](../../src/components/views/VisualizerView.tsx) **保持不变**。RTOS 的类型和导入导出（`VisualizerTraceV3`）都放在 `src/rtos-sim/` 里，两条链路互相隔离。
 
 ### 预置场景
 
@@ -431,7 +431,7 @@ GitHub Pages 的 `base` 对两个入口同样生效。`dist/404.html` 的 SPA �
 | `07_isr_deferred.cpp` | ISR → `release_from_isr` → 处理任务（延迟中断处理） |
 | `08_timer_eventgroup.cpp` | 软件定时器 + 事件组多条件同步 |
 
-#### [MODIFY] [tools/check-course.py](file:///home/lujingjing/Project/professional-cpp-learning/tools/check-course.py)
+#### [MODIFY] [tools/check-course.py](../../tools/check-course.py)
 `lab: rtos-sim` 章节的示例跳过原生编译检查，改为调用 `node tools/check-rtos-examples.ts`，确认能模拟成功且没有 error 诊断。
 
 ---

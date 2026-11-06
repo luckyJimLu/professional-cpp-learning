@@ -10,11 +10,13 @@
 | --- | --- | --- | --- |
 | 区① 课程内容 | `daily/`、`weekly/`、`patterns/`、`examples/` | `.md`（daily/patterns）、C++ 源码仅限 `examples/` 与 `patterns/examples/` | 课程正文与配套源码，源码目录是例外区（源码不算"资源"） |
 | 区① 速查与规范 | `booklets/`、`guidelines/` | `.md` + `booklets/examples/` 内 `.c/.cpp` | 速查与编码规范 |
-| 区① 平台资料 | `frameworks/`、`references/reading-paths/`、`docs/*.md`（区①平铺层） | `.md`（frameworks 含矩阵认可的示例源码） | 网站专题页加载 |
+| 区① 平台资料 | `frameworks/`、`topics/`、`references/reading-paths/`、`docs/*.md`（区①平铺层） | `.md`（frameworks 含矩阵认可的示例源码） | 网站专题页加载 |
 | 资源镜像树 | `assets/<原内容路径>/…` | `.jpeg/.png/.svg/.webp/.gif/.pdf` 等非文本资源 | **正文目录禁止出现资源文件**；md 用相对路径引用 assets |
 | 冻结基线 | `references/system-design-notes/**`（含其 `pdfs/`） | 原样保留，例外区 | 免资源分离；SHA-256 迁移契约锁定，不重排 |
 | 设计规范 | `docs/design/` + 根 `PRODUCT.md` | `.md` + `.impeccable/` 配置 | PRODUCT.md 置根目录由 impeccable 技能约定决定 |
 | 维护者文档 | `docs/maint/`（含 `archive/`） | `.md` + `.json` | 不加载进网站；**改动不触发站点构建** |
+
+**分区隔离：** 区① 的文档面向读者，只写知识、操作与验证结论；规划、覆盖统计、评审记录、设计决策和历史修订一律放 `docs/design/` 或 `docs/maint/`。区① 不得链接这两个目录，需要引用时复述结论，或把可公开的部分写成区① 正文。
 
 ## 2. 文本契约（课程内容与元数据分离）
 
@@ -33,6 +35,8 @@
 **提交者与 AI 执行者指引：** 新增每日课程时拆成两步——先只写正文 md（不动其他文件），再到 `daily/lessons.meta.json` 追加对应条目并维护 `previous/next`；后续若只改正文（改写、补导读），无需触碰元数据。不要把元数据写回正文，也不要再引入 frontmatter 或新的侧车文件。机器校验由 `scripts/build-content.py --check` 与 `tools/check-course.py` 实现，两者都按本节读取 `lessons.meta.json`；正文渲染时元数据通过 manifest 注入站点。
 
 区① 专题文档（daily 以外的 weekly/patterns/docs/booklets/frameworks 等）仍保留 frontmatter，至少含 `summary` 字段（站点列表摘要使用）。
+
+`topics/` 采用 `topics/<领域>/<主题>/README.md`，实验放同目录 `lab/`；领域名由内容管道映射为展示分类。目录与标题不写序号、版本或日期，一个目录只放一个主题。
 
 ## 3. 资源引用规则
 

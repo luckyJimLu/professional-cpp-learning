@@ -1,4 +1,4 @@
-// 专题 001 实验：用可观测行为验证 shared_ptr 的实现模型
+// shared_ptr 实现原理实验：用可观测行为验证正文模型
 //
 // 本实验不依赖任何一家标准库源码，只观测标准保证的行为，
 // 再对照正文里的 libc++ 实现（__shared_count / __shared_weak_count）理解"为什么"。
@@ -232,7 +232,7 @@ void ExperimentAliasingConstructor() {
 
 int main() {
   // 先触发一次 iostream 内部初始化，使其分配不计入各实验的快照。
-  std::cout << "专题 001 实验：shared_ptr 实现模型的可观测验证\n\n";
+  std::cout << "shared_ptr 实现原理实验：控制块与引用计数的可观测验证\n\n";
 
   ExperimentMakeSharedSingleAllocation();
   ExperimentNewTwiceAllocation();

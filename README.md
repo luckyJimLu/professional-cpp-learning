@@ -28,7 +28,7 @@
 
 不占用 Day 编号的深挖内容，自成目录（含正文与可编译实验）：
 
-- [专题 001 · 用 libc++ 源码读懂 `shared_ptr`：引用计数、控制块与内存序](topics/topic-001-libcxx-shared-ptr/)（衔接 Day 31 所有权主题）
+- [shared_ptr 实现原理：控制块、引用计数与内存序](topics/stdlib/shared-ptr-internals/)（衔接 Day 60 智能指针主题）
 
 ## 最近课程
 
@@ -72,7 +72,8 @@
 ├── examples/
 │   └── day-XXX/
 ├── topics/
-│   └── topic-001-libcxx-shared-ptr/   # 专题：正文 README.md + lab/main.cpp
+│   └── stdlib/
+│       └── shared-ptr-internals/     # 专题：正文 README.md + lab/main.cpp
 ├── weekly/
 │   ├── week-01-review.md
 │   └── ...
@@ -141,11 +142,12 @@ npm run preview
 - Guidelines：直接渲染 Embedded C++ Guideline Markdown
 - Progress：课程覆盖与学习证据
 
-设计与 Agent 约束：
+仓库内部（设计与维护）：
 
-- [DESIGN.md](DESIGN.md)
-- [UX-CONTRACT.md](UX-CONTRACT.md)
-- [Learning UX](docs/learning-ux.md)
+- [设计规范](docs/design/DESIGN.md)
+- [交互契约](docs/design/UX-CONTRACT.md)
+- [学习体验规范](docs/design/learning-ux.md)
+- [内容契约](docs/maint/content-contract.md)
 
 > 历史课程保留 Markdown 正文；课程 metadata 集中在 `daily/lessons.meta.json`，独立 Lab 源码位于 `examples/day-XXX/`。
 
