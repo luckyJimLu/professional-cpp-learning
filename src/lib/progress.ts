@@ -4,7 +4,7 @@ import { stepDefsForDay, type StepKey } from "./course";
 const STORAGE_KEY = "professional-cpp-learning-console:v1";
 
 interface SavedProgress {
-  version: 2;
+  version: 3;
   completedDays: number[];
   steps: Record<string, StepKey[]>;
   weakPoints: string[];
@@ -12,7 +12,7 @@ interface SavedProgress {
 
 function initialState(): SavedProgress {
   return {
-    version: 2,
+    version: 3,
     completedDays: [],
     steps: {},
     weakPoints: [],
@@ -23,19 +23,29 @@ function loadState(): SavedProgress {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return initialState();
-    const parsed = JSON.parse(raw) as Partial<SavedProgress>;
+    const parsed = JSON.parse(raw) as {
+      version?: number;
+      completedDays?: number[];
+      steps?: Record<string, StepKey[]>;
+      weakPoints?: string[];
+    };
     const steps = parsed.steps ?? {};
-    // v1 prefilled every published repository day as "complete". Completion is
-    // learning evidence, so migrate only days whose required stages were recorded.
+    const isRecordedComplete = (day: number) =>
+      stepDefsForDay(day).every((step) =>
+        (steps[String(day)] ?? []).includes(step.key),
+      );
+
+    // v2 counted eight stages. Preserve legacy completion only when all stages
+    // required by that lesson's format were recorded; ten-stage lessons must
+    // have DESIGN and EMBEDDED evidence before remaining complete.
     const completedDays =
-      parsed.version === 2
+      parsed.version === 3
         ? (parsed.completedDays ?? [])
-        : Object.entries(steps)
-            .filter(([day, completed]) =>
-              stepDefsForDay(Number(day)).every((step) => completed.includes(step.key)),
-            )
-            .map(([day]) => Number(day))
-            .filter((day) => Number.isFinite(day));
+        : parsed.version === 2
+          ? (parsed.completedDays ?? []).filter(isRecordedComplete)
+          : Object.keys(steps)
+              .map(Number)
+              .filter((day) => Number.isFinite(day) && isRecordedComplete(day));
     return {
       version: 2,
       completedDays: Array.from(new Set(completedDays)).sort((a, b) => a - b),
@@ -68,7 +78,7 @@ export function useLearningProgress() {
       if (stepDefsForDay(day).every((item) => current.has(item.key))) completedDays.add(day);
       persist({
         ...state,
-        version: 2,
+        version: 3,
         steps,
         completedDays: [...completedDays].sort((a, b) => a - b),
       });
