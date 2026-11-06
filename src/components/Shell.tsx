@@ -261,7 +261,7 @@ export function Shell({
                   <span>代码搜索</span>
                 </button>
                 <a href={`${import.meta.env.BASE_URL}rtos.html`}>
-                  <span aria-hidden="true">⌁</span>
+                  <NavIcon id="rtos" />
                   <span>RTOS 模拟器 ↗</span>
                 </a>
                 <a
@@ -413,9 +413,7 @@ export function Shell({
                   href={`${import.meta.env.BASE_URL}rtos.html`}
                   title="RTOS 模拟器"
                 >
-                  <span className="nav-icon" aria-hidden="true">
-                    ⌁
-                  </span>
+                  <NavIcon id="rtos" />
                   <span>RTOS 模拟器</span>
                   <small className="nav-external-badge" aria-hidden="true">
                     ↗
