@@ -82,24 +82,37 @@ def main() -> int:
             any(marker in text for marker in STUB_MARKERS)
             and len(lines) < STUB_MAX_LINES
         )
-        markers = re.findall(r"^## ([①②③④⑤⑥⑦⑧])", text, re.M)
-        has_sections = markers == list("①②③④⑤⑥⑦⑧")
+        markers = re.findall(r"^## ([①②③④⑤⑥⑦⑧⑨⑩])", text, re.M)
+        legacy_markers = list("①②③④⑤⑥⑦⑧")
+        current_markers = list("①②③④⑤⑥⑦⑧⑨⑩")
+        has_legacy_sections = markers == legacy_markers
+        has_current_sections = markers == current_markers
+        has_sections = has_legacy_sections or has_current_sections
         if not has_sections:
-            problems.append(f"{name}: requires all eight core learning stages in order")
-        # The web reader maps stage numbers to actions. A numbered Lab in stage
-        # 8 used to pass the presence check while the reader treated it as Quiz.
-        stage_titles = dict(re.findall(r"^## ([⑤⑥⑦⑧])([^\n]*)", text, re.M))
-        expected_titles = {
-            "⑤": r"规范",
-            "⑥": r"实验|Lab|练习|周工程",
-            "⑦": r"坑",
-            "⑧": r"检查|自测|测验|Quiz",
-        }
+            problems.append(f"{name}: requires either the legacy eight-stage or current ten-stage structure in order")
+
+        # The reader supports historical eight-stage lessons and the current
+        # ten-stage contract. Validate each layout against its own stage roles.
+        stage_titles = dict(re.findall(r"^## ([⑤⑥⑦⑧⑨⑩])([^\n]*)", text, re.M))
+        if has_current_sections:
+            expected_titles = {
+                "⑤": r"模式|Pattern",
+                "⑥": r"Embedded|System Design|场景",
+                "⑦": r"规范",
+                "⑧": r"实验|Lab|练习|周工程",
+                "⑨": r"坑",
+                "⑩": r"检查|自测|测验|Quiz",
+            }
+        else:
+            expected_titles = {
+                "⑤": r"规范",
+                "⑥": r"实验|Lab|练习|周工程",
+                "⑦": r"坑",
+                "⑧": r"检查|自测|测验|Quiz",
+            }
         for marker, pattern in expected_titles.items():
             if not re.search(pattern, stage_titles.get(marker, ""), re.IGNORECASE):
                 problems.append(f"{name}: stage {marker} has the wrong learning role")
-        if re.search(r"^## [⑨⑩]", text, re.M):
-            problems.append(f"{name}: extra numbered stages are not rendered by the eight-stage reader")
         if any(marker in text for marker in STUB_MARKERS):
             problems.append(f"{name}: contains delivery placeholder text")
         if is_stub:

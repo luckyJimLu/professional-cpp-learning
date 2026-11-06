@@ -1753,6 +1753,38 @@
       "lab": "examples/day-071/main.cpp",
       "previous": 70,
       "next": 72
+    },
+    {
+      "path": "daily/day-072-initializer-list-constructors.md",
+      "week": 11,
+      "part": "III",
+      "chapter": 8,
+      "chapter_title": "Gaining Proficiency with Classes and Objects",
+      "title": "Initializer-List Constructors and Braced-Initialization Semantics",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-06",
+      "patterns": [
+        "composition",
+        "value-semantics"
+      ],
+      "topics": [
+        "initializer-list-constructor",
+        "std-initializer-list",
+        "list-initialization",
+        "overload-resolution",
+        "narrowing",
+        "backing-array-lifetime",
+        "bounded-configuration"
+      ],
+      "guidelines": [
+        "no-retained-initializer-list-view",
+        "explicit-initialization-intent",
+        "bounded-runtime-input"
+      ],
+      "lab": "examples/day-072/main.cpp",
+      "previous": 71,
+      "next": 73
     }
   ]
 }

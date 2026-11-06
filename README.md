@@ -8,9 +8,9 @@
 
 ## 当前进度
 
-- **已完成：Day 1–32**
-- **当前课程：Day 33（已发布 / 待学习）**
-- 当前主线：**Chapter 5 · Designing with Classes**
+- **已发布：Day 1–72**
+- **当前课程：Day 72（已发布 / 待学习）**
+- 当前主线：**Chapter 8 · Gaining Proficiency with Classes and Objects**
 - 更新方式：**GitHub Markdown only**
 - Gmail 邮件投递：**已停止**
 
@@ -32,27 +32,29 @@
 
 ## 最近课程
 
-- [Day 33 · Polymorphism and Virtual Interfaces](daily/day-033-polymorphism-virtual-interfaces.md)
-- [Day 32 · is-a、not-a、类层次与 Mixin](daily/day-032-inheritance-is-a-hierarchies-mixins.md)
-- [Day 31 · 对象所有权、生命周期与资源管理边界](daily/day-031-ownership-lifetime-resource-boundaries.md)
-- [Day 30 · Composition：用对象组合分配职责](daily/day-030-composition-object-responsibilities.md)
-- [Day 29 · 构造函数、初始化与让非法状态难以表示](daily/day-029-constructors-initialization-valid-state.md)
-- [Day 28 · 类的不变量与最小公共接口](daily/day-028-class-invariants-minimal-interface.md)
+- [Day 72 · Initializer-List Constructors：花括号初始化的重载规则与边界](daily/day-072-initializer-list-constructors.md)
+- [Day 71 · Copy Constructors and Value Semantics](daily/day-071-copy-constructors-value-semantics.md)
+- [Day 70 · 构造函数成员初始化列表与成员顺序](daily/day-070-constructor-initializer-list-member-order.md)
+- [Day 69 · 对象创建与构造函数](daily/day-069-object-creation-constructors.md)
+- [Day 68 · 对象存储期、this 与 C++23 显式对象参数](daily/day-068-object-storage-this-explicit-object-parameter.md)
+- [Day 67 · Class Encapsulation and Member Functions](daily/day-067-class-encapsulation-member-functions.md)
 
 ## 每日课程结构
 
-每节约 60 分钟：
+每节约 60 分钟，固定十个环节：
 
 1. 今日章节与建议阅读范围
 2. 昨日复习 3 问
-3. 核心概念讲解
+3. 核心概念
 4. C 写法 vs Modern C++
-5. 今日编码规范
-6. 可编译小实验 / 代码练习
-7. 3 个常见坑
-8. 2 道检查题
+5. 设计模式映射与稳定边界
+6. Embedded / System Design 场景
+7. 今日编码规范
+8. 可独立编译运行的 Lab / 练习
+9. 3 个常见坑
+10. 检查题（2 道知识/代码题 + 1 道设计题）
 
-每 7 天安排一次工程化周复盘。
+每 7 天安排一次包含 Code Review 与 Design Review 的工程化周复盘。
 
 ## 仓库结构
 
@@ -65,7 +67,7 @@
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-033-*.md
+│   └── day-072-*.md
 ├── examples/
 │   └── day-XXX/
 ├── topics/
@@ -144,7 +146,7 @@ npm run preview
 - [UX-CONTRACT.md](UX-CONTRACT.md)
 - [Learning UX](docs/learning-ux.md)
 
-> Day 1–32 无需批量迁移即可使用。Day 33 起使用 YAML frontmatter + 独立 Lab 文件作为新内容契约示范。
+> 历史课程保留 Markdown 正文；课程 metadata 集中在 `daily/lessons.meta.json`，独立 Lab 源码位于 `examples/day-XXX/`。
 
 
 ### 浏览器 C++ 编译

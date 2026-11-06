@@ -171,6 +171,15 @@
 - MUST：仅当所有成员复制都满足项目错误模型时才声明 noexcept；std::string/std::vector 等动态复制的分配成本与失败语义必须单独审查。
 - REVIEW：覆盖复制后独立修改、source 先销毁、borrow lifetime、unique_ptr 不可复制、shared_ptr 共享而非深复制、队列按值复制的 WCET，以及 ISR/线程上下文。
 
+## Initializer-list constructors 与花括号初始化边界
+
+- MUST：不要把 `std::initializer_list<T>` 或其迭代器作为长期成员保存；它是对临时 backing array 的只读访问视图，不承担 payload ownership。
+- MUST：若 initializer-list constructor 需要长期保存元素，必须在构造期间复制到明确 owner（例如固定容量 `std::array`）；超容量必须进入显式错误模型，不得越界或部分更新。
+- SHOULD：谨慎向普通业务类添加 initializer-list constructor。list-initialization 会优先考虑该类构造函数，可能改变已有 `T{count, fill}` 调用的语义；优先使用 `T::Filled(...)`、`T::FromBytes(...)` 等命名工厂或 tag type。
+- SHOULD：对 source-defined 的小型同类型配置可以使用 initializer-list；不要把它当作网络、UART、IPC 等运行期输入接口。
+- MUST：运行期外部数据使用 `std::span<const T>` / pointer+length 等显式 borrow API，并校验长度、容量和错误状态；跨任务或异步使用时必须转为明确 owner 或 pool handle。
+- REVIEW：检查 initializer-list 元素的 `const` 属性、move-only 类型限制、backing array 生命周期、列表长度上界、构造函数内部动态分配，以及 ISR/WCET 约束。
+
 ## 类关系与层级
 
 - has-a / uses-a 与 is-a 必须表达真实语义，不为了复用实现而继承。
