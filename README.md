@@ -8,9 +8,9 @@
 
 ## 当前进度
 
-- **已发布：Day 1–73**
-- **当前课程：Day 73（已发布 / 待学习）**
-- **下一课：Day 74 · Converting Constructors and Explicit Constructors（p.284 起）**
+- **已发布：Day 1–74**
+- **当前课程：Day 74（已发布 / 待学习）**
+- **下一课：Day 75 · Chapter 8 · 原书 p.284 之后的下一小节（生成前核验标题）**
 - 当前主线：**Chapter 8 · Gaining Proficiency with Classes and Objects**
 - 更新方式：**GitHub Markdown only**
 - Gmail 邮件投递：**已停止**
@@ -32,6 +32,7 @@
 
 ## 最近课程
 
+- [Day 74 · Converting Constructors and Explicit Constructors：显式转换与强类型边界](daily/day-074-converting-constructors-explicit.md)
 - [Day 73 · Delegating Constructors：统一构造入口与类不变量](daily/day-073-delegating-constructors.md)
 - [Day 72 · Initializer-List Constructors：花括号初始化的重载规则与边界](daily/day-072-initializer-list-constructors.md)
 - [Day 71 · Copy Constructors and Value Semantics](daily/day-071-copy-constructors-value-semantics.md)
@@ -68,7 +69,7 @@
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-073-*.md
+│   └── day-074-*.md
 ├── examples/
 │   └── day-XXX/
 ├── topics/

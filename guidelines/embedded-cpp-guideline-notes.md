@@ -192,6 +192,17 @@
 - MUST：若外部运行期输入可能非法，先在 boundary/factory 校验并返回 Status / std::expected；不要用异常、半有效对象或构造期硬件副作用表达可恢复失败。
 - REVIEW：检查目标构造函数是否引入 heap allocation、锁、阻塞、I/O 或 callback 注册；检查 required dependency 的 owner/borrow/lifetime、失败回滚、注销与 in-flight drain 顺序，以及 ISR/WCET 上界。
 
+## Converting constructors and explicit constructors
+
+- MUST：单参数构造函数默认声明为 `explicit`；只有隐式转换本身是稳定、无歧义且对调用方确有价值的 API 契约时才例外。
+- MUST：不同单位和领域语义使用不同强类型，例如 `Milliseconds`、`RetryCount`、`BaudRate`；不要用同一整数类型或 `using` alias 假装编译器能区分单位。
+- MUST：需要显式构造但禁止隐式转换的类型，应验证 `std::is_constructible_v` 为 true、`std::is_convertible_v` 为 false；可将该契约写入 static_assert 或单元测试。
+- SHOULD：明确区分 direct-init、direct-list-init、copy-init 与 copy-list-init；不要把花括号、圆括号和等号初始化当成等价。
+- MAY：泛型包装器需要传播底层类型的隐式转换策略时，可以使用 C++20 `explicit(bool)`，并配合 `requires` 限制可构造条件；普通业务类优先使用简单的 `explicit`。
+- MUST：`explicit` 只控制隐式转换，不负责范围、单位来源或设备状态验证。外部输入必须在 trust boundary 校验；可恢复错误通过 Status / expected 返回。
+- SHOULD：在 C HAL / RTOS 边界集中完成强类型到原始整数、毫秒到 tick 的适配；检查舍入、溢出和最大等待值，不让平台单位泄漏到业务层。
+- REVIEW：检查是否仍有裸整数参数、危险隐式转换、copy-list-init 陷阱、构造期副作用、隐藏的 tick 换算，以及 callback 中是否错误借用临时配置对象。
+
 ## 类关系与层级
 
 - has-a / uses-a 与 is-a 必须表达真实语义，不为了复用实现而继承。

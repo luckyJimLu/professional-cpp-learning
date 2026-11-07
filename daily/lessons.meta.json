@@ -1815,6 +1815,40 @@
       "lab": "examples/day-073/main.cpp",
       "previous": 72,
       "next": 74
+    },
+    {
+      "path": "daily/day-074-converting-constructors-explicit.md",
+      "week": 11,
+      "part": "III",
+      "chapter": 8,
+      "chapter_title": "Gaining Proficiency with Classes and Objects",
+      "title": "Converting Constructors and Explicit Constructors · Strongly Typed API Boundaries",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-07",
+      "patterns": [
+        "value-semantics",
+        "adapter"
+      ],
+      "topics": [
+        "converting-constructor",
+        "explicit",
+        "implicit-conversion",
+        "direct-initialization",
+        "copy-initialization",
+        "conditional-explicit",
+        "strong-types",
+        "units"
+      ],
+      "guidelines": [
+        "explicit-single-argument-constructor",
+        "strong-types-for-units",
+        "no-implicit-unit-conversion",
+        "separate-runtime-validation"
+      ],
+      "lab": "examples/day-074/main.cpp",
+      "previous": 73,
+      "next": 75
     }
   ]
 }
