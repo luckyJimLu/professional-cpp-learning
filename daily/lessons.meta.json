@@ -1849,6 +1849,41 @@
       "lab": "examples/day-074/main.cpp",
       "previous": 73,
       "next": 75
+    },
+    {
+      "path": "daily/day-075-summary-compiler-generated-constructors.md",
+      "week": 11,
+      "part": "III",
+      "chapter": 8,
+      "chapter_title": "Gaining Proficiency with Classes and Objects",
+      "title": "Summary of Compiler-Generated Constructors · Defaulted Operations and Resource Semantics",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-08",
+      "patterns": [
+        "rule-of-zero",
+        "composition",
+        "raii"
+      ],
+      "topics": [
+        "implicit-default-constructor",
+        "implicit-copy-constructor",
+        "memberwise-copy",
+        "defaulted-deleted-functions",
+        "type-traits",
+        "rule-of-zero",
+        "unique-resource-owner",
+        "bounded-copy-cost"
+      ],
+      "guidelines": [
+        "explicit-defaulting-intent",
+        "delete-copy-for-unique-owner",
+        "memberwise-copy-review",
+        "bounded-copy-cost"
+      ],
+      "lab": "examples/day-075/main.cpp",
+      "previous": 74,
+      "next": 76
     }
   ]
 }

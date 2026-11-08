@@ -203,6 +203,17 @@
 - SHOULD：在 C HAL / RTOS 边界集中完成强类型到原始整数、毫秒到 tick 的适配；检查舍入、溢出和最大等待值，不让平台单位泄漏到业务层。
 - REVIEW：检查是否仍有裸整数参数、危险隐式转换、copy-list-init 陷阱、构造期副作用、隐藏的 tick 换算，以及 callback 中是否错误借用临时配置对象。
 
+
+## Compiler-generated constructors 与 special-member 边界
+
+- MUST：每个标量成员都必须有明确初始化来源；类声明了任意构造函数后，不要假设编译器还会隐式提供无参 default constructor。确有合法默认状态时显式声明 `T() = default`，并验证所有 base/member 均可默认构造。
+- MUST：值对象只有在 memberwise copy 完全符合其不变量时才保留默认复制；raw pointer、内部自引用地址、句柄或唯一资源不能未经审查就依赖默认 copy constructor。
+- MUST：唯一资源 owner 应删除 copy constructor 与 copy assignment，或由 `std::unique_ptr` 等 RAII 成员自然传播不可复制语义；不得用 `shared_ptr` 掩盖本来唯一的资源所有权。
+- SHOULD：优先 Rule of Zero，让成员类型管理自身资源；只有确实需要自定义资源语义时才手写 special members，并整体审查 copy / move / destruction 的一致性。Move 的完整规则按 Chapter 9 学习。
+- SHOULD：用 `std::is_default_constructible_v`、`std::is_copy_constructible_v`、`std::is_copy_assignable_v` 和必要时的 trivial traits 固化编译期能力契约；traits 不证明深复制、资源唯一性、线程安全或 WCET。
+- MUST：在 RTOS queue / ISR / hard real-time path 中评估值复制的字节数、成员分配行为与 WCET；`std::span` 是 borrow view，不会延长底层 buffer lifetime。
+- REVIEW：检查 default constructor 是否建立确定状态、copy 是否复制 raw handle / self pointer、成员不可复制时生成操作是否 deleted、lease 是否 double-release、owner/borrow 销毁顺序，以及跨任务转移是否被误写成 copy。
+
 ## 类关系与层级
 
 - has-a / uses-a 与 is-a 必须表达真实语义，不为了复用实现而继承。

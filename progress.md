@@ -1,10 +1,10 @@
 # Professional C++ 学习进度
 
-> 状态校验日期：2026-11-07。每次发布前重新扫描 `daily/day-*.md`；当前最大 Day 为 **74**，没有覆盖或重复既有课程。
+> 状态校验日期：2026-11-08。每次发布前重新扫描 `daily/day-*.md`；当前最大 Day 为 **75**，没有覆盖或重复既有课程。
 
-- **已发布课程：Day 1–74**
-- **最新课程：Day 74 · Chapter 8 · Converting Constructors and Explicit Constructors**
-- **下一课：Day 75 · Chapter 8 · p.284 之后的下一小节（生成前核验原书目录）**
+- **已发布课程：Day 1–75**
+- **最新课程：Day 75 · Chapter 8 · Summary of Compiler-Generated Constructors**
+- **下一课：Day 76 · Chapter 8 · Object Destruction（p.286）**
 - **主教材：** Marc Gregoire, *Professional C++, Sixth Edition*（C++23）
 - **唯一课程源：** 本仓库 Markdown；不发送邮件。
 
@@ -18,7 +18,7 @@
 | Chapter 5 | 28–40 | 类、对象、所有权、多态、继承、Mixin |
 | Chapter 6 | 41–55 | 复用、模板、可扩展接口与 SOLID |
 | Chapter 7 | 56–66 | 内存管理、RAII、智能指针、PMR、固定存储与生命周期 |
-| Chapter 8 | 67–74 | 类封装、对象存储期、构造、成员初始化、复制、列表构造、构造委托、转换构造与 explicit |
+| Chapter 8 | 67–75 | 类封装、对象存储期、构造、成员初始化、复制、列表构造、构造委托、转换构造、explicit、编译器生成的构造函数 |
 
 ## 完整课程索引
 
@@ -100,6 +100,7 @@
 | 072 | 2026-11-06 | Chapter 8 | Initializer-List Constructors and Braced-Initialization Semantics；initializer-list-constructor, std-initializer-list, list-initialization | composition, value-semantics | [Day 072](daily/day-072-initializer-list-constructors.md) |
 | 073 | 2026-11-06 | Chapter 8 | Delegating Constructors and Canonical Initialization Path；delegating-constructors, canonical-constructor, constructor-invariants | composition, value-semantics | [Day 073](daily/day-073-delegating-constructors.md) |
 | 074 | 2026-11-07 | Chapter 8 | Converting Constructors and Explicit Constructors；隐式转换、四种初始化、explicit(bool)、强类型单位 | value-object, adapter, explicit-conversion-boundary | [Day 074](daily/day-074-converting-constructors-explicit.md) |
+| 075 | 2026-11-08 | Chapter 8 | Summary of Compiler-Generated Constructors；隐式 default/copy constructor、memberwise copy、=default/=delete、type traits | rule-of-zero, composition, unique-resource-owner | [Day 075](daily/day-075-summary-compiler-generated-constructors.md) |
 
 ## 专题
 
