@@ -214,6 +214,19 @@
 - MUST：在 RTOS queue / ISR / hard real-time path 中评估值复制的字节数、成员分配行为与 WCET；`std::span` 是 borrow view，不会延长底层 buffer lifetime。
 - REVIEW：检查 default constructor 是否建立确定状态、copy 是否复制 raw handle / self pointer、成员不可复制时生成操作是否 deleted、lease 是否 double-release、owner/borrow 销毁顺序，以及跨任务转移是否被误写成 copy。
 
+## Object destruction、RAII 与 teardown
+
+> 本节是面向 Embedded / RTOS 的工程补充；具体硬件关闭语义仍由 HAL 与平台契约定义。
+
+- MUST：析构函数必须 no-throw、非阻塞且工作量有界；不得在 destructor 中等待 DMA idle、等待 task、获取无 timeout 的锁或执行可能失败的网络/文件 flush。
+- MUST：可能失败或需要 timeout 的关闭流程使用显式 `Stop(timeout)` / `Close(timeout)`，返回项目统一 Status；调用方在正确 task context 处理超时、重试与恢复。析构只执行幂等、非阻塞的安全 fallback。
+- MUST：若对象可能经 public base pointer 或 `std::unique_ptr<Base>` 销毁，base destructor 必须 public virtual；若禁止基类删除，使用 protected non-virtual destructor 并让接口表达该限制。
+- MUST：成员按声明顺序构造、逆序销毁。若 borrower / callback registration 的析构会访问 dependency / owner，dependency 必须先声明、后销毁；initializer list 的书写顺序不能改变这一规则。
+- MUST：callback teardown 区分 unregister/cancel 与 in-flight drain。销毁 callback target 前必须阻止新派发，并按线程上下文完成已进入回调的同步退出；仅销毁 registration token 不自动证明没有回调正在运行。
+- SHOULD：优先 Rule of Zero，让 RAII 成员管理资源；不要为了日志或形式化清理机械增加 user-declared destructor，因为它会影响隐式 move special members 的生成规则。
+- SHOULD：审查 `std::shared_ptr` 最后一个 strong owner 可能在哪个线程释放；若析构触碰 RTOS、HAL 或线程亲和资源，应由明确 owner task 执行显式 teardown，不依赖任意线程上的最后一次 reset。
+- REVIEW：检查 destructor 的 noexcept、分配/锁/阻塞上界、owner/borrow lifetime、成员声明顺序、virtual destructor、delete/delete[] 匹配、callback unregister + drain、超时后对象状态与幂等 fallback。
+
 ## 类关系与层级
 
 - has-a / uses-a 与 is-a 必须表达真实语义，不为了复用实现而继承。
