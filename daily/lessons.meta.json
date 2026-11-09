@@ -1884,6 +1884,42 @@
       "lab": "examples/day-075/main.cpp",
       "previous": 74,
       "next": 76
+    },
+    {
+      "path": "daily/day-076-object-destruction-raii-teardown.md",
+      "week": 11,
+      "part": "III",
+      "chapter": 8,
+      "chapter_title": "Gaining Proficiency with Classes and Objects",
+      "title": "Object Destruction · Destruction Order, RAII and Bounded Teardown",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-09",
+      "patterns": [
+        "raii",
+        "composition",
+        "adapter"
+      ],
+      "topics": [
+        "object-destruction",
+        "destructor-order",
+        "member-destruction-order",
+        "virtual-destructor",
+        "explicit-shutdown",
+        "callback-teardown",
+        "in-flight-drain",
+        "bounded-fallback"
+      ],
+      "guidelines": [
+        "no-throw-destructor",
+        "explicit-fallible-shutdown",
+        "dependency-aware-member-order",
+        "virtual-destructor-for-polymorphic-base",
+        "bounded-destructor-work"
+      ],
+      "lab": "examples/day-076/main.cpp",
+      "previous": 75,
+      "next": 77
     }
   ]
 }
