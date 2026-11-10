@@ -11,7 +11,7 @@
 - **已发布：Day 1–77**
 - **当前课程：Day 77 · 第 11 周复盘（已发布 / 待学习）**
 - **下一课：Day 78 · Chapter 8 · Assignment Operators（原书 p.288 起）**
-- **主教材后续：Assignment Operators（p.288 起；周复盘后继续）**
+- **主教材后续：Assignment Operators（p.288 起；Day 77 周复盘已完成）**
 - 当前主线：**Chapter 8 · Gaining Proficiency with Classes and Objects**
 - 更新方式：**GitHub Markdown only**
 - Gmail 邮件投递：**已停止**
