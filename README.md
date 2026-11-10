@@ -8,9 +8,9 @@
 
 ## 当前进度
 
-- **已发布：Day 1–76**
-- **当前课程：Day 76（已发布 / 待学习）**
-- **下一课：Day 77 · 第 11 周复盘（Day 71–76）：构造、对象销毁与 teardown**
+- **已发布：Day 1–77**
+- **当前课程：Day 77 · 第 11 周复盘（已发布 / 待学习）**
+- **下一课：Day 78 · Chapter 8 · Assignment Operators（原书 p.288 起）**
 - **主教材后续：Assignment Operators（p.288 起；周复盘后继续）**
 - 当前主线：**Chapter 8 · Gaining Proficiency with Classes and Objects**
 - 更新方式：**GitHub Markdown only**
@@ -33,6 +33,7 @@
 
 ## 最近课程
 
+- [Day 77 · 第 11 周复盘：Copy、Construction、Destruction 与 Lifetime Contract](daily/day-077-week11-review-constructors-destruction.md)
 - [Day 76 · Object Destruction：析构顺序、RAII 与可控 Teardown](daily/day-076-object-destruction-raii-teardown.md)
 - [Day 75 · Summary of Compiler-Generated Constructors：默认生成、显式 default/delete 与资源语义](daily/day-075-summary-compiler-generated-constructors.md)
 - [Day 74 · Converting Constructors and Explicit Constructors：显式转换与强类型边界](daily/day-074-converting-constructors-explicit.md)
@@ -72,7 +73,7 @@
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-075-*.md
+│   └── day-077-*.md
 ├── examples/
 │   └── day-XXX/
 ├── topics/

@@ -1920,6 +1920,45 @@
       "lab": "examples/day-076/main.cpp",
       "previous": 75,
       "next": 77
+    },
+    {
+      "path": "daily/day-077-week11-review-constructors-destruction.md",
+      "week": 11,
+      "part": "III",
+      "chapter": 8,
+      "chapter_title": "Gaining Proficiency with Classes and Objects",
+      "title": "Week 11 Review · Copy, Construction, Destruction and Lifetime Contract",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-10",
+      "patterns": [
+        "rule-of-zero",
+        "composition",
+        "raii",
+        "adapter"
+      ],
+      "topics": [
+        "weekly-review",
+        "object-semantics",
+        "copy-contract",
+        "initializer-list-lifetime",
+        "canonical-constructor",
+        "explicit-conversion",
+        "compiler-generated-special-members",
+        "callback-lifetime",
+        "bounded-teardown"
+      ],
+      "guidelines": [
+        "copy-contract-review",
+        "explicit-unit-types",
+        "canonical-constructor",
+        "dependency-aware-member-order",
+        "bounded-no-throw-destructor",
+        "callback-unregister-and-drain"
+      ],
+      "lab": "examples/day-077/main.cpp",
+      "previous": 76,
+      "next": 78
     }
   ]
 }

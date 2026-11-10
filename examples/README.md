@@ -12,7 +12,7 @@
 
 ```text
 examples/
-├── day-001/ ~ day-076/     # 每日课程配套目录
+├── day-001/ ~ day-077/     # 每日课程配套目录
 │   ├── main.cpp            # 每日课程核心 Lab 主入口
 │   ├── exercise-01.cpp     # 独立代码练习实现（如存在）
 │   └── exercise-01-solution.cpp # 独立代码练习参考解答（如存在）

@@ -314,3 +314,14 @@
 ## 评审与验证
 
 [五项评审与规则案例](review-rubric.md) 将上述重点规则连接到错误／推荐写法、检测方式和例外条件。[内容总索引](../docs/content-map.md) 提供对应课程、专题和实验入口。
+
+
+## 第 11 周对象语义闭环复核
+
+- REVIEW：每个类先声明 copy contract：独立值、共享资源、borrow view 或禁止复制；不要仅凭 type traits 判断资源语义。
+- REVIEW：initializer_list / span 不承担 payload ownership；异步边界必须复制、转移 owner 或使用有界 pool handle。
+- MUST：convenience constructors 若建立相同 invariant，应委托 canonical constructor；单位参数使用 distinct strong types 与 explicit conversion boundary。
+- REVIEW：唯一资源 owner 删除 copy；Rule of Zero 优先，只有真实资源语义需要时才手写 special members。
+- MUST：owner/dependency 成员先声明，borrower/registration 后声明；真实异步 callback 还必须 unregister/cancel 并 drain in-flight work。
+- MUST：可失败 shutdown 通过显式 Stop(timeout) 返回 Status；析构保持 no-throw、非阻塞、有界，不承担等待 DMA / task / callback drain。
+- REVIEW：把 copy bytes、heap allocation、refcount、锁、timeout、callback context 和 WCET 纳入同一份设计审查证据。
