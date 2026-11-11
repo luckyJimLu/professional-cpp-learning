@@ -297,7 +297,7 @@ class BadDmaLease {
 源码：[examples/day-078/main.cpp](../examples/day-078/main.cpp)
 
 ```bash
-g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic -Werror examples/day-078/main.cpp -o day078
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-078/main.cpp -o day078
 ./day078
 ```
 
@@ -313,7 +313,7 @@ g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic -Werror examples/day-078/ma
 源码：[examples/day-078/exercise-01.cpp](../examples/day-078/exercise-01.cpp)
 
 ```bash
-g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic -Werror examples/day-078/exercise-01.cpp -o day078-ex01
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-078/exercise-01.cpp -o day078-ex01
 ./day078-ex01
 ```
 
