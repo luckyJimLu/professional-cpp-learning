@@ -1,6 +1,6 @@
 # 每日课程（Daily Lessons）
 
-本目录存放每日 C++ 工程化课程正文。课程基于 *Professional C++, 6th Edition* 的章节顺序展开，目前已发布 Day 1–77，单篇学习时间建议控制在 60 分钟左右。
+本目录存放每日 C++ 工程化课程正文。课程基于 *Professional C++, 6th Edition* 的章节顺序展开，目前已发布 Day 1–78，单篇学习时间建议控制在 60 分钟左右。
 
 ## 文件命名与规范
 
@@ -35,6 +35,6 @@
 | Chapter 5 | Day 36–40 | Has-a / Is-a 关系边界、多继承契约、Mixin 类与类关系收束 |
 | Chapter 6 | Day 41–55 | 面向复用设计、模板与概念、防护边界、可用接口设计与 SOLID 原则 |
 | Chapter 7 | Day 56–66 | 内存所有权、智能指针、自定义删除器、PMR 分配器与资源决策树 |
-| Chapter 8 | Day 67–77（Day 77 为对象语义周复盘） | class 封装、成员函数、对象存储期、this、对象创建、构造函数、Copy Constructors、Initializer-List Constructors、Delegating Constructors、Converting Constructors / Explicit Constructors、Summary of Compiler-Generated Constructors、Object Destruction |
+| Chapter 8 | Day 67–78（Day 77 为对象语义周复盘） | class 封装、成员函数、对象存储期、this、对象创建、构造函数、Copy Constructors、Initializer-List Constructors、Delegating Constructors、Converting Constructors / Explicit Constructors、Summary of Compiler-Generated Constructors、Object Destruction、Assignment Operators |
 
-下一课为 **Day 78 · Chapter 8 · Assignment Operators（p.288 起）**；Day 77 已完成 Day 71–76 的对象语义周复盘。
+下一课为 **Day 79 · Chapter 9 · Mastering Classes and Objects（p.295 起）**；生成前先核验原书本章首个小节标题。Day 77 已完成 Day 71–76 的对象语义周复盘。

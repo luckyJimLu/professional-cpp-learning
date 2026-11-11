@@ -1959,6 +1959,43 @@
       "lab": "examples/day-077/main.cpp",
       "previous": 76,
       "next": 78
+    },
+    {
+      "path": "daily/day-078-assignment-operators.md",
+      "week": 12,
+      "part": "III",
+      "chapter": 8,
+      "chapter_title": "Gaining Proficiency with Classes and Objects",
+      "title": "Assignment Operators · Copy / Move Assignment and Resource Semantics",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-11",
+      "patterns": [
+        "value-semantics",
+        "raii",
+        "ownership-transfer",
+        "adapter"
+      ],
+      "topics": [
+        "assignment-operators",
+        "copy-assignment",
+        "move-assignment",
+        "self-assignment",
+        "defaulted-deleted-assignment",
+        "unique-resource-owner",
+        "bounded-value-copy",
+        "moved-from-state"
+      ],
+      "guidelines": [
+        "default-value-assignment",
+        "delete-copy-for-unique-owner",
+        "safe-move-assignment",
+        "named-fallible-reconfiguration",
+        "bounded-assignment-cost"
+      ],
+      "lab": "examples/day-078/main.cpp",
+      "previous": 77,
+      "next": 79
     }
   ]
 }

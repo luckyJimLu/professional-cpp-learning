@@ -8,10 +8,10 @@
 
 ## 当前进度
 
-- **已发布：Day 1–77**
-- **当前课程：Day 77 · 第 11 周复盘（已发布 / 待学习）**
-- **下一课：Day 78 · Chapter 8 · Assignment Operators（原书 p.288 起）**
-- **主教材后续：Assignment Operators（p.288 起；Day 77 周复盘已完成）**
+- **已发布：Day 1–78**
+- **当前课程：Day 78 · Assignment Operators：Copy / Move Assignment 与资源语义（已发布 / 待学习）**
+- **下一课：Day 79 · Chapter 9 · Mastering Classes and Objects（原书 p.295 起；先核验本章首个小节）**
+- **主教材后续：Chapter 9 · Mastering Classes and Objects（p.295 起；Chapter 8 已完成）**
 - 当前主线：**Chapter 8 · Gaining Proficiency with Classes and Objects**
 - 更新方式：**GitHub Markdown only**
 - Gmail 邮件投递：**已停止**
@@ -33,6 +33,7 @@
 
 ## 最近课程
 
+- [Day 78 · Assignment Operators：Copy / Move Assignment 与资源语义](daily/day-078-assignment-operators.md)
 - [Day 77 · 第 11 周复盘：Copy、Construction、Destruction 与 Lifetime Contract](daily/day-077-week11-review-constructors-destruction.md)
 - [Day 76 · Object Destruction：析构顺序、RAII 与可控 Teardown](daily/day-076-object-destruction-raii-teardown.md)
 - [Day 75 · Summary of Compiler-Generated Constructors：默认生成、显式 default/delete 与资源语义](daily/day-075-summary-compiler-generated-constructors.md)
@@ -73,7 +74,7 @@
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-077-*.md
+│   └── day-078-*.md
 ├── examples/
 │   └── day-XXX/
 ├── topics/

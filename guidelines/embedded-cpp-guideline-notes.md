@@ -227,6 +227,21 @@
 - SHOULD：审查 `std::shared_ptr` 最后一个 strong owner 可能在哪个线程释放；若析构触碰 RTOS、HAL 或线程亲和资源，应由明确 owner task 执行显式 teardown，不依赖任意线程上的最后一次 reset。
 - REVIEW：检查 destructor 的 noexcept、分配/锁/阻塞上界、owner/borrow lifetime、成员声明顺序、virtual destructor、delete/delete[] 匹配、callback unregister + drain、超时后对象状态与幂等 fallback。
 
+## Assignment Operators：copy / move assignment 与资源替换
+
+> 本节是本项目针对类赋值语义与嵌入式资源所有权的工程补充，不代表 Google C++ Style Guide 对所有项目的逐字强制条款。
+
+- MUST：先区分 copy construction 与 copy assignment。赋值目标对象已经存在；赋值操作必须处理目标的旧状态，不得把赋值误当作重新构造。
+- SHOULD：当所有 base/member 的 memberwise assignment 正好满足类不变量时，优先使用 defaulted copy assignment；不要手写重复的逐成员复制逻辑。
+- MUST：copy assignment 通常返回 T&，并返回 *this，以保持常见赋值表达式与链式赋值语义。
+- MUST：唯一资源 owner（DMA channel、socket、文件描述符、独占设备会话等）不得通过默认 memberwise copy assignment 复制资源句柄；优先删除 copy constructor / copy assignment。
+- SHOULD：只有确实需要所有权转移时才提供 move assignment。实现必须先安全处理目标当前资源，再转移 source，并让 source 进入有效、可析构的 moved-from 状态；自移动路径不得破坏对象不变量。
+- MUST：noexcept 只能在赋值操作与所有成员操作确实不抛异常时声明；不得为消除 warning 机械添加。
+- MUST：如果状态替换可能等待硬件 ACK、发生 timeout、分配内存或失败，不要隐藏在 operator=；使用 TryConfigure() / TryAssign() 等具名 API 返回 Status，并定义 timeout、线程上下文与失败后的对象状态。
+- SHOULD：固定容量 value type 使用 std::array 等明确容量成员，使 copy assignment 的工作量可审计；对 std::vector / std::string 等动态成员审查分配、容量增长、复制成本与错误模型。
+- MUST：赋值不会自动提供线程安全。共享对象要明确 owner task、同步策略和 IRQ 边界；ISR 不执行无界分配、阻塞或复杂资源转移。
+- REVIEW：覆盖 x = x、自移动、copy/move/delete 能力、目标旧资源释放、source moved-from 状态、borrow view 生命周期、callback 捕获地址、跨 task 资源转移和 WCET。
+
 ## 类关系与层级
 
 - has-a / uses-a 与 is-a 必须表达真实语义，不为了复用实现而继承。

@@ -12,7 +12,7 @@
 
 ```text
 examples/
-├── day-001/ ~ day-077/     # 每日课程配套目录
+├── day-001/ ~ day-078/     # 每日课程配套目录
 │   ├── main.cpp            # 每日课程核心 Lab 主入口
 │   ├── exercise-01.cpp     # 独立代码练习实现（如存在）
 │   └── exercise-01-solution.cpp # 独立代码练习参考解答（如存在）
@@ -49,8 +49,8 @@ python3 tools/check-examples.py --sanitize
 在本地使用 GCC 单独编译某个示例：
 
 ```bash
-g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic -Werror examples/day-066/main.cpp -o /tmp/day66-main
-/tmp/day66-main
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic -Werror examples/day-078/main.cpp -o /tmp/day78-main
+/tmp/day78-main
 ```
 
 ## 维护约定
