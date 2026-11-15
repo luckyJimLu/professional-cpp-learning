@@ -14,6 +14,10 @@ export interface ContentLesson {
   previous: string;
   next: string;
   rtosScenario?: string;
+  stats?: {
+    minutes: number;
+    wordCount: number;
+  };
 }
 
 export interface ContentTopic {

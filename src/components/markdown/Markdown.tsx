@@ -2,7 +2,8 @@ import { isValidElement, type ReactNode } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { Root } from "mdast";
-import { answerDisclosures } from "../lib/markdownDisclosures";
+import { slugifyHeading } from "../../hooks/useHeadingScrollSpy";
+import { answerDisclosures } from "../../lib/markdownDisclosures";
 
 // Legacy topic documents sometimes use multiple h1 sections. Keep one title
 // and normalize later sections in the Markdown AST, leaving fenced code intact.
@@ -37,7 +38,7 @@ function documentHeadings() {
     }
   };
 }
-import { resolveAsset } from "../lib/contentAssets";
+import { resolveAsset } from "../../lib/contentAssets";
 import { MermaidDiagram } from "./MermaidDiagram";
 import { PlantUmlDiagram, isPlantUmlSource } from "./PlantUmlDiagram";
 import { CodeBlock } from "./CodeBlock";
@@ -51,17 +52,14 @@ function headingText(value: ReactNode): string {
   return "";
 }
 function headingId(value: ReactNode) {
-  return headingText(value)
-    .toLowerCase()
-    .replace(/[^\p{L}\p{N}_\s-]/gu, "")
-    .replace(/\s/g, "-");
+  return slugifyHeading(headingText(value));
 }
 
 const components: Components = {
   table({ children }) {
     return (
       <div
-        className="markdown-table-scroll my-5 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xs"
+        className="markdown-table-scroll my-5 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-2xs"
         role="region"
         aria-label="数据表格，可横向滚动"
         tabIndex={0}

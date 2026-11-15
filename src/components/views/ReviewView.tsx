@@ -63,7 +63,7 @@ export function ReviewView({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="ghost-button"
+                    className="ghost-button min-h-[44px] sm:min-h-0"
                     type="button"
                     onClick={() => removeWeakPoint(point)}
                     aria-label={`移出复习清单：${point}`}

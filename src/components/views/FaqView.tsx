@@ -1,62 +1,42 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, type RefObject } from "react";
+import {
+  FAQ_DIMENSIONS,
+  FAQ_HIGHLIGHT_CARDS,
+} from "@/data/courseMetadata";
+import { useAsyncContent } from "@/hooks/useAsyncContent";
+import { useHeadingScrollSpy } from "@/hooks/useHeadingScrollSpy";
 import { fetchContentText } from "@/lib/contentRuntime";
-import { Markdown } from "../Markdown";
+import { Markdown } from "../markdown/Markdown";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 
 const FAQ_PATH = "docs/faq.md";
+const FAQ_EXCLUDED_HEADINGS = ["目录"] as const;
 
 export function FaqView() {
   const articleRef = useRef<HTMLElement>(null);
-  const [topicText, setTopicText] = useState("");
-  const [headings, setHeadings] = useState<
-    { id: string; title: string; level: number }[]
-  >([]);
-  const [activeId, setActiveId] = useState("");
+  const {
+    data: topicText,
+    status,
+    retry,
+  } = useAsyncContent(
+    async () => {
+      const raw = await fetchContentText(FAQ_PATH);
+      return raw
+        .replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "")
+        .replace(/^[\s\S]*?(?=^## Q1:)/m, "");
+    },
+    "",
+    [],
+  );
 
-  useEffect(() => {
-    let alive = true;
-    fetchContentText(FAQ_PATH)
-      .then((raw) => {
-        if (!alive) return;
-        setTopicText(
-          raw
-            .replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "")
-            .replace(/^[\s\S]*?(?=^## Q1:)/m, ""),
-        );
-      })
-      .catch(() => {
-        if (alive) setTopicText("");
-      });
-    return () => {
-      alive = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    const nodes = Array.from(
-      articleRef.current?.querySelectorAll<HTMLHeadingElement>(
-        "h2[id], h3[id]",
-      ) ?? [],
-    ).filter((h) => h.textContent?.trim() !== "目录");
-    setHeadings(
-      nodes.map((heading) => ({
-        id: heading.id,
-        title: heading.textContent ?? "",
-        level: heading.tagName === "H3" ? 3 : 2,
-      })),
-    );
-    const updateActive = () => {
-      const current =
-        [...nodes]
-          .reverse()
-          .find((node) => node.getBoundingClientRect().top <= 140) ?? nodes[0];
-      setActiveId(current?.id ?? "");
-    };
-    updateActive();
-    window.addEventListener("scroll", updateActive, { passive: true });
-    return () => window.removeEventListener("scroll", updateActive);
-  }, [topicText]);
+  const { headings, activeId } = useHeadingScrollSpy({
+    containerRef: articleRef,
+    selector: "h2[id], h3[id]",
+    threshold: 140,
+    contentKey: topicText,
+    excludeTitles: FAQ_EXCLUDED_HEADINGS,
+  });
 
   return (
     <div className="docs-layout today-layout faq-page">
@@ -68,31 +48,47 @@ export function FaqView() {
           </p>
         </header>
 
-        <Card
-          asChild
-          className="guide-current-lesson faq-summary-card"
-          aria-label="核心主题速览"
-        >
-          <section>
-            <div className="guide-current-main">
-              <div className="guide-current-top">
-                <span className="page-eyebrow">高频专题 Q1 · 语言机制全景</span>
-                <Badge variant="outline" className="guide-current-badge mono font-normal">
-                  6 大分类 · 4 大作用维度 · C++11–C++23
-                </Badge>
+        {FAQ_HIGHLIGHT_CARDS.map((card) => (
+          <Card
+            key={card.id}
+            asChild
+            className="guide-current-lesson faq-summary-card"
+            aria-label="核心主题速览"
+          >
+            <section>
+              <div className="guide-current-main">
+                <div className="guide-current-top">
+                  <span className="page-eyebrow">{card.eyebrow}</span>
+                  <Badge variant="outline" className="guide-current-badge mono font-normal">
+                    {card.badge}
+                  </Badge>
+                </div>
+                <h2>{card.title}</h2>
+                <p className="guide-current-meta">{card.summary}</p>
               </div>
-              <h2>
-                C++ 修饰符（说明符 Specifiers、限定符 Qualifiers 与属性 Attributes）深度辨析
-              </h2>
-              <p className="guide-current-meta">
-                从访问权限、常量与编译期求值、存储期与链接性、成员函数约束、C++20 模块化到标准属性，系统梳理核心区别与工程选型。
-              </p>
-            </div>
-          </section>
-        </Card>
+            </section>
+          </Card>
+        ))}
 
-        <div ref={articleRef as React.RefObject<HTMLDivElement>} className="document-card faq-document">
-          <Markdown embedDocument>{topicText}</Markdown>
+        <div ref={articleRef as RefObject<HTMLDivElement>} className="document-card faq-document">
+          {status === "loading" ? (
+            <p className="product-loading" role="status">
+              正在加载常见问题…
+            </p>
+          ) : status === "error" ? (
+            <div className="topic-notice" role="alert">
+              <p>常见问题加载失败，请检查网络后重试。</p>
+              <button
+                type="button"
+                className="ghost-button"
+                onClick={retry}
+              >
+                重新加载
+              </button>
+            </div>
+          ) : (
+            <Markdown embedDocument>{topicText}</Markdown>
+          )}
         </div>
       </article>
 
@@ -117,22 +113,12 @@ export function FaqView() {
         <div className="today-aside-card">
           <span className="page-eyebrow">四大作用维度</span>
           <dl className="today-aside-stats">
-            <div>
-              <dt>权限与边界维度</dt>
-              <dd>public / protected / private / export</dd>
-            </div>
-            <div>
-              <dt>求值与只读维度</dt>
-              <dd>const / mutable / constexpr / consteval</dd>
-            </div>
-            <div>
-              <dt>实例与调用约束</dt>
-              <dd>&amp; / &amp;&amp; / explicit / noexcept / virtual</dd>
-            </div>
-            <div>
-              <dt>链接与编译器指导</dt>
-              <dd>static / extern / inline / [[...]]</dd>
-            </div>
+            {FAQ_DIMENSIONS.map((dim) => (
+              <div key={dim.label}>
+                <dt>{dim.label}</dt>
+                <dd>{dim.keywords}</dd>
+              </div>
+            ))}
           </dl>
         </div>
       </aside>

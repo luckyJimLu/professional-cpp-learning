@@ -17,6 +17,26 @@ export function Shell({
   children: ReactNode;
 }) {
   const drawerRef = useRef<HTMLDetailsElement>(null);
+  const drawerCloseBtnRef = useRef<HTMLButtonElement>(null);
+
+  const setDrawerSiblingsInert = (isOpen: boolean) => {
+    const selectors = [
+      ".skip-link",
+      ".brand-logo-link",
+      ".shell-context",
+      ".sidebar",
+      ".main-shell",
+    ];
+    for (const selector of selectors) {
+      const el = document.querySelector<HTMLElement>(selector);
+      if (!el) continue;
+      if (isOpen) {
+        el.setAttribute("inert", "");
+      } else {
+        el.removeAttribute("inert");
+      }
+    }
+  };
 
   const focusMainContent = () => {
     requestAnimationFrame(() => {
@@ -107,7 +127,7 @@ export function Shell({
   useEffect(() => {
     const release = () => {
       if (drawerRef.current) drawerRef.current.open = false;
-      document.getElementById("main-content")?.removeAttribute("inert");
+      setDrawerSiblingsInert(false);
     };
     const handleKeydown = (event: KeyboardEvent) => {
       if (!drawerRef.current?.open) return;
@@ -116,11 +136,16 @@ export function Shell({
         drawerRef.current.querySelector("summary")?.focus();
       }
       if (event.key === "Tab") {
-        const elements = [
-          ...drawerRef.current.querySelectorAll<HTMLElement>(
-            "summary, button, a[href]",
-          ),
-        ].filter((el) => el.tabIndex >= 0);
+        const drawerDialog =
+          drawerRef.current.querySelector<HTMLElement>(".drawer-content");
+        const elements = drawerDialog
+          ? [
+              ...drawerDialog.querySelectorAll<HTMLElement>(
+                'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+              ),
+            ]
+          : [];
+        if (elements.length === 0) return;
         const first = elements[0];
         const last = elements.at(-1);
         if (event.shiftKey && document.activeElement === first) {
@@ -147,21 +172,18 @@ export function Shell({
 
   const handleDrawerToggle = () => {
     const isOpen = drawerRef.current?.open ?? false;
-    const main = document.getElementById("main-content");
-    if (main) {
-      if (isOpen) {
-        main.setAttribute("inert", "");
-      } else {
-        main.removeAttribute("inert");
-      }
+    setDrawerSiblingsInert(isOpen);
+    if (isOpen) {
+      requestAnimationFrame(() => {
+        drawerCloseBtnRef.current?.focus();
+      });
     }
   };
 
   const closeDrawer = (restoreTriggerFocus = true) => {
     if (drawerRef.current) {
       drawerRef.current.open = false;
-      const main = document.getElementById("main-content");
-      if (main) main.removeAttribute("inert");
+      setDrawerSiblingsInert(false);
       if (restoreTriggerFocus)
         drawerRef.current.querySelector("summary")?.focus();
     }
@@ -207,10 +229,18 @@ export function Shell({
               aria-hidden="true"
               onClick={() => closeDrawer()}
             />
-            <div className="drawer-content">
+            <div
+              className="drawer-content"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="drawer-title"
+            >
               <div className="drawer-header">
-                <span className="drawer-title">导航 · {label}</span>
+                <span id="drawer-title" className="drawer-title">
+                  导航 · {label}
+                </span>
                 <button
+                  ref={drawerCloseBtnRef}
                   type="button"
                   className="drawer-close-btn"
                   aria-label="关闭导航菜单"
@@ -333,6 +363,7 @@ export function Shell({
                 type="button"
                 className="sidebar-collapse-btn"
                 onClick={toggleSidebar}
+                aria-expanded={!isSidebarCollapsed}
                 aria-label="收起侧边栏"
                 title="收起侧边栏"
               >
@@ -360,6 +391,7 @@ export function Shell({
                 type="button"
                 className="sidebar-control-btn sidebar-expand-btn"
                 onClick={toggleSidebar}
+                aria-expanded={!isSidebarCollapsed}
                 aria-label="展开侧边栏"
                 title="展开侧边栏"
               >

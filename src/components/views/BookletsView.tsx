@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useAsyncContent } from "../../hooks/useAsyncContent";
 import {
   cBooklet,
   booklets,
@@ -10,15 +11,19 @@ import {
 } from "../../lib/booklets";
 import { navigate, useLocationParams } from "../../lib/navigation";
 import { Icon } from "../common/Icon";
-import { Markdown } from "../Markdown";
-import "../../booklets.css";
+import { Markdown } from "../markdown/Markdown";
+import "../../styles/booklets.css";
 
 export function BookletsView() {
   const params = useLocationParams();
   const isReady = useBookletsReady();
-  useEffect(() => {
-    void hydrateBooklets();
-  }, [isReady]);
+  const { status: hydrationStatus, retry: retryHydrate } = useAsyncContent(
+    hydrateBooklets,
+    undefined,
+    [],
+    { enabled: !isReady, initialReady: isReady },
+  );
+  const loadError = hydrationStatus === "error";
   const booklet =
     booklets.find((book) => book.id === params.get("book")) ?? cBooklet;
   const query = params.get("bq") ?? "";
@@ -286,6 +291,20 @@ export function BookletsView() {
     Boolean(requestedEntry) ||
     activeSection !== "all";
   if (!isReady) {
+    if (loadError) {
+      return (
+        <section className="topic-notice" role="alert">
+          <p>小册子加载失败，请检查网络后重试。</p>
+          <button
+            type="button"
+            className="ghost-button"
+            onClick={retryHydrate}
+          >
+            重新加载
+          </button>
+        </section>
+      );
+    }
     return (
       <section className="product-loading" role="status">
         正在加载小册子…
@@ -314,7 +333,7 @@ export function BookletsView() {
                 key={book.id}
                 type="button"
                 aria-pressed={active}
-                className={`px-3 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer ${
+                className={`min-h-[44px] sm:min-h-0 px-3 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer ${
                   active
                     ? "bg-white text-blue-600 shadow-2xs ring-1 ring-slate-200/60"
                     : "text-slate-600 hover:text-slate-900"
@@ -514,7 +533,7 @@ export function BookletsView() {
                       type="button"
                       aria-pressed={active}
                       onClick={() => setSearchScope(scope.id)}
-                      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition cursor-pointer ${
+                      className={`inline-flex min-h-[44px] sm:min-h-0 items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition cursor-pointer ${
                         active
                           ? "bg-blue-600 text-white shadow-2xs"
                           : "border border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:text-blue-600"
@@ -553,7 +572,7 @@ export function BookletsView() {
                     <a
                       key={`${entryBookId}-${entry.id}`}
                       href={bookletHref({ book: entryBookId, entry: entry.id })}
-                      className="group inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs shadow-2xs transition hover:border-blue-300 hover:bg-blue-50/40"
+                      className="group inline-flex min-h-[44px] sm:min-h-0 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs shadow-2xs transition hover:border-blue-300 hover:bg-blue-50/40"
                       onClick={(event) => {
                         if (
                           event.ctrlKey ||
@@ -600,6 +619,7 @@ export function BookletsView() {
           {query.trim() ? (
             visible.length > 0 ? (
               <section className="booklet-section" aria-label="关键词匹配结果">
+                <h2 className="sr-only">搜索结果</h2>
                 {visible.map(renderEntry)}
               </section>
             ) : null

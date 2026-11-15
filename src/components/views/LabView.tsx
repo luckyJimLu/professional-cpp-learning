@@ -1,32 +1,11 @@
 import { useEffect, useRef, useState } from "react";
+import { VISUALIZER_DEMO_CODE } from "../../data/visualizerPresets";
 import { type Lesson, type StepKey } from "../../lib/course";
-import { Markdown } from "../Markdown";
+import { Markdown } from "../markdown/Markdown";
 import { PageHeader } from "../common/PageHeader";
 import { VisualizerWorkbench } from "../../visualizer/VisualizerWorkbench";
 import { inferTraceEventsFromCodeAndOutput } from "../../visualizer/reducer";
 import { useTraceSession } from "../../visualizer/useTraceSession";
-
-const VISUALIZER_DEMO_CODE = `#include "visualizer.h"
-#include <iostream>
-
-struct Resource {
-    int id;
-};
-
-int main() {
-    VIS_SCOPE("main");
-
-    Resource res{1};
-    VIS_TRACK(res, Resource);
-
-    int* p = new int(100);
-    VIS_PTR(p, p);
-
-    delete p;
-    VIS_STEP_L("堆内存释放完成");
-    return 0;
-}
-`;
 
 function labInstructions(body: string): string {
   return body
@@ -46,8 +25,9 @@ export function LabView({
   isStepComplete: (day: number, step: StepKey) => boolean;
 }) {
   const lab = lesson.sections.find((section) => section.step === "lab");
+  const hasExtractedCode = Boolean(lesson.labCode);
   const sourceCode =
-    lesson.labCode ?? "// This lesson has no extracted C++ example yet.";
+    lesson.labCode ?? "// 本课暂未提取独立 C++ 实验源码，可先阅读本课概念或加载示例。";
 
   const [customOrigin, setCustomOrigin] = useState<string | null>(() => {
     try {
@@ -121,11 +101,35 @@ export function LabView({
     traceSession.reset(nextCode);
   }, [lesson.day, sourceCode]);
 
-  const runCompiler = async () => {
-    const succeeded = await traceSession.run();
-    if (succeeded) {
+  const runAttemptedRef = useRef(false);
+
+  const clangUnavailable = traceSession.state.diagnostics.some((item) =>
+    item.includes("Clang WASM 工具链提示"),
+  );
+  const compileFailed = traceSession.state.status === "error";
+
+  useEffect(() => {
+    if (!runAttemptedRef.current) return;
+    if (
+      traceSession.state.status === "loading" ||
+      traceSession.state.status === "running"
+    ) {
+      return;
+    }
+    runAttemptedRef.current = false;
+    if (traceSession.state.status === "ready" && !clangUnavailable) {
       markStep(lesson.day, "lab");
     }
+  }, [
+    clangUnavailable,
+    lesson.day,
+    markStep,
+    traceSession.state.status,
+  ]);
+
+  const runCompiler = async () => {
+    runAttemptedRef.current = true;
+    await traceSession.run();
   };
 
   const compilerBusy =
@@ -177,7 +181,7 @@ export function LabView({
 
             <div className="lab-actions">
               <button
-                className="ghost-button"
+                className="ghost-button min-h-[44px] sm:min-h-0"
                 onClick={() => setHint((value) => !value)}
                 type="button"
               >
@@ -185,7 +189,7 @@ export function LabView({
               </button>
               {!customOrigin && (
                 <button
-                  className="ghost-button"
+                  className="ghost-button min-h-[44px] sm:min-h-0"
                   onClick={resetToLessonSource}
                   disabled={
                     compilerBusy || traceSession.state.code === sourceCode
@@ -261,16 +265,80 @@ export function LabView({
               </span>
             </div>
           ) : (
-            <VisualizerWorkbench
-              session={traceSession.state}
-              onChangeCode={traceSession.setCode}
-              onStepChange={traceSession.setStep}
-              onRun={runCompiler}
-              onRunApproximate={runStepDebugger}
-              onLoadTrace={traceSession.loadTrace}
-              variant="lab"
-              className="lab-workbench"
-            />
+            <>
+              {!hasExtractedCode && !customOrigin && (
+                <div className="topic-notice" role="status" style={{ margin: "16px 16px 0" }}>
+                  <p>本课暂未提取独立 C++ 实验源码，可在下方编辑代码或加载可视化示例进行实验。</p>
+                  <button
+                    type="button"
+                    className="ghost-button min-h-[44px] sm:min-h-0"
+                    onClick={loadVisualizerDemo}
+                  >
+                    加载可视化示例
+                  </button>
+                </div>
+              )}
+              {compileFailed && (
+                <div className="topic-notice" role="alert" style={{ margin: "16px 16px 0" }}>
+                  <p>
+                    Clang 编译或程序运行失败，本次实验尚未标记完成。请根据下方终端诊断修正代码后重试，或恢复课例源码。
+                  </p>
+                  <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                    <button
+                      type="button"
+                      className="ghost-button min-h-[44px] sm:min-h-0"
+                      disabled={compilerBusy}
+                      onClick={() => void runCompiler()}
+                    >
+                      重试编译运行
+                    </button>
+                    <button
+                      type="button"
+                      className="ghost-button min-h-[44px] sm:min-h-0"
+                      disabled={compilerBusy}
+                      onClick={resetToLessonSource}
+                    >
+                      恢复课例源码
+                    </button>
+                  </div>
+                </div>
+              )}
+              {!compileFailed && clangUnavailable && (
+                <div className="topic-notice" role="alert" style={{ margin: "16px 16px 0" }}>
+                  <p>
+                    Clang/WASM 编译沙箱当前不可用，本次未执行真实编译，也未标记实验完成。下方仅展示近似推演轨迹（非真实运行时结果），可检查网络或本地编译资源后重试。
+                  </p>
+                  <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                    <button
+                      type="button"
+                      className="ghost-button min-h-[44px] sm:min-h-0"
+                      disabled={compilerBusy}
+                      onClick={() => void runCompiler()}
+                    >
+                      重试 Clang 编译
+                    </button>
+                    <button
+                      type="button"
+                      className="ghost-button min-h-[44px] sm:min-h-0"
+                      disabled={compilerBusy}
+                      onClick={resetToLessonSource}
+                    >
+                      恢复课例源码
+                    </button>
+                  </div>
+                </div>
+              )}
+              <VisualizerWorkbench
+                session={traceSession.state}
+                onChangeCode={traceSession.setCode}
+                onStepChange={traceSession.setStep}
+                onRun={runCompiler}
+                onRunApproximate={runStepDebugger}
+                onLoadTrace={traceSession.loadTrace}
+                variant="lab"
+                className="lab-workbench"
+              />
+            </>
           )}
         </section>
       </div>

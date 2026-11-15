@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useAsyncContent } from "../../hooks/useAsyncContent";
+import { useHeadingScrollSpy } from "../../hooks/useHeadingScrollSpy";
 import {
   fetchTopicText,
   topics,
@@ -11,13 +13,13 @@ import {
   hydrateReferenceBooks,
   useTopicsReady,
   type Topic,
-} from "../lib/topics";
-import { navigate, useLocationParams } from "../lib/navigation";
-import { Markdown } from "./Markdown";
+} from "../../lib/topics";
+import { navigate, useLocationParams } from "../../lib/navigation";
+import { Markdown } from "../markdown/Markdown";
 import {
   resolveContentHref,
   resolveContentNavigation,
-} from "../lib/contentNavigation";
+} from "../../lib/contentNavigation";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Badge } from "@/components/ui/badge";
 
@@ -48,17 +50,20 @@ function topicUrl(path?: string, category?: string) {
   return url.href;
 }
 
-export function Topics() {
+export function TopicsView() {
   const params = useLocationParams();
   const isTopicsReady = useTopicsReady();
+  const { status: catalogStatus, retry: retryCatalog } = useAsyncContent(
+    () => hydrateTopics().then(hydrateReferenceBooks),
+    undefined,
+    [],
+    { enabled: !isTopicsReady, initialReady: isTopicsReady },
+  );
+  const loadError = catalogStatus === "error";
   const path = params.get("topic");
   const selected = isTopicsReady
     ? topics.find((topic) => topic.path === path)
     : undefined;
-  useEffect(() => {
-    if (isTopicsReady) return;
-    void hydrateTopics().then(hydrateReferenceBooks);
-  }, [isTopicsReady]);
   const groupNames = [
     ...new Set(
       topics
@@ -80,6 +85,34 @@ export function Topics() {
     });
   const select = (value: string) => navigate({ view: "topics", topic: value });
 
+  if (!isTopicsReady) {
+    return (
+      <div className="topics-page-view topics-catalog">
+        <header className="page-header topics-page-header">
+          <h1>专题知识库</h1>
+          <p className="page-description">
+            先选一个专题，沿着目录深入。随时回到上次阅读的位置。
+          </p>
+        </header>
+        {loadError ? (
+          <div className="topic-notice" role="alert">
+            <p>专题目录加载失败，请检查网络后重试。</p>
+            <button
+              type="button"
+              className="ghost-button"
+              onClick={retryCatalog}
+            >
+              重新加载
+            </button>
+          </div>
+        ) : (
+          <p className="product-loading" role="status">
+            正在加载专题知识库…
+          </p>
+        )}
+      </div>
+    );
+  }
   if (selected)
     return (
       <TopicReader key={selected.path} selected={selected} onSelect={select} />
@@ -234,6 +267,8 @@ export function Topics() {
   );
 }
 
+export const Topics = TopicsView;
+
 function TopicReader({
   selected,
   onSelect,
@@ -244,18 +279,22 @@ function TopicReader({
   const articleRef = useRef<HTMLElement>(null);
   const directoryRef = useRef<HTMLDetailsElement>(null);
   const tocRef = useRef<HTMLDetailsElement>(null);
-  const [topicText, setTopicText] = useState(selected.body);
-  useEffect(() => {
-    let alive = true;
-    fetchTopicText(selected).then((text) => {
-      if (alive) setTopicText(text);
-    });
-    return () => {
-      alive = false;
-    };
-  }, [selected]);
-  const [headings, setHeadings] = useState<{ id: string; text: string }[]>([]);
-  const [activeHeading, setActiveHeading] = useState("");
+  const {
+    data: topicText,
+    status: articleStatus,
+    retry: retryArticle,
+  } = useAsyncContent(
+    () => fetchTopicText(selected),
+    selected.body,
+    [selected.path],
+    { initialReady: Boolean(selected.body) },
+  );
+  const { headings, activeId: activeHeading } = useHeadingScrollSpy({
+    containerRef: articleRef,
+    selector: ".markdown h2[id]",
+    threshold: 155,
+    contentKey: `${selected.path}\0${topicText}`,
+  });
   const articles = seriesTopics(selected);
   const index = articles.findIndex((topic) => topic.path === selected.path);
   const previous = articles[index - 1];
@@ -277,24 +316,11 @@ function TopicReader({
 
   useEffect(() => {
     save(kLastRead, selected.path);
-    const nodes = [
-      ...(articleRef.current?.querySelectorAll<HTMLHeadingElement>(
-        ".markdown h2[id]",
-      ) ?? []),
-    ];
-    setHeadings(
-      nodes.map((node) => ({ id: node.id, text: node.textContent ?? "" })),
-    );
     let y = 0;
     let timer: ReturnType<typeof setTimeout> | undefined;
-    const update = () => {
+    const updatePosition = () => {
       if (!topicText) return; // 正文尚未就绪：高度不足，避免短滚动态覆盖阅读位置
       y = window.scrollY;
-      const current =
-        [...nodes]
-          .reverse()
-          .find((node) => node.getBoundingClientRect().top <= 155) ?? nodes[0];
-      setActiveHeading(current?.id ?? "");
       clearTimeout(timer);
       timer = setTimeout(
         () => save(positionKey(selected.path), String(y)),
@@ -305,9 +331,9 @@ function TopicReader({
     const frame = requestAnimationFrame(() => {
       if (!window.location.hash && topicText && Number.isFinite(savedY) && savedY > 0)
         window.scrollTo({ top: savedY, behavior: "instant" });
-      update();
+      updatePosition();
     });
-    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("scroll", updatePosition, { passive: true });
     const persist = () => {
       if (topicText) save(positionKey(selected.path), String(y));
     };
@@ -315,7 +341,7 @@ function TopicReader({
     return () => {
       cancelAnimationFrame(frame);
       clearTimeout(timer);
-      window.removeEventListener("scroll", update);
+      window.removeEventListener("scroll", updatePosition);
       window.removeEventListener("pagehide", persist);
       persist();
     };
@@ -416,7 +442,7 @@ function TopicReader({
                         tocRef.current.open = false;
                     }}
                   >
-                    {heading.text}
+                    {heading.title}
                   </a>
                 ))}
               </nav>
@@ -433,19 +459,36 @@ function TopicReader({
             className="document-card topic-document-centered"
             ref={articleRef}
           >
-            <Markdown
-              normalizeDocumentHeadings
-              sourcePath={selected.path}
-              resolveHref={(href) => resolveContentHref(selected.path, href)}
-              onNavigate={(href) => {
-                const target = resolveContentNavigation(selected.path, href);
-                if (!target) return false;
-                navigate(target);
-                return true;
-              }}
-            >
-              {topicText}
-            </Markdown>
+            {articleStatus === "loading" ? (
+              <p className="product-loading" role="status">
+                正在加载专题文章…
+              </p>
+            ) : articleStatus === "error" ? (
+              <div className="topic-notice" role="alert">
+                <p>专题文章加载失败，请检查网络后重试。</p>
+                <button
+                  type="button"
+                  className="ghost-button"
+                  onClick={retryArticle}
+                >
+                  重新加载
+                </button>
+              </div>
+            ) : (
+              <Markdown
+                normalizeDocumentHeadings
+                sourcePath={selected.path}
+                resolveHref={(href) => resolveContentHref(selected.path, href)}
+                onNavigate={(href) => {
+                  const target = resolveContentNavigation(selected.path, href);
+                  if (!target) return false;
+                  navigate(target);
+                  return true;
+                }}
+              >
+                {topicText}
+              </Markdown>
+            )}
             <footer className="source-path">来源：{selected.path}</footer>
           </article>
           <nav className="topic-adjacent" aria-label="相邻文章">

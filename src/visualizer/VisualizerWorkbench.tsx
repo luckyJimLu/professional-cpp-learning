@@ -10,6 +10,7 @@ import { moveTabFocus } from "../lib/keyboardTabs";
 import { MemoryCanvas, type MemoryLayoutMode } from "./MemoryCanvas";
 import { PRESET_TRACES_META, loadPresetTrace } from "./presetTraces";
 import { TraceSelectorModal } from "./TraceSelectorModal";
+import { useSplitPane } from "./useSplitPane";
 import type {
   TraceSessionState,
   VisualizerTrace,
@@ -91,112 +92,22 @@ export function VisualizerWorkbench({
     }
   }, [session.currentStep, totalSteps, onStepChange]);
 
-  const SPLIT_STORAGE_KEY = "cpp-vis-split-percent";
-  const [splitPercent, setSplitPercent] = useState<number>(() => {
-    try {
-      const saved = localStorage.getItem(SPLIT_STORAGE_KEY);
-      if (saved) {
-        const val = parseFloat(saved);
-        if (!isNaN(val) && val >= 20 && val <= 80) return val;
-      }
-    } catch {}
-    return 42;
+  const {
+    splitPercent,
+    isResizing,
+    splitContainerRef,
+    handlePointerDown,
+    handleResetSplit,
+    handleSplitKeyDown,
+  } = useSplitPane({
+    storageKey: "cpp-vis-split-percent",
+    defaultPercent: 42,
+    minPercent: 20,
+    maxPercent: 80,
+    minLeftWidth: 320,
+    minRightWidth: 360,
+    gutterWidth: 8,
   });
-  const [isResizing, setIsResizing] = useState(false);
-  const splitContainerRef = useRef<HTMLDivElement>(null);
-
-  const handlePointerDown = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      if (e.button !== 0) return;
-      const container = splitContainerRef.current;
-      if (!container) return;
-
-      e.preventDefault();
-      (e.target as HTMLElement).setPointerCapture(e.pointerId);
-      setIsResizing(true);
-
-      const onPointerMove = (moveEvent: PointerEvent) => {
-        const rect = container.getBoundingClientRect();
-        if (rect.width <= 0) return;
-        const offsetX = moveEvent.clientX - rect.left;
-        const newPercent = Math.min(
-          80,
-          Math.max(20, (offsetX / rect.width) * 100),
-        );
-        setSplitPercent(Math.round(newPercent * 10) / 10);
-      };
-
-      const onPointerUp = (upEvent: PointerEvent) => {
-        try {
-          (upEvent.target as HTMLElement)?.releasePointerCapture?.(
-            upEvent.pointerId,
-          );
-        } catch {}
-        setIsResizing(false);
-        window.removeEventListener("pointermove", onPointerMove);
-        window.removeEventListener("pointerup", onPointerUp);
-        window.removeEventListener("pointercancel", onPointerUp);
-
-        const rect = container.getBoundingClientRect();
-        if (rect.width > 0) {
-          const offsetX = upEvent.clientX - rect.left;
-          const finalPercent = Math.min(
-            80,
-            Math.max(20, (offsetX / rect.width) * 100),
-          );
-          const rounded = Math.round(finalPercent * 10) / 10;
-          setSplitPercent(rounded);
-          try {
-            localStorage.setItem(SPLIT_STORAGE_KEY, String(rounded));
-          } catch {}
-        }
-        window.dispatchEvent(new Event("resize"));
-      };
-
-      window.addEventListener("pointermove", onPointerMove);
-      window.addEventListener("pointerup", onPointerUp);
-      window.addEventListener("pointercancel", onPointerUp);
-    },
-    [],
-  );
-
-  const handleResetSplit = useCallback(() => {
-    setSplitPercent(42);
-    try {
-      localStorage.setItem(SPLIT_STORAGE_KEY, "42");
-    } catch {}
-    window.dispatchEvent(new Event("resize"));
-  }, []);
-
-  const handleSplitKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        setSplitPercent((prev) => {
-          const next = Math.max(20, Math.round((prev - 2) * 10) / 10);
-          try {
-            localStorage.setItem(SPLIT_STORAGE_KEY, String(next));
-          } catch {}
-          return next;
-        });
-        window.dispatchEvent(new Event("resize"));
-      } else if (e.key === "ArrowRight") {
-        e.preventDefault();
-        setSplitPercent((prev) => {
-          const next = Math.min(80, Math.round((prev + 2) * 10) / 10);
-          try {
-            localStorage.setItem(SPLIT_STORAGE_KEY, String(next));
-          } catch {}
-          return next;
-        });
-        window.dispatchEvent(new Event("resize"));
-      } else if (e.key === "Home") {
-        e.preventDefault();
-        handleResetSplit();
-      }
-    },
-    [handleResetSplit],
-  );
 
   useEffect(() => {
     if (session.traceId && session.snapshots.length > 0) {

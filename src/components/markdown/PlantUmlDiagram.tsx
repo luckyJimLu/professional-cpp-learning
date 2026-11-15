@@ -4,9 +4,9 @@ import {
   getPlantUmlServerUrl,
   getPlantUmlSvgUrl,
   plantUmlSlug,
-} from "../lib/plantuml";
+} from "../../lib/plantuml";
 
-export { isPlantUmlSource } from "../lib/plantuml";
+export { isPlantUmlSource } from "../../lib/plantuml";
 
 interface PlantUmlDiagramProps {
   code: string;

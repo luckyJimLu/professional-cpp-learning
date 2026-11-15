@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  SLIDE_ENABLED_DAYS,
+  WEEK_ZH_THEMES,
+} from "../../data/courseMetadata";
+import { useAsyncContent } from "../../hooks/useAsyncContent";
+import {
   loadLearningPlan,
   lessonByDay,
   lessons,
@@ -9,24 +14,11 @@ import {
 import { calculateReadingStats } from "../../lib/readingTime";
 import { navigate, useLocationParams } from "../../lib/navigation";
 import { PageHeader } from "../common/PageHeader";
-import { Markdown } from "../Markdown";
+import { Markdown } from "../markdown/Markdown";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-
-const WEEK_ZH_THEMES: Record<number, string> = {
-  1: "从 C 到现代 C++ 基础与状态建模",
-  2: "字符串视图、生命周期与编码风格",
-  3: "工程边界、错误处理与可测试架构",
-  4: "抽象契约、耦合内聚与类不变式",
-  5: "对象组合、所有权与多态虚拟接口",
-  6: "继承边界、切片防御与 Mixin 组合",
-  7: "代码复用、泛型模板与防御性检查",
-  8: "易用接口设计、受众边界与 SOLID",
-  9: "智能指针、动态内存与资源分配边界",
-  10: "对象生命周期、固定容量与资源边界",
-};
 
 export function LessonsView({
   openLesson,
@@ -45,10 +37,11 @@ export function LessonsView({
   const activeTab = params.get("courseTab") === "all" ? "all" : "roadmap";
   const target = lessonByDay(currentDay ?? 1) ?? lessons.at(-1);
   const weeks = roadmapByWeek();
-  const [learningPlan, setLearningPlan] = useState<string>("");
-  useEffect(() => {
-    loadLearningPlan().then(setLearningPlan).catch(() => setLearningPlan(""));
-  }, []);
+  const {
+    data: learningPlan,
+    status: planStatus,
+    retry: retryPlan,
+  } = useAsyncContent(loadLearningPlan, "", []);
   useEffect(() => setDraft(query), [query]);
   const setQuery = (value: string) =>
     navigate({ courseQuery: value || undefined }, true);
@@ -78,9 +71,9 @@ export function LessonsView({
       <span className="course-row-content">
         <strong>{lesson.title}</strong>
         <small>
-          第 {lesson.week} 周 · 约 {calculateReadingStats(lesson.raw).minutes}{" "}
-          分钟阅读
-          {lesson.day === 1 && (
+          第 {lesson.week} 周 · 约{" "}
+          {(lesson.stats ?? calculateReadingStats(lesson.raw)).minutes} 分钟阅读
+          {SLIDE_ENABLED_DAYS.has(lesson.day) && (
             <span
               style={{
                 marginLeft: "8px",
@@ -142,7 +135,7 @@ export function LessonsView({
           </Card>
         )}
       <div className="course-toolbar">
-        <div className="search-input-row course-search">
+        <search className="search-input-row course-search" aria-label="课程搜索">
           <Input
             ref={inputRef}
             type="search"
@@ -176,7 +169,7 @@ export function LessonsView({
               清空
             </Button>
           )}
-        </div>
+        </search>
         <div className="course-toolbar-actions">
           <div
             className="course-tab-group"
@@ -212,6 +205,7 @@ export function LessonsView({
               <h2>没有找到这节课程</h2>
               <p>试试“指针”“54”或章节编号，也可以清空搜索回到进阶路线。</p>
               <Button
+                type="button"
                 variant="outline"
                 className="ghost-button"
                 onClick={() => {
@@ -293,7 +287,24 @@ export function LessonsView({
       )}
         <details className="source-details" id="course-plan">
           <summary>查看章节里程碑与原始路线</summary>
-          <Markdown embedDocument>{learningPlan}</Markdown>
+          {planStatus === "loading" ? (
+            <p className="product-loading" role="status">
+              正在加载学习路线…
+            </p>
+          ) : planStatus === "error" ? (
+            <div className="topic-notice" role="alert">
+              <p>学习路线加载失败，请检查网络后重试。</p>
+              <button
+                type="button"
+                className="ghost-button"
+                onClick={retryPlan}
+              >
+                重新加载
+              </button>
+            </div>
+          ) : (
+            <Markdown embedDocument>{learningPlan}</Markdown>
+          )}
         </details>
       </div>
 

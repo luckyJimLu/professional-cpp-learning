@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { codeEntries, hydrateSearch, searchCode, useSearchHydrated, type CodeEntry } from "../lib/search";
-import { navigate, useLocationParams } from "../lib/navigation";
-import { PageHeader } from "./common/PageHeader";
-import { Icon } from "./common/Icon";
+import { codeEntries, hydrateSearch, searchCode, useSearchHydrated, type CodeEntry } from "../../lib/search";
+import { navigate, useLocationParams } from "../../lib/navigation";
+import { PageHeader } from "../common/PageHeader";
+import { Icon } from "../common/Icon";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -20,7 +20,7 @@ function Highlight({ text, query }: { text: string; query: string }) {
   );
 }
 
-export function CodeSearch() {
+export function CodeSearchView() {
   const params = useLocationParams();
   const query = params.get("q") ?? "";
   const [draft, setDraft] = useState(query);
@@ -386,56 +386,63 @@ export function CodeSearch() {
           </section>
         )}
         <div className="search-results">
-          {pagedResults.map(({ entry, lineIndex }) => (
-            <button
-              className="search-result"
-              key={`${entry.id}:${lineIndex}`}
-              aria-pressed={
-                selected?.id === entry.id &&
-                matchLine === entry.line + lineIndex
-              }
-              onClick={(event) => {
-                selectedResultRef.current = event.currentTarget;
-                setCopyFeedback(null);
-                navigate({
-                  code: entry.id,
-                  line: String(entry.line + lineIndex),
-                });
-              }}
-            >
-              <div className="result-header">
-                <span className="result-meta">
-                  {entry.kind === "file" ? "源码" : "代码块"} · L
-                  {entry.line + lineIndex}
-                </span>
-                <Badge variant="outline" className="result-category-badge font-normal">
-                  {entry.category === "daily"
-                    ? "课程"
-                    : entry.category === "topics"
-                      ? "架构"
-                      : entry.category === "examples"
-                        ? "实验"
-                        : entry.category === "patterns"
-                          ? "模式"
-                          : "规范"}
-                </Badge>
+          {pagedResults.map(({ entry, lineIndex }) => {
+            const isSelected =
+              selected?.id === entry.id &&
+              matchLine === entry.line + lineIndex;
+            return (
+              <div
+                className={`search-result${isSelected ? " border-[var(--blue)]" : ""}`}
+                key={`${entry.id}:${lineIndex}`}
+              >
+                <div className="result-header">
+                  <span className="result-meta">
+                    {entry.kind === "file" ? "源码" : "代码块"} · L
+                    {entry.line + lineIndex}
+                  </span>
+                  <Badge variant="outline" className="result-category-badge font-normal">
+                    {entry.category === "daily"
+                      ? "课程"
+                      : entry.category === "topics"
+                        ? "架构"
+                        : entry.category === "examples"
+                          ? "实验"
+                          : entry.category === "patterns"
+                            ? "模式"
+                            : "规范"}
+                  </Badge>
+                </div>
+                <button
+                  type="button"
+                  className="w-full cursor-pointer border-0 bg-transparent p-0 text-left max-md:min-h-[44px]"
+                  aria-pressed={isSelected}
+                  onClick={(event) => {
+                    selectedResultRef.current = event.currentTarget;
+                    setCopyFeedback(null);
+                    navigate({
+                      code: entry.id,
+                      line: String(entry.line + lineIndex),
+                    });
+                  }}
+                >
+                  <strong>{entry.title}</strong>
+                  <span className="result-source-path">{entry.path}</span>
+                </button>
+                <pre>
+                  {entry.lines
+                    .slice(Math.max(0, lineIndex - 1), lineIndex + 2)
+                    .map((line, i) => (
+                      <span className="preview-line" key={i}>
+                        <span>{entry.line + Math.max(0, lineIndex - 1) + i}</span>
+                        <code>
+                          <Highlight text={line} query={query.trim()} />
+                        </code>
+                      </span>
+                    ))}
+                </pre>
               </div>
-              <strong>{entry.title}</strong>
-              <span className="result-source-path">{entry.path}</span>
-              <pre>
-                {entry.lines
-                  .slice(Math.max(0, lineIndex - 1), lineIndex + 2)
-                  .map((line, i) => (
-                    <span className="preview-line" key={i}>
-                      <span>{entry.line + Math.max(0, lineIndex - 1) + i}</span>
-                      <code>
-                        <Highlight text={line} query={query.trim()} />
-                      </code>
-                    </span>
-                  ))}
-              </pre>
-            </button>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -465,3 +472,5 @@ export function CodeSearch() {
     </div>
   );
 }
+
+export const CodeSearch = CodeSearchView;

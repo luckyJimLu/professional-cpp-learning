@@ -232,25 +232,6 @@
 .cm-editor-host .cm-editor { height: 100%; }
 .cm-editor-host .cm-scroller { overflow: auto; height: 100%; }
 
-.vcr-controls-container { flex: none; display: flex; flex-direction: column; gap: 8px; padding: 8px 14px; border-bottom: 1px solid #1c2430; background: #0d1117; }
-.vcr-toolbar, .vcr-buttons, .vcr-slider-wrapper { display: flex; align-items: center; }
-.vcr-toolbar { justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.vcr-buttons { gap: 5px; }
-.vcr-btn { border: 1px solid #30363d; padding: 4px 9px; color: #c9d1d9; background: #161b22; cursor: pointer; min-height: var(--control-height); border-radius: var(--radius-control); }
-.vcr-btn:hover:not(:disabled) { color: #fff; border-color: #64748b; background: #21262d; }
-.vcr-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-.vcr-btn.play-btn { color: #fff; border-color: #1a73e8; background: #00599c; font-weight: 600; }
-.vcr-btn.play-btn.active { border-color: #d97706; background: #b35c00; }
-.vcr-slider-wrapper { flex: 1; max-width: 420px; gap: 10px; }
-.vcr-slider { flex: 1; accent-color: #38bdf8; cursor: pointer; }
-.vcr-step-counter { color: #8b949e; font: 12px/1 var(--mono); white-space: nowrap; }
-.vcr-step-counter strong { color: #58a6ff; }
-.vcr-speed-select { border: 1px solid #30363d; padding: 4px 8px; color: #c9d1d9; background: #161b22; font-size: 12px; min-height: var(--control-height); border-radius: var(--radius-control); }
-.vcr-action-banner { display: flex; align-items: center; gap: 9px; min-height: 34px; padding: 6px 9px; border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 6px; background: rgba(56, 189, 248, 0.08); font-size: 12px; border-left: 1px solid rgba(56, 189, 248, 0.2); }
-.vcr-action-tag { flex: none; border-radius: 4px; padding: 2px 6px; color: #fff; background: #00599c; font: 600 10px/1.4 var(--mono); }
-.vcr-action-text { flex: 1; color: #f0f6fc; }
-.vcr-warning-pill { color: #fca5a5; font-size: 11px; }
-
 .memory-canvas-shell { display: flex; flex: 1; min-width: 0; min-height: 0; flex-direction: column; background: #090d13; }
 /* 极简单行步骤语义说明胶囊（取代原厚重控制条，不占垂直高度） */
 .memory-step-caption {
@@ -431,8 +412,6 @@
 
 @media (max-width: 560px) {
   .trace-chip { display: none; }
-  .vcr-action-banner { align-items: flex-start; flex-direction: column; }
-  .vcr-slider-wrapper { flex-basis: 100%; }
   .memory-canvas-root { grid-template-columns: 280px 300px; }
 }
 

@@ -1,22 +1,9 @@
 import { useEffect } from "react";
+import { DEFAULT_DEMO_CODE } from "../../data/visualizerPresets";
 import { PageHeader } from "../common/PageHeader";
 import { VisualizerWorkbench } from "../../visualizer/VisualizerWorkbench";
 import { loadPresetTrace } from "../../visualizer/presetTraces";
 import { useTraceSession } from "../../visualizer/useTraceSession";
-
-const DEFAULT_DEMO_CODE = `#include <iostream>
-#include <memory>
-
-struct Widget {
-    int id;
-    Widget(int v) : id(v) {}
-};
-
-int main() {
-    auto p1 = std::make_unique<Widget>(42);
-    std::unique_ptr<Widget> p2 = std::move(p1);
-    return 0;
-}`;
 
 export function VisualizerView() {
   const traceSession = useTraceSession(DEFAULT_DEMO_CODE);

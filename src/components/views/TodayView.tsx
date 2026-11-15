@@ -1,5 +1,10 @@
 import { useState } from "react";
 import {
+  STAGE_DESCRIPTIONS,
+  TODAY_PATHWAYS,
+  type LearningPathwayMeta,
+} from "../../data/courseMetadata";
+import {
   STEP_DEFS,
   latestLesson,
   lessonByDay,
@@ -11,48 +16,78 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 
-const STAGE_DESCRIPTIONS: Record<StepKey, { budget: number; desc: string }> = {
-  read: {
-    budget: 5,
-    desc: "定位本章工程背景与核心问题，明确要解决的系统边界。",
-  },
-  recall: {
-    budget: 4,
-    desc: "检索前置知识与上一课的关键契约，建立知识连接。",
-  },
-  concept: {
-    budget: 10,
-    desc: "拆解 C++ 语言机制、对象模型与零成本抽象底层原理。",
-  },
-  refactor: {
-    budget: 5,
-    desc: "对比脆弱的 C 写法与现代 C++ 重构方案，消除资源与类型隐患。",
-  },
-  design: {
-    budget: 6,
-    desc: "识别真实变化轴与稳定边界，判断是否需要 Pattern，并明确 owner、borrow 与 lifetime。",
-  },
-  embedded: {
-    budget: 6,
-    desc: "映射到 RTOS、Driver、Modem 或 Embedded Linux，检查线程、IRQ、WCET、内存与 teardown。",
-  },
-  rules: {
-    budget: 5,
-    desc: "提炼可落地的 Embedded C++ 编码规范与代码评审检查项。",
-  },
-  lab: {
-    budget: 9,
-    desc: "在浏览器工作区编译运行真实源码，结合输出与内存轨迹验证。",
-  },
-  review: {
-    budget: 4,
-    desc: "盘点常见误用与边界陷阱，防患未然。",
-  },
-  pass: {
-    budget: 6,
-    desc: "完成自测检验，能够独立解释并写出等价实现后再标记通过。",
-  },
-};
+function PathwayIcon({ id }: { id: LearningPathwayMeta["id"] }) {
+  switch (id) {
+    case "topics":
+      return (
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polygon points="12 2 2 7 12 12 22 7 12 2" />
+          <polyline points="2 17 12 22 22 17" />
+          <polyline points="2 12 12 17 22 12" />
+        </svg>
+      );
+    case "lab":
+      return (
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polyline points="4 17 10 11 4 5" />
+          <line x1="12" y1="19" x2="20" y2="19" />
+        </svg>
+      );
+    case "slides":
+      return (
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+          <line x1="8" y1="21" x2="16" y2="21" />
+          <line x1="12" y1="17" x2="12" y2="21" />
+        </svg>
+      );
+    case "rtos":
+      return (
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <rect x="2" y="4" width="20" height="16" rx="2" />
+          <path d="M6 8h4" />
+          <path d="M14 12h4" />
+          <path d="M8 16h6" />
+        </svg>
+      );
+  }
+}
 
 export function TodayView({
   currentDay,
@@ -166,94 +201,24 @@ export function TodayView({
         )}
 
         <nav id="pathways" className="guide-pathways" aria-label="学习入口">
-          <a href="?view=topics">
-            <span className="pathway-icon" aria-hidden="true">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polygon points="12 2 2 7 12 12 22 7 12 2" />
-                <polyline points="2 17 12 22 22 17" />
-                <polyline points="2 12 12 17 22 12" />
-              </svg>
-            </span>
-            <strong>
-              按专题深入 <span aria-hidden="true">→</span>
-            </strong>
-            <span>接口、所有权、嵌入式与系统工程</span>
-          </a>
-          <a href="?view=lab">
-            <span className="pathway-icon" aria-hidden="true">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="4 17 10 11 4 5" />
-                <line x1="12" y1="19" x2="20" y2="19" />
-              </svg>
-            </span>
-            <strong>
-              动手做实验 <span aria-hidden="true">→</span>
-            </strong>
-            <span>运行源码，观察输出与内存变化</span>
-          </a>
-          <a href="?view=slides">
-            <span className="pathway-icon" aria-hidden="true">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
-                <line x1="8" y1="21" x2="16" y2="21" />
-                <line x1="12" y1="17" x2="12" y2="21" />
-              </svg>
-            </span>
-            <strong>
-              浏览配套课件 <span aria-hidden="true">→</span>
-            </strong>
-            <span>Slidev 蓝图幻灯片、大纲对照与演讲要点</span>
-          </a>
-          <a href={`${import.meta.env.BASE_URL}rtos.html`}>
-            <span className="pathway-icon" aria-hidden="true">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="2" y="4" width="20" height="16" rx="2" />
-                <path d="M6 8h4" />
-                <path d="M14 12h4" />
-                <path d="M8 16h6" />
-              </svg>
-            </span>
-            <strong>
-              理解并发调度 <span aria-hidden="true">↗</span>
-            </strong>
-            <span>回放任务、同步与中断的执行过程</span>
-          </a>
+          {TODAY_PATHWAYS.map((item) => (
+            <a
+              key={item.id}
+              href={
+                item.isExternalBase
+                  ? `${import.meta.env.BASE_URL}${item.href}`
+                  : item.href
+              }
+            >
+              <span className="pathway-icon" aria-hidden="true">
+                <PathwayIcon id={item.id} />
+              </span>
+              <strong>
+                {item.title} <span aria-hidden="true">{item.arrow}</span>
+              </strong>
+              <span>{item.description}</span>
+            </a>
+          ))}
         </nav>
 
         <section id="learning-method" className="guide-section">

@@ -1,114 +1,184 @@
 /**
- * 可拖拽分栏比例 Hook（支持 localStorage 持久化与无障碍键盘调整）
+ * 可拖拽分栏比例 Hook（支持 localStorage 持久化、最小像素宽度约束、Pointer Capture 与键盘调整）
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface UseSplitPaneOptions {
-  storageKey: string;
-  defaultRatio?: number;
-  minRatio?: number;
-  maxRatio?: number;
-  direction?: "horizontal" | "vertical";
+  storageKey?: string;
+  defaultPercent?: number;
+  minPercent?: number;
+  maxPercent?: number;
+  minLeftWidth?: number;
+  minRightWidth?: number;
+  gutterWidth?: number;
+  keyboardStep?: number;
 }
 
 export function useSplitPane({
-  storageKey,
-  defaultRatio = 0.42,
-  minRatio = 0.24,
-  maxRatio = 0.72,
-  direction = "horizontal",
-}: UseSplitPaneOptions) {
-  const clamp = useCallback(
-    (val: number) => Math.min(maxRatio, Math.max(minRatio, val)),
-    [minRatio, maxRatio],
+  storageKey = "cpp-vis-split-percent",
+  defaultPercent = 42,
+  minPercent = 20,
+  maxPercent = 80,
+  minLeftWidth = 320,
+  minRightWidth = 360,
+  gutterWidth = 8,
+  keyboardStep = 2,
+}: UseSplitPaneOptions = {}) {
+  const clampPercent = useCallback(
+    (percent: number, containerWidth?: number) => {
+      let lower = minPercent;
+      let upper = maxPercent;
+      if (
+        containerWidth &&
+        containerWidth > minLeftWidth + minRightWidth + gutterWidth
+      ) {
+        const minFromLeft = (minLeftWidth / containerWidth) * 100;
+        const maxFromRight =
+          ((containerWidth - minRightWidth - gutterWidth) / containerWidth) *
+          100;
+        lower = Math.max(lower, minFromLeft);
+        upper = Math.min(upper, maxFromRight);
+      }
+      if (lower > upper) {
+        return Math.round(Math.min(maxPercent, Math.max(minPercent, percent)) * 10) / 10;
+      }
+      const clamped = Math.min(upper, Math.max(lower, percent));
+      return Math.round(clamped * 10) / 10;
+    },
+    [gutterWidth, maxPercent, minLeftWidth, minPercent, minRightWidth],
   );
 
-  const [ratio, setRatioState] = useState<number>(() => {
-    if (typeof window === "undefined") return defaultRatio;
-    try {
-      const saved = window.localStorage.getItem(storageKey);
-      const parsed = saved ? Number(saved) : NaN;
-      return Number.isFinite(parsed) ? clamp(parsed) : defaultRatio;
-    } catch {
-      return defaultRatio;
-    }
-  });
-
-  const [isDragging, setIsDragging] = useState(false);
-  const containerRef = useRef<HTMLElement | null>(null);
-
-  const setRatio = useCallback(
-    (next: number) => {
-      const clamped = clamp(next);
-      setRatioState(clamped);
+  const persist = useCallback(
+    (value: number) => {
       try {
-        window.localStorage.setItem(storageKey, String(clamped));
+        window.localStorage.setItem(storageKey, String(value));
       } catch {
         // ignore storage errors
       }
     },
-    [clamp, storageKey],
+    [storageKey],
   );
 
-  useEffect(() => {
-    if (!isDragging) return;
-
-    const handleMove = (e: PointerEvent) => {
-      const el = containerRef.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      if (direction === "horizontal") {
-        if (rect.width <= 0) return;
-        setRatio((e.clientX - rect.left) / rect.width);
-      } else {
-        if (rect.height <= 0) return;
-        setRatio((e.clientY - rect.top) / rect.height);
+  const [splitPercent, setSplitPercent] = useState<number>(() => {
+    if (typeof window === "undefined") return defaultPercent;
+    try {
+      const saved = window.localStorage.getItem(storageKey);
+      if (saved) {
+        const parsed = parseFloat(saved);
+        if (Number.isFinite(parsed) && parsed >= minPercent && parsed <= maxPercent) {
+          return parsed;
+        }
       }
-    };
+    } catch {
+      // ignore storage errors
+    }
+    return defaultPercent;
+  });
 
-    const handleUp = () => {
-      setIsDragging(false);
-    };
+  const [isResizing, setIsResizing] = useState(false);
+  const splitContainerRef = useRef<HTMLDivElement>(null);
+  const dragCleanupRef = useRef<(() => void) | null>(null);
 
-    window.addEventListener("pointermove", handleMove);
-    window.addEventListener("pointerup", handleUp);
+  useEffect(() => {
     return () => {
-      window.removeEventListener("pointermove", handleMove);
-      window.removeEventListener("pointerup", handleUp);
+      dragCleanupRef.current?.();
+      dragCleanupRef.current = null;
     };
-  }, [isDragging, direction, setRatio]);
+  }, []);
 
-  const onSplitterKeyDown = useCallback(
+  const handleResetSplit = useCallback(() => {
+    setSplitPercent(defaultPercent);
+    persist(defaultPercent);
+    window.dispatchEvent(new Event("resize"));
+  }, [defaultPercent, persist]);
+
+  const handlePointerDown = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (e.button !== 0) return;
+      const container = splitContainerRef.current;
+      if (!container) return;
+
+      e.preventDefault();
+      try {
+        (e.target as HTMLElement).setPointerCapture(e.pointerId);
+      } catch {
+        // ignore synthetic pointer events
+      }
+      setIsResizing(true);
+
+      const computePercent = (clientX: number) => {
+        const rect = container.getBoundingClientRect();
+        if (rect.width <= 0) return null;
+        const offsetX = clientX - rect.left;
+        return clampPercent((offsetX / rect.width) * 100, rect.width);
+      };
+
+      const onPointerMove = (moveEvent: PointerEvent) => {
+        const next = computePercent(moveEvent.clientX);
+        if (next !== null) setSplitPercent(next);
+      };
+
+      const cleanup = () => {
+        setIsResizing(false);
+        window.removeEventListener("pointermove", onPointerMove);
+        window.removeEventListener("pointerup", onPointerUp);
+        window.removeEventListener("pointercancel", onPointerUp);
+        dragCleanupRef.current = null;
+      };
+
+      const onPointerUp = (upEvent: PointerEvent) => {
+        try {
+          (upEvent.target as HTMLElement)?.releasePointerCapture?.(
+            upEvent.pointerId,
+          );
+        } catch {
+          // ignore
+        }
+        cleanup();
+        const finalPercent = computePercent(upEvent.clientX);
+        if (finalPercent !== null) {
+          setSplitPercent(finalPercent);
+          persist(finalPercent);
+        }
+        window.dispatchEvent(new Event("resize"));
+      };
+
+      dragCleanupRef.current?.();
+      dragCleanupRef.current = cleanup;
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp);
+      window.addEventListener("pointercancel", onPointerUp);
+    },
+    [clampPercent, persist],
+  );
+
+  const handleSplitKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      const step = 0.03;
-      if (direction === "horizontal") {
-        if (e.key === "ArrowLeft") {
-          e.preventDefault();
-          setRatio(ratio - step);
-        } else if (e.key === "ArrowRight") {
-          e.preventDefault();
-          setRatio(ratio + step);
-        }
-      } else {
-        if (e.key === "ArrowUp") {
-          e.preventDefault();
-          setRatio(ratio - step);
-        } else if (e.key === "ArrowDown") {
-          e.preventDefault();
-          setRatio(ratio + step);
-        }
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        e.preventDefault();
+        const delta = e.key === "ArrowLeft" ? -keyboardStep : keyboardStep;
+        const width = splitContainerRef.current?.getBoundingClientRect().width;
+        setSplitPercent((prev) => {
+          const next = clampPercent(prev + delta, width);
+          persist(next);
+          return next;
+        });
+        window.dispatchEvent(new Event("resize"));
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        handleResetSplit();
       }
     },
-    [direction, ratio, setRatio],
+    [clampPercent, handleResetSplit, keyboardStep, persist],
   );
 
   return {
-    ratio,
-    setRatio,
-    isDragging,
-    containerRef,
-    startDrag: () => setIsDragging(true),
-    onSplitterKeyDown,
+    splitPercent,
+    isResizing,
+    splitContainerRef,
+    handlePointerDown,
+    handleResetSplit,
+    handleSplitKeyDown,
   };
 }

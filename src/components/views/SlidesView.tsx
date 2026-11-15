@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useAsyncContent } from "../../hooks/useAsyncContent";
 import { Icon } from "../common/Icon";
 import { moveTabFocus } from "../../lib/keyboardTabs";
 import { PageHeader } from "../common/PageHeader";
@@ -8,7 +9,7 @@ import { SlideStage } from "../slides/SlideStage";
 import { SlideGrid } from "../slides/SlideGrid";
 import { SlideSyllabus } from "../slides/SlideSyllabus";
 import { SlidevControls } from "../slides/SlidevControls";
-import "../../slides.css";
+import "../../styles/slides.css";
 
 const TAB_MODES = ["presenter", "grid", "syllabus", "live"] as const;
 type TabMode = (typeof TAB_MODES)[number];
@@ -52,9 +53,13 @@ export function SlidesView() {
     setActiveTab(resolveTab(params.get("tab")));
   }, [params, selectedDeck?.totalSlides]);
 
-  useEffect(() => {
-    void hydrateSlides();
-  }, [isSlidesReady]);
+  const { status: slidesStatus, retry: retrySlides } = useAsyncContent(
+    hydrateSlides,
+    undefined,
+    [],
+    { enabled: !isSlidesReady, initialReady: isSlidesReady },
+  );
+  const loadError = slidesStatus === "error";
 
   if (!isSlidesReady || !selectedDeck) {
     return (
@@ -63,9 +68,22 @@ export function SlidesView() {
           title="架构与设计模式课件"
           description="配套工程蓝图风格的交互式幻灯片，深入剖析 C++ 语言机制、依赖管理、设计模式与架构权衡。"
         />
-        <section className="product-loading" role="status">
-          正在加载课件…
-        </section>
+        {loadError ? (
+          <div className="topic-notice" role="alert">
+            <p>课件加载失败，请检查网络后重试。</p>
+            <button
+              type="button"
+              className="ghost-button"
+              onClick={retrySlides}
+            >
+              重新加载
+            </button>
+          </div>
+        ) : (
+          <section className="product-loading" role="status">
+            正在加载课件…
+          </section>
+        )}
       </div>
     );
   }

@@ -1,44 +1,25 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useAsyncContent } from "../../hooks/useAsyncContent";
+import { useHeadingScrollSpy } from "../../hooks/useHeadingScrollSpy";
 import { loadGuideline } from "../../lib/course";
 import { PageHeader } from "../common/PageHeader";
-import { Markdown } from "../Markdown";
+import { Markdown } from "../markdown/Markdown";
 
 export function GuidelinesView() {
   const articleRef = useRef<HTMLElement>(null);
   const indexRef = useRef<HTMLDetailsElement>(null);
-  const [guideline, setGuideline] = useState<string>("");
-  useEffect(() => {
-    loadGuideline().then(setGuideline).catch(() => setGuideline(""));
-  }, []);
-  const [headings, setHeadings] = useState<
-    { id: string; title: string; level: number }[]
-  >([]);
-  const [activeId, setActiveId] = useState("");
+  const {
+    data: guideline,
+    status,
+    retry,
+  } = useAsyncContent(loadGuideline, "", []);
 
-  useEffect(() => {
-    const nodes = Array.from(
-      articleRef.current?.querySelectorAll<HTMLHeadingElement>(
-        "h2[id], h3[id]",
-      ) ?? [],
-    );
-    setHeadings(
-      nodes.map((heading) => ({
-        id: heading.id,
-        title: heading.textContent ?? "",
-        level: heading.tagName === "H3" ? 3 : 2,
-      })),
-    );
-    const updateActive = () => {
-      const current =
-        [...nodes]
-          .reverse()
-          .find((node) => node.getBoundingClientRect().top <= 140) ?? nodes[0];
-      setActiveId(current?.id ?? "");
-    };
-    updateActive();
-    window.addEventListener("scroll", updateActive, { passive: true });
-    return () => window.removeEventListener("scroll", updateActive);
-  }, []);
+  const { headings, activeId } = useHeadingScrollSpy({
+    containerRef: articleRef,
+    selector: "h2[id], h3[id]",
+    threshold: 140,
+    contentKey: guideline,
+  });
 
   useEffect(() => {
     const desktop = window.matchMedia("(min-width: 1100px)");
@@ -57,8 +38,8 @@ export function GuidelinesView() {
         description="复习类型安全、资源管理与嵌入式开发中的编码规范，结合评审清单与每日实验落地。"
       />
       <div className="guidelines-layout">
-        {headings.length > 0 && (
-          <aside className="guidelines-aside" aria-label="规范目录与扩展阅读">
+        <aside className="guidelines-aside" aria-label="规范目录与扩展阅读">
+          {headings.length > 0 && (
             <details ref={indexRef} className="reading-index">
               <summary>
                 <span>查找规范章节</span>
@@ -89,21 +70,38 @@ export function GuidelinesView() {
                 ))}
               </nav>
             </details>
-            <div className="guidelines-related-card">
-              <span className="page-eyebrow">配套资源</span>
-              <a href="?view=topics&topic=guidelines/review-rubric.md">
-                <strong>五项评审与规则案例 →</strong>
-                <span>对照反例、推荐写法与例外条件</span>
-              </a>
-              <a href="?view=topics&topic=docs/content-map.md">
-                <strong>课程与规范对照索引 →</strong>
-                <span>按规则定位对应课程与可运行实验</span>
-              </a>
-            </div>
-          </aside>
-        )}
+          )}
+          <div className="guidelines-related-card">
+            <span className="page-eyebrow">配套资源</span>
+            <a href="?view=topics&topic=guidelines/review-rubric.md">
+              <strong>五项评审与规则案例 →</strong>
+              <span>对照反例、推荐写法与例外条件</span>
+            </a>
+            <a href="?view=topics&topic=docs/content-map.md">
+              <strong>课程与规范对照索引 →</strong>
+              <span>按规则定位对应课程与可运行实验</span>
+            </a>
+          </div>
+        </aside>
         <article ref={articleRef} className="document-card guidelines-document">
-          <Markdown embedDocument>{guideline}</Markdown>
+          {status === "loading" ? (
+            <p className="product-loading" role="status">
+              正在加载编码规范…
+            </p>
+          ) : status === "error" ? (
+            <div className="topic-notice" role="alert">
+              <p>编码规范加载失败，请检查网络后重试。</p>
+              <button
+                type="button"
+                className="ghost-button"
+                onClick={retry}
+              >
+                重新加载
+              </button>
+            </div>
+          ) : (
+            <Markdown embedDocument>{guideline}</Markdown>
+          )}
         </article>
       </div>
     </div>

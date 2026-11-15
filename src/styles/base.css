@@ -8,7 +8,7 @@
   --canvas: #f6f7f9;
   --surface: #ffffff;
   --ink: #15191f;
-  --muted: #66717e;
+  --muted: #5e6976;
   --line: #dfe3e8;
   --line-strong: #c7cdd4;
   --blue: #00599c;
@@ -24,7 +24,7 @@
   --font-aux: 13px;
   --font-sans: "Noto Sans TC Variable", "Noto Sans TC", "Noto Sans CJK TC", "Source Han Sans TC", "Noto Sans CJK SC", "Noto Sans SC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-family: var(--font-sans);
-  --mono: "IBM Plex Mono", "Noto Sans Mono CJK SC", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --mono: "IBM Plex Mono", "JetBrains Mono", "Noto Sans Mono CJK SC", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
   --sidebar: 220px;
   --header-height: 56px;
   --content-max: 1120px;
@@ -45,7 +45,7 @@
   --font-h1: 32px;
   --font-h2: 24px;
   --line-height-base: 1.75;
-  --scroll-thumb: #a5afb9;
+  --scroll-thumb: #7e8a97;
   --scroll-track: var(--canvas);
   --scroll-hover: var(--muted);
   --scroll-active: var(--blue);
@@ -88,7 +88,7 @@ button {
 
 button:focus-visible,
 summary:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--blue) 30%, transparent);
+  outline: 2px solid var(--blue);
   outline-offset: 2px;
 }
 
@@ -213,6 +213,7 @@ summary:focus-visible {
 
 .sidebar-status strong {
   font: 600 13px/1.3 var(--mono);
+  font-variant-numeric: tabular-nums;
   color: var(--ink);
 }
 
@@ -1165,6 +1166,7 @@ summary:focus-visible {
   display: block;
   margin: 8px 0;
   font-size: 25px;
+  font-variant-numeric: tabular-nums;
 }
 
 .progress-summary p {
@@ -1563,8 +1565,9 @@ summary:focus-visible {
   tab-size: 2;
 }
 
-.code-panel.editable textarea:focus {
-  box-shadow: inset 0 0 0 1px #38506a;
+.code-panel.editable textarea:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: -2px;
 }
 
 .code-panel.editable footer {
@@ -1902,4 +1905,16 @@ input, textarea {
 }
 *::-webkit-scrollbar-thumb:active {
   background: var(--scroll-active);
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -1,5 +1,5 @@
 import { lazy, useEffect, useMemo, useState, type ReactNode } from "react";
-import { DeferredContent } from "./components/DeferredContent";
+import { DeferredContent } from "./components/markdown/DeferredContent";
 import { Shell } from "./components/Shell";
 import {
   NAV,
@@ -20,10 +20,15 @@ import { useLearningProgress } from "./lib/progress";
 import { TodayView } from "./components/views/TodayView";
 import { LessonsView } from "./components/views/LessonsView";
 import { LessonView } from "./components/views/LessonView";
-import { LabView } from "./components/views/LabView";
 import { ReviewView } from "./components/views/ReviewView";
 import { GuidelinesView } from "./components/views/GuidelinesView";
 import { FaqView } from "./components/views/FaqView";
+
+const LabView = lazy(() =>
+  import("./components/views/LabView").then((module) => ({
+    default: module.LabView,
+  })),
+);
 
 const VisualizerView = lazy(() =>
   import("./components/views/VisualizerView").then((module) => ({
@@ -43,12 +48,15 @@ const BookletsView = lazy(() =>
 );
 
 const Topics = lazy(() =>
-  import("./components/Topics").then((module) => ({ default: module.Topics })),
+  import("./components/views/TopicsView").then((module) => ({
+    default: module.TopicsView,
+  })),
 );
-export const preloadCodeSearch = () => import("./components/CodeSearch");
+export const preloadCodeSearch = () =>
+  import("./components/views/CodeSearchView");
 const CodeSearch = lazy(() =>
   preloadCodeSearch().then((module) => ({
-    default: module.CodeSearch,
+    default: module.CodeSearchView,
   })),
 );
 
@@ -202,11 +210,13 @@ export default function App() {
       break;
     case "lab":
       page = selectedLesson ? (
-        <LabView
-          lesson={selectedLesson}
-          markStep={progress.markStep}
-          isStepComplete={progress.isStepComplete}
-        />
+        <DeferredContent key="lab" label="实验工作区">
+          <LabView
+            lesson={selectedLesson}
+            markStep={progress.markStep}
+            isStepComplete={progress.isStepComplete}
+          />
+        </DeferredContent>
       ) : null;
       break;
     case "review":

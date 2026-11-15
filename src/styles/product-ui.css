@@ -925,6 +925,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .nav-item,
@@ -1104,6 +1105,7 @@
   color: var(--ink);
   font-size: 0.8125rem;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .guide-current-lesson {
@@ -1385,6 +1387,7 @@
   color: var(--muted);
   font-size: 0.8125rem;
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
 .topic-collection h2 a {
@@ -1473,6 +1476,7 @@
   color: var(--muted);
   font-size: 0.75rem;
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
 .guidelines-page .reading-index nav {

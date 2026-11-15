@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { CHINESE_TITLES } from "../data/courseMetadata";
 import { fetchContentText, loadContentManifest } from "./contentRuntime";
 import type { ContentLesson } from "@/types/contentManifest";
 
@@ -63,6 +64,10 @@ export interface Lesson {
   labCode?: string;
   labChecklist: string[];
   nextSummary?: string;
+  stats?: {
+    minutes: number;
+    wordCount: number;
+  };
 }
 
 const mainCppCache = new Map<string, string>();
@@ -167,16 +172,6 @@ function splitSections(body: string): {
   });
   return { sections, steps };
 }
-
-const CHINESE_TITLES: Record<number, string> = {
-  33: "多态与虚函数接口",
-  45: "泛型数据结构与算法：模板应用",
-  46: "防御式设计：提供完备的校验与防护机制",
-  47: "为扩展性而设计：开闭原则与演进架构",
-  48: "设计易用接口：一致性与人体工学",
-  49: "面向受众与目标场景的接口设计",
-  50: "防呆接口设计：让正确使用变得自然，让错误使用无法编译",
-};
 
 function stripDayPrefix(title: string, day: number): string {
   return title
@@ -331,6 +326,43 @@ export function loadProgress(): Promise<string> {
   return fetchContentText("progress.md");
 }
 
+function buildLessonFromManifestEntry(entry: ContentLesson): Lesson {
+  const day = entry.number;
+  const chapter = Number(entry.chapter) || undefined;
+  const lab = typeof entry.lab === "string" ? entry.lab : "";
+  const labPath = lab && lab !== "rtos-sim" ? lab : undefined;
+  const labMode = lab === "rtos-sim" ? ("rtos-sim" as const) : undefined;
+  return {
+    day,
+    week: Number(entry.week) || Math.ceil(day / 7),
+    part:
+      String(entry.part || chapterToPart(chapter) || "").replace(
+        /^Part\s+/i,
+        "",
+      ) || undefined,
+    chapter,
+    chapterTitle:
+      typeof entry.chapterTitle === "string" ? entry.chapterTitle : undefined,
+    title: stripDayPrefix(entry.title || `Day ${day}`, day),
+    duration: Number(entry.duration) || 60,
+    status: entry.status || "published",
+    topics: entry.topics ?? [],
+    guidelines: entry.guidelines ?? [],
+    labPath,
+    labMode,
+    rtosScenario:
+      typeof entry.rtosScenario === "string" ? entry.rtosScenario : undefined,
+    path: entry.path,
+    raw: "",
+    sections: [],
+    steps: day >= TEN_STAGE_START_DAY ? STEP_DEFS : LEGACY_STEP_DEFS,
+    labCode: undefined,
+    labChecklist: [],
+    nextSummary: undefined,
+    stats: entry.stats,
+  };
+}
+
 let hydrating: Promise<void> | null = null;
 
 export function hydrateCourses(): Promise<void> {
@@ -338,33 +370,7 @@ export function hydrateCourses(): Promise<void> {
     const manifest = await loadContentManifest();
     manifestLessons.push(...manifest.lessons);
     for (const entry of manifest.lessons) {
-      const day = entry.number;
-      const chapter = Number(entry.chapter) || undefined;
-      const lab = typeof entry.lab === "string" ? entry.lab : "";
-      const labPath = lab && lab !== "rtos-sim" ? lab : undefined;
-      const labMode = lab === "rtos-sim" ? ("rtos-sim" as const) : undefined;
-      lessons.push({
-        day,
-        week: Number(entry.week) || Math.ceil(day / 7),
-        part: String(entry.part || chapterToPart(chapter) || "").replace(/^Part\s+/i, "") || undefined,
-        chapter,
-        chapterTitle: typeof entry.chapterTitle === "string" ? entry.chapterTitle : undefined,
-        title: stripDayPrefix(entry.title || `Day ${day}`, day),
-        duration: Number(entry.duration) || 60,
-        status: entry.status || "published",
-        topics: entry.topics ?? [],
-        guidelines: entry.guidelines ?? [],
-        labPath,
-        labMode,
-        rtosScenario: typeof entry.rtosScenario === "string" ? entry.rtosScenario : undefined,
-        path: entry.path,
-        raw: "",
-        sections: [],
-        steps: day >= TEN_STAGE_START_DAY ? STEP_DEFS : LEGACY_STEP_DEFS,
-        labCode: undefined,
-        labChecklist: [],
-        nextSummary: undefined,
-      });
+      lessons.push(buildLessonFromManifestEntry(entry));
     }
     lessons.sort((a, b) => a.day - b.day);
     bumpCourseVersion();

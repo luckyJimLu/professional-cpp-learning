@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { hljs } from "../lib/hljs";
+import { hljs } from "../../lib/hljs";
 import "highlight.js/styles/github-dark.css";
 
 export function HighlightedCode({

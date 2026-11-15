@@ -6,7 +6,7 @@ import {
 } from "../../lib/course";
 import { calculateReadingStats } from "../../lib/readingTime";
 import { CompileRail } from "../common/CompileRail";
-import { Markdown } from "../Markdown";
+import { Markdown } from "../markdown/Markdown";
 import { navigate as navigateRoute } from "../../lib/navigation";
 import {
   resolveContentHref,
@@ -113,8 +113,8 @@ export function LessonView({
   };
 
   const readingStats = useMemo(
-    () => calculateReadingStats(lesson.raw),
-    [lesson.raw],
+    () => lesson.stats ?? calculateReadingStats(lesson.raw),
+    [lesson.raw, lesson.stats],
   );
 
   return (
@@ -187,6 +187,11 @@ export function LessonView({
                   <button
                     className="review-later"
                     aria-pressed={queuedReview.has(section.step!)}
+                    aria-label={
+                      queuedReview.has(section.step!)
+                        ? `已加入复习：${definition.title}`
+                        : `稍后复习：${definition.title}`
+                    }
                     onClick={() => {
                       addWeakPoint(
                         `Day ${lesson.day} · ${definition.title} · ${lesson.title}`,
@@ -204,6 +209,11 @@ export function LessonView({
                   </button>
                   <button
                     className={cx("section-check", complete && "is-complete")}
+                    aria-label={
+                      complete
+                        ? `✓ 已完成：${definition.title}`
+                        : `完成本节：${definition.title}`
+                    }
                     onClick={() => completeStep(section.step!)}
                     type="button"
                   >
@@ -229,6 +239,12 @@ export function LessonView({
 
         <footer className="lesson-footer">
           <div className="lesson-source-bar">
+            <a
+              href={`?view=lab&day=${lesson.day}`}
+              className="primary-button"
+            >
+              前往本课实验 →
+            </a>
             <a
               href={`https://github.com/luckyJimLu/professional-cpp-learning/blob/main/${lesson.path}`}
               target="_blank"
