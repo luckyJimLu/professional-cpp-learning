@@ -1,11 +1,11 @@
 # Professional C++ 学习进度
 
-> 状态校验日期：2026-11-11。每次发布前重新扫描 `daily/day-*.md`；当前最大 Day 为 **78**，没有覆盖或重复既有课程。
+> 状态校验日期：2026-11-19。每次发布前重新扫描 `daily/day-*.md`；当前最大 Day 为 **79**，没有覆盖或重复既有课程。
 
-- **已发布课程：Day 1–78**
-- **最新课程：Day 78 · Assignment Operators：Copy / Move Assignment 与资源语义**
-- **下一课：Day 79 · Chapter 9 · Mastering Classes and Objects（原书 p.295 起；生成前核验本章首个小节）**
-- **主教材后续：Chapter 9 · Mastering Classes and Objects（p.295 起；Chapter 8 Assignment Operators 已完成）**
+- **已发布课程：Day 1–79**
+- **最新课程：Day 79 · Friends：受控访问与最小信任边界**
+- **下一课：Day 80 · Chapter 9 · Dynamic Memory Allocation in Objects（Friends 小节已完成，按原书顺序继续）**
+- **主教材后续：Chapter 9 · Mastering Classes and Objects（p.295–355；已完成 Friends）**
 - **主教材：** Marc Gregoire, *Professional C++, Sixth Edition*（C++23）
 - **唯一课程源：** 本仓库 Markdown；不发送邮件。
 
@@ -20,6 +20,7 @@
 | Chapter 6 | 41–55 | 复用、模板、可扩展接口与 SOLID |
 | Chapter 7 | 56–66 | 内存管理、RAII、智能指针、PMR、固定存储与生命周期 |
 | Chapter 8 | 67–78 | 类封装、对象存储期、构造、成员初始化、复制、列表构造、构造委托、转换构造、explicit、编译器生成的构造函数、Object Destruction、Assignment Operators（copy/move assignment）与第 11 周对象语义复盘 |
+| Chapter 9 | 79– | Friends：friend function / friend class、最小授权与封装边界 |
 
 ## 完整课程索引
 
@@ -105,6 +106,7 @@
 | 076 | 2026-11-09 | Chapter 8 | Object Destruction：析构时机、成员逆序销毁、virtual destructor、Stop(timeout) 与 no-throw fallback；object-destruction, destructor-order, raii-teardown | raii, composition, adapter, callback-teardown | [Day 076](daily/day-076-object-destruction-raii-teardown.md) |
 | 077 | 2026-11-10 | Chapter 8 Review | 第 11 周复盘：Copy、Construction、Destruction 与 Lifetime Contract；week-review, object-semantics, copy-contract, callback-lifetime | rule-of-zero, composition, adapter, explicit-lifetime | [Day 077](daily/day-077-week11-review-constructors-destruction.md) |
 | 078 | 2026-11-11 | Chapter 8 | Assignment Operators：copy/move assignment、self-assignment、default/delete、唯一资源转移；assignment-operators, copy-assignment, move-assignment | value-semantics, RAII, ownership-transfer | [Day 078](daily/day-078-assignment-operators.md) |
+| 079 | 2026-11-19 | Chapter 9 | Friends：friend function / friend class、最小授权、封装与内部表示访问；friends, encapsulation, access-control | minimal-friendship, stable-interface, explicit-borrow | [Day 079](daily/day-079-friends-minimal-access.md) |
 
 ## 专题
 
