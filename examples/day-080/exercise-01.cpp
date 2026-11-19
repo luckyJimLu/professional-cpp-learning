@@ -1,17 +1,13 @@
 #include <cstddef>
 #include <iostream>
 #include <memory>
-#include <utility>
-class DynamicBuffer {
+class Buffer {
 public:
- explicit DynamicBuffer(std::size_t n) : data_(n ? std::make_unique<std::byte[]>(n) : nullptr), size_(n) {}
- DynamicBuffer(const DynamicBuffer&) = delete;
- DynamicBuffer& operator=(const DynamicBuffer&) = delete;
- DynamicBuffer(DynamicBuffer&&) noexcept = default;
- DynamicBuffer& operator=(DynamicBuffer&&) noexcept = default;
- std::size_t Size() const noexcept { return size_; }
- bool Write(std::size_t i, std::byte v) noexcept { if (i >= size_) return false; data_[i] = v; return true; }
- std::byte Read(std::size_t i) const noexcept { return i < size_ ? data_[i] : std::byte{0}; }
-private: std::unique_ptr<std::byte[]> data_; std::size_t size_{0U};
+ explicit Buffer(std::size_t n): data_(std::make_unique<int[]>(n)), size_(n) {}
+ Buffer(const Buffer&)=delete;
+ Buffer& operator=(const Buffer&)=delete;
+ bool Set(std::size_t i,int v) noexcept { if(i>=size_) return false; data_[i]=v; return true; }
+ int Sum() const noexcept { int s=0; for(std::size_t i=0;i<size_;++i) s+=data_[i]; return s; }
+private: std::unique_ptr<int[]> data_; std::size_t size_;
 };
-int main() { DynamicBuffer rx{16U}; const bool ok=rx.Write(3U,std::byte{0x2AU}); std::cout<<"size="<<rx.Size()<<" wrote="<<ok<<" value="<<std::to_integer<int>(rx.Read(3U))<<'\n'; DynamicBuffer moved{std::move(rx)}; std::cout<<"moved_size="<<moved.Size()<<'\n'; }
+int main(){ Buffer b{4U}; const bool ok=b.Set(2U,7); std::cout<<"set="<<ok<<" sum="<<b.Sum()<<'\n'; }
