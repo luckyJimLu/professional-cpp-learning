@@ -26,6 +26,10 @@ export function Shell({
       ".shell-context",
       ".sidebar",
       ".main-shell",
+      // 主内容区本身也要挂 inert：只给祖先 .main-shell 挂 inert 虽能
+      // 让子树不可交互，但 #main-content 上没有属性，抽屉的焦点管理
+      // 与测试都以它为准。
+      "#main-content",
     ];
     for (const selector of selectors) {
       const el = document.querySelector<HTMLElement>(selector);

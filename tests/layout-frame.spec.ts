@@ -102,7 +102,7 @@ test("topics catalog consolidates domains and renames books option to 参考书�
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/?view=topics");
-  await expect(page.locator("#topic-category option")).toHaveCount(7); // 等待内容导水完成后应用挂载
+  await expect(page.locator("#topic-category option")).toHaveCount(9); // 等待内容导水完成后应用挂载
   const options = await page
     .locator("#topic-category option")
     .allInnerTexts();
@@ -113,6 +113,8 @@ test("topics catalog consolidates domains and renames books option to 参考书�
     "嵌入式系统",
     "设计模式",
     "C++ 并发编程",
+    "专题精读",
+    "标准库实现",
     "参考书籍",
   ]);
 });

@@ -90,11 +90,11 @@ test("lesson review feedback leads back to a real course and can be cleared", as
 }) => {
   await page.goto("/?view=lesson&day=54");
   await page
-    .getByRole("button", { name: "稍后复习", exact: true })
+    .getByRole("button", { name: /^稍后复习/ })
     .first()
     .click();
   await expect(
-    page.getByRole("button", { name: "已加入复习", exact: true }),
+    page.getByRole("button", { name: /^已加入复习/ }),
   ).toHaveAttribute("aria-pressed", "true");
   await page.goto("/?view=review");
   await expect(page.locator(".review-point-list")).toContainText("Day 54");

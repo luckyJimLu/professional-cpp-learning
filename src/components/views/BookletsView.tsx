@@ -108,7 +108,10 @@ export function BookletsView() {
     if (!query.trim()) return booklet.sections.flatMap((s) => s.entries);
     if (searchScope === "all") return allMatches;
     return allMatches.filter((entry) => entry.bookId === searchScope);
-  }, [query, booklet, allMatches, searchScope]);
+    // isReady 必须在依赖里：hydrateBooklets 是原地修改 booklet.sections，
+    // booklet 对象引用不变；没有 isReady，首屏挂载时算出的空列表在水合
+    // 完成后永远不会重算，小册子正文一直显示 0 条。
+  }, [query, booklet, allMatches, searchScope, isReady]);
   const visible = matches;
   const visibleIds = useMemo(
     () => new Set(visible.map((entry) => entry.id)),

@@ -14,6 +14,7 @@ test("content map links to environment and runnable cross-module labs", async ({
   await article.getByRole("link", { name: "内容总索引", exact: true }).click();
   await article
     .getByRole("link", { name: "Modem 数据通道贯穿实验", exact: true })
+    .first()
     .click();
   await expect(article.locator("h1")).toContainText("贯穿实验");
   const starter = article.getByRole("link", { name: "starter", exact: true });

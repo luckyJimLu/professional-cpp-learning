@@ -30,7 +30,7 @@ export function CodeSearchView() {
     status: "copied" | "error";
   } | null>(null);
   const previewTitleRef = useRef<HTMLHeadingElement>(null);
-  const selectedResultRef = useRef<HTMLButtonElement | null>(null);
+  const selectedResultRef = useRef<HTMLElement | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const composingRef = useRef(false);
   const debounceTimerRef = useRef<number | null>(null);
@@ -394,6 +394,17 @@ export function CodeSearchView() {
               <div
                 className={`search-result${isSelected ? " border-[var(--blue)]" : ""}`}
                 key={`${entry.id}:${lineIndex}`}
+                tabIndex={-1}
+                onClick={(event) => {
+                  // 整行可点：点标题按钮或代码片段都打开预览；关闭预览后
+                  // 焦点回到这一行（div 需 tabIndex 才能接收焦点）。
+                  selectedResultRef.current = event.currentTarget;
+                  setCopyFeedback(null);
+                  navigate({
+                    code: entry.id,
+                    line: String(entry.line + lineIndex),
+                  });
+                }}
               >
                 <div className="result-header">
                   <span className="result-meta">
@@ -416,8 +427,7 @@ export function CodeSearchView() {
                   type="button"
                   className="w-full cursor-pointer border-0 bg-transparent p-0 text-left max-md:min-h-[44px]"
                   aria-pressed={isSelected}
-                  onClick={(event) => {
-                    selectedResultRef.current = event.currentTarget;
+                  onClick={() => {
                     setCopyFeedback(null);
                     navigate({
                       code: entry.id,
