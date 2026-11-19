@@ -1995,7 +1995,39 @@
       ],
       "lab": "examples/day-078/main.cpp",
       "previous": 77,
-      "next": 79
+      "next": 80
+    },
+    {
+      "path": "daily/day-079-friends-minimal-access.md",
+      "week": 12,
+      "part": "III",
+      "chapter": 9,
+      "chapter_title": "Mastering Classes and Objects",
+      "title": "Friends · Controlled Access and Minimal Trust Boundaries",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-19",
+      "patterns": [
+        "minimal-friendship",
+        "stable-interface",
+        "adapter"
+      ],
+      "topics": [
+        "friends",
+        "friend-function",
+        "friend-class",
+        "encapsulation",
+        "access-control",
+        "borrow-lifetime"
+      ],
+      "guidelines": [
+        "minimize-friendship",
+        "friend-is-not-ownership",
+        "no-async-borrow-escape"
+      ],
+      "lab": "examples/day-079/main.cpp",
+      "previous": 78,
+      "next": 80
     }
   ]
 }
