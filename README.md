@@ -8,11 +8,11 @@
 
 ## 当前进度
 
-- **已发布：Day 1–79**
-- **当前课程：Day 79 · Friends：受控访问与最小信任边界（已发布）**
-- **下一课：Day 80 · Chapter 9 · Dynamic Memory Allocation in Objects**
+- **已发布：Day 1–86**
+- **当前课程：Day 86 · Operator Overloading：让语法糖保持类型语义（已发布）**
+- **下一课：Day 87 · Chapter 9 · Building Stable Interfaces**
 - **主教材后续：Chapter 9 · Mastering Classes and Objects（p.295 起；Chapter 8 已完成）**
-- 当前主线：**Chapter 9 · Mastering Classes and Objects（Friends 已完成）**
+- 当前主线：**Chapter 9 · Mastering Classes and Objects（Day 79–86 已完成至 Operator Overloading）**
 - 更新方式：**GitHub Markdown only**
 - Gmail 邮件投递：**已停止**
 
@@ -33,6 +33,13 @@
 
 ## 最近课程
 
+- [Day 86 · Operator Overloading：让语法糖保持类型语义](daily/day-086-operator-overloading.md)
+- [Day 85 · Enumerations Inside Classes：把状态域绑定到类型边界](daily/day-085-enumerations-inside-classes.md)
+- [Day 84 · Nested Classes：把辅助类型收进所有权边界](daily/day-084-nested-classes.md)
+- [Day 83 · Different Kinds of Data Members](daily/day-083-different-kinds-of-data-members.md)
+- [Day 82 · constexpr and consteval](daily/day-082-constexpr-consteval.md)
+- [Day 81 · More About Member Functions](daily/day-081-more-about-member-functions.md)
+- [Day 80 · Dynamic Memory Allocation in Objects](daily/day-080-dynamic-memory-in-objects.md)
 - [Day 79 · Friends：受控访问与最小信任边界](daily/day-079-friends-minimal-access.md)
 - [Day 78 · Assignment Operators：Copy / Move Assignment 与资源语义](daily/day-078-assignment-operators.md)
 - [Day 77 · 第 11 周复盘：Copy、Construction、Destruction 与 Lifetime Contract](daily/day-077-week11-review-constructors-destruction.md)
@@ -75,7 +82,7 @@
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-078-*.md
+│   └── day-086-*.md
 ├── examples/
 │   └── day-XXX/
 ├── topics/
