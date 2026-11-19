@@ -1,0 +1,1 @@
+TelemetrySnapshot 可被多个 task 读取，但只由采集 task 更新。设计 API 并说明 const 无法替代哪些同步机制。
