@@ -1,0 +1,1 @@
+Modem 状态来自 UART byte。设计 DecodeState，区分未知值与合法状态。
