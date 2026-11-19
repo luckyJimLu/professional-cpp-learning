@@ -1,14 +1,11 @@
 #include <iostream>
-#include <string>
-#include <string_view>
-#include <utility>
-class CommandName {
+class SensorReading {
 public:
- explicit CommandName(std::string v): value_(std::move(v)) {}
- std::string_view View() const noexcept { return value_; }
- static bool IsAllowed(std::string_view v) noexcept { return v=="AT" || v=="AT+CSQ"; }
- const std::string& Get() const & noexcept { return value_; }
- std::string Take() && noexcept { return std::move(value_); }
-private: std::string value_;
+ explicit SensorReading(int v): value_(v) {}
+ int Value() const noexcept { return value_; }
+ void Set(int v) noexcept { value_=v; }
+ int AverageWith(const SensorReading& other) const noexcept { return (value_+other.value_)/2; }
+ static bool IsInRange(int v) noexcept { return v>=0 && v<=1000; }
+private: int value_;
 };
-int main(){ CommandName c{"AT+CSQ"}; std::cout<<"allowed="<<CommandName::IsAllowed(c.View())<<" view="<<c.Get()<<'\n'; std::cout<<"taken="<<std::move(c).Take()<<'\n'; }
+int main(){ const SensorReading a{40}; const SensorReading b{44}; std::cout<<"valid="<<SensorReading::IsInRange(a.Value())<<" average="<<a.AverageWith(b)<<'\n'; }
