@@ -11,7 +11,7 @@
 - **已发布：Day 1–86**
 - **当前课程：Day 86 · Operator Overloading：让语法糖保持类型语义（已发布）**
 - **下一课：Day 87 · Chapter 9 · Building Stable Interfaces**
-- **主教材后续：Chapter 9 · Mastering Classes and Objects（p.295 起；Chapter 8 已完成）**
+- **主教材后续：Chapter 9 · Mastering Classes and Objects（p.295–355；Day 79–86 已完成至 Operator Overloading）**
 - 当前主线：**Chapter 9 · Mastering Classes and Objects（Day 79–86 已完成至 Operator Overloading）**
 - 更新方式：**GitHub Markdown only**
 - Gmail 邮件投递：**已停止**
