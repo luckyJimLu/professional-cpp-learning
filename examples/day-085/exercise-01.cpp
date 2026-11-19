@@ -1,10 +1,9 @@
 #include <cstdint>
 #include <iostream>
 #include <optional>
-class Modem {
+class DmaChannel {
 public:
- enum class State: std::uint8_t { Offline=0U, Registering=1U, Online=2U };
- static std::optional<State> DecodeState(std::uint8_t raw) noexcept { switch(raw){ case 0U:return State::Offline; case 1U:return State::Registering; case 2U:return State::Online; default:return std::nullopt; } }
- static const char* ToString(State s) noexcept { switch(s){ case State::Offline:return "offline"; case State::Registering:return "registering"; case State::Online:return "online"; } return "invalid"; }
+ enum class Status: std::uint8_t { Idle=0U, Busy=1U, Complete=2U, Fault=3U };
+ static std::optional<Status> Parse(std::uint8_t raw) noexcept { switch(raw){ case 0U:return Status::Idle; case 1U:return Status::Busy; case 2U:return Status::Complete; case 3U:return Status::Fault; default:return std::nullopt; } }
 };
-int main(){ auto s=Modem::DecodeState(2U); auto bad=Modem::DecodeState(9U); std::cout<<"state="<<(s?Modem::ToString(*s):"invalid")<<" rejected="<<!bad<<'\n'; }
+int main(){ auto s=DmaChannel::Parse(3U); auto bad=DmaChannel::Parse(7U); std::cout<<"fault="<<(s && *s==DmaChannel::Status::Fault)<<" invalid_rejected="<<!bad<<'\n'; }
