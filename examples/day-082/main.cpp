@@ -1,1 +1,8 @@
-RX_RING_SIZE 必须是至少 64 的 2 的幂。设计编译期约束，并说明收到的数据长度如何验证。
+#include <cstddef>
+#include <iostream>
+constexpr bool IsPowerOfTwo(std::size_t n) noexcept { return n!=0U && (n&(n-1U))==0U; }
+consteval std::size_t RingMask(std::size_t n) { if(!IsPowerOfTwo(n)) throw "capacity must be power of two"; return n-1U; }
+constexpr std::size_t kCapacity=128U;
+static_assert(kCapacity>=64U && IsPowerOfTwo(kCapacity));
+constexpr std::size_t kMask=RingMask(kCapacity);
+int main(){ const std::size_t received=37U; std::cout<<"mask="<<kMask<<" runtime_ok="<<(received<=kCapacity)<<'\n'; }
