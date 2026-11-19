@@ -1,11 +1,10 @@
-#include <cstddef>
 #include <iostream>
-class FixedRing {
+class DmaQueue {
+private: struct Descriptor { unsigned id{0U}; bool owned{false}; };
 public:
- class Cursor { public: explicit Cursor(std::size_t p): position_(p) {} std::size_t Position() const noexcept { return position_; } private: std::size_t position_; };
- explicit FixedRing(std::size_t n): capacity_(n) {}
- Cursor Begin() const noexcept { return Cursor{0U}; }
- bool IsValid(const Cursor& c) const noexcept { return c.Position()<capacity_; }
-private: std::size_t capacity_;
+ void Submit(unsigned id) noexcept { descriptor_.id=id; descriptor_.owned=true; }
+ bool Complete(unsigned id) noexcept { if(!descriptor_.owned || descriptor_.id!=id) return false; descriptor_.owned=false; return true; }
+ bool HasPending() const noexcept { return descriptor_.owned; }
+private: Descriptor descriptor_{};
 };
-int main(){ const FixedRing ring{8U}; const auto cursor=ring.Begin(); std::cout<<"position="<<cursor.Position()<<" valid="<<ring.IsValid(cursor)<<'\n'; }
+int main(){ DmaQueue q; q.Submit(17U); const bool wrong=q.Complete(18U); const bool done=q.Complete(17U); std::cout<<"wrong="<<wrong<<" done="<<done<<" pending="<<q.HasPending()<<'\n'; }
