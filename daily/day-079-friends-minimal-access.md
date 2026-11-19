@@ -1,6 +1,6 @@
 # Day 79 · Friends：受控访问与最小信任边界
 
-> **日期**：2026-11-19（恢复任务后的补课）  
+> **日期**：2026-11-12（暂停期间补课）  
 > **主教材**：Marc Gregoire, *Professional C++, Sixth Edition*（C++23），Chapter 9 · *Mastering Classes and Objects*，从 **Friends** 小节开始。Chapter 9 页码为 p.295–355。  
 > **前置课程**：[Day 78 · Assignment Operators](day-078-assignment-operators.md)、[Day 67 · Class Encapsulation](day-067-class-encapsulation-member-functions.md)。  
 > **辅教材**：Dmitri Nesteruk, *Design Patterns in Modern C++*；仓库中的 ownership/lifetime 与稳定接口专题。  
