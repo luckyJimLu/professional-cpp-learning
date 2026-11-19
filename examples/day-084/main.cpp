@@ -1,0 +1,1 @@
+FixedRingBuffer 内部需要 Cursor。决定 Cursor 是否公开、如何避免引用失效，以及是否允许跨 buffer 使用。
