@@ -1,11 +1,11 @@
 # Professional C++ 学习进度
 
-> 状态校验日期：2026-11-19。每次发布前重新扫描 `daily/day-*.md`；当前最大 Day 为 **86**，没有覆盖或重复既有课程。
+> 状态校验日期：2026-11-20。每次发布前重新扫描 `daily/day-*.md`；当前最大 Day 为 **87**，没有覆盖或重复既有课程。
 
-- **已发布课程：Day 1–86**
-- **最新课程：Day 86 · Operator Overloading：让语法糖保持类型语义**
-- **下一课：Day 87 · Chapter 9 · Building Stable Interfaces（按原书顺序继续）**
-- **主教材后续：Chapter 9 · Mastering Classes and Objects（p.295–355；Day 79–86 已完成至 Operator Overloading）**
+- **已发布课程：Day 1–87**
+- **最新课程：Day 87 · Building Stable Interfaces：用 Interface / Implementation 分离稳定 API**
+- **下一课：Day 88 · Chapter 10 · Building Classes with Inheritance（按原书顺序继续）**
+- **主教材后续：Chapter 10 · Discovering Inheritance Techniques（p.357–419；Chapter 9 已由 Day 79–87 完成）**
 - **主教材：** Marc Gregoire, *Professional C++, Sixth Edition*（C++23）
 - **唯一课程源：** 本仓库 Markdown；不发送邮件。
 
@@ -20,7 +20,7 @@
 | Chapter 6 | 41–55 | 复用、模板、可扩展接口与 SOLID |
 | Chapter 7 | 56–66 | 内存管理、RAII、智能指针、PMR、固定存储与生命周期 |
 | Chapter 8 | 67–78 | 类封装、对象存储期、构造、成员初始化、复制、列表构造、构造委托、转换构造、explicit、编译器生成的构造函数、Object Destruction、Assignment Operators（copy/move assignment）与第 11 周对象语义复盘 |
-| Chapter 9 | 79–86 | Friends、动态存储、成员函数、constexpr/consteval、数据成员、嵌套类、类内枚举与运算符重载 |
+| Chapter 9 | 79–87 | Friends、动态存储、成员函数、constexpr/consteval、数据成员、嵌套类、类内枚举、运算符重载与稳定接口（PImpl） |
 
 ## 完整课程索引
 
@@ -114,6 +114,7 @@
 | 084 | 2026-11-17 | Chapter 9 | Nested Classes：辅助类型作用域与第 12 周工程复盘 | nested-types, encapsulation, weekly-review | [Day 084](daily/day-084-nested-classes.md) |
 | 085 | 2026-11-18 | Chapter 9 | Enumerations Inside Classes：类型化状态域与外部值验证 | enum-class, protocol-validation, state-machine | [Day 085](daily/day-085-enumerations-inside-classes.md) |
 | 086 | 2026-11-19 | Chapter 9 | Operator Overloading：值语义、复合赋值与直观运算符契约 | value-semantics, operator-contract, strong-types | [Day 086](daily/day-086-operator-overloading.md) |
+| 087 | 2026-11-20 | Chapter 9 | Building Stable Interfaces：Interface / Implementation 分离、PImpl、不完整类型、unique_ptr 与稳定 ABI 边界 | pimpl, implementation-hiding, stable-interface, bridge-idiom | [Day 087](daily/day-087-building-stable-interfaces.md) |
 
 ## 专题
 

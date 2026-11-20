@@ -2028,6 +2028,256 @@
       "lab": "examples/day-079/main.cpp",
       "previous": 78,
       "next": 80
+    },
+    {
+      "path": "daily/day-080-dynamic-memory-in-objects.md",
+      "week": 12,
+      "part": "III",
+      "chapter": 9,
+      "chapter_title": "Mastering Classes and Objects",
+      "title": "Dynamic Memory Allocation in Objects · Dynamic Members and Rule of Zero",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-13",
+      "patterns": [
+        "raii",
+        "rule-of-zero",
+        "bounded-allocation"
+      ],
+      "topics": [
+        "dynamic-memory-in-objects",
+        "unique-resource-owner",
+        "allocation-failure",
+        "bounded-capacity"
+      ],
+      "guidelines": [
+        "rule-of-zero",
+        "raii-member-ownership",
+        "bounded-allocation",
+        "explicit-allocation-failure"
+      ],
+      "lab": "examples/day-080/main.cpp",
+      "previous": 79,
+      "next": 81
+    },
+    {
+      "path": "daily/day-081-more-about-member-functions.md",
+      "week": 12,
+      "part": "III",
+      "chapter": 9,
+      "chapter_title": "Mastering Classes and Objects",
+      "title": "More About Member Functions · const, static and ref-qualifiers",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-14",
+      "patterns": [
+        "const-contract",
+        "value-semantics"
+      ],
+      "topics": [
+        "member-functions",
+        "const-member-function",
+        "static-member-function",
+        "overload-resolution",
+        "ref-qualifier",
+        "value-category"
+      ],
+      "guidelines": [
+        "const-correctness",
+        "ref-qualified-api",
+        "no-hidden-state"
+      ],
+      "lab": "examples/day-081/main.cpp",
+      "previous": 80,
+      "next": 82
+    },
+    {
+      "path": "daily/day-082-constexpr-consteval.md",
+      "week": 12,
+      "part": "III",
+      "chapter": 9,
+      "chapter_title": "Mastering Classes and Objects",
+      "title": "constexpr and consteval · Compile-Time Computation",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-15",
+      "patterns": [
+        "compile-time-validation"
+      ],
+      "topics": [
+        "constexpr",
+        "consteval",
+        "immediate-function",
+        "compile-time-validation",
+        "runtime-validation"
+      ],
+      "guidelines": [
+        "constexpr-for-static-invariants",
+        "runtime-validation-for-external-input",
+        "avoid-compile-time-overengineering"
+      ],
+      "lab": "examples/day-082/main.cpp",
+      "previous": 81,
+      "next": 83
+    },
+    {
+      "path": "daily/day-083-different-kinds-of-data-members.md",
+      "week": 12,
+      "part": "III",
+      "chapter": 9,
+      "chapter_title": "Mastering Classes and Objects",
+      "title": "Different Kinds of Data Members · Instance, static, const and mutable",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-16",
+      "patterns": [
+        "member-ownership",
+        "logical-constness"
+      ],
+      "topics": [
+        "data-members",
+        "instance-member",
+        "static-member",
+        "const-member",
+        "mutable",
+        "logical-constness"
+      ],
+      "guidelines": [
+        "avoid-writable-global-state",
+        "mutable-only-for-logical-constness",
+        "static-state-synchronization"
+      ],
+      "lab": "examples/day-083/main.cpp",
+      "previous": 82,
+      "next": 84
+    },
+    {
+      "path": "daily/day-084-nested-classes.md",
+      "week": 12,
+      "part": "III",
+      "chapter": 9,
+      "chapter_title": "Mastering Classes and Objects",
+      "title": "Nested Classes · Scope, Encapsulation and Week 12 Review",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-17",
+      "patterns": [
+        "nested-types",
+        "encapsulation",
+        "weekly-review"
+      ],
+      "topics": [
+        "nested-classes",
+        "nested-type-scope",
+        "encapsulation",
+        "ownership-boundary",
+        "weekly-review"
+      ],
+      "guidelines": [
+        "nest-only-type-local-helpers",
+        "no-implicit-outer-object",
+        "review-ownership-boundaries"
+      ],
+      "lab": "examples/day-084/main.cpp",
+      "previous": 83,
+      "next": 85
+    },
+    {
+      "path": "daily/day-085-enumerations-inside-classes.md",
+      "week": 13,
+      "part": "III",
+      "chapter": 9,
+      "chapter_title": "Mastering Classes and Objects",
+      "title": "Enumerations Inside Classes · Typed State Domains and External Validation",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-18",
+      "patterns": [
+        "enum-class",
+        "protocol-validation",
+        "state-machine"
+      ],
+      "topics": [
+        "nested-enum",
+        "enum-class",
+        "protocol-validation",
+        "state-machine",
+        "underlying-type"
+      ],
+      "guidelines": [
+        "enum-class-for-state",
+        "validate-before-cast",
+        "exhaustive-switch"
+      ],
+      "lab": "examples/day-085/main.cpp",
+      "previous": 84,
+      "next": 86
+    },
+    {
+      "path": "daily/day-086-operator-overloading.md",
+      "week": 13,
+      "part": "III",
+      "chapter": 9,
+      "chapter_title": "Mastering Classes and Objects",
+      "title": "Operator Overloading · Value Semantics and Intuitive Operator Contracts",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-19",
+      "patterns": [
+        "value-semantics",
+        "operator-contract",
+        "strong-types"
+      ],
+      "topics": [
+        "operator-overloading",
+        "compound-assignment",
+        "comparison-contract",
+        "strong-types",
+        "value-semantics"
+      ],
+      "guidelines": [
+        "operators-preserve-intuitive-meaning",
+        "compound-assignment-returns-reference",
+        "no-hidden-io-or-blocking"
+      ],
+      "lab": "examples/day-086/main.cpp",
+      "previous": 85,
+      "next": 87
+    },
+    {
+      "path": "daily/day-087-building-stable-interfaces.md",
+      "week": 13,
+      "part": "III",
+      "chapter": 9,
+      "chapter_title": "Mastering Classes and Objects",
+      "title": "Building Stable Interfaces · Interface / Implementation Separation and PImpl",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-20",
+      "patterns": [
+        "pimpl",
+        "implementation-hiding",
+        "adapter",
+        "bridge-idiom"
+      ],
+      "topics": [
+        "stable-interfaces",
+        "interface-implementation",
+        "pimpl",
+        "incomplete-type",
+        "unique-ptr",
+        "abi-boundary",
+        "borrow-lifetime"
+      ],
+      "guidelines": [
+        "stable-public-header",
+        "pimpl-unique-owner",
+        "out-of-line-pimpl-destructor",
+        "bounded-initialization-allocation"
+      ],
+      "lab": "examples/day-087/main.cpp",
+      "previous": 86,
+      "next": 88
     }
   ]
 }

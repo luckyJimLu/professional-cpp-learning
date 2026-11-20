@@ -340,3 +340,16 @@
 - MUST：owner/dependency 成员先声明，borrower/registration 后声明；真实异步 callback 还必须 unregister/cancel 并 drain in-flight work。
 - MUST：可失败 shutdown 通过显式 Stop(timeout) 返回 Status；析构保持 no-throw、非阻塞、有界，不承担等待 DMA / task / callback drain。
 - REVIEW：把 copy bytes、heap allocation、refcount、锁、timeout、callback context 和 WCET 纳入同一份设计审查证据。
+
+
+## 稳定接口与 PImpl（Day 87）
+
+- MUST：公共头文件只暴露调用者需要依赖的语义契约；不得公开 vendor HAL 类型、DMA descriptor、内部缓存布局或可写实现状态。
+- MUST：使用 PImpl 时，默认由 std::unique_ptr<Impl> 表达唯一所有权；复制默认删除，除非定义了明确的深拷贝语义。
+- MUST：Impl 为不完整类型时，析构函数必须在实现文件、Impl 完整定义之后实现；移动赋值等可能释放 Impl 的操作也应放在实现文件定义。
+- SHOULD：PImpl 仅用于真实的编译依赖隔离、对象表示隐藏或动态库 ABI 边界；小型值类型和模块内部类优先直接成员，避免无谓分配和间接访问。
+- MUST：PImpl 的动态分配只能发生在有预算的初始化阶段；ISR、硬实时线程和延迟关键路径不得分配或扩容。无堆平台优先静态存储或固定对象池。
+- MUST：若 Impl 持有注入的 T&，该成员是 borrow，不是 owner；必须保证被借用对象先构造、后销毁，并在文档中说明。
+- MUST：std::string_view 等 view 参数默认只在同步调用期间借用；异步队列必须复制到有界存储、转移 owner 或使用明确 pool handle。
+- REVIEW：PImpl 不自动保证 ABI 稳定；公共签名、基类、虚函数、工具链和标准库 ABI 仍需单独治理。
+- REVIEW：Modules 可降低编译依赖，但不自动隐藏导出类的对象布局，也不自动提供二进制 ABI 稳定性。

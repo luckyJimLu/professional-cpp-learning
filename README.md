@@ -8,11 +8,11 @@
 
 ## 当前进度
 
-- **已发布：Day 1–86**
-- **当前课程：Day 86 · Operator Overloading：让语法糖保持类型语义（已发布）**
-- **下一课：Day 87 · Chapter 9 · Building Stable Interfaces**
-- **主教材后续：Chapter 9 · Mastering Classes and Objects（p.295–355；Day 79–86 已完成至 Operator Overloading）**
-- 当前主线：**Chapter 9 · Mastering Classes and Objects（Day 79–86 已完成至 Operator Overloading）**
+- **已发布：Day 1–87**
+- **当前课程：Day 87 · Building Stable Interfaces：用 Interface / Implementation 分离稳定 API（已发布）**
+- **下一课：Day 88 · Chapter 10 · Building Classes with Inheritance**
+- **主教材后续：Chapter 10 · Discovering Inheritance Techniques（p.357–419；Chapter 9 已由 Day 79–87 完成）**
+- 当前主线：**Chapter 9 · Mastering Classes and Objects（Day 79–87 已完成，进入 Chapter 10）**
 - 更新方式：**GitHub Markdown only**
 - Gmail 邮件投递：**已停止**
 
@@ -33,6 +33,7 @@
 
 ## 最近课程
 
+- [Day 87 · Building Stable Interfaces：用 Interface / Implementation 分离稳定 API](daily/day-087-building-stable-interfaces.md)
 - [Day 86 · Operator Overloading：让语法糖保持类型语义](daily/day-086-operator-overloading.md)
 - [Day 85 · Enumerations Inside Classes：把状态域绑定到类型边界](daily/day-085-enumerations-inside-classes.md)
 - [Day 84 · Nested Classes：把辅助类型收进所有权边界](daily/day-084-nested-classes.md)
