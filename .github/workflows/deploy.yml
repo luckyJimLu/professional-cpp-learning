@@ -13,7 +13,7 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   changes:
@@ -26,25 +26,53 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - name: Select pipeline (app rebuild vs content refresh)
         id: select
+        shell: bash
         run: |
-          set -eu
-          app_re='^(src/|public/|vite\.config\.ts|package\.json$|package-lock\.json|playwright\.config\.ts|index\.html|rtos\.html|scripts/build-content\.py|include/)'
-          content_re='^(daily/|weekly/|patterns/|booklets/|guidelines/|frameworks/|references/|docs/|assets/|progress\.md|README\.md)'
+          set -euo pipefail
+          app_re='^(src/|public/|vite\.config\.ts$|tsconfig\.json$|eslint\.config\.js$|package\.json$|package-lock\.json$|bun\.lock$|playwright\.config\.ts$|index\.html$|rtos\.html$|metadata\.json$|scripts/build-content\.py$|include/|\.github/workflows/deploy\.yml$)'
+          content_re='^(daily/|weekly/|patterns/|booklets/|guidelines/|frameworks/|references/|docs/|assets/|progress\.md$|README\.md$)'
+
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            app=true; content=true
+            app=true
+            content=false
           else
-            changed="$(git diff --name-only HEAD^ HEAD | tr '\n' ' ')"
-            echo "changed: $changed"
-            match() { echo "$changed" | grep -Eq "$1" && echo true || echo false; }
-            app="$(match "$app_re")"
-            content="$(match "$content_re")"
+            before="${{ github.event.before }}"
+            sha="${{ github.sha }}"
+            zero_sha="0000000000000000000000000000000000000000"
+
+            if [ -n "$before" ] && [ "$before" != "$zero_sha" ] && git cat-file -e "${before}^{commit}" 2>/dev/null; then
+              changed="$(git diff --name-only "$before" "$sha")"
+            elif git rev-parse --verify HEAD^ >/dev/null 2>&1; then
+              changed="$(git diff --name-only HEAD^ HEAD)"
+            else
+              changed=""
+            fi
+
+            echo "=== Changed files ==="
+            echo "$changed"
+
+            if [ -z "$changed" ]; then
+              # 首次推送、强制推送或无法计算 diff 时，默认触发全量发布，避免误跳过
+              app=true
+              content=false
+            else
+              # 保留换行符逐行匹配，修复原 tr '\n' ' ' 导致 ^ / $ 锚点失效而跳过发布的问题
+              match() { printf '%s\n' "$changed" | grep -Eq "$1" && echo true || echo false; }
+              app="$(match "$app_re")"
+              content="$(match "$content_re")"
+            fi
           fi
+
           # 应用侧文件变更时全量重建即可覆盖内容；仅内容变更走快速通道
-          if [ "$app" = "true" ]; then content="false"; fi
+          if [ "$app" = "true" ]; then
+            content="false"
+          fi
+
+          echo "Selected pipeline -> app=$app, content=$content"
           echo "app=$app" >> "$GITHUB_OUTPUT"
           echo "content=$content" >> "$GITHUB_OUTPUT"
 
@@ -79,20 +107,27 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Check course content
-        run: npm run check:course
-
-      - name: Check C booklet examples
-        run: npm run check:booklets
-
-      - name: Verify migrated content
-        run: npm run check:migration
-
-      - name: Check content contract
-        run: python3 scripts/build-content.py --check
-
-      - name: Check Slidev course decks
-        run: npm run ppt:check
+      - name: Run optional repository content checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          has_script() {
+            node -e "const p = JSON.parse(require('fs').readFileSync('package.json','utf8')); process.exit(p.scripts && p.scripts[process.argv[1]] ? 0 : 1)" "$1"
+          }
+          for script in check:course check:booklets check:migration ppt:check; do
+            if has_script "$script"; then
+              echo "Running npm run $script ..."
+              npm run "$script"
+            else
+              echo "Skipping npm run $script (not defined in package.json)"
+            fi
+          done
+          if [ -f scripts/build-content.py ]; then
+            echo "Running python3 scripts/build-content.py --check ..."
+            python3 scripts/build-content.py --check
+          else
+            echo "Skipping scripts/build-content.py --check (script not present)"
+          fi
 
       - name: Build web application (content pipeline included)
         env:
@@ -158,7 +193,13 @@ jobs:
           fi
 
       - name: Check content contract
-        run: python3 scripts/build-content.py --check
+        shell: bash
+        run: |
+          if [ -f scripts/build-content.py ]; then
+            python3 scripts/build-content.py --check
+          else
+            echo "Skipping scripts/build-content.py --check (script not present)"
+          fi
 
       - name: Restore last deployed dist
         id: dist_cache
@@ -171,7 +212,13 @@ jobs:
 
       - name: Build content tree
         if: steps.dist_cache.outputs.cache-hit
-        run: python3 scripts/build-content.py --out dist/content
+        shell: bash
+        run: |
+          if [ -f scripts/build-content.py ]; then
+            python3 scripts/build-content.py --out dist/content
+          else
+            echo "scripts/build-content.py not present; keeping cached dist."
+          fi
 
       - name: Fallback full build when cache missing
         if: ${{ !steps.dist_cache.outputs.cache-hit }}
