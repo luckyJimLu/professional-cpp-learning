@@ -1,26 +1,115 @@
-@layer theme, base, legacy, components, utilities;
-
 @import "tailwindcss";
-@import "tw-animate-css";
-@import "./styles/theme.css";
+@custom-variant dark (&:where(.dark, .dark *));
 
-@utility inline-code {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.8125rem;
-  background-color: var(--canvas);
-  color: var(--ink);
-  padding: 0.125rem 0.375rem;
-  border-radius: var(--radius-sm, 4px);
-  border: 1px solid var(--line);
+@theme {
+  --font-serif-editorial: "Noto Serif SC", Georgia, "Songti SC", serif;
+  --font-sans-body: "Plus Jakarta Sans", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+  --font-mono-code: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 @layer base {
-  p code, li code, dd code, td code, th code {
-    @apply inline-code;
+  html {
+    font-family: var(--font-sans-body);
+    scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
   }
 }
 
-@import "./styles/base.css" layer(legacy);
-@import "./styles/workspace.css" layer(legacy);
-@import "./styles/docs.css" layer(legacy);
-@import "./styles/product-ui.css" layer(legacy);
+.font-editorial {
+  font-family: var(--font-serif-editorial);
+}
+
+.font-code {
+  font-family: var(--font-mono-code);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Classical Chinese book double hairline rule (文武线) for major section transitions */
+.wenwu-rule {
+  position: relative;
+  height: 5px;
+  border-top: 1px solid rgba(20, 25, 24, 0.16);
+  border-bottom: 1px solid rgba(20, 25, 24, 0.06);
+}
+
+.dark .wenwu-rule {
+  border-top-color: rgba(232, 236, 234, 0.16);
+  border-bottom-color: rgba(232, 236, 234, 0.06);
+}
+
+/* Subtle mineral paper dot-grid atmosphere strictly for the outer frame, never inside reading prose */
+.paper-frame-tint {
+  background-image: radial-gradient(rgba(30, 107, 82, 0.055) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.dark .paper-frame-tint {
+  background-image: radial-gradient(rgba(90, 184, 151, 0.065) 1px, transparent 1px);
+}
+
+/* Purposeful compositor-only transitions */
+@keyframes seal-stamp {
+  0% {
+    opacity: 0;
+    transform: scale(1.22) rotate(-6deg);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(0.97) rotate(-2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(-3deg);
+  }
+}
+
+@keyframes panel-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-seal-stamp {
+  animation: seal-stamp 280ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-panel-reveal {
+  animation: panel-reveal 220ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-seal-stamp {
+    animation: none;
+    transform: rotate(-3deg);
+  }
+
+  .animate-panel-reveal {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
