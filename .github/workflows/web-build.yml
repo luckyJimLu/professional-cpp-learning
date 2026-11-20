@@ -34,18 +34,26 @@ jobs:
         run: npm ci --no-audit --no-fund || npm install --no-audit --no-fund
 
       - name: Check course content
+        env:
+          NODE_OPTIONS: "--disable-warning=DEP0040"
         run: npm run check:course
 
       - name: Check C booklet examples
+        env:
+          NODE_OPTIONS: "--disable-warning=DEP0040"
         run: npm run check:booklets
 
       - name: Verify migrated content
+        env:
+          NODE_OPTIONS: "--disable-warning=DEP0040"
         run: npm run check:migration
 
       - name: Check content contract
         run: python3 scripts/build-content.py --check
 
       - name: Check Slidev course decks
+        env:
+          NODE_OPTIONS: "--disable-warning=DEP0040"
         run: npm run ppt:check
 
       - name: Check migrated C++ examples
@@ -61,6 +69,8 @@ jobs:
           python3 tools/check-asio-echo.py --bin-dir build/asio
 
       - name: Typecheck and build
+        env:
+          NODE_OPTIONS: "--disable-warning=DEP0040"
         run: npm run build
 
       - name: Compile and run standalone C++ labs and exercises
@@ -72,4 +82,6 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Browser compiler and Markdown diagram tests
+        env:
+          NODE_OPTIONS: "--disable-warning=DEP0040"
         run: npm run test:e2e

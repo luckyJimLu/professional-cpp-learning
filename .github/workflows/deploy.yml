@@ -109,6 +109,8 @@ jobs:
 
       - name: Run optional repository content checks
         shell: bash
+        env:
+          NODE_OPTIONS: "--disable-warning=DEP0040"
         run: |
           set -euo pipefail
           has_script() {
@@ -132,6 +134,7 @@ jobs:
       - name: Build web application (content pipeline included)
         env:
           GITHUB_PAGES: "true"
+          NODE_OPTIONS: "--disable-warning=DEP0040"
         run: npm run build
 
       - name: Show dist diagnostics
@@ -238,6 +241,7 @@ jobs:
         if: ${{ !steps.dist_cache.outputs.cache-hit }}
         env:
           GITHUB_PAGES: "true"
+          NODE_OPTIONS: "--disable-warning=DEP0040"
         run: npm run build
 
       - name: Show dist diagnostics
