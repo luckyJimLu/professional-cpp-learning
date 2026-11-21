@@ -2278,6 +2278,43 @@
       "lab": "examples/day-087/main.cpp",
       "previous": 86,
       "next": 88
+    },
+    {
+      "path": "daily/day-088-building-classes-with-inheritance.md",
+      "week": 13,
+      "part": "III",
+      "chapter": 10,
+      "chapter_title": "Discovering Inheritance Techniques",
+      "title": "Building Classes with Inheritance · Base Subobjects, Access Views and Is-a Contracts",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-21",
+      "patterns": [
+        "public-inheritance-contract",
+        "composition-over-inheritance",
+        "is-a-substitutability"
+      ],
+      "topics": [
+        "inheritance",
+        "extending-classes",
+        "base-subobject",
+        "derived-class",
+        "access-control",
+        "public-inheritance",
+        "protected-members",
+        "final",
+        "composition"
+      ],
+      "guidelines": [
+        "public-inheritance-only-for-substitutability",
+        "keep-base-data-private",
+        "explicit-inheritance-access",
+        "close-concrete-leaf-with-final",
+        "base-destructor-policy"
+      ],
+      "lab": "examples/day-088/main.cpp",
+      "previous": 87,
+      "next": 89
     }
   ]
 }

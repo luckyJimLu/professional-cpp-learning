@@ -8,11 +8,11 @@
 
 ## 当前进度
 
-- **已发布：Day 1–87**
-- **当前课程：Day 87 · Building Stable Interfaces：用 Interface / Implementation 分离稳定 API（已发布）**
-- **下一课：Day 88 · Chapter 10 · Building Classes with Inheritance**
+- **已发布：Day 1–88**
+- **当前课程：Day 88 · Building Classes with Inheritance：从 Base Subobject 到真实的 Is-a 契约（已发布）**
+- **下一课：Day 89 · Chapter 10 · Overriding Member Functions（virtual / override）**
 - **主教材后续：Chapter 10 · Discovering Inheritance Techniques（p.357–419；Chapter 9 已由 Day 79–87 完成）**
-- 当前主线：**Chapter 9 · Mastering Classes and Objects（Day 79–87 已完成，进入 Chapter 10）**
+- 当前主线：**Chapter 10 · Discovering Inheritance Techniques（Day 88 已开始）**
 - 更新方式：**GitHub Markdown only**
 - Gmail 邮件投递：**已停止**
 
@@ -33,6 +33,7 @@
 
 ## 最近课程
 
+- [Day 88 · Building Classes with Inheritance：从 Base Subobject 到真实的 Is-a 契约](daily/day-088-building-classes-with-inheritance.md)
 - [Day 87 · Building Stable Interfaces：用 Interface / Implementation 分离稳定 API](daily/day-087-building-stable-interfaces.md)
 - [Day 86 · Operator Overloading：让语法糖保持类型语义](daily/day-086-operator-overloading.md)
 - [Day 85 · Enumerations Inside Classes：把状态域绑定到类型边界](daily/day-085-enumerations-inside-classes.md)
@@ -83,7 +84,7 @@
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-086-*.md
+│   └── day-088-*.md
 ├── examples/
 │   └── day-XXX/
 ├── topics/

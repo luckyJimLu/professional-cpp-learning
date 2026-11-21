@@ -353,3 +353,16 @@
 - MUST：std::string_view 等 view 参数默认只在同步调用期间借用；异步队列必须复制到有界存储、转移 owner 或使用明确 pool handle。
 - REVIEW：PImpl 不自动保证 ABI 稳定；公共签名、基类、虚函数、工具链和标准库 ABI 仍需单独治理。
 - REVIEW：Modules 可降低编译依赖，但不自动隐藏导出类的对象布局，也不自动提供二进制 ABI 稳定性。
+
+
+## Inheritance access control 与扩展边界（Day 88）
+
+> 本节是对既有“类关系与层级”规则的细化，不把继承本身视为 GoF 设计模式。
+
+- MUST：public inheritance 必须表达真实的 is-a / substitutability；base 的每个 public 操作都必须对 derived 对象保持语义正确。仅为复用实现、获得某个 helper 或暴露底层 API，不足以构成 public inheritance。
+- MUST：需要调用底层 driver 能力但不满足 is-a 时，优先 composition，并通过构造参数显式注入 required dependency；若成员是引用，它是 borrow，owner 必须比 borrower 活得更久。
+- SHOULD：base 的可变数据成员保持 private。只有真实、受控的派生扩展点才开放 protected operation；避免 protected data 让派生类依赖 base 的内部表示。
+- MUST：继承访问方式显式写出 public / protected / private，不依赖 class / struct 的默认继承访问级别。Review 时检查 derived-to-base 转换是否符合调用者契约。
+- SHOULD：concrete leaf 在没有受支持的进一步扩展轴时可使用 final；不要机械地给所有类添加 final，也不要把 final 当作运行时性能优化保证。
+- MUST：普通继承不等于 runtime polymorphism。没有 virtual function 时，base reference 只提供静态类型可见的 base contract；若需要经 base pointer / unique_ptr<Base> 销毁派生对象，base destructor 必须 public virtual。若禁止 base deletion，可使用 protected non-virtual destructor 并明确接口限制。
+- REVIEW：检查 base constructor 是否只建立有效软件状态、base/member 初始化顺序、派生对象析构顺序、protected API 面积、public API 泄漏、base-view 的可见操作，以及是否因继承不必要地引入 heap / shared ownership / runtime registration。

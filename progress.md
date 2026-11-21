@@ -1,11 +1,11 @@
 # Professional C++ 学习进度
 
-> 状态校验日期：2026-11-20。每次发布前重新扫描 `daily/day-*.md`；当前最大 Day 为 **87**，没有覆盖或重复既有课程。
+> 状态校验日期：2026-11-21。已重新扫描 `daily/day-*.md`；发布前最大 Day 为 **87**，本次新增 Day 088，不覆盖或重复既有课程。
 
-- **已发布课程：Day 1–87**
-- **最新课程：Day 87 · Building Stable Interfaces：用 Interface / Implementation 分离稳定 API**
-- **下一课：Day 88 · Chapter 10 · Building Classes with Inheritance（按原书顺序继续）**
-- **主教材后续：Chapter 10 · Discovering Inheritance Techniques（p.357–419；Chapter 9 已由 Day 79–87 完成）**
+- **已发布课程：Day 1–88**
+- **最新课程：Day 88 · Building Classes with Inheritance：从 Base Subobject 到真实的 Is-a 契约**
+- **下一课：Day 89 · Chapter 10 · Overriding Member Functions（virtual / override 与替换契约）**
+- **主教材当前：Chapter 10 · Discovering Inheritance Techniques（p.357–419；Day 88 已完成 Extending Classes 的基础范围）**
 - **主教材：** Marc Gregoire, *Professional C++, Sixth Edition*（C++23）
 - **唯一课程源：** 本仓库 Markdown；不发送邮件。
 
@@ -21,6 +21,7 @@
 | Chapter 7 | 56–66 | 内存管理、RAII、智能指针、PMR、固定存储与生命周期 |
 | Chapter 8 | 67–78 | 类封装、对象存储期、构造、成员初始化、复制、列表构造、构造委托、转换构造、explicit、编译器生成的构造函数、Object Destruction、Assignment Operators（copy/move assignment）与第 11 周对象语义复盘 |
 | Chapter 9 | 79–87 | Friends、动态存储、成员函数、constexpr/consteval、数据成员、嵌套类、类内枚举、运算符重载与稳定接口（PImpl） |
+| Chapter 10 | 88– | Discovering Inheritance Techniques：继承扩展、base subobject、访问视角与 is-a 契约（进行中） |
 
 ## 完整课程索引
 
@@ -115,6 +116,8 @@
 | 085 | 2026-11-18 | Chapter 9 | Enumerations Inside Classes：类型化状态域与外部值验证 | enum-class, protocol-validation, state-machine | [Day 085](daily/day-085-enumerations-inside-classes.md) |
 | 086 | 2026-11-19 | Chapter 9 | Operator Overloading：值语义、复合赋值与直观运算符契约 | value-semantics, operator-contract, strong-types | [Day 086](daily/day-086-operator-overloading.md) |
 | 087 | 2026-11-20 | Chapter 9 | Building Stable Interfaces：Interface / Implementation 分离、PImpl、不完整类型、unique_ptr 与稳定 ABI 边界 | pimpl, implementation-hiding, stable-interface, bridge-idiom | [Day 087](daily/day-087-building-stable-interfaces.md) |
+
+| 088 | 2026-11-21 | Chapter 10 | Building Classes with Inheritance：Extending Classes、base subobject、public/protected/private 访问视角、final 与 is-a 契约 | public-inheritance-contract, composition-over-inheritance, base-subobject-lifetime | [Day 088](daily/day-088-building-classes-with-inheritance.md) |
 
 ## 专题
 
