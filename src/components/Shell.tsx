@@ -205,7 +205,7 @@ export function Shell({
   const layoutMode =
     view === "lesson"
       ? "read"
-      : ["lab", "slides", "search", "visualizer"].includes(view)
+      : ["lab", "slides", "search", "visualizer", "xiantu"].includes(view)
         ? "operate"
         : "browse";
 
@@ -480,7 +480,7 @@ export function Shell({
 
       <div className="main-shell">
         <main
-          className={`content ${view === "visualizer" ? "is-visualizer-view" : ""}`}
+          className={`content ${view === "visualizer" ? "is-visualizer-view" : ""} ${view === "xiantu" ? "is-xiantu-view" : ""}`.trim()}
           id="main-content"
           tabIndex={-1}
           data-view={view}

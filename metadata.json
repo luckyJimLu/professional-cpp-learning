@@ -1,5 +1,5 @@
 {
-  "name": "仙途 · 现代 C++ 修仙录",
-  "description": "以东方墨玉画卷与交互式 C++23 演练台打造的现代 C++ 修仙学习模块，收录第一时期·炼气期（第 1~3 章）完整法宝图谱、九回破境双模块沙盘、十大宗门戒律与炼气期大圆满综合试炼。",
+  "name": "Professional C++ Learning Console",
+  "description": "基于 Professional C++ (6th Edition) 的工程化现代 C++23 在线学习平台，集成每日课程、浏览器内 Clang/WASM 实验、内存可视化、RTOS 并发模拟器与仙途现代 C++ 修仙录子模块。",
   "requestFramePermissions": []
 }

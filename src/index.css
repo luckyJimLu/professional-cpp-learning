@@ -1,4 +1,12 @@
+@layer theme, base, legacy, components, utilities;
+
 @import "tailwindcss";
+@import "./styles/base.css" layer(legacy);
+@import "./styles/workspace.css" layer(legacy);
+@import "./styles/docs.css" layer(legacy);
+@import "./styles/product-ui.css" layer(legacy);
+@import "./styles/theme.css";
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
@@ -7,23 +15,35 @@
   --font-mono-code: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-@layer base {
-  html {
-    font-family: var(--font-sans-body);
-    scroll-behavior: smooth;
-    text-rendering: optimizeLegibility;
-  }
+/* Full-bleed container for the Xiantu sub-module inside Shell */
+.content.is-xiantu-view {
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+}
 
-  p {
-    text-wrap: pretty;
-  }
+.xiantu-view {
+  font-family: var(--font-sans-body);
+  text-rendering: optimizeLegibility;
+}
 
-  h1,
-  h2,
-  h3,
-  h4 {
-    text-wrap: balance;
-  }
+.xiantu-view p {
+  text-wrap: pretty;
+}
+
+.xiantu-view h1,
+.xiantu-view h2,
+.xiantu-view h3,
+.xiantu-view h4 {
+  text-wrap: balance;
+}
+
+.xiantu-view [id="overview"],
+.xiantu-view [id="artifacts"],
+.xiantu-view [id="stages"],
+.xiantu-view [id="epilogue"],
+.xiantu-view [id="trial"] {
+  scroll-margin-top: calc(var(--header-height, 56px) + 72px);
 }
 
 .font-editorial {
@@ -48,7 +68,7 @@
   border-bottom-color: rgba(232, 236, 234, 0.06);
 }
 
-/* Subtle mineral paper dot-grid atmosphere strictly for the outer frame, never inside reading prose */
+/* Subtle mineral paper dot-grid atmosphere strictly for the outer frame */
 .paper-frame-tint {
   background-image: radial-gradient(rgba(30, 107, 82, 0.055) 1px, transparent 1px);
   background-size: 24px 24px;
@@ -94,10 +114,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
   .animate-seal-stamp {
     animation: none;
     transform: rotate(-3deg);
@@ -105,11 +121,5 @@
 
   .animate-panel-reveal {
     animation: none;
-  }
-
-  *,
-  *::before,
-  *::after {
-    transition-duration: 0.01ms !important;
   }
 }
