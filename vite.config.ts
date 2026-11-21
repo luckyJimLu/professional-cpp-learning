@@ -20,6 +20,9 @@ export default defineConfig({
       "@": path.resolve(rootDir, "src"),
     },
   },
+  worker: {
+    format: "es",
+  },
   build: {
     rollupOptions: {
       input: {
