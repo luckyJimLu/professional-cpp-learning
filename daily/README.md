@@ -39,4 +39,4 @@
 | Chapter 9 | Day 79–87 | Friends、Dynamic Memory Allocation in Objects、More About Member Functions、constexpr / consteval、数据成员类型、Nested Classes、类内枚举、Operator Overloading、Building Stable Interfaces / PImpl |
 | Chapter 10 | Day 88– | Discovering Inheritance Techniques：Building Classes with Inheritance、base / derived access、is-a 与 composition 边界（进行中） |
 
-Chapter 9 已在 Day 87 完成；Day 88 已进入 Chapter 10 · Discovering Inheritance Techniques，完成 Building Classes with Inheritance / Extending Classes 的首段。下一课为 **Day 89 · Overriding Member Functions**；继续按原书顺序推进。Day 84 已完成第 12 周周复盘。
+Chapter 9 已在 Day 87 完成；Day 88 已进入 Chapter 10 · Discovering Inheritance Techniques，完成 Building Classes with Inheritance（Extending Classes 与 Preventing Inheritance）的首段。下一课为 **Day 89 · Overriding Member Functions**；继续按原书顺序推进。Day 84 已完成第 12 周周复盘。

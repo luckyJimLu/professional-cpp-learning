@@ -11,9 +11,9 @@ Chapter 9 已按仓库实际进度完成。今天进入 Chapter 10，严格从�
 
 - **Chapter 10 · Discovering Inheritance Techniques**，全章 pp.357–419。
 - 今日小节：**Building Classes with Inheritance** → **Extending Classes**。
-- 建议阅读：从本章开头读到 **A Client’s View of Inheritance** 与 **A Derived Class’s View of Inheritance**；建议范围约 pp.357–361。
+- 建议阅读：从本章开头读到 **A Client’s View of Inheritance** 与 **A Derived Class’s View of Inheritance**；建议范围约 pp.357–362。
 - 阅读时重点标记：public inheritance 的含义、base subobject、派生类能访问什么、调用者通过 base view 能看到什么。
-- **Preventing Inheritance** 与 **Overriding Member Functions** 留待后续课程，不在今天抢跑。
+- **Preventing Inheritance**（用 final 明确关闭继承扩展）纳入今天阅读；**Overriding Member Functions** 留待后续课程，不在今天抢跑。
 
 章节顺序可在 [O’Reilly 的 Chapter 10 目录](https://www.oreilly.com/library/view/professional-c-6th/9781394193172/c10.xhtml)核对；Wiley 将 Chapter 10 标为 pp.357–419。
 

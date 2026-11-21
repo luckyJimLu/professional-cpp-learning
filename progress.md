@@ -5,7 +5,7 @@
 - **已发布课程：Day 1–88**
 - **最新课程：Day 88 · Building Classes with Inheritance：从 Base Subobject 到真实的 Is-a 契约**
 - **下一课：Day 89 · Chapter 10 · Overriding Member Functions（virtual / override 与替换契约）**
-- **主教材当前：Chapter 10 · Discovering Inheritance Techniques（p.357–419；Day 88 已完成 Extending Classes 的基础范围）**
+- **主教材当前：Chapter 10 · Discovering Inheritance Techniques（p.357–419；Day 88 已完成 Extending Classes 与 Preventing Inheritance 的基础范围）**
 - **主教材：** Marc Gregoire, *Professional C++, Sixth Edition*（C++23）
 - **唯一课程源：** 本仓库 Markdown；不发送邮件。
 
