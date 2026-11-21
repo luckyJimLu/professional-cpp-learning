@@ -16,8 +16,11 @@
     "check:course": "python3 tools/check-course.py",
     "check:booklets": "python3 tools/check-booklets.py",
     "check:migration": "python3 tools/check-migration.py",
+    "check:reference-cpp": "cd references/system-design-notes && bash scripts/check-cpp-examples.sh",
     "check:examples": "python3 tools/check-examples.py",
     "ppt:check": "python3 tools/check-slides.py",
+    "format:cpp": "python3 tools/format-markdown-cpp.py --all",
+    "format:cpp:check": "python3 tools/format-markdown-cpp.py --all --check",
     "test:e2e": "playwright test"
   },
   "dependencies": {
