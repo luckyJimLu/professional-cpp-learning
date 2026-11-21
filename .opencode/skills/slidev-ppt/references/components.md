@@ -46,7 +46,7 @@ ppt: N
 | 类名 | 用途 |
 |---|---|
 | `pc-kicker` / `pc-subtitle` | 封面小标签 / 副标题 |
-| `pc-card` + `info`/`good`/`bad` | 卡片（可带左色条），内部用 `<h3>` + `<p>`；主文字段落可用 `<p class="pc-card-lead">`，英文小副标可用 `<p class="pc-card-meta">` |
+| `pc-card` + `info`/`good`/`bad` | 卡片（全边框 + 语义色底纹，不用左色条），内部用 `<h3>` + `<p>`；主文字段落可用 `<p class="pc-card-lead">`，英文小副标可用 `<p class="pc-card-meta">` |
 | `pc-layers` / `pc-layer` | 分层模型容器 / 单层；内部 `pc-layer-title`、`pc-layer-en`、`pc-layer-desc`、`pc-tags` |
 | `pc-axis` + `pc-axis-line` | 纵向轴线（如 Design Level ↓ Code Level） |
 | `pc-span` + `pc-span-title` | 跨层虚线框（紫色，横切关注点） |

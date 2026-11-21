@@ -26,9 +26,9 @@ const icons = { info: '💡', good: '✅', bad: '❌' } as const
   background: var(--pc-surface);
   font-size: 0.92rem;
 }
-.pc-callout.info { border-left: 4px solid var(--pc-accent); }
-.pc-callout.good { border-left: 4px solid var(--pc-good); }
-.pc-callout.bad  { border-left: 4px solid var(--pc-bad); }
+.pc-callout.info { border-color: rgba(56, 189, 248, 0.45); background: rgba(56, 189, 248, 0.08); }
+.pc-callout.good { border-color: rgba(34, 197, 94, 0.45); background: rgba(34, 197, 94, 0.08); }
+.pc-callout.bad  { border-color: rgba(239, 68, 68, 0.45); background: rgba(239, 68, 68, 0.08); }
 .pc-callout-title { font-weight: 700; margin-bottom: 0.25rem; }
 .pc-callout.info .pc-callout-title { color: var(--pc-accent); }
 .pc-callout.good .pc-callout-title { color: var(--pc-good); }

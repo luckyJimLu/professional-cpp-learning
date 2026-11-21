@@ -40,10 +40,10 @@ ppt: 1
 <svg viewBox="0 0 900 335" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="软件开发的三层金字塔">
   <!-- 左侧 Design Level -> Code Level 标尺轴线与跃迁弧线 -->
   <g>
-    <text x="58" y="34" fill="var(--pc-accent)" font-size="12" font-weight="700" text-anchor="middle">Design Level</text>
+    <text x="58" y="34" fill="var(--pc-accent)" font-size="12" style="font-size: 12px" font-weight="700" text-anchor="middle">Design Level</text>
     <line x1="58" y1="46" x2="58" y2="296" stroke="var(--pc-border)" stroke-width="1.5" stroke-dasharray="4 3" />
     <polygon points="53,294 63,294 58,304" fill="var(--pc-good)" />
-    <text x="58" y="322" fill="var(--pc-good)" font-size="12" font-weight="700" text-anchor="middle">Code Level</text>
+    <text x="58" y="322" fill="var(--pc-good)" font-size="12" style="font-size: 12px" font-weight="700" text-anchor="middle">Code Level</text>
     <!-- 左侧底部向中层的焦点跃迁弧形箭头 -->
     <path d="M 105,268 C 68,230 68,175 142,158" fill="none" stroke="var(--pc-accent)" stroke-width="3" />
     <polygon points="138,151 152,156 141,165" fill="var(--pc-accent)" />
@@ -52,39 +52,39 @@ ppt: 1
   <!-- 第 1 层：金字塔尖（软件架构） -->
   <g v-click="1">
     <polygon points="270,18 355,112 185,112" fill="rgba(30, 41, 59, 0.92)" stroke="var(--pc-accent)" stroke-width="2" />
-    <text x="270" y="78" fill="var(--pc-text)" font-size="15" font-weight="700" text-anchor="middle">1 · 软件架构</text>
-    <text x="270" y="98" fill="var(--pc-muted)" font-size="10.5" text-anchor="middle">Software Architecture</text>
+    <text x="270" y="78" fill="var(--pc-text)" font-size="15" style="font-size: 15px" font-weight="700" text-anchor="middle">1 · 软件架构</text>
+    <text x="270" y="98" fill="var(--pc-muted)" font-size="10.5" style="font-size: 10.5px" text-anchor="middle">Software Architecture</text>
     <line x1="332" y1="76" x2="468" y2="56" stroke="var(--pc-accent)" stroke-width="1.5" />
     <circle cx="332" cy="76" r="3" fill="var(--pc-accent)" />
     <rect x="468" y="18" width="252" height="76" rx="6" fill="var(--pc-surface)" stroke="var(--pc-border)" stroke-width="1.5" />
-    <text x="482" y="42" fill="var(--pc-text)" font-size="12.5" font-weight="600">宏观决策、系统级模式 · <tspan fill="var(--pc-bad)">后期极难更改</tspan></text>
-    <text x="482" y="64" fill="var(--pc-accent)" font-size="11.5" font-family="var(--pc-font-mono)">[微服务]  [C/S]  [插件架构]</text>
-    <text x="482" y="82" fill="var(--pc-muted)" font-size="10.5">决定系统的宏观拓扑与边界</text>
+    <text x="482" y="42" fill="var(--pc-text)" font-size="12.5" style="font-size: 12.5px" font-weight="600">宏观决策、系统级模式 · <tspan fill="var(--pc-bad)">后期极难更改</tspan></text>
+    <text x="482" y="64" fill="var(--pc-accent)" font-size="11.5" style="font-size: 11.5px" font-family="var(--pc-font-mono)">[微服务]  [C/S]  [插件架构]</text>
+    <text x="482" y="82" fill="var(--pc-muted)" font-size="10.5" style="font-size: 10.5px">决定系统的宏观拓扑与边界</text>
   </g>
 
   <!-- 第 2 层：金字塔中腰（软件设计 —— 视觉焦点高亮层） -->
   <g v-click="2">
     <polygon points="185,118 355,118 425,212 115,212" fill="rgba(56, 189, 248, 0.22)" stroke="var(--pc-accent)" stroke-width="2.5" />
-    <text x="270" y="162" fill="var(--pc-text)" font-size="17" font-weight="700" text-anchor="middle">2 · 软件设计</text>
-    <text x="270" y="184" fill="var(--pc-accent)" font-size="11.5" font-weight="600" text-anchor="middle">Software Design（核心主战场）</text>
+    <text x="270" y="162" fill="var(--pc-text)" font-size="17" style="font-size: 17px" font-weight="700" text-anchor="middle">2 · 软件设计</text>
+    <text x="270" y="184" fill="var(--pc-accent)" font-size="11.5" style="font-size: 11.5px" font-weight="600" text-anchor="middle">Software Design（核心主战场）</text>
     <line x1="392" y1="165" x2="468" y2="152" stroke="var(--pc-accent)" stroke-width="2" />
     <circle cx="392" cy="165" r="3.5" fill="var(--pc-accent)" />
     <rect x="468" y="112" width="252" height="84" rx="6" fill="rgba(56, 189, 248, 0.12)" stroke="var(--pc-accent)" stroke-width="1.8" />
-    <text x="482" y="136" fill="var(--pc-text)" font-size="12.5" font-weight="600">管理组件间的逻辑与物理依赖</text>
-    <text x="482" y="154" fill="var(--pc-muted)" font-size="11.5">引入合理的抽象，决定系统可维护性</text>
-    <text x="482" y="178" fill="var(--pc-accent)" font-size="11.5" font-family="var(--pc-font-mono)">[Visitor] [Strategy] [External Poly]</text>
+    <text x="482" y="136" fill="var(--pc-text)" font-size="12.5" style="font-size: 12.5px" font-weight="600">管理组件间的逻辑与物理依赖</text>
+    <text x="482" y="154" fill="var(--pc-muted)" font-size="11.5" style="font-size: 11.5px">引入合理的抽象，决定系统可维护性</text>
+    <text x="482" y="178" fill="var(--pc-accent)" font-size="11.5" style="font-size: 11.5px" font-family="var(--pc-font-mono)">[Visitor] [Strategy] [External Poly]</text>
   </g>
 
   <!-- 第 3 层：金字塔宽底座（实现细节） -->
   <g v-click="3">
     <polygon points="115,218 425,218 495,312 45,312" fill="rgba(34, 197, 94, 0.12)" stroke="var(--pc-good)" stroke-width="2" />
-    <text x="270" y="262" fill="var(--pc-text)" font-size="16" font-weight="700" text-anchor="middle">3 · 实现细节</text>
-    <text x="270" y="284" fill="var(--pc-good)" font-size="11" text-anchor="middle">Implementation Details</text>
+    <text x="270" y="262" fill="var(--pc-text)" font-size="16" style="font-size: 16px" font-weight="700" text-anchor="middle">3 · 实现细节</text>
+    <text x="270" y="284" fill="var(--pc-good)" font-size="11" style="font-size: 11px" text-anchor="middle">Implementation Details</text>
     <line x1="462" y1="265" x2="468" y2="265" stroke="var(--pc-good)" stroke-width="1.5" />
     <rect x="468" y="216" width="252" height="88" rx="6" fill="var(--pc-surface)" stroke="var(--pc-good)" stroke-width="1.5" />
-    <text x="482" y="240" fill="var(--pc-text)" font-size="12.5" font-weight="600">具体语言特性、内存分配、异常安全</text>
-    <text x="482" y="262" fill="var(--pc-good)" font-size="11" font-family="var(--pc-font-mono)">[std::make_unique] [RAII]</text>
-    <text x="482" y="282" fill="var(--pc-good)" font-size="11" font-family="var(--pc-font-mono)">[Copy-and-Swap]    [SFINAE]</text>
+    <text x="482" y="240" fill="var(--pc-text)" font-size="12.5" style="font-size: 12.5px" font-weight="600">具体语言特性、内存分配、异常安全</text>
+    <text x="482" y="262" fill="var(--pc-good)" font-size="11" style="font-size: 11px" font-family="var(--pc-font-mono)">[std::make_unique] [RAII]</text>
+    <text x="482" y="282" fill="var(--pc-good)" font-size="11" style="font-size: 11px" font-family="var(--pc-font-mono)">[Copy-and-Swap]    [SFINAE]</text>
   </g>
 
   <!-- 最右侧跨层虚线框：Idioms（惯用法）横跨第 2 层与第 3 层 -->
@@ -92,13 +92,13 @@ ppt: 1
     <path d="M 724,152 L 742,152 L 742,262 L 724,262" fill="none" stroke="var(--pc-violet)" stroke-width="2" />
     <line x1="742" y1="207" x2="754" y2="207" stroke="var(--pc-violet)" stroke-width="2" />
     <rect x="754" y="122" width="140" height="172" rx="8" fill="rgba(167, 139, 250, 0.08)" stroke="var(--pc-violet)" stroke-width="2" stroke-dasharray="6 4" />
-    <text x="824" y="148" fill="var(--pc-violet)" font-size="13.5" font-weight="700" text-anchor="middle">Idioms（惯用法）</text>
-    <text x="824" y="168" fill="var(--pc-muted)" font-size="11" text-anchor="middle">横跨设计层与实现层</text>
+    <text x="824" y="148" fill="var(--pc-violet)" font-size="13.5" style="font-size: 13.5px" font-weight="700" text-anchor="middle">Idioms（惯用法）</text>
+    <text x="824" y="168" fill="var(--pc-muted)" font-size="11" style="font-size: 11px" text-anchor="middle">横跨设计层与实现层</text>
     <line x1="768" y1="178" x2="880" y2="178" stroke="var(--pc-border)" stroke-width="1" />
-    <text x="768" y="198" fill="var(--pc-text)" font-size="11.5" font-weight="600">设计层：</text>
-    <text x="768" y="216" fill="var(--pc-violet)" font-size="11" font-family="var(--pc-font-mono)">Pimpl · NVI</text>
-    <text x="768" y="244" fill="var(--pc-text)" font-size="11.5" font-weight="600">实现层：</text>
-    <text x="768" y="262" fill="var(--pc-violet)" font-size="11" font-family="var(--pc-font-mono)">RAII · Copy-and-Swap</text>
+    <text x="768" y="198" fill="var(--pc-text)" font-size="11.5" style="font-size: 11.5px" font-weight="600">设计层：</text>
+    <text x="768" y="216" fill="var(--pc-violet)" font-size="11" style="font-size: 11px" font-family="var(--pc-font-mono)">Pimpl · NVI</text>
+    <text x="768" y="244" fill="var(--pc-text)" font-size="11.5" style="font-size: 11.5px" font-weight="600">实现层：</text>
+    <text x="768" y="262" fill="var(--pc-violet)" font-size="11" style="font-size: 11px" font-family="var(--pc-font-mono)">RAII · Copy-and-Swap</text>
   </g>
 </svg>
 </div>
@@ -654,19 +654,19 @@ ppt: 5
 
 <div class="pc-svg-hero">
 <svg viewBox="0 0 460 155" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
-  <text x="8" y="18" fill="var(--pc-bad)" font-size="11" font-family="var(--pc-font-mono)" font-weight="600">shared_ptr&lt;T&gt;(new T) · 两次独立堆分配</text>
+  <text x="8" y="18" fill="var(--pc-bad)" font-size="11" style="font-size: 11px" font-family="var(--pc-font-mono)" font-weight="600">shared_ptr&lt;T&gt;(new T) · 两次独立堆分配</text>
   <rect x="8" y="26" width="170" height="40" rx="5" fill="var(--pc-surface)" stroke="var(--pc-bad)" stroke-width="1.5"/>
-  <text x="93" y="45" text-anchor="middle" fill="var(--pc-text)" font-size="11" font-weight="600">Control Block</text>
-  <text x="93" y="59" text-anchor="middle" fill="var(--pc-muted)" font-size="9.5" font-family="var(--pc-font-mono)">strong / weak / deleter</text>
+  <text x="93" y="45" text-anchor="middle" fill="var(--pc-text)" font-size="11" style="font-size: 11px" font-weight="600">Control Block</text>
+  <text x="93" y="59" text-anchor="middle" fill="var(--pc-muted)" font-size="9.5" style="font-size: 9.5px" font-family="var(--pc-font-mono)">strong / weak / deleter</text>
   <line x1="178" y1="46" x2="238" y2="46" stroke="var(--pc-bad)" stroke-width="1.5" stroke-dasharray="4 3"/>
   <rect x="238" y="26" width="140" height="40" rx="5" fill="var(--pc-surface)" stroke="var(--pc-bad)" stroke-width="1.5"/>
-  <text x="308" y="50" text-anchor="middle" fill="var(--pc-text)" font-size="11" font-weight="600">Heap Object T</text>
+  <text x="308" y="50" text-anchor="middle" fill="var(--pc-text)" font-size="11" style="font-size: 11px" font-weight="600">Heap Object T</text>
 
-  <text x="8" y="94" fill="var(--pc-good)" font-size="11" font-family="var(--pc-font-mono)" font-weight="600">std::make_shared&lt;T&gt;() · 单次连续堆分配</text>
+  <text x="8" y="94" fill="var(--pc-good)" font-size="11" style="font-size: 11px" font-family="var(--pc-font-mono)" font-weight="600">std::make_shared&lt;T&gt;() · 单次连续堆分配</text>
   <rect x="8" y="102" width="370" height="42" rx="5" fill="rgba(16, 185, 129, 0.10)" stroke="var(--pc-good)" stroke-width="1.75"/>
   <line x1="195" y1="102" x2="195" y2="144" stroke="var(--pc-good)" stroke-width="1.2" stroke-dasharray="3 3"/>
-  <text x="101" y="127" text-anchor="middle" fill="var(--pc-good)" font-size="11" font-weight="600">Control Block (强/弱计数)</text>
-  <text x="286" y="127" text-anchor="middle" fill="var(--pc-text)" font-size="11" font-weight="600">In-place Object T</text>
+  <text x="101" y="127" text-anchor="middle" fill="var(--pc-good)" font-size="11" style="font-size: 11px" font-weight="600">Control Block (强/弱计数)</text>
+  <text x="286" y="127" text-anchor="middle" fill="var(--pc-text)" font-size="11" style="font-size: 11px" font-weight="600">In-place Object T</text>
 </svg>
 </div>
 
@@ -742,20 +742,20 @@ ppt: 5
     </marker>
   </defs>
   <rect x="20" y="42" width="125" height="64" rx="6" fill="var(--pc-surface)" stroke="var(--pc-accent)" stroke-width="1.5"/>
-  <text x="82" y="69" text-anchor="middle" fill="var(--pc-text)" font-size="13" font-weight="700">ListNode A</text>
-  <text x="82" y="89" text-anchor="middle" fill="var(--pc-muted)" font-size="10" font-family="var(--pc-font-mono)">strong = 1</text>
+  <text x="82" y="69" text-anchor="middle" fill="var(--pc-text)" font-size="13" style="font-size: 13px" font-weight="700">ListNode A</text>
+  <text x="82" y="89" text-anchor="middle" fill="var(--pc-muted)" font-size="10" style="font-size: 10px" font-family="var(--pc-font-mono)">strong = 1</text>
 
   <rect x="275" y="42" width="125" height="64" rx="6" fill="var(--pc-surface)" stroke="var(--pc-accent)" stroke-width="1.5"/>
-  <text x="337" y="69" text-anchor="middle" fill="var(--pc-text)" font-size="13" font-weight="700">ListNode B</text>
-  <text x="337" y="89" text-anchor="middle" fill="var(--pc-muted)" font-size="10" font-family="var(--pc-font-mono)">strong = 1</text>
+  <text x="337" y="69" text-anchor="middle" fill="var(--pc-text)" font-size="13" style="font-size: 13px" font-weight="700">ListNode B</text>
+  <text x="337" y="89" text-anchor="middle" fill="var(--pc-muted)" font-size="10" style="font-size: 10px" font-family="var(--pc-font-mono)">strong = 1</text>
 
   <!-- next: shared_ptr -->
   <path d="M 147 56 C 190 30, 230 30, 272 56" fill="none" stroke="var(--pc-accent)" stroke-width="2" marker-end="url(#arr-solid)"/>
-  <text x="210" y="30" text-anchor="middle" fill="var(--pc-accent)" font-size="10.5" font-family="var(--pc-font-mono)">next (shared_ptr)</text>
+  <text x="210" y="30" text-anchor="middle" fill="var(--pc-accent)" font-size="10.5" style="font-size: 10.5px" font-family="var(--pc-font-mono)">next (shared_ptr)</text>
 
   <!-- prev: weak_ptr -->
   <path d="M 273 92 C 230 118, 190 118, 148 92" fill="none" stroke="var(--pc-good)" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arr-weak)"/>
-  <text x="210" y="132" text-anchor="middle" fill="var(--pc-good)" font-size="10.5" font-family="var(--pc-font-mono)">prev (weak_ptr · 破环)</text>
+  <text x="210" y="132" text-anchor="middle" fill="var(--pc-good)" font-size="10.5" style="font-size: 10.5px" font-family="var(--pc-font-mono)">prev (weak_ptr · 破环)</text>
 </svg>
 </div>
 
@@ -1233,23 +1233,23 @@ ppt: 9
     </marker>
   </defs>
   <rect x="10" y="34" width="110" height="58" rx="6" fill="var(--pc-surface)" stroke="var(--pc-bad)" stroke-width="1.5"/>
-  <text x="65" y="57" text-anchor="middle" fill="var(--pc-text)" font-size="11.5" font-weight="700">Object</text>
-  <text x="65" y="76" text-anchor="middle" fill="var(--pc-bad)" font-size="10" font-family="var(--pc-font-mono)">vptr</text>
+  <text x="65" y="57" text-anchor="middle" fill="var(--pc-text)" font-size="11.5" style="font-size: 11.5px" font-weight="700">Object</text>
+  <text x="65" y="76" text-anchor="middle" fill="var(--pc-bad)" font-size="10" style="font-size: 10px" font-family="var(--pc-font-mono)">vptr</text>
 
   <line x1="120" y1="63" x2="170" y2="63" stroke="var(--pc-bad)" stroke-width="1.8" marker-end="url(#v-arr)"/>
-  <text x="145" y="54" text-anchor="middle" fill="var(--pc-muted)" font-size="9.5">跳转 1</text>
+  <text x="145" y="54" text-anchor="middle" fill="var(--pc-muted)" font-size="9.5" style="font-size: 9.5px">跳转 1</text>
 
   <rect x="172" y="26" width="120" height="74" rx="6" fill="var(--pc-surface)" stroke="var(--pc-bad)" stroke-width="1.5"/>
-  <text x="232" y="48" text-anchor="middle" fill="var(--pc-text)" font-size="11.5" font-weight="700">vtable</text>
-  <text x="232" y="68" text-anchor="middle" fill="var(--pc-muted)" font-size="9.5" font-family="var(--pc-font-mono)">[0] &amp;D::operator[]</text>
-  <text x="232" y="84" text-anchor="middle" fill="var(--pc-muted)" font-size="9.5" font-family="var(--pc-font-mono)">[1] &amp;D::~D</text>
+  <text x="232" y="48" text-anchor="middle" fill="var(--pc-text)" font-size="11.5" style="font-size: 11.5px" font-weight="700">vtable</text>
+  <text x="232" y="68" text-anchor="middle" fill="var(--pc-muted)" font-size="9.5" style="font-size: 9.5px" font-family="var(--pc-font-mono)">[0] &amp;D::operator[]</text>
+  <text x="232" y="84" text-anchor="middle" fill="var(--pc-muted)" font-size="9.5" style="font-size: 9.5px" font-family="var(--pc-font-mono)">[1] &amp;D::~D</text>
 
   <line x1="292" y1="63" x2="342" y2="63" stroke="var(--pc-bad)" stroke-width="1.8" marker-end="url(#v-arr)"/>
-  <text x="317" y="54" text-anchor="middle" fill="var(--pc-muted)" font-size="9.5">跳转 2</text>
+  <text x="317" y="54" text-anchor="middle" fill="var(--pc-muted)" font-size="9.5" style="font-size: 9.5px">跳转 2</text>
 
   <rect x="344" y="34" width="96" height="58" rx="6" fill="rgba(239,68,68,0.12)" stroke="var(--pc-bad)" stroke-width="1.5"/>
-  <text x="392" y="58" text-anchor="middle" fill="var(--pc-bad)" font-size="11" font-weight="700">函数指针</text>
-  <text x="392" y="76" text-anchor="middle" fill="var(--pc-muted)" font-size="9.5">阻碍 Inlining</text>
+  <text x="392" y="58" text-anchor="middle" fill="var(--pc-bad)" font-size="11" style="font-size: 11px" font-weight="700">函数指针</text>
+  <text x="392" y="76" text-anchor="middle" fill="var(--pc-muted)" font-size="9.5" style="font-size: 9.5px">阻碍 Inlining</text>
 </svg>
 </div>
 

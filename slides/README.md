@@ -12,7 +12,7 @@
 * `components/`: 主题自定义组件，包括 [Callout.vue](components/Callout.vue) 与 [Quote.vue](components/Quote.vue)。
 * `global-top.vue` & `style.css`: 统一定制的 Slidev Dark Blueprint 蓝图全局排版样式。
 * `package.json`: Slidev 本地依赖配置与运行脚本。
-* `dist/`: 构建生成的静态 HTML / PDF 产物，属于自动生成文件，切勿手动修改。
+* `dist/`: 构建生成的静态 HTML / PDF / PPTX 产物，属于自动生成文件，切勿手动修改。
 * `node_modules/`: 本地依赖库目录，无需手动干预。
 
 ## 主题样式与同步
@@ -53,4 +53,8 @@ npm run ppt:sync
 | `npm run build:03` | 单独构建第 3 课静态 HTML (`dist/lesson-03`) |
 | `npm run export:02` | 单独导出第 2 课 PDF 产物 (`dist/lesson-02.pdf`) |
 | `npm run export:03` | 单独导出第 3 课 PDF 产物 (`dist/lesson-03.pdf`) |
+| `npm run export:pptx` | 顺序导出三课视觉保真 PPTX（每页 1 张逻辑页，讲者备注保留） |
+| `npm run export:pptx:01` | 单独导出第 1 课 PPTX 产物 (`dist/lesson-01.pptx`) |
+| `npm run export:pptx:02` | 单独导出第 2 课 PPTX 产物 (`dist/lesson-02.pptx`) |
+| `npm run export:pptx:03` | 单独导出第 3 课 PPTX 产物 (`dist/lesson-03.pptx`) |
 | `npm run build:all` | 顺序构建 lesson-01, lesson-02, lesson-03 |

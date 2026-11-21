@@ -28,7 +28,7 @@
 | `--pc-border` | `#334155` | 细边框 / 分隔线 | Border / Hairline rule |
 | `--pc-text` | `#E2E8F0` | 主文字 | Primary ink / Text |
 | `--pc-muted` | `#94A3B8` | 次要文字、英文副标题、连接线 | Muted text / Default arrow |
-| `--pc-accent` | `#38BDF8` | 关键词、标题下划线、`**粗体**` | Focal border / Primary accent |
+| `--pc-accent` | `#38BDF8` | 关键词、语义边框/底纹、`**粗体**` | Focal border / Primary accent |
 | `--pc-good` | `#22C55E` | 正面 / 推荐 / ✅ / 低耗时条形 | Success / Modern C++ solution |
 | `--pc-bad` | `#EF4444` | 反面 / 警告 / ❌ / 高耗时条形 | Error / Anti-pattern / Bottleneck |
 | `--pc-quote` | `#F59E0B` | **仅**用于金句与高亮批注 | Quote / Note border |
@@ -38,7 +38,7 @@
 
 ## 版式
 
-- 16:9，`canvasWidth: 980`；标题居左，下方青蓝细线（由主题自动生成，`# 标题` 即可）。
+- 16:9，`canvasWidth: 980`；标题居左，不加标题下划线，靠字号、字重与留白建立层级（`# 标题` 即可）。
 - 左上角页眉「第 X 课 · 短标题」（来自 headmatter `lesson`），右下角「PPT N · 页码」（来自 frontmatter `ppt`）——均由 `global-top.vue` 自动渲染，**不要手写**。
 - 正文要点 ≤ 5 条，每条 ≤ 25 字；页面留白 ≥ 30%。
 - 图示：扁平线框、圆角卡片、分层图、受控高度（`≤ 310px`）的 Mermaid 或外部 SVG；不用照片、不用 3D、不用 emoji 装饰（`<Callout>` 组件内置的功能性图标除外）。

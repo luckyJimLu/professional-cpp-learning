@@ -21,9 +21,9 @@ defineProps<{
 .pc-quote {
   margin: 0;
   padding: 0.8rem 1.2rem;
-  border-left: 4px solid var(--pc-quote);
+  border: 1px solid rgba(245, 158, 11, 0.45);
   background: rgba(245, 158, 11, 0.08);
-  border-radius: 0 var(--pc-radius) var(--pc-radius) 0;
+  border-radius: var(--pc-radius);
 }
 .pc-quote-en {
   margin: 0;
