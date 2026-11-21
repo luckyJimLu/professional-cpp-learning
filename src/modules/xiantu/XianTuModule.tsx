@@ -171,7 +171,7 @@ export function XianTuModule({ isDark, onToggleTheme }: XianTuModuleProps) {
     progress.solvedBugIds.length > 0;
 
   return (
-    <main>
+    <div className="xiantu-module">
       {/* Workspace Era Shelf & Chapter Switcher (below 3-zone top header contract) */}
       <div className="border-b border-[#141918]/10 dark:border-[#E8ECEA]/10 bg-[#EFF2EF]/75 dark:bg-[#131A18]">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
@@ -448,6 +448,6 @@ export function XianTuModule({ isDark, onToggleTheme }: XianTuModuleProps) {
           </button>
         </div>
       </section>
-    </main>
+    </div>
   );
 }
