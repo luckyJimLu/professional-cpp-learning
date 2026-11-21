@@ -15,35 +15,333 @@
   --font-mono-code: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-/* Full-bleed container for the Xiantu sub-module inside Shell */
-.content.is-xiantu-view {
-  width: 100%;
-  max-width: 100%;
-  padding: 0;
-}
+/* ---------------------------------------------------------------------------
+ * 仙途 (Xiantu) sub-module
+ * Structural chrome (page header, toolbar, cards, buttons, focus rings) follows
+ * the shared product tokens; narrative accents (jade / cinnabar / gold, serif
+ * titles, seals, ink plates) are the module's own flavour.
+ * ------------------------------------------------------------------------- */
+@layer components {
+  .xiantu-page {
+    --xt-jade: #1e6b52;
+    --xt-jade-ink: #174d3b;
+    --xt-jade-soft: #eef6f2;
+    --xt-cinnabar: #b83b2a;
+    --xt-cinnabar-ink: #8c281b;
+    --xt-cinnabar-soft: #faf0ee;
+    --xt-gold: #9a7b3e;
+    --xt-gold-ink: #664f1f;
+    --xt-gold-soft: #fbf6ea;
+    --xt-prose: #334155;
+    --xt-toolbar-height: 56px;
+    --xt-scroll-offset: calc(var(--header-height) + var(--xt-toolbar-height) + 20px);
+    max-width: var(--frame-max);
+    margin-inline: auto;
+    min-width: 0;
+    color: var(--ink);
+  }
 
-.xiantu-view {
-  font-family: var(--font-sans-body);
-  text-rendering: optimizeLegibility;
-}
+  .xiantu-page p {
+    text-wrap: pretty;
+  }
 
-.xiantu-view p {
-  text-wrap: pretty;
-}
+  .xiantu-page :is(h1, h2, h3, h4) {
+    text-wrap: balance;
+  }
 
-.xiantu-view h1,
-.xiantu-view h2,
-.xiantu-view h3,
-.xiantu-view h4 {
-  text-wrap: balance;
-}
+  .xiantu-page [data-xt-section] {
+    scroll-margin-top: var(--xt-scroll-offset);
+  }
 
-.xiantu-view [id="overview"],
-.xiantu-view [id="artifacts"],
-.xiantu-view [id="stages"],
-.xiantu-view [id="epilogue"],
-.xiantu-view [id="trial"] {
-  scroll-margin-top: calc(var(--header-height, 56px) + 72px);
+  /* Page header: same rhythm as other modules, with era status on the right */
+  .xt-page-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4) var(--space-8);
+    max-width: none;
+    margin-bottom: var(--space-6);
+  }
+
+  .xt-page-header h1 {
+    margin: 0 0 var(--space-2);
+  }
+
+  .xt-page-header .page-description {
+    max-width: 640px;
+  }
+
+  .xt-realm {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-shrink: 0;
+  }
+
+  .xt-realm-text {
+    display: grid;
+    gap: 2px;
+    text-align: left;
+  }
+
+  @media (min-width: 761px) {
+    .xt-realm-text {
+      text-align: right;
+    }
+  }
+
+  .xt-realm-text small {
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .xt-realm-text strong {
+    font-family: var(--font-serif-editorial);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--xt-jade);
+  }
+
+  /* Sticky chapter + section toolbar (mirrors the booklet toolbar) */
+  .xt-toolbar {
+    position: sticky;
+    top: var(--header-height);
+    z-index: 15;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3) var(--space-6);
+    min-height: var(--xt-toolbar-height);
+    padding: 8px 0;
+    margin-bottom: var(--space-6);
+    background: color-mix(in srgb, var(--surface) 95%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .xt-chapter-tabs {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    min-width: 0;
+    max-width: 100%;
+    padding: 3px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--line) 45%, var(--canvas));
+  }
+
+  .xt-chapter-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .xt-chapter-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 34px;
+    padding: 4px 12px;
+    border: 0;
+    border-radius: 7px;
+    color: var(--muted);
+    background: transparent;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .xt-chapter-tab:hover {
+    color: var(--ink);
+  }
+
+  .xt-chapter-tab[aria-selected="true"] {
+    color: var(--blue);
+    background: var(--surface);
+    box-shadow: 0 0 0 1px var(--line), 0 1px 2px rgba(15, 23, 42, 0.06);
+  }
+
+  .xt-chapter-tab .xt-chapter-count {
+    font: 500 11px/1 var(--mono);
+    color: var(--muted);
+  }
+
+  .xt-chapter-tab .xt-chapter-count[data-done="true"] {
+    color: var(--xt-jade);
+  }
+
+  .xt-section-nav {
+    display: none;
+    align-items: center;
+    gap: 2px;
+  }
+
+  @media (min-width: 1100px) {
+    .xt-section-nav {
+      display: flex;
+    }
+  }
+
+  .xt-section-nav a {
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: var(--muted);
+    font-size: 13px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+
+  .xt-section-nav a:hover,
+  .xt-section-nav a[aria-current="location"] {
+    color: var(--blue);
+    background: var(--blue-soft);
+  }
+
+  .xt-section-nav a[aria-current="location"] {
+    font-weight: 600;
+  }
+
+  /* Card surface shared by hero, panels and transitions */
+  .xt-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  /* Era progress stats */
+  .xt-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0 0 var(--space-6);
+    overflow: hidden;
+  }
+
+  @media (min-width: 900px) {
+    .xt-stats {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .xt-stats > div {
+    padding: 14px 18px;
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+    margin: -1px 0 0 -1px;
+  }
+
+  .xt-stats dt {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+
+  .xt-stats dd {
+    margin: 0;
+    font: 600 18px/1.4 var(--mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Sections */
+  .xt-section {
+    padding-top: var(--space-12);
+    margin-top: var(--space-12);
+    border-top: 1px solid var(--line);
+  }
+
+  .xt-section-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-3) var(--space-8);
+    margin-bottom: var(--space-6);
+  }
+
+  .xt-section-header h2 {
+    margin: 4px 0 0;
+    font-size: var(--font-h2);
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    line-height: 1.35;
+    color: var(--ink);
+  }
+
+  .xt-section-header > p {
+    max-width: 460px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .xt-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    line-height: 1.6;
+    color: var(--xt-jade);
+  }
+
+  .xt-eyebrow::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 1px;
+    background: currentColor;
+    transform: rotate(45deg);
+  }
+
+  .xt-eyebrow[data-tone="cinnabar"] {
+    color: var(--xt-cinnabar);
+  }
+
+  .xt-eyebrow[data-tone="gold"] {
+    color: var(--xt-gold);
+  }
+
+  /* Transition card linking to next chapter / era (like topic-continue) */
+  .xt-continue {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: 18px 22px;
+    margin-top: var(--space-8);
+  }
+
+  .xt-continue small {
+    display: block;
+    margin-bottom: 2px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--xt-jade);
+  }
+
+  .xt-continue[data-tone="gold"] small {
+    color: var(--xt-gold);
+  }
+
+  .xt-continue strong {
+    font-family: var(--font-serif-editorial);
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .xt-continue p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
 }
 
 .font-editorial {
@@ -51,31 +349,8 @@
 }
 
 .font-code {
-  font-family: var(--font-mono-code);
+  font-family: var(--mono);
   font-variant-numeric: tabular-nums;
-}
-
-/* Classical Chinese book double hairline rule (文武线) for major section transitions */
-.wenwu-rule {
-  position: relative;
-  height: 5px;
-  border-top: 1px solid rgba(20, 25, 24, 0.16);
-  border-bottom: 1px solid rgba(20, 25, 24, 0.06);
-}
-
-.dark .wenwu-rule {
-  border-top-color: rgba(232, 236, 234, 0.16);
-  border-bottom-color: rgba(232, 236, 234, 0.06);
-}
-
-/* Subtle mineral paper dot-grid atmosphere strictly for the outer frame */
-.paper-frame-tint {
-  background-image: radial-gradient(rgba(30, 107, 82, 0.055) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-.dark .paper-frame-tint {
-  background-image: radial-gradient(rgba(90, 184, 151, 0.065) 1px, transparent 1px);
 }
 
 /* Purposeful compositor-only transitions */

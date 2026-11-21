@@ -10,9 +10,11 @@ import {
   RotateCcw,
   ShieldCheck,
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import type { XianTuTrial } from '../types';
 import { RichProse } from './RichProse';
 import { SealStamp } from './SealStamp';
+import { SectionHeader } from './SectionHeader';
 
 interface HeartDemonTrialProps {
   eraLabel: string;
@@ -88,71 +90,56 @@ export function HeartDemonTrial({
     secondaryLineNumber ? `L${lineNumber}/L${secondaryLineNumber}` : `L${lineNumber}`;
 
   return (
-    <section
-      id="trial"
-      className="py-16 md:py-22 border-t border-[#141918]/10 dark:border-[#E8ECEA]/10 bg-[#EEF1EE]/60 dark:bg-[#121917]"
-    >
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-          <div>
-            <p className="text-xs font-medium tracking-[0.14em] text-[#B83B2A] dark:text-[#E57363] mb-2">
-              {eraLabel}终极考核 · 已识破 {solvedBugIds.length} / {trial.bugs.length} 处心魔
-            </p>
-            <div className="flex flex-wrap items-center gap-3">
-              <h2 className="font-editorial text-2xl sm:text-3xl font-semibold text-[#141918] dark:text-[#F0F4F2]">
-                {trial.title}
-              </h2>
-              {allSolved && <SealStamp label="炼气圆满" tone="vermilion" size="md" animated />}
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2.5">
-            <button
-              type="button"
-              onClick={() => setShowHint((v) => !v)}
-              className="inline-flex items-center gap-1.5 min-h-[40px] px-3.5 py-2 text-xs font-medium rounded-lg border border-[#141918]/15 dark:border-[#E8ECEA]/15 bg-white dark:bg-[#161E1C] text-[#141918] dark:text-[#E8ECEA] hover:border-[#1E6B52] transition-colors whitespace-nowrap"
-            >
-              <HelpCircle className="w-3.5 h-3.5" strokeWidth={1.6} />
+    <section id="trial" data-xt-section className="xt-section">
+      <SectionHeader
+        tone="cinnabar"
+        eyebrow={`${eraLabel}终极考核 · 已识破 ${solvedBugIds.length} / ${trial.bugs.length} 处心魔`}
+        title={trial.title}
+        titleAddon={
+          allSolved ? <SealStamp label="炼气圆满" tone="vermilion" size="md" animated /> : null
+        }
+        actions={
+          <div className="flex flex-wrap items-center gap-2">
+            <Button variant="outline" size="sm" onClick={() => setShowHint((v) => !v)}>
+              <HelpCircle className="w-3.5 h-3.5 mr-1.5" strokeWidth={1.6} />
               {showHint ? '隐藏提示' : '查看提示'}
-            </button>
+            </Button>
 
-            <button
-              type="button"
-              onClick={() => setShowFixedCode((v) => !v)}
-              className="inline-flex items-center gap-1.5 min-h-[40px] px-3.5 py-2 text-xs font-medium rounded-lg border border-[#141918]/15 dark:border-[#E8ECEA]/15 bg-white dark:bg-[#161E1C] text-[#141918] dark:text-[#E8ECEA] hover:border-[#1E6B52] transition-colors whitespace-nowrap"
-            >
+            <Button variant="outline" size="sm" onClick={() => setShowFixedCode((v) => !v)}>
               {showFixedCode ? (
-                <EyeOff className="w-3.5 h-3.5" strokeWidth={1.6} />
+                <EyeOff className="w-3.5 h-3.5 mr-1.5" strokeWidth={1.6} />
               ) : (
-                <Eye className="w-3.5 h-3.5" strokeWidth={1.6} />
+                <Eye className="w-3.5 h-3.5 mr-1.5" strokeWidth={1.6} />
               )}
               {showFixedCode ? '收起正道代码' : '查看修复代码'}
-            </button>
+            </Button>
 
-            <button
-              type="button"
+            <Button
+              variant="outline"
+              size="sm"
               onClick={handleReset}
-              className="inline-flex items-center gap-1.5 min-h-[40px] px-3.5 py-2 text-xs font-medium rounded-lg border border-[#141918]/15 dark:border-[#E8ECEA]/15 bg-white dark:bg-[#161E1C] text-[#596662] dark:text-[#98A6A1] hover:text-[#141918] dark:hover:text-white transition-colors whitespace-nowrap"
+              className="text-[var(--muted)]"
             >
-              <RotateCcw className="w-3.5 h-3.5" strokeWidth={1.6} />
+              <RotateCcw className="w-3.5 h-3.5 mr-1.5" strokeWidth={1.6} />
               重置试炼
-            </button>
+            </Button>
           </div>
-        </div>
+        }
+      />
 
-        <p className="text-[15px] text-[#3C4845] dark:text-[#B4C0BC] mb-5 leading-relaxed max-w-4xl">
+        <p className="text-[15px] text-[var(--xt-prose)] mb-5 leading-relaxed max-w-4xl">
           <RichProse text={trial.intro} />
         </p>
 
         {showHint && (
-          <div className="mb-6 p-4 rounded-lg bg-[#FBF6EA] dark:bg-[#231D12] border border-[#9A7B3E]/25 dark:border-[#D4B36E]/25 text-sm text-[#664F1F] dark:text-[#E5CFA0] leading-relaxed animate-panel-reveal">
+          <div className="mb-6 p-4 rounded-lg bg-[var(--xt-gold-soft)] border border-[var(--xt-gold)]/25 text-sm text-[var(--xt-gold-ink)] leading-relaxed animate-panel-reveal">
             <RichProse text={trial.hint} />
           </div>
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
           {/* Interactive clickable C++23 code editor surface */}
-          <div className="lg:col-span-6 rounded-xl bg-[#131A18] text-[#E3ECE8] border border-[#25332F] overflow-hidden flex flex-col">
+          <div className="lg:col-span-6 rounded-xl bg-[var(--code)] text-[#E3ECE8] border border-[#25332F] overflow-hidden flex flex-col">
             <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between text-xs text-[#9AB0A8]">
               <span className="font-code">{trial.filename} · C++23</span>
               <span>点击任意代码行排查心魔</span>
@@ -236,34 +223,34 @@ export function HeartDemonTrial({
           </div>
 
           {/* Right Diagnostic Panel */}
-          <div className="lg:col-span-6 rounded-xl bg-white dark:bg-[#151D1B] border border-[#141918]/10 dark:border-[#E8ECEA]/10 p-6 sm:p-7 flex flex-col">
+          <div className="lg:col-span-6 rounded-xl bg-white border border-[var(--line)] p-6 sm:p-7 flex flex-col">
             {activeBug ? (
               <div key={activeBug.id} className="flex-1 flex flex-col animate-panel-reveal">
-                <div className="pb-4 mb-5 border-b border-[#141918]/10 dark:border-[#E8ECEA]/10">
-                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-[#596662] dark:text-[#98A6A1] mb-1.5">
+                <div className="pb-4 mb-5 border-b border-[var(--line)]">
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-[var(--muted)] mb-1.5">
                     <span className="font-code">
                       {activeBug.secondaryLineNumber
                         ? `第 ${activeBug.lineNumber} / ${activeBug.secondaryLineNumber} 行`
                         : `第 ${activeBug.lineNumber} 行`}
                     </span>
                     <span aria-hidden="true">·</span>
-                    <span className="font-medium text-[#1E6B52] dark:text-[#5AB897]">
+                    <span className="font-medium text-[var(--xt-jade)]">
                       {activeBug.dimension}
                     </span>
                     <span aria-hidden="true">·</span>
-                    <span className="font-medium text-[#B83B2A] dark:text-[#E57363]">
+                    <span className="font-medium text-[var(--xt-cinnabar)]">
                       {activeBug.category}
                     </span>
                   </div>
-                  <h3 className="font-editorial text-lg sm:text-xl font-semibold text-[#141918] dark:text-[#F0F4F2]">
+                  <h3 className="font-editorial text-lg sm:text-xl font-semibold text-[var(--ink)]">
                     {activeBug.title}
                   </h3>
-                  <code className="font-code text-xs block mt-2.5 px-3.5 py-2.5 rounded-lg bg-[#F4F6F4] dark:bg-[#101614] text-[#141918] dark:text-[#D5DFDC] border border-[#141918]/8 dark:border-[#E8ECEA]/8 overflow-x-auto">
+                  <code className="font-code text-xs block mt-2.5 px-3.5 py-2.5 rounded-lg bg-[var(--canvas)] text-[var(--ink)] border border-[var(--line)] overflow-x-auto">
                     {activeBug.codeExcerpt}
                   </code>
                 </div>
 
-                <p className="text-sm sm:text-[15px] text-[#222D2A] dark:text-[#D2DBD8] mb-4 leading-relaxed">
+                <p className="text-sm sm:text-[15px] text-[var(--xt-prose)] mb-4 leading-relaxed">
                   <RichProse text={activeBug.prompt} />
                 </p>
 
@@ -274,16 +261,16 @@ export function HeartDemonTrial({
                     const isBugSolved = solvedBugIds.includes(activeBug.id);
 
                     let borderClass =
-                      'border-[#141918]/12 dark:border-[#E8ECEA]/12 hover:border-[#1E6B52] dark:hover:border-[#5AB897]';
+                      'border-[var(--line)] hover:border-[var(--xt-jade)]';
                     if (isChosen && opt.isCorrect) {
                       borderClass =
-                        'border-[#1E6B52] dark:border-[#5AB897] bg-[#EEF6F2] dark:bg-[#13251F]';
+                        'border-[var(--xt-jade)] bg-[var(--xt-jade-soft)]';
                     } else if (isChosen && !opt.isCorrect) {
                       borderClass =
-                        'border-[#B83B2A] dark:border-[#E57363] bg-[#FAF0EE] dark:bg-[#271614]';
+                        'border-[var(--xt-cinnabar)] bg-[var(--xt-cinnabar-soft)]';
                     } else if (isBugSolved && opt.isCorrect) {
                       borderClass =
-                        'border-[#1E6B52]/50 dark:border-[#5AB897]/50 bg-[#EEF6F2]/60 dark:bg-[#13251F]/60';
+                        'border-[var(--xt-jade)]/50 bg-[var(--xt-jade-soft)]/60';
                     }
 
                     return (
@@ -291,19 +278,19 @@ export function HeartDemonTrial({
                         key={opt.id}
                         type="button"
                         onClick={() => handleChooseOption(activeBug.id, opt.id, opt.isCorrect)}
-                        className={`w-full text-left p-3.5 rounded-lg border text-xs sm:text-sm leading-relaxed transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1E6B52] ${borderClass}`}
+                        className={`w-full text-left p-3.5 rounded-lg border text-xs sm:text-sm leading-relaxed transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--blue)] ${borderClass}`}
                       >
                         <div className="flex items-start gap-2.5">
                           <span className="mt-0.5 shrink-0">
                             {isChosen && opt.isCorrect ? (
-                              <CheckCircle2 className="w-4 h-4 text-[#1E6B52] dark:text-[#5AB897]" strokeWidth={1.8} />
+                              <CheckCircle2 className="w-4 h-4 text-[var(--xt-jade)]" strokeWidth={1.8} />
                             ) : isChosen && !opt.isCorrect ? (
-                              <AlertCircle className="w-4 h-4 text-[#B83B2A] dark:text-[#E57363]" strokeWidth={1.8} />
+                              <AlertCircle className="w-4 h-4 text-[var(--xt-cinnabar)]" strokeWidth={1.8} />
                             ) : (
-                              <span className="block w-4 h-4 rounded-full border border-[#141918]/25 dark:border-[#E8ECEA]/25" />
+                              <span className="block w-4 h-4 rounded-full border border-[var(--line-strong)]" />
                             )}
                           </span>
-                          <span className="text-[#141918] dark:text-[#E8ECEA]">
+                          <span className="text-[var(--ink)]">
                             <RichProse text={opt.label} />
                           </span>
                         </div>
@@ -311,8 +298,8 @@ export function HeartDemonTrial({
                           <p
                             className={`mt-2.5 pl-6 text-xs leading-relaxed ${
                               opt.isCorrect
-                                ? 'text-[#174D3B] dark:text-[#BCE4D5]'
-                                : 'text-[#8C281B] dark:text-[#F0BDB5]'
+                                ? 'text-[var(--xt-jade-ink)]'
+                                : 'text-[var(--xt-cinnabar-ink)]'
                             }`}
                           >
                             <RichProse text={opt.feedback} />
@@ -324,9 +311,9 @@ export function HeartDemonTrial({
                 </div>
 
                 {solvedBugIds.includes(activeBug.id) && (
-                  <div className="mt-auto pt-4 border-t border-[#141918]/10 dark:border-[#E8ECEA]/10 text-xs space-y-2">
-                    <div className="font-semibold text-[#1E6B52] dark:text-[#5AB897]">正道修复写法</div>
-                    <pre className="font-code block p-3 rounded-lg bg-[#F1F6F3] dark:bg-[#12221D] text-[#143328] dark:text-[#C9E7DC] border border-[#1E6B52]/15 dark:border-[#5AB897]/20 whitespace-pre-wrap overflow-x-auto">
+                  <div className="mt-auto pt-4 border-t border-[var(--line)] text-xs space-y-2">
+                    <div className="font-semibold text-[var(--xt-jade)]">正道修复写法</div>
+                    <pre className="font-code block p-3 rounded-lg bg-[var(--xt-jade-soft)] text-[var(--xt-jade-ink)] border border-[var(--xt-jade)]/15 whitespace-pre-wrap overflow-x-auto">
                       <code>{activeBug.fixedLine}</code>
                     </pre>
                   </div>
@@ -334,17 +321,17 @@ export function HeartDemonTrial({
               </div>
             ) : cleanLineNotice !== null ? (
               <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
-                <ShieldCheck className="w-9 h-9 text-[#1E6B52] dark:text-[#5AB897] mb-3" strokeWidth={1.5} />
-                <h3 className="font-editorial text-lg font-semibold text-[#141918] dark:text-[#F0F4F2] mb-2">
+                <ShieldCheck className="w-9 h-9 text-[var(--xt-jade)] mb-3" strokeWidth={1.5} />
+                <h3 className="font-editorial text-lg font-semibold text-[var(--ink)] mb-2">
                   第 {cleanLineNotice} 行清净无碍
                 </h3>
-                <p className="text-sm text-[#596662] dark:text-[#98A6A1] max-w-sm leading-relaxed">
+                <p className="text-sm text-[var(--muted)] max-w-sm leading-relaxed">
                   这一行代码本身并无致命心魔。请继续排查左侧代码中的隐患行，或点击下方快捷定位按钮直接切入。
                 </p>
               </div>
             ) : (
               <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
-                <p className="text-sm text-[#596662] dark:text-[#98A6A1]">
+                <p className="text-sm text-[var(--muted)]">
                   请在左侧代码中点击疑似存在心魔的代码行开始排查。
                 </p>
               </div>
@@ -353,14 +340,14 @@ export function HeartDemonTrial({
         </div>
 
         {allSolved && (
-          <div className="mt-6 p-6 rounded-xl bg-[#EEF6F2] dark:bg-[#13251F] border border-[#1E6B52]/25 dark:border-[#5AB897]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-panel-reveal">
+          <div className="mt-6 p-6 rounded-xl bg-[var(--xt-jade-soft)] border border-[var(--xt-jade)]/25 flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-panel-reveal">
             <div className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-[#1E6B52] dark:text-[#5AB897] shrink-0 mt-0.5" strokeWidth={1.8} />
+              <CheckCircle2 className="w-5 h-5 text-[var(--xt-jade)] shrink-0 mt-0.5" strokeWidth={1.8} />
               <div>
-                <h3 className="font-editorial text-lg font-semibold text-[#143328] dark:text-[#E0F2EC]">
+                <h3 className="font-editorial text-lg font-semibold text-[var(--xt-jade-ink)]">
                   五处综合心魔尽数破除 · 炼气期大圆满
                 </h3>
-                <p className="text-xs sm:text-sm text-[#2A5949] dark:text-[#B3DCD0] mt-1 leading-relaxed">
+                <p className="text-xs sm:text-sm text-[var(--xt-jade-ink)] mt-1 leading-relaxed">
                   元信息与保留字命名、统一初始化防窄化、单行 if 括号与求值顺序、返回局部悬垂视图以及临时字符串视图绑定五重关卡尽数通关，可展开完整正道代码留存对照。
                 </p>
               </div>
@@ -368,7 +355,7 @@ export function HeartDemonTrial({
             <button
               type="button"
               onClick={() => setShowFixedCode(true)}
-              className="min-h-[40px] px-4 py-2 text-xs font-medium rounded-lg bg-[#1E6B52] dark:bg-[#4FA687] text-white dark:text-[#0E1614] hover:opacity-90 transition-opacity whitespace-nowrap shrink-0"
+              className="min-h-[40px] px-4 py-2 text-xs font-medium rounded-lg bg-[var(--xt-jade)] text-white hover:opacity-90 transition-opacity whitespace-nowrap shrink-0"
             >
               检视完整正道代码
             </button>
@@ -376,7 +363,7 @@ export function HeartDemonTrial({
         )}
 
         {showFixedCode && (
-          <div className="mt-6 rounded-xl bg-[#131A18] text-[#E3ECE8] border border-[#25332F] p-5 sm:p-6 animate-panel-reveal">
+          <div className="mt-6 rounded-xl bg-[var(--code)] text-[#E3ECE8] border border-[#25332F] p-5 sm:p-6 animate-panel-reveal">
             <div className="flex flex-wrap items-center justify-between gap-3 mb-3.5">
               <span className="text-xs font-semibold text-[#68D3AD]">
                 现代 C++23 完整修复版 · {trial.filename}
@@ -413,7 +400,6 @@ export function HeartDemonTrial({
             </pre>
           </div>
         )}
-      </div>
     </section>
   );
 }

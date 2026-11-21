@@ -15,7 +15,7 @@ export function EditorialPlate({ plateId, alt, className = '' }: EditorialPlateP
     <div
       role="img"
       aria-label={alt}
-      className={`w-full h-full bg-[#ECEFEB] dark:bg-[#161F1C] flex items-center justify-center overflow-hidden ${className}`}
+      className={`w-full h-full bg-[#ECEFEB] flex items-center justify-center overflow-hidden ${className}`}
     >
       {plateId === 'ch3-hero-codecraft' && (
         <svg viewBox="0 0 800 450" className="w-full h-full" preserveAspectRatio="xMidYMid slice">

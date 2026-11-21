@@ -17,8 +17,8 @@ export function SealStamp({
 }: SealStampProps) {
   const toneClass =
     tone === 'vermilion'
-      ? 'border-[#B83B2A] text-[#B83B2A] bg-[#B83B2A]/[0.04] dark:border-[#E57363] dark:text-[#E57363] dark:bg-[#E57363]/[0.07]'
-      : 'border-[#1E6B52] text-[#1E6B52] bg-[#1E6B52]/[0.05] dark:border-[#5AB897] dark:text-[#5AB897] dark:bg-[#5AB897]/[0.08]';
+      ? 'border-[var(--xt-cinnabar)] text-[var(--xt-cinnabar)] bg-[var(--xt-cinnabar)]/[0.04]'
+      : 'border-[var(--xt-jade)] text-[var(--xt-jade)] bg-[var(--xt-jade)]/[0.05]';
 
   const sizeClass =
     size === 'md'

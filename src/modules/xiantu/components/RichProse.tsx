@@ -24,7 +24,7 @@ export function RichProse({ text, className = '' }: RichProseProps) {
           return (
             <code
               key={idx}
-              className="font-code text-[0.87em] px-1.5 py-[1px] mx-[1px] rounded-[4px] bg-[#EBF0ED] dark:bg-[#1C2824] text-[#174A38] dark:text-[#86D5B8] border border-[#1E6B52]/12 dark:border-[#5AB897]/18 align-baseline"
+              className="font-code text-[0.87em] px-1.5 py-[1px] mx-[1px] rounded-[4px] bg-[#EBF0ED] text-[#174A38] border border-[var(--xt-jade)]/12 align-baseline"
             >
               {part}
             </code>

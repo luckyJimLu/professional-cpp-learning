@@ -18,15 +18,15 @@ interface RoundSimulatorProps {
 
 export function RoundSimulator({ type, title, subtitle }: RoundSimulatorProps) {
   return (
-    <div className="rounded-xl bg-white dark:bg-[#151D1B] border border-[#141918]/10 dark:border-[#E8ECEA]/10 p-6 flex flex-col animate-panel-reveal">
-      <div className="pb-4 mb-5 border-b border-[#141918]/10 dark:border-[#E8ECEA]/10">
-        <p className="text-xs font-medium tracking-[0.12em] text-[#1E6B52] dark:text-[#5AB897] mb-1">
+    <div className="rounded-xl bg-white border border-[var(--line)] p-6 flex flex-col animate-panel-reveal">
+      <div className="pb-4 mb-5 border-b border-[var(--line)]">
+        <p className="text-xs font-medium tracking-[0.12em] text-[var(--xt-jade)] mb-1">
           本回演练法阵
         </p>
-        <h4 className="font-editorial text-lg font-semibold text-[#141918] dark:text-[#F0F4F2]">
+        <h4 className="font-editorial text-lg font-semibold text-[var(--ink)]">
           {title}
         </h4>
-        <p className="text-xs text-[#596662] dark:text-[#98A6A1] mt-1 leading-relaxed">
+        <p className="text-xs text-[var(--muted)] mt-1 leading-relaxed">
           {subtitle}
         </p>
       </div>
@@ -130,7 +130,7 @@ function DualLabSwitch({
   return (
     <div className="space-y-4">
       <div
-        className="grid grid-cols-2 gap-1.5 pb-3 border-b border-[#141918]/8 dark:border-[#E8ECEA]/8"
+        className="grid grid-cols-2 gap-1.5 pb-3 border-b border-[var(--line)]"
         role="tablist"
         aria-label="演练模块切换"
       >
@@ -141,8 +141,8 @@ function DualLabSwitch({
           onClick={() => setPane('left')}
           className={`min-h-[36px] px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors whitespace-nowrap truncate ${
             pane === 'left'
-              ? 'border-[#1E6B52] dark:border-[#5AB897] bg-[#EEF6F2] dark:bg-[#13251F] text-[#174D3B] dark:text-[#BCE4D5]'
-              : 'border-[#141918]/12 dark:border-[#E8ECEA]/12 text-[#525E5B] dark:text-[#98A6A1] hover:text-[#141918] dark:hover:text-white'
+              ? 'border-[var(--xt-jade)] bg-[var(--xt-jade-soft)] text-[var(--xt-jade-ink)]'
+              : 'border-[var(--line)] text-[var(--muted)] hover:text-[var(--ink)]'
           }`}
         >
           01 · {leftLabel}
@@ -154,8 +154,8 @@ function DualLabSwitch({
           onClick={() => setPane('right')}
           className={`min-h-[36px] px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors whitespace-nowrap truncate ${
             pane === 'right'
-              ? 'border-[#1E6B52] dark:border-[#5AB897] bg-[#EEF6F2] dark:bg-[#13251F] text-[#174D3B] dark:text-[#BCE4D5]'
-              : 'border-[#141918]/12 dark:border-[#E8ECEA]/12 text-[#525E5B] dark:text-[#98A6A1] hover:text-[#141918] dark:hover:text-white'
+              ? 'border-[var(--xt-jade)] bg-[var(--xt-jade-soft)] text-[var(--xt-jade-ink)]'
+              : 'border-[var(--line)] text-[var(--muted)] hover:text-[var(--ink)]'
           }`}
         >
           02 · {rightLabel}
@@ -206,7 +206,7 @@ function ModuleImportSim() {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-3 gap-1 p-1 rounded-lg bg-[#EFF2F0] dark:bg-[#1C2623]">
+      <div className="grid grid-cols-3 gap-1 p-1 rounded-lg bg-[var(--canvas)]">
         {(['legacy', 'transition', 'modern'] as const).map((key) => (
           <button
             key={key}
@@ -214,8 +214,8 @@ function ModuleImportSim() {
             onClick={() => setMode(key)}
             className={`min-h-[36px] px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap truncate ${
               mode === key
-                ? 'bg-white dark:bg-[#111816] text-[#141918] dark:text-[#F0F4F2] shadow-xs'
-                : 'text-[#525E5B] dark:text-[#98A6A1] hover:text-[#141918] dark:hover:text-white'
+                ? 'bg-white text-[var(--ink)] shadow-xs'
+                : 'text-[var(--muted)] hover:text-[var(--ink)]'
             }`}
           >
             {key === 'legacy' ? '旧式头文件' : key === 'transition' ? '过渡兼容' : 'import std;'}
@@ -300,8 +300,8 @@ function UniformInitSim() {
             onClick={() => setSelected(item.id)}
             className={`min-h-[34px] px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
               selected === item.id
-                ? 'bg-[#1E6B52] text-white dark:bg-[#4FA687] dark:text-[#0E1614]'
-                : 'bg-[#EFF2F0] dark:bg-[#1C2623] text-[#3F4B48] dark:text-[#B4C0BC] hover:bg-[#E3E8E5] dark:hover:bg-[#24312D]'
+                ? 'bg-[var(--xt-jade)] text-white'
+                : 'bg-[var(--canvas)] text-[var(--xt-prose)] hover:bg-[#E3E8E5]'
             }`}
           >
             {item.label}
@@ -357,7 +357,7 @@ function ReferenceMemorySim() {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-3 gap-1 p-1 rounded-lg bg-[#EFF2F0] dark:bg-[#1C2623]">
+      <div className="grid grid-cols-3 gap-1 p-1 rounded-lg bg-[var(--canvas)]">
         {(
           [
             ['leak', '裸指针泄漏'],
@@ -372,9 +372,9 @@ function ReferenceMemorySim() {
             className={`min-h-[36px] px-2 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
               scenario === key
                 ? key === 'const-ref'
-                  ? 'bg-white dark:bg-[#111816] text-[#1E6B52] dark:text-[#5AB897] shadow-xs'
-                  : 'bg-white dark:bg-[#111816] text-[#B83B2A] dark:text-[#E57363] shadow-xs'
-                : 'text-[#525E5B] dark:text-[#98A6A1]'
+                  ? 'bg-white text-[var(--xt-jade)] shadow-xs'
+                  : 'bg-white text-[var(--xt-cinnabar)] shadow-xs'
+                : 'text-[var(--muted)]'
             }`}
           >
             {label}
@@ -450,8 +450,8 @@ function ConstPointerSim() {
             }}
             className={`min-h-[38px] px-3 py-2 text-xs font-code font-medium rounded-md text-left transition-colors truncate ${
               selectedId === item.id
-                ? 'bg-[#1E6B52] text-white dark:bg-[#4FA687] dark:text-[#0E1614]'
-                : 'bg-[#EFF2F0] dark:bg-[#1C2623] text-[#1D2724] dark:text-[#C5D1CD] hover:bg-[#E2E8E5] dark:hover:bg-[#25322E]'
+                ? 'bg-[var(--xt-jade)] text-white'
+                : 'bg-[var(--canvas)] text-[var(--xt-prose)] hover:bg-[var(--line)]'
             }`}
           >
             {item.syntax}
@@ -459,9 +459,9 @@ function ConstPointerSim() {
         ))}
       </div>
 
-      <div className="p-4 rounded-lg bg-[#F4F6F4] dark:bg-[#101614] border border-[#141918]/8 dark:border-[#E8ECEA]/8 space-y-1.5">
-        <div className="text-[11px] font-medium text-[#596662] dark:text-[#98A6A1]">从右向左心法拆解</div>
-        <p className="text-xs text-[#141918] dark:text-[#E8ECEA] leading-relaxed font-medium">
+      <div className="p-4 rounded-lg bg-[var(--canvas)] border border-[var(--line)] space-y-1.5">
+        <div className="text-[11px] font-medium text-[var(--muted)]">从右向左心法拆解</div>
+        <p className="text-xs text-[var(--ink)] leading-relaxed font-medium">
           {current.readRightToLeft}
         </p>
       </div>
@@ -470,9 +470,9 @@ function ConstPointerSim() {
         <button
           type="button"
           onClick={() => setActionResult('data')}
-          className="px-3 py-2.5 text-xs font-code rounded-lg border border-[#141918]/15 dark:border-[#E8ECEA]/15 hover:border-[#1E6B52] dark:hover:border-[#5AB897] bg-white dark:bg-[#18211E] text-[#141918] dark:text-[#E8ECEA] transition-colors text-left"
+          className="px-3 py-2.5 text-xs font-code rounded-lg border border-[var(--line-strong)] hover:border-[var(--xt-jade)] bg-white text-[var(--ink)] transition-colors text-left"
         >
-          <span className="block text-[11px] font-sans text-[#596662] dark:text-[#98A6A1] mb-0.5">
+          <span className="block text-[11px] font-sans text-[var(--muted)] mb-0.5">
             实测修改数据
           </span>
           ip[4] = 5;
@@ -481,9 +481,9 @@ function ConstPointerSim() {
         <button
           type="button"
           onClick={() => setActionResult('rebind')}
-          className="px-3 py-2.5 text-xs font-code rounded-lg border border-[#141918]/15 dark:border-[#E8ECEA]/15 hover:border-[#1E6B52] dark:hover:border-[#5AB897] bg-white dark:bg-[#18211E] text-[#141918] dark:text-[#E8ECEA] transition-colors text-left"
+          className="px-3 py-2.5 text-xs font-code rounded-lg border border-[var(--line-strong)] hover:border-[var(--xt-jade)] bg-white text-[var(--ink)] transition-colors text-left"
         >
-          <span className="block text-[11px] font-sans text-[#596662] dark:text-[#98A6A1] mb-0.5">
+          <span className="block text-[11px] font-sans text-[var(--muted)] mb-0.5">
             实测指针改道
           </span>
           ip = otherPtr;
@@ -574,8 +574,8 @@ function AutoDeductionSim() {
             onClick={() => setSelected(item.id)}
             className={`min-h-[38px] px-3.5 py-2 text-xs font-code text-left rounded-md transition-colors flex items-center justify-between gap-2 ${
               selected === item.id
-                ? 'bg-[#1E6B52] text-white dark:bg-[#4FA687] dark:text-[#0E1614]'
-                : 'bg-[#EFF2F0] dark:bg-[#1C2623] text-[#1D2724] dark:text-[#C5D1CD] hover:bg-[#E2E8E5] dark:hover:bg-[#25322E]'
+                ? 'bg-[var(--xt-jade)] text-white'
+                : 'bg-[var(--canvas)] text-[var(--xt-prose)] hover:bg-[var(--line)]'
             }`}
           >
             <span className="truncate">{item.expr}</span>
@@ -655,7 +655,7 @@ function ReturnValueNrvoSim() {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-1 p-1 rounded-lg bg-[#EFF2F0] dark:bg-[#1C2623]">
+      <div className="grid grid-cols-2 gap-1 p-1 rounded-lg bg-[var(--canvas)]">
         <button
           type="button"
           onClick={() => {
@@ -664,8 +664,8 @@ function ReturnValueNrvoSim() {
           }}
           className={`min-h-[36px] px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
             strategy === 'dangling'
-              ? 'bg-white dark:bg-[#111816] text-[#B83B2A] dark:text-[#E57363] shadow-xs'
-              : 'text-[#525E5B] dark:text-[#98A6A1]'
+              ? 'bg-white text-[var(--xt-cinnabar)] shadow-xs'
+              : 'text-[var(--muted)]'
           }`}
         >
           反例：返回 Employee&
@@ -678,8 +678,8 @@ function ReturnValueNrvoSim() {
           }}
           className={`min-h-[36px] px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
             strategy === 'value'
-              ? 'bg-white dark:bg-[#111816] text-[#1E6B52] dark:text-[#5AB897] shadow-xs'
-              : 'text-[#525E5B] dark:text-[#98A6A1]'
+              ? 'bg-white text-[var(--xt-jade)] shadow-xs'
+              : 'text-[var(--muted)]'
           }`}
         >
           正道：按值返回 Employee
@@ -694,7 +694,7 @@ function ReturnValueNrvoSim() {
         }
       />
 
-      <div className="text-xs font-semibold text-[#141918] dark:text-[#F0F4F2]">{currentStep.title}</div>
+      <div className="text-xs font-semibold text-[var(--ink)]">{currentStep.title}</div>
 
       <MemoryLinkDiagram
         leftTitle="被调函数栈帧"
@@ -778,8 +778,8 @@ function CStringNullTrapSim() {
             onClick={() => setMode(key)}
             className={`min-h-[36px] px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
               mode === key
-                ? 'bg-[#1E6B52] text-white dark:bg-[#4FA687] dark:text-[#0E1614]'
-                : 'bg-[#EFF2F0] dark:bg-[#1C2623] text-[#3F4B48] dark:text-[#B4C0BC]'
+                ? 'bg-[var(--xt-jade)] text-white'
+                : 'bg-[var(--canvas)] text-[var(--xt-prose)]'
             }`}
           >
             {label}
@@ -789,7 +789,7 @@ function CStringNullTrapSim() {
 
       {/* Visual byte-by-byte memory tape */}
       <div>
-        <div className="flex items-center justify-between text-[11px] text-[#596662] dark:text-[#98A6A1] mb-2">
+        <div className="flex items-center justify-between text-[11px] text-[var(--muted)] mb-2">
           <span>"hello" 内存字节排布</span>
           <span className="font-code">strlen = 5 · 实占 6 Bytes</span>
         </div>
@@ -799,10 +799,10 @@ function CStringNullTrapSim() {
               key={b.idx}
               className={`rounded-md py-2 text-center border font-code text-xs ${
                 b.kind === 'overflow'
-                  ? 'bg-[#FAF0EE] dark:bg-[#2B1715] border-[#B83B2A] dark:border-[#E57363] text-[#B83B2A] dark:text-[#F09A8E] font-semibold'
+                  ? 'bg-[var(--xt-cinnabar-soft)] border-[var(--xt-cinnabar)] text-[var(--xt-cinnabar)] font-semibold'
                   : b.kind === 'nul'
-                    ? 'bg-[#EEF6F2] dark:bg-[#142821] border-[#1E6B52]/40 dark:border-[#5AB897]/40 text-[#1E6B52] dark:text-[#68D3AD] font-semibold'
-                    : 'bg-[#F4F6F4] dark:bg-[#101614] border-[#141918]/10 dark:border-[#E8ECEA]/10 text-[#141918] dark:text-[#E8ECEA]'
+                    ? 'bg-[var(--xt-jade-soft)] border-[var(--xt-jade)]/40 text-[var(--xt-jade)] font-semibold'
+                    : 'bg-[var(--canvas)] border-[var(--line)] text-[var(--ink)]'
               }`}
             >
               <div>{b.ch}</div>
@@ -871,8 +871,8 @@ function CtadStringLiteralSim() {
             onClick={() => setSelected(item.id)}
             className={`min-h-[36px] px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
               selected === item.id
-                ? 'bg-[#1E6B52] text-white dark:bg-[#4FA687] dark:text-[#0E1614]'
-                : 'bg-[#EFF2F0] dark:bg-[#1C2623] text-[#3F4B48] dark:text-[#B4C0BC]'
+                ? 'bg-[var(--xt-jade)] text-white'
+                : 'bg-[var(--canvas)] text-[var(--xt-prose)]'
             }`}
           >
             {item.label}
@@ -931,14 +931,14 @@ function StringViewZeroCopySim() {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-1 p-1 rounded-lg bg-[#EFF2F0] dark:bg-[#1C2623]">
+      <div className="grid grid-cols-2 gap-1 p-1 rounded-lg bg-[var(--canvas)]">
         <button
           type="button"
           onClick={() => setParamType('const-ref')}
           className={`min-h-[36px] px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
             paramType === 'const-ref'
-              ? 'bg-white dark:bg-[#111816] text-[#B83B2A] dark:text-[#E57363] shadow-xs'
-              : 'text-[#525E5B] dark:text-[#98A6A1]'
+              ? 'bg-white text-[var(--xt-cinnabar)] shadow-xs'
+              : 'text-[var(--muted)]'
           }`}
         >
           const string&
@@ -948,8 +948,8 @@ function StringViewZeroCopySim() {
           onClick={() => setParamType('string-view')}
           className={`min-h-[36px] px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
             paramType === 'string-view'
-              ? 'bg-white dark:bg-[#111816] text-[#1E6B52] dark:text-[#5AB897] shadow-xs'
-              : 'text-[#525E5B] dark:text-[#98A6A1]'
+              ? 'bg-white text-[var(--xt-jade)] shadow-xs'
+              : 'text-[var(--muted)]'
           }`}
         >
           string_view（按值）
@@ -970,8 +970,8 @@ function StringViewZeroCopySim() {
             onClick={() => setArgSource(key)}
             className={`min-h-[32px] px-3 py-1 text-xs rounded-md border transition-colors whitespace-nowrap ${
               argSource === key
-                ? 'border-[#1E6B52] dark:border-[#5AB897] bg-[#EEF6F2] dark:bg-[#13251F] text-[#174D3B] dark:text-[#BCE4D5] font-medium'
-                : 'border-[#141918]/12 dark:border-[#E8ECEA]/12 text-[#525E5B] dark:text-[#98A6A1]'
+                ? 'border-[var(--xt-jade)] bg-[var(--xt-jade-soft)] text-[var(--xt-jade-ink)] font-medium'
+                : 'border-[var(--line)] text-[var(--muted)]'
             }`}
           >
             {label}
@@ -1044,7 +1044,7 @@ function CharconvBufferSim() {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-3 gap-1 p-1 rounded-lg bg-[#EFF2F0] dark:bg-[#1C2623]">
+      <div className="grid grid-cols-3 gap-1 p-1 rounded-lg bg-[var(--canvas)]">
         {cases.map((item) => (
           <button
             key={item.id}
@@ -1052,8 +1052,8 @@ function CharconvBufferSim() {
             onClick={() => setSelected(item.id)}
             className={`min-h-[36px] px-2 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap truncate ${
               selected === item.id
-                ? 'bg-white dark:bg-[#111816] text-[#141918] dark:text-[#F0F4F2] shadow-xs'
-                : 'text-[#525E5B] dark:text-[#98A6A1]'
+                ? 'bg-white text-[var(--ink)] shadow-xs'
+                : 'text-[var(--muted)]'
             }`}
           >
             {item.label}
@@ -1132,8 +1132,8 @@ function PrintlnRangesSim() {
             onClick={() => setSelected(item.id)}
             className={`min-h-[34px] px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
               selected === item.id
-                ? 'bg-[#1E6B52] text-white dark:bg-[#4FA687] dark:text-[#0E1614]'
-                : 'bg-[#EFF2F0] dark:bg-[#1C2623] text-[#3F4B48] dark:text-[#B4C0BC]'
+                ? 'bg-[var(--xt-jade)] text-white'
+                : 'bg-[var(--canvas)] text-[var(--xt-prose)]'
             }`}
           >
             {item.label}
@@ -1210,7 +1210,7 @@ function DanglingStringViewSim() {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-1 p-1 rounded-lg bg-[#EFF2F0] dark:bg-[#1C2623]">
+      <div className="grid grid-cols-2 gap-1 p-1 rounded-lg bg-[var(--canvas)]">
         <button
           type="button"
           onClick={() => {
@@ -1219,8 +1219,8 @@ function DanglingStringViewSim() {
           }}
           className={`min-h-[36px] px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
             strategy === 'dangling'
-              ? 'bg-white dark:bg-[#111816] text-[#B83B2A] dark:text-[#E57363] shadow-xs'
-              : 'text-[#525E5B] dark:text-[#98A6A1]'
+              ? 'bg-white text-[var(--xt-cinnabar)] shadow-xs'
+              : 'text-[var(--muted)]'
           }`}
         >
           反例：绑定临时拼接
@@ -1233,8 +1233,8 @@ function DanglingStringViewSim() {
           }}
           className={`min-h-[36px] px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
             strategy === 'owned'
-              ? 'bg-white dark:bg-[#111816] text-[#1E6B52] dark:text-[#5AB897] shadow-xs'
-              : 'text-[#525E5B] dark:text-[#98A6A1]'
+              ? 'bg-white text-[var(--xt-jade)] shadow-xs'
+              : 'text-[var(--muted)]'
           }`}
         >
           正道：std::string 持有
@@ -1249,7 +1249,7 @@ function DanglingStringViewSim() {
         }
       />
 
-      <div className="text-xs font-semibold text-[#141918] dark:text-[#F0F4F2]">{currentStep.title}</div>
+      <div className="text-xs font-semibold text-[var(--ink)]">{currentStep.title}</div>
 
       <MemoryLinkDiagram
         leftTitle={strategy === 'dangling' ? '临时字符串宿主' : '持久 std::string'}
@@ -1310,7 +1310,7 @@ function SelfDocCommentSim() {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-3 gap-1 p-1 rounded-lg bg-[#EFF2F0] dark:bg-[#1C2623]">
+      <div className="grid grid-cols-3 gap-1 p-1 rounded-lg bg-[var(--canvas)]">
         {(
           [
             ['noisy', '逐行翻译注释'],
@@ -1324,8 +1324,8 @@ function SelfDocCommentSim() {
             onClick={() => setMode(key)}
             className={`min-h-[36px] px-2 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap truncate ${
               mode === key
-                ? 'bg-white dark:bg-[#111816] text-[#141918] dark:text-[#F0F4F2] shadow-xs'
-                : 'text-[#525E5B] dark:text-[#98A6A1]'
+                ? 'bg-white text-[var(--ink)] shadow-xs'
+                : 'text-[var(--muted)]'
             }`}
           >
             {label}
@@ -1387,14 +1387,14 @@ function SquintTestSim() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="grid grid-cols-2 gap-1 p-1 rounded-lg bg-[#EFF2F0] dark:bg-[#1C2623] flex-1">
+        <div className="grid grid-cols-2 gap-1 p-1 rounded-lg bg-[var(--canvas)] flex-1">
           <button
             type="button"
             onClick={() => setStyle('cruft')}
             className={`min-h-[34px] px-2.5 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
               style === 'cruft'
-                ? 'bg-white dark:bg-[#111816] text-[#B83B2A] dark:text-[#E57363] shadow-xs'
-                : 'text-[#525E5B] dark:text-[#98A6A1]'
+                ? 'bg-white text-[var(--xt-cinnabar)] shadow-xs'
+                : 'text-[var(--muted)]'
             }`}
           >
             积垢嵌套（Cruft）
@@ -1404,8 +1404,8 @@ function SquintTestSim() {
             onClick={() => setStyle('clean')}
             className={`min-h-[34px] px-2.5 py-1 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
               style === 'clean'
-                ? 'bg-white dark:bg-[#111816] text-[#1E6B52] dark:text-[#5AB897] shadow-xs'
-                : 'text-[#525E5B] dark:text-[#98A6A1]'
+                ? 'bg-white text-[var(--xt-jade)] shadow-xs'
+                : 'text-[var(--muted)]'
             }`}
           >
             单一职责拆解
@@ -1417,8 +1417,8 @@ function SquintTestSim() {
           onClick={() => setSquintOn((v) => !v)}
           className={`inline-flex items-center gap-1.5 min-h-[38px] px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors whitespace-nowrap ${
             squintOn
-              ? 'border-[#1E6B52] dark:border-[#5AB897] bg-[#EEF6F2] dark:bg-[#13251F] text-[#174D3B] dark:text-[#BCE4D5]'
-              : 'border-[#141918]/15 dark:border-[#E8ECEA]/15 text-[#4B5653] dark:text-[#A3B0AC]'
+              ? 'border-[var(--xt-jade)] bg-[var(--xt-jade-soft)] text-[var(--xt-jade-ink)]'
+              : 'border-[var(--line-strong)] text-[var(--muted)]'
           }`}
         >
           <Eye className="w-3.5 h-3.5" strokeWidth={1.6} />
@@ -1494,8 +1494,8 @@ function ReservedNameCheckerSim() {
             onClick={() => setIdentifier(sample)}
             className={`min-h-[32px] px-2.5 py-1 text-xs font-code rounded-md transition-colors whitespace-nowrap ${
               identifier === sample
-                ? 'bg-[#1E6B52] text-white dark:bg-[#4FA687] dark:text-[#0E1614]'
-                : 'bg-[#EFF2F0] dark:bg-[#1C2623] text-[#3F4B48] dark:text-[#B4C0BC]'
+                ? 'bg-[var(--xt-jade)] text-white'
+                : 'bg-[var(--canvas)] text-[var(--xt-prose)]'
             }`}
           >
             {sample}
@@ -1506,7 +1506,7 @@ function ReservedNameCheckerSim() {
       <div>
         <label
           htmlFor="xiantu-ident-input"
-          className="block text-[11px] font-medium text-[#596662] dark:text-[#98A6A1] mb-1.5"
+          className="block text-[11px] font-medium text-[var(--muted)] mb-1.5"
         >
           输入任意 C++ 标识符实时检测保留字红线
         </label>
@@ -1516,7 +1516,7 @@ function ReservedNameCheckerSim() {
           value={identifier}
           onChange={(e) => setIdentifier(e.target.value)}
           placeholder="例如：_FormatUser 或 m_spirit"
-          className="w-full min-h-[40px] px-3.5 py-2 rounded-lg font-code text-xs bg-[#F4F6F4] dark:bg-[#101614] border border-[#141918]/15 dark:border-[#E8ECEA]/15 text-[#141918] dark:text-[#F0F4F2] focus:outline-none focus:border-[#1E6B52] dark:focus:border-[#5AB897]"
+          className="w-full min-h-[40px] px-3.5 py-2 rounded-lg font-code text-xs bg-[var(--canvas)] border border-[var(--line-strong)] text-[var(--ink)] focus:outline-none focus:border-[var(--xt-jade)]"
         />
       </div>
 
@@ -1557,7 +1557,7 @@ function MagicNumberConstCastSim() {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-3 gap-1 p-1 rounded-lg bg-[#EFF2F0] dark:bg-[#1C2623]">
+      <div className="grid grid-cols-3 gap-1 p-1 rounded-lg bg-[var(--canvas)]">
         {(
           [
             ['magic', '魔数隐患'],
@@ -1571,8 +1571,8 @@ function MagicNumberConstCastSim() {
             onClick={() => setMode(key)}
             className={`min-h-[36px] px-2 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap truncate ${
               mode === key
-                ? 'bg-white dark:bg-[#111816] text-[#141918] dark:text-[#F0F4F2] shadow-xs'
-                : 'text-[#525E5B] dark:text-[#98A6A1]'
+                ? 'bg-white text-[var(--ink)] shadow-xs'
+                : 'text-[var(--muted)]'
             }`}
           >
             {label}
@@ -1594,14 +1594,14 @@ function BracelessIfEscapeSim() {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-1 p-1 rounded-lg bg-[#EFF2F0] dark:bg-[#1C2623]">
+      <div className="grid grid-cols-2 gap-1 p-1 rounded-lg bg-[var(--canvas)]">
         <button
           type="button"
           onClick={() => setBraced(false)}
           className={`min-h-[36px] px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
             !braced
-              ? 'bg-white dark:bg-[#111816] text-[#B83B2A] dark:text-[#E57363] shadow-xs'
-              : 'text-[#525E5B] dark:text-[#98A6A1]'
+              ? 'bg-white text-[var(--xt-cinnabar)] shadow-xs'
+              : 'text-[var(--muted)]'
           }`}
         >
           反例：无大括号 if
@@ -1611,8 +1611,8 @@ function BracelessIfEscapeSim() {
           onClick={() => setBraced(true)}
           className={`min-h-[36px] px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
             braced
-              ? 'bg-white dark:bg-[#111816] text-[#1E6B52] dark:text-[#5AB897] shadow-xs'
-              : 'text-[#525E5B] dark:text-[#98A6A1]'
+              ? 'bg-white text-[var(--xt-jade)] shadow-xs'
+              : 'text-[var(--muted)]'
           }`}
         >
           正道：始终加 {'{}'}
@@ -1620,7 +1620,7 @@ function BracelessIfEscapeSim() {
       </div>
 
       <div className="flex items-center gap-2 text-xs">
-        <span className="text-[#596662] dark:text-[#98A6A1]">测试分值：</span>
+        <span className="text-[var(--muted)]">测试分值：</span>
         {([60, 95] as const).map((val) => (
           <button
             key={val}
@@ -1628,8 +1628,8 @@ function BracelessIfEscapeSim() {
             onClick={() => setScore(val)}
             className={`min-h-[32px] px-3 py-1 rounded-md font-code border transition-colors ${
               score === val
-                ? 'border-[#1E6B52] dark:border-[#5AB897] bg-[#EEF6F2] dark:bg-[#13251F] text-[#174D3B] dark:text-[#BCE4D5] font-semibold'
-                : 'border-[#141918]/12 dark:border-[#E8ECEA]/12 text-[#525E5B] dark:text-[#98A6A1]'
+                ? 'border-[var(--xt-jade)] bg-[var(--xt-jade-soft)] text-[var(--xt-jade-ink)] font-semibold'
+                : 'border-[var(--line)] text-[var(--muted)]'
             }`}
           >
             score = {val}
@@ -1677,14 +1677,14 @@ function EvalOrderUbSim() {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-1 p-1 rounded-lg bg-[#EFF2F0] dark:bg-[#1C2623]">
+      <div className="grid grid-cols-2 gap-1 p-1 rounded-lg bg-[var(--canvas)]">
         <button
           type="button"
           onClick={() => setStrategy('ub')}
           className={`min-h-[36px] px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
             strategy === 'ub'
-              ? 'bg-white dark:bg-[#111816] text-[#B83B2A] dark:text-[#E57363] shadow-xs'
-              : 'text-[#525E5B] dark:text-[#98A6A1]'
+              ? 'bg-white text-[var(--xt-cinnabar)] shadow-xs'
+              : 'text-[var(--muted)]'
           }`}
         >
           反例：val = val++ + 10
@@ -1694,8 +1694,8 @@ function EvalOrderUbSim() {
           onClick={() => setStrategy('split')}
           className={`min-h-[36px] px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap ${
             strategy === 'split'
-              ? 'bg-white dark:bg-[#111816] text-[#1E6B52] dark:text-[#5AB897] shadow-xs'
-              : 'text-[#525E5B] dark:text-[#98A6A1]'
+              ? 'bg-white text-[var(--xt-jade)] shadow-xs'
+              : 'text-[var(--muted)]'
           }`}
         >
           正道：拆行确立顺序
@@ -1743,7 +1743,7 @@ function EvalOrderUbSim() {
 
 function CodePlate({ code }: { code: string }) {
   return (
-    <pre className="font-code text-xs leading-[1.68] p-4 rounded-lg bg-[#F4F6F4] dark:bg-[#101614] text-[#18221F] dark:text-[#D5DFDC] overflow-x-auto border border-[#141918]/8 dark:border-[#E8ECEA]/8">
+    <pre className="font-code text-xs leading-[1.68] p-4 rounded-lg bg-[var(--canvas)] text-[#18221F] overflow-x-auto border border-[var(--line)]">
       <code>{code}</code>
     </pre>
   );
@@ -1759,14 +1759,14 @@ function MetricRows({
       {rows.map((row) => (
         <div
           key={row.label}
-          className="flex items-center justify-between gap-3 py-2.5 border-b border-[#141918]/8 dark:border-[#E8ECEA]/8 last:border-b-0"
+          className="flex items-center justify-between gap-3 py-2.5 border-b border-[var(--line)] last:border-b-0"
         >
-          <dt className="text-[#596662] dark:text-[#98A6A1] shrink-0">{row.label}</dt>
+          <dt className="text-[var(--muted)] shrink-0">{row.label}</dt>
           <dd
             className={`text-right ${row.mono ? 'font-code' : ''} ${
               row.accent
-                ? 'font-semibold text-[#1E6B52] dark:text-[#5AB897]'
-                : 'font-medium text-[#141918] dark:text-[#E8ECEA]'
+                ? 'font-semibold text-[var(--xt-jade)]'
+                : 'font-medium text-[var(--ink)]'
             }`}
           >
             {row.value}
@@ -1792,11 +1792,11 @@ function MemoryLinkDiagram({
 }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] items-center gap-2 text-xs">
-      <div className="p-3 rounded-lg bg-[#F5F7F5] dark:bg-[#111917] border border-[#141918]/10 dark:border-[#E8ECEA]/10">
-        <span className="text-[11px] font-medium text-[#596662] dark:text-[#98A6A1] block mb-1">
+      <div className="p-3 rounded-lg bg-[var(--canvas)] border border-[var(--line)]">
+        <span className="text-[11px] font-medium text-[var(--muted)] block mb-1">
           {leftTitle}
         </span>
-        <span className="text-[#141918] dark:text-[#E8ECEA] leading-relaxed block">{leftBody}</span>
+        <span className="text-[var(--ink)] leading-relaxed block">{leftBody}</span>
       </div>
 
       <div className="flex items-center justify-center py-0.5" aria-hidden="true">
@@ -1819,16 +1819,16 @@ function MemoryLinkDiagram({
       <div
         className={`p-3 rounded-lg border ${
           isBroken
-            ? 'bg-[#FAF0EE] dark:bg-[#271614] border-[#B83B2A]/30 dark:border-[#E57363]/30'
-            : 'bg-[#F5F7F5] dark:bg-[#111917] border-[#141918]/10 dark:border-[#E8ECEA]/10'
+            ? 'bg-[var(--xt-cinnabar-soft)] border-[var(--xt-cinnabar)]/30'
+            : 'bg-[var(--canvas)] border-[var(--line)]'
         }`}
       >
-        <span className="text-[11px] font-medium text-[#596662] dark:text-[#98A6A1] block mb-1">
+        <span className="text-[11px] font-medium text-[var(--muted)] block mb-1">
           {rightTitle}
         </span>
         <span
           className={`leading-relaxed block ${
-            isBroken ? 'text-[#8C281B] dark:text-[#F0BDB5] font-medium' : 'text-[#141918] dark:text-[#E8ECEA]'
+            isBroken ? 'text-[var(--xt-cinnabar-ink)] font-medium' : 'text-[var(--ink)]'
           }`}
         >
           {rightBody}
@@ -1850,7 +1850,7 @@ function StepControls({
       <button
         type="button"
         onClick={() => onStepChange(1)}
-        className="inline-flex items-center gap-1.5 min-h-[38px] px-3 py-1.5 text-xs font-medium rounded-lg border border-[#141918]/15 dark:border-[#E8ECEA]/15 text-[#4B5653] dark:text-[#A3B0AC] hover:text-[#141918] dark:hover:text-white transition-colors whitespace-nowrap"
+        className="inline-flex items-center gap-1.5 min-h-[38px] px-3 py-1.5 text-xs font-medium rounded-lg border border-[var(--line-strong)] text-[var(--muted)] hover:text-[var(--ink)] transition-colors whitespace-nowrap"
       >
         <RotateCcw className="w-3.5 h-3.5" strokeWidth={1.6} />
         重置步骤
@@ -1861,7 +1861,7 @@ function StepControls({
           type="button"
           disabled={step === 1}
           onClick={() => onStepChange(Math.max(1, step - 1) as 1 | 2 | 3)}
-          className="min-h-[38px] px-3 py-1.5 text-xs font-medium rounded-lg border border-[#141918]/15 dark:border-[#E8ECEA]/15 text-[#141918] dark:text-[#E8ECEA] disabled:opacity-40 transition-colors whitespace-nowrap"
+          className="min-h-[38px] px-3 py-1.5 text-xs font-medium rounded-lg border border-[var(--line-strong)] text-[var(--ink)] disabled:opacity-40 transition-colors whitespace-nowrap"
         >
           上一步
         </button>
@@ -1869,7 +1869,7 @@ function StepControls({
           type="button"
           disabled={step === 3}
           onClick={() => onStepChange(Math.min(3, step + 1) as 1 | 2 | 3)}
-          className="min-h-[38px] px-4 py-1.5 text-xs font-medium rounded-lg bg-[#1E6B52] dark:bg-[#4FA687] text-white dark:text-[#0E1614] hover:opacity-90 disabled:opacity-40 transition-opacity whitespace-nowrap"
+          className="min-h-[38px] px-4 py-1.5 text-xs font-medium rounded-lg bg-[var(--xt-jade)] text-white hover:opacity-90 disabled:opacity-40 transition-opacity whitespace-nowrap"
         >
           下一步推演
         </button>
@@ -1887,22 +1887,22 @@ function StatusBanner({
 }) {
   const styles = {
     ok: {
-      box: 'bg-[#EEF6F2] dark:bg-[#13251F] border-[#1E6B52]/20 dark:border-[#5AB897]/25 text-[#174D3B] dark:text-[#BCE4D5]',
+      box: 'bg-[var(--xt-jade-soft)] border-[var(--xt-jade)]/20 text-[var(--xt-jade-ink)]',
       label: '安全通过',
       icon: CheckCircle2,
     },
     warn: {
-      box: 'bg-[#FBF6EA] dark:bg-[#241E12] border-[#9A7B3E]/25 dark:border-[#D4B36E]/25 text-[#664F1F] dark:text-[#E5CFA0]',
+      box: 'bg-[var(--xt-gold-soft)] border-[var(--xt-gold)]/25 text-[var(--xt-gold-ink)]',
       label: '隐患警示',
       icon: AlertTriangle,
     },
     error: {
-      box: 'bg-[#FAF0EE] dark:bg-[#271614] border-[#B83B2A]/25 dark:border-[#E57363]/25 text-[#7D2418] dark:text-[#F2C3BC]',
+      box: 'bg-[var(--xt-cinnabar-soft)] border-[var(--xt-cinnabar)]/25 text-[var(--xt-cinnabar-ink)]',
       label: '拦截 / 心魔',
       icon: XCircle,
     },
     info: {
-      box: 'bg-[#F2F5F4] dark:bg-[#18211F] border-[#141918]/10 dark:border-[#E8ECEA]/10 text-[#33403C] dark:text-[#C5D1CD]',
+      box: 'bg-[#F2F5F4] border-[var(--line)] text-[#33403C]',
       label: '法阵提示',
       icon: ShieldCheck,
     },

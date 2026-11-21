@@ -14,7 +14,7 @@ export function ResilientArtwork({ src, alt, title, className = '' }: ResilientA
   if (hasError) {
     return (
       <div
-        className={`flex flex-col items-center justify-center bg-[#E9EDE9] dark:bg-[#1B2421] text-[#4A5854] dark:text-[#98ABA5] p-6 text-center ${className}`}
+        className={`flex flex-col items-center justify-center bg-[#E9EDE9] text-[var(--xt-prose)] p-6 text-center ${className}`}
         role="img"
         aria-label={alt}
       >
