@@ -325,10 +325,6 @@ export function Shell({
         </div>
         <div className="shell-context">
           <nav aria-label="当前位置" className="shell-current-page">
-            <span className="shell-breadcrumb-root">工程手册</span>
-            <span className="shell-breadcrumb-sep" aria-hidden="true">
-              ›
-            </span>
             <strong>{label}</strong>
           </nav>
           <button
