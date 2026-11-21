@@ -8,7 +8,7 @@
 
 import type { Expr, FuncDecl, Program, Stmt, VarDeclStmt } from "../frontend/ast.ts";
 import { lookupObjectType, NAMESPACE_CONSTANTS } from "../frontend/apiCatalog.ts";
-import type { KernelCall, KernelGen, KernelResult, ObjectInitSpec, ThreadAttrs } from "../kernel/types.ts";
+import type { KernelCall, KernelGen, ObjectInitSpec, ThreadAttrs } from "../kernel/types.ts";
 import { RTOS_STATEMENT_BUDGET, type RtosConfig, type RtosDiagnostic } from "../types.ts";
 import { Env, ScopeFrame } from "./env.ts";
 import {

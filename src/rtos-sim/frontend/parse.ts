@@ -56,7 +56,6 @@ const TYPE_NODE_NAMES = new Set([
 ]);
 
 const STREAM_IDENTS = new Set(["std::cout", "std::endl"]);
-const GLOBAL_OK_TOKENS = new Set(["static", "extern", "inline", "constexpr", "volatile", "mutable"]);
 
 /** 方法名 → 参数个数范围（跨对象类别合并，parse 期只能做宽松校验） */
 const METHOD_ARITY = new Map<string, { min: number; max: number }>();

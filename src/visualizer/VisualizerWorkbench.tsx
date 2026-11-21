@@ -1,7 +1,6 @@
 import {
   useCallback,
   useEffect,
-  useRef,
   useState,
   type KeyboardEvent,
 } from "react";
@@ -68,7 +67,7 @@ export function VisualizerWorkbench({
 
   // 统一自动播放控制器
   const [isPlaying, setIsPlaying] = useState(false);
-  const [playSpeed, setPlaySpeed] = useState<number>(1000);
+  const [playSpeed] = useState<number>(1000);
 
   useEffect(() => {
     if (!isPlaying) return;

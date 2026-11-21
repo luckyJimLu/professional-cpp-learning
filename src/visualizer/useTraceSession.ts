@@ -7,7 +7,7 @@ import {
 } from "./reducer";
 import { initialTraceSession, traceSessionReducer } from "./traceSessionState";
 import { materializeTrace } from "./traceProtocol";
-import type { TraceSessionState, VisualizerTrace } from "./types";
+import type { VisualizerTrace } from "./types";
 
 function stripVisLines(text: string): string {
   return text
