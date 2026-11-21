@@ -5,7 +5,7 @@ export const NAV = [
   { id: "lessons", label: "课程", group: "learn" },
   { id: "slides", label: "课件", group: "learn" },
   { id: "review", label: "复盘", group: "learn" },
-  { id: "xiantu", label: "仙途修仙录", group: "learn" },
+  { id: "xiantu", label: "仙途", group: "learn" },
   { id: "topics", label: "专题", group: "reference" },
   { id: "booklets", label: "小册子", group: "reference" },
   { id: "guidelines", label: "编码规范", group: "reference" },
