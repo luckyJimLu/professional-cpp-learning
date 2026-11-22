@@ -366,3 +366,18 @@
 - SHOULD：concrete leaf 在没有受支持的进一步扩展轴时可使用 final；不要机械地给所有类添加 final，也不要把 final 当作运行时性能优化保证。
 - MUST：普通继承不等于 runtime polymorphism。没有 virtual function 时，base reference 只提供静态类型可见的 base contract；若需要经 base pointer / unique_ptr<Base> 销毁派生对象，base destructor 必须 public virtual。若禁止 base deletion，可使用 protected non-virtual destructor 并明确接口限制。
 - REVIEW：检查 base constructor 是否只建立有效软件状态、base/member 初始化顺序、派生对象析构顺序、protected API 面积、public API 泄漏、base-view 的可见操作，以及是否因继承不必要地引入 heap / shared ownership / runtime registration。
+
+
+## Virtual functions 与 override 契约（Day 89）
+
+- MUST：需要通过基类引用 / 指针实现运行时替换时，基类成员函数必须显式声明 virtual；派生类中所有预期重写都必须显式标记 override。
+- MUST：重写签名必须保持参数类型、const / volatile、ref-qualifier 与异常说明兼容；不要通过删掉基类 const 或放宽错误契约来“修复”编译错误。
+- MUST：把“同名函数”与“override”区分开。基类函数非 virtual，或派生签名不匹配时，派生声明可能只是 hiding；代码评审不得仅凭函数名判断重写成功。
+- SHOULD：多态基类若允许通过 Base* / std::unique_ptr<Base> 销毁派生对象，析构函数必须 public virtual；若禁止基类销毁，使用受控析构访问并在接口中明确限制。
+- MUST：runtime polymorphism 与 ownership 分开设计。virtual 不创建对象、不拥有对象、不延长引用 / 指针的生命周期；required borrowed dependency 优先使用引用，owner 必须比 borrower 活得更久。
+- SHOULD：只有真实的运行时变化轴才使用 virtual Strategy。固件类型编译期固定时，评估 composition、template / concept；同时检查模板实例化数量、Flash、RAM 与可测试性。
+- MUST：嵌入式 runtime interface 必须约束调用上下文、timeout、错误语义、最大 buffer、线程安全和可替换实现的行为契约；override 只验证签名，不自动保证 Liskov Substitution Principle。
+- MUST：实时路径中的虚调用必须具有有限、可审计的目标集合；不得通过无界插件注册、动态分配或无界回调隐藏工作量。WCET 结论必须来自目标平台测量 / 分析。
+- MUST：同步 span / string_view 默认只借用到调用返回；若底层通过 DMA / worker 异步使用 buffer，必须转移或延长 owner 生命周期，直到完成 / 取消 / drain。
+- MUST：异步 callback 若捕获 this，必须定义 owner、取消 / unregister、in-flight drain 与 teardown 顺序；不能把 virtual interface 当作 callback lifetime 方案。
+- REVIEW：检查 virtual base destructor、override warning、签名漂移、base-view 行为、对象 slicing、是否误引入 shared_ptr / heap，以及 ISR / task context 的调用约束。

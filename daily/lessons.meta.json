@@ -2315,6 +2315,44 @@
       "lab": "examples/day-088/main.cpp",
       "previous": 87,
       "next": 89
+    },
+    {
+      "path": "daily/day-089-overriding-member-functions-virtual-override.md",
+      "week": 13,
+      "part": "III",
+      "chapter": 10,
+      "chapter_title": "Discovering Inheritance Techniques",
+      "title": "Overriding Member Functions · From virtual to override and runtime dispatch contracts",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-22",
+      "patterns": [
+        "strategy",
+        "runtime-polymorphism",
+        "override-contract",
+        "explicit-borrow"
+      ],
+      "topics": [
+        "overriding-member-functions",
+        "virtual-functions",
+        "override-keyword",
+        "dynamic-dispatch",
+        "base-reference",
+        "signature-matching",
+        "function-hiding",
+        "runtime-vs-static-polymorphism",
+        "transport-strategy"
+      ],
+      "guidelines": [
+        "base-virtual-extension-point",
+        "override-all-overrides",
+        "polymorphic-destructor-policy",
+        "explicit-borrow-lifetime",
+        "bounded-runtime-dispatch"
+      ],
+      "lab": "examples/day-089/main.cpp",
+      "previous": 88,
+      "next": 90
     }
   ]
 }
