@@ -12,7 +12,7 @@
 - **当前课程：Day 89 · Overriding Member Functions：从 virtual 到 override 的运行时契约（已发布）**
 - **下一课：Day 90 · Chapter 10 · The Truth about virtual（动态分派实现、性能与虚析构边界）**
 - **主教材当前：Chapter 10 · Discovering Inheritance Techniques（p.357–419；Day 89 已完成 Overriding Member Functions，下一节为 The Truth about virtual）**
-- 当前主线：**Chapter 10 · Discovering Inheritance Techniques（Day 88 已开始）**
+- 当前主线：**Chapter 10 · Discovering Inheritance Techniques（Day 88–89 已推进至 virtual / override）**
 - 更新方式：**GitHub Markdown only**
 - Gmail 邮件投递：**已停止**
 
