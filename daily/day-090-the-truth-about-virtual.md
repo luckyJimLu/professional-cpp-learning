@@ -487,5 +487,5 @@ Base destructor contract is polymorphic-safe
 
 - Marc Gregoire, *Professional C++, Sixth Edition*, Chapter 10 · Discovering Inheritance Techniques，The Truth about virtual，pp.366–369。
 - [O’Reilly：Chapter 10 · Discovering Inheritance Techniques](https://www.oreilly.com/library/view/professional-c-6th/9781394193172/c10.xhtml)
-- [Wiley：Professional C++, 6th Edition](https://www.wiley.com/en-us/Professional%2BC%2B%2C%2B6th%2BEdition-p-9781394193202)
+- [Wiley：Professional C++, 6th Edition](https://www.wiley.com/en-us/Professional%2BC%2B%2B%2C%2B6th%2BEdition-p-9781394193202)
 - 仓库扩展：[Strategy 与行为模式](../patterns/03-behavioral-patterns.md#策略strategy) · [Ownership 与 Smart Pointers](../patterns/ownership-and-smart-pointers.md)
