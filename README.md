@@ -8,11 +8,11 @@
 
 ## 当前进度
 
-- **已发布：Day 1–89**
-- **当前课程：Day 89 · Overriding Member Functions：从 virtual 到 override 的运行时契约（已发布）**
-- **下一课：Day 90 · Chapter 10 · The Truth about virtual（动态分派实现、性能与虚析构边界）**
-- **主教材当前：Chapter 10 · Discovering Inheritance Techniques（p.357–419；Day 89 已完成 Overriding Member Functions，下一节为 The Truth about virtual）**
-- 当前主线：**Chapter 10 · Discovering Inheritance Techniques（Day 88–89 已推进至 virtual / override）**
+- **已发布：Day 1–90**
+- **当前课程：Day 90 · The Truth about virtual：vtable 心智模型、动态分派成本与虚析构边界（已发布）**
+- **下一课：Day 91 · Chapter 10 · Preventing Overriding（用 final 关闭具体重写点）**
+- **主教材当前：Chapter 10 · Discovering Inheritance Techniques（p.357–419；Day 90 已完成 The Truth about virtual，下一节为 Preventing Overriding）**
+- 当前主线：**Chapter 10 · Discovering Inheritance Techniques（Day 88–90 已推进至 virtual / override、vtable 与虚析构）**
 - 更新方式：**GitHub Markdown only**
 - Gmail 邮件投递：**已停止**
 
@@ -33,6 +33,7 @@
 
 ## 最近课程
 
+- [Day 90 · The Truth about virtual：vtable 心智模型、动态分派成本与虚析构边界](daily/day-090-the-truth-about-virtual.md)
 - [Day 89 · Overriding Member Functions：从 virtual 到 override 的运行时契约](daily/day-089-overriding-member-functions-virtual-override.md)
 - [Day 88 · Building Classes with Inheritance：从 Base Subobject 到真实的 Is-a 契约](daily/day-088-building-classes-with-inheritance.md)
 - [Day 87 · Building Stable Interfaces：用 Interface / Implementation 分离稳定 API](daily/day-087-building-stable-interfaces.md)
@@ -85,7 +86,7 @@
 ├── daily/
 │   ├── day-001-*.md
 │   ├── ...
-│   └── day-089-*.md
+│   └── day-090-*.md
 ├── examples/
 │   └── day-XXX/
 ├── topics/

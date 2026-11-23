@@ -1,11 +1,11 @@
 # Professional C++ 学习进度
 
-> 状态校验日期：2026-11-22。已重新扫描 `daily/day-*.md`；发布前最大 Day 为 **88**，本次新增 Day 089，不覆盖或重复既有课程。
+> 状态校验日期：2026-11-23。已重新扫描 `daily/day-*.md`；发布前最大 Day 为 **89**，本次新增 Day 090，不覆盖或重复既有课程。
 
-- **已发布课程：Day 1–89**
-- **最新课程：Day 89 · Overriding Member Functions：从 virtual 到 override 的运行时契约**
-- **下一课：Day 90 · Chapter 10 · The Truth about virtual（动态分派实现、性能与虚析构边界）**
-- **主教材当前：Chapter 10 · Discovering Inheritance Techniques（p.357–419；Day 89 已完成 Overriding Member Functions：virtual / override 与 base-view 分派）**
+- **已发布课程：Day 1–90**
+- **最新课程：Day 90 · The Truth about virtual：vtable 心智模型、动态分派成本与虚析构边界**
+- **下一课：Day 91 · Chapter 10 · Preventing Overriding（用 final 关闭具体重写点）**
+- **主教材当前：Chapter 10 · Discovering Inheritance Techniques（p.357–419；Day 90 已完成 The Truth about virtual：动态分派实现模型、虚函数成本与虚析构边界）**
 - **主教材：** Marc Gregoire, *Professional C++, Sixth Edition*（C++23）
 - **唯一课程源：** 本仓库 Markdown；不发送邮件。
 
@@ -21,7 +21,7 @@
 | Chapter 7 | 56–66 | 内存管理、RAII、智能指针、PMR、固定存储与生命周期 |
 | Chapter 8 | 67–78 | 类封装、对象存储期、构造、成员初始化、复制、列表构造、构造委托、转换构造、explicit、编译器生成的构造函数、Object Destruction、Assignment Operators（copy/move assignment）与第 11 周对象语义复盘 |
 | Chapter 9 | 79–87 | Friends、动态存储、成员函数、constexpr/consteval、数据成员、嵌套类、类内枚举、运算符重载与稳定接口（PImpl） |
-| Chapter 10 | 88– | Discovering Inheritance Techniques：继承扩展、base subobject、virtual / override、动态分派与 is-a 契约（进行中） |
+| Chapter 10 | 88– | Discovering Inheritance Techniques：继承扩展、virtual / override、vtable 心智模型、动态分派成本与虚析构契约（进行中） |
 
 ## 完整课程索引
 
@@ -119,6 +119,7 @@
 
 | 088 | 2026-11-21 | Chapter 10 | Building Classes with Inheritance：Extending Classes、base subobject、public/protected/private 访问视角、final 与 is-a 契约 | public-inheritance-contract, composition-over-inheritance, base-subobject-lifetime | [Day 088](daily/day-088-building-classes-with-inheritance.md) |
 | 089 | 2026-11-22 | Chapter 10 | Overriding Member Functions：virtual 基类契约、override 签名校验、base reference 的动态分派与 transport Strategy | strategy, runtime-polymorphism, override-contract, explicit-borrow | [Day 089](daily/day-089-overriding-member-functions-virtual-override.md) |
+| 090 | 2026-11-23 | Chapter 10 | The Truth about virtual：vtable / vptr 实现模型、动态与静态分派、对象空间 / 调用成本、virtual destructor 与多态销毁契约 | strategy, runtime-vs-static-polymorphism, measured-virtual-cost, polymorphic-destruction | [Day 090](daily/day-090-the-truth-about-virtual.md) |
 
 ## 专题
 

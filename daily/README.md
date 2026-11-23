@@ -1,6 +1,6 @@
 # 每日课程（Daily Lessons）
 
-本目录存放每日 C++ 工程化课程正文。课程基于 *Professional C++, 6th Edition* 的章节顺序展开，目前已发布 Day 1–89，单篇学习时间建议控制在 60 分钟左右。
+本目录存放每日 C++ 工程化课程正文。课程基于 *Professional C++, 6th Edition* 的章节顺序展开，目前已发布 Day 1–90，单篇学习时间建议控制在 60 分钟左右。
 
 ## 文件命名与规范
 
@@ -37,6 +37,6 @@
 | Chapter 7 | Day 56–66 | 内存所有权、智能指针、自定义删除器、PMR 分配器与资源决策树 |
 | Chapter 8 | Day 67–78（Day 77 为对象语义周复盘） | class 封装、成员函数、对象存储期、this、对象创建、构造函数、Copy Constructors、Initializer-List Constructors、Delegating Constructors、Converting Constructors / Explicit Constructors、Summary of Compiler-Generated Constructors、Object Destruction、Assignment Operators |
 | Chapter 9 | Day 79–87 | Friends、Dynamic Memory Allocation in Objects、More About Member Functions、constexpr / consteval、数据成员类型、Nested Classes、类内枚举、Operator Overloading、Building Stable Interfaces / PImpl |
-| Chapter 10 | Day 88– | Discovering Inheritance Techniques：Building Classes with Inheritance、base / derived access、Overriding Member Functions（virtual / override）与运行时分派（进行中） |
+| Chapter 10 | Day 88– | Discovering Inheritance Techniques：Building Classes with Inheritance、base / derived access、Overriding Member Functions（virtual / override）、The Truth about virtual（vtable / vptr、调用成本与虚析构） |
 
-Chapter 9 已在 Day 87 完成；Day 88 已进入 Chapter 10 · Discovering Inheritance Techniques；Day 89 完成 Overriding Member Functions（The virtual Keyword、重写语法、Client’s View 与 override）。下一课为 **Day 90 · The Truth about virtual**；继续按原书顺序推进。Day 84 已完成第 12 周周复盘。
+Chapter 9 已在 Day 87 完成；Day 88 已进入 Chapter 10 · Discovering Inheritance Techniques；Day 89 完成 Overriding Member Functions；Day 90 完成 The Truth about virtual（动态分派实现模型、虚函数成本与虚析构）。下一课为 **Day 91 · Preventing Overriding**；继续按原书顺序推进。Day 84 已完成第 12 周周复盘。

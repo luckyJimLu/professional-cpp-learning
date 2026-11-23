@@ -381,3 +381,13 @@
 - MUST：同步 span / string_view 默认只借用到调用返回；若底层通过 DMA / worker 异步使用 buffer，必须转移或延长 owner 生命周期，直到完成 / 取消 / drain。
 - MUST：异步 callback 若捕获 this，必须定义 owner、取消 / unregister、in-flight drain 与 teardown 顺序；不能把 virtual interface 当作 callback lifetime 方案。
 - REVIEW：检查 virtual base destructor、override warning、签名漂移、base-view 行为、对象 slicing、是否误引入 shared_ptr / heap，以及 ISR / task context 的调用约束。
+
+
+## Virtual Dispatch 成本与 ABI 边界（Day 90）
+
+- MUST：把 vtable / vptr 视为常见 ABI 实现模型，不得把它们的具体布局、位置或固定字节数写成 C++ 标准保证；不得用固定 sizeof 断言跨平台验证虚函数开销。
+- MUST：若允许通过 Base* / std::unique_ptr<Base> 销毁派生对象，基类析构必须 public virtual；若接口只允许 borrow 且禁止基类销毁，可使用 protected non-virtual destructor，并让限制在接口层可见。
+- SHOULD：仅在真实运行时变化轴上引入 virtual。固定固件配置优先评估具体类型组合或 template / concept；同时检查模板实例化、Flash、RAM、编译时间与可测试性。
+- MUST：不得仅凭“virtual 很慢”或“virtual 免费”做优化决策。对实时路径在目标编译器、优化级别和真实硬件上测量 indirect call、对象大小、代码体积、锁 / DMA / 错误路径与 WCET。
+- MUST：virtual 不自动分配 heap、不自动拥有对象，也不提供线程安全。owner / borrow / lifetime、调用上下文、timeout、错误语义和 teardown 必须单独定义。
+- REVIEW：检查 public non-virtual destructor、基类删除权限、std::has_virtual_destructor_v、对象 slicing、是否误引入 shared_ptr / heap，以及 vtable ABI 是否被误当成稳定跨工具链接口。

@@ -2353,6 +2353,45 @@
       "lab": "examples/day-089/main.cpp",
       "previous": 88,
       "next": 90
+    },
+    {
+      "path": "daily/day-090-the-truth-about-virtual.md",
+      "week": 13,
+      "part": "III",
+      "chapter": 10,
+      "chapter_title": "Discovering Inheritance Techniques",
+      "title": "The Truth about virtual · vtable Mental Model, Dispatch Cost and Virtual Destructor Contract",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-23",
+      "patterns": [
+        "strategy",
+        "runtime-vs-static-polymorphism",
+        "measured-virtual-cost",
+        "polymorphic-destruction"
+      ],
+      "topics": [
+        "the-truth-about-virtual",
+        "vtable",
+        "vptr",
+        "dynamic-binding",
+        "static-binding",
+        "devirtualization",
+        "virtual-call-cost",
+        "virtual-destructor",
+        "polymorphic-destruction",
+        "runtime-vs-static-polymorphism"
+      ],
+      "guidelines": [
+        "virtual-only-for-runtime-extension",
+        "polymorphic-base-destructor-policy",
+        "measure-on-target",
+        "no-abi-layout-assumptions",
+        "bounded-real-time-dispatch"
+      ],
+      "lab": "examples/day-090/main.cpp",
+      "previous": 89,
+      "next": 91
     }
   ]
 }
