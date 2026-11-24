@@ -29,3 +29,5 @@
 | 第 09 周 | Day 57–63 | 智能指针所有权转移、回调生命周期拆除、PMR 与资源分配策略 | [week-09-review.md](week-09-review.md) |
 | 第 10 周 | Day 64–70 | 对象生命周期、固定存储、class invariant、构造函数与成员初始化顺序 | [week-10-review.md](week-10-review.md) |
 | 第 11 周 | Day 71–77 | Copy、initializer-list、delegating/explicit constructors、compiler-generated operations、destruction 与 callback teardown | [week-11-review.md](week-11-review.md) |
+| 第 12 周 | Day 78–84 | 赋值、friend、动态存储、成员函数、constexpr、数据成员与嵌套类 | [week-12-review.md](week-12-review.md) |
+| 第 13 周 | Day 85–91 | enum class、运算符值语义、稳定接口、继承、override、virtual 与 Facade / Strategy 边界 | [week-13-review.md](week-13-review.md) |

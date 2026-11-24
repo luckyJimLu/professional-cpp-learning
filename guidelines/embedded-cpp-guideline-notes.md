@@ -391,3 +391,13 @@
 - MUST：不得仅凭“virtual 很慢”或“virtual 免费”做优化决策。对实时路径在目标编译器、优化级别和真实硬件上测量 indirect call、对象大小、代码体积、锁 / DMA / 错误路径与 WCET。
 - MUST：virtual 不自动分配 heap、不自动拥有对象，也不提供线程安全。owner / borrow / lifetime、调用上下文、timeout、错误语义和 teardown 必须单独定义。
 - REVIEW：检查 public non-virtual destructor、基类删除权限、std::has_virtual_destructor_v、对象 slicing、是否误引入 shared_ptr / heap，以及 vtable ABI 是否被误当成稳定跨工具链接口。
+
+
+## Facade / Orchestrator 与底层接口的关系（Week 13 Review）
+
+- MUST：高层 controller / session / manager 仅为了转发底层函数，不得 public inherit 低层 transport / HAL interface；优先通过 composition 持有或借用 required dependency。
+- MUST：public inheritance 必须满足完整 substitutability。基类的每个 public operation 都必须对派生对象保持相同语义，不能让调用者绕过高层校验、状态机或资源不变量。
+- SHOULD：Facade 只暴露领域 API，例如 SendAt()；raw Write() 留在 transport 边界。required transport 以构造参数显式注入，使用引用表达必需的非拥有依赖。
+- REVIEW：搜索只转发成员函数的 override，检查是否存在“is-a 只为复用”的继承；检查通过 base reference 是否能绕过命令编码、权限、状态或长度验证。
+- REVIEW：Facade 的 owner / borrow 必须分开标注；若 transport 由 composition root 拥有，controller 不得 delete 或延长其生命周期。异步 DMA / callback 还需独立定义 buffer owner、cancel、unregister、in-flight drain 和 teardown。
+- SHOULD：固定产品配置优先具体类型或 template / concept；只有真实运行时替换或 Fake 注入需求才引入 Strategy / virtual interface。

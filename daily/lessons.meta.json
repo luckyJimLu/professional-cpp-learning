@@ -2392,6 +2392,44 @@
       "lab": "examples/day-090/main.cpp",
       "previous": 89,
       "next": 91
+    },
+    {
+      "path": "daily/day-091-week13-review-inheritance-interface-boundaries.md",
+      "week": 13,
+      "part": "III",
+      "chapter": 10,
+      "chapter_title": "Discovering Inheritance Techniques",
+      "title": "Week 13 Review · Stable Class Interfaces, Inheritance and Runtime Polymorphism",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-24",
+      "patterns": [
+        "facade",
+        "strategy",
+        "composition-over-inheritance",
+        "stable-interface"
+      ],
+      "topics": [
+        "weekly-review",
+        "class-contracts",
+        "value-semantics",
+        "pimpl",
+        "inheritance",
+        "override",
+        "virtual-dispatch",
+        "ownership-borrow-lifetime",
+        "embedded-realtime-boundaries"
+      ],
+      "guidelines": [
+        "facade-composition-not-inheritance",
+        "explicit-owner-borrow",
+        "bounded-realtime-path",
+        "no-hidden-low-level-api",
+        "boundary-tests"
+      ],
+      "lab": "examples/day-091/main.cpp",
+      "previous": 90,
+      "next": 92
     }
   ]
 }

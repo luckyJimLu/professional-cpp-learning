@@ -1,11 +1,11 @@
 # Professional C++ 学习进度
 
-> 状态校验日期：2026-11-23。已重新扫描 `daily/day-*.md`；发布前最大 Day 为 **89**，本次新增 Day 090，不覆盖或重复既有课程。
+> 状态校验日期：2026-11-24。已重新扫描 `daily/day-*.md`；发布前最大 Day 为 **90**，本次新增 Day 091，不覆盖或重复既有课程。
 
-- **已发布课程：Day 1–90**
-- **最新课程：Day 90 · The Truth about virtual：vtable 心智模型、动态分派成本与虚析构边界**
-- **下一课：Day 91 · Chapter 10 · Preventing Overriding（用 final 关闭具体重写点）**
-- **主教材当前：Chapter 10 · Discovering Inheritance Techniques（p.357–419；Day 90 已完成 The Truth about virtual：动态分派实现模型、虚函数成本与虚析构边界）**
+- **已发布课程：Day 1–91**
+- **最新课程：Day 91 · 第 13 周复盘：从类接口到运行时多态的稳定边界**
+- **下一课：Day 92 · Chapter 10 · Preventing Overriding（用 final 关闭具体重写点）**
+- **主教材当前：Chapter 10 · Discovering Inheritance Techniques（p.357–419；Day 91 完成第 13 周复盘，覆盖 Day 85–90；下一小节为 Preventing Overriding，p.370）**
 - **主教材：** Marc Gregoire, *Professional C++, Sixth Edition*（C++23）
 - **唯一课程源：** 本仓库 Markdown；不发送邮件。
 
@@ -120,6 +120,7 @@
 | 088 | 2026-11-21 | Chapter 10 | Building Classes with Inheritance：Extending Classes、base subobject、public/protected/private 访问视角、final 与 is-a 契约 | public-inheritance-contract, composition-over-inheritance, base-subobject-lifetime | [Day 088](daily/day-088-building-classes-with-inheritance.md) |
 | 089 | 2026-11-22 | Chapter 10 | Overriding Member Functions：virtual 基类契约、override 签名校验、base reference 的动态分派与 transport Strategy | strategy, runtime-polymorphism, override-contract, explicit-borrow | [Day 089](daily/day-089-overriding-member-functions-virtual-override.md) |
 | 090 | 2026-11-23 | Chapter 10 | The Truth about virtual：vtable / vptr 实现模型、动态与静态分派、对象空间 / 调用成本、virtual destructor 与多态销毁契约 | strategy, runtime-vs-static-polymorphism, measured-virtual-cost, polymorphic-destruction | [Day 090](daily/day-090-the-truth-about-virtual.md) |
+| 091 | 2026-11-24 | Chapter 9–10 Review | 第 13 周复盘：类接口、值语义、PImpl、继承、override 与运行时多态；class contract、owner / borrow / lifetime、Facade + composition | Facade、Strategy、composition-over-inheritance；控制器组合 transport，不伪装成底层 transport | [Day 091](daily/day-091-week13-review-inheritance-interface-boundaries.md) |
 
 ## 专题
 
