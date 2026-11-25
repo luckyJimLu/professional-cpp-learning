@@ -2430,6 +2430,43 @@
       "lab": "examples/day-091/main.cpp",
       "previous": 90,
       "next": 92
+    },
+    {
+      "path": "daily/day-092-preventing-overriding-final.md",
+      "week": 14,
+      "part": "III",
+      "chapter": 10,
+      "chapter_title": "Discovering Inheritance Techniques",
+      "title": "Preventing Overriding · 用 final 关闭不应再变化的继承点",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-25",
+      "patterns": [
+        "template-method",
+        "non-virtual-interface",
+        "final-contract",
+        "composition"
+      ],
+      "topics": [
+        "preventing-overriding",
+        "final-specifier",
+        "final-virtual-function",
+        "final-class",
+        "final-overrider",
+        "nvi",
+        "template-method",
+        "embedded-extension-boundary"
+      ],
+      "guidelines": [
+        "override-all-overrides",
+        "finalize-invariant-hooks",
+        "final-concrete-leaf-only",
+        "no-final-as-performance-promise",
+        "bounded-runtime-dispatch"
+      ],
+      "lab": "examples/day-092/main.cpp",
+      "previous": 91,
+      "next": 93
     }
   ]
 }

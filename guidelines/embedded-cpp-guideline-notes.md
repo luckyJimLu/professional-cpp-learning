@@ -401,3 +401,17 @@
 - REVIEW：搜索只转发成员函数的 override，检查是否存在“is-a 只为复用”的继承；检查通过 base reference 是否能绕过命令编码、权限、状态或长度验证。
 - REVIEW：Facade 的 owner / borrow 必须分开标注；若 transport 由 composition root 拥有，controller 不得 delete 或延长其生命周期。异步 DMA / callback 还需独立定义 buffer owner、cancel、unregister、in-flight drain 和 teardown。
 - SHOULD：固定产品配置优先具体类型或 template / concept；只有真实运行时替换或 Fake 注入需求才引入 Strategy / virtual interface。
+
+
+## Preventing Overriding / final（Day 92）
+
+- MUST：所有预期重写基类虚函数的成员函数都显式标记 override；不要仅凭同名判断重写成功。
+- MUST：只有当某个虚函数的实现必须成为最终重写点时，才在该 override 上标记 final；推荐统一写成 override final。final 不能用于普通非虚成员函数。
+- SHOULD：具体叶子类在没有受支持的进一步派生需求时标记 class final；接口基类、Strategy 扩展点和需要被 Fake 替换的抽象边界不得机械标记 final。
+- MUST：final 只关闭类派生或特定虚函数的后续重写，不代表对象不可组合、不代表线程安全、不代表 ownership，也不保证 devirtualization。
+- SHOULD：若中间类仍有真实扩展轴，可只关闭 invariant-sensitive virtual hook，并保留其他受控 hook；若没有任何派生扩展需求，优先让具体类整体 final。
+- MUST：不要通过继承具体 UART / USB driver 来增加 trace、计数或限流。优先 composition；只有包装策略需要独立叠加时才引入 Decorator。
+- MUST：final 不替代 owner / borrow / lifetime 设计。required dependency 显式注入；同步 span 只借用到调用返回；异步 DMA 必须由固定 buffer owner 持有到 completion / cancel / drain。
+- REVIEW：final 函数仍然是 virtual；派生类可以继承它的实现，但不能 override。不同参数的同名函数可能是 overload / name hiding，不构成对 final 虚函数的重写。
+- REVIEW：final 可能为编译器提供 devirtualization 机会，但不能把它写成性能保证；在目标编译器、优化级别和 MCU 上测量调用成本与 WCET。
+- REVIEW：检查 ISR / task context、timeout、Status 错误传播、固定容量、DMA buffer、callback unregister / in-flight drain、析构顺序和边界测试。

@@ -8,11 +8,11 @@
 
 ## 当前进度
 
-- **已发布：Day 1–91**
-- **当前课程：Day 91 · 第 13 周复盘：从类接口到运行时多态的稳定边界（已发布）**
-- **下一课：Day 92 · Chapter 10 · Preventing Overriding（用 final 关闭具体重写点）**
-- **主教材当前：Chapter 10 · Discovering Inheritance Techniques（p.357–419；Day 91 完成第 13 周复盘，覆盖 Day 85–90；下一节 Preventing Overriding，p.370）**
-- 当前主线：**Chapter 10 · Discovering Inheritance Techniques（Day 88–90 已推进至 virtual / override、vtable 与虚析构）**
+- **已发布：Day 1–92**
+- **当前课程：Day 92 · Preventing Overriding：用 final 关闭不应再变化的继承点（已发布）**
+- **下一课：Day 93 · Chapter 10 · Inheritance for Reuse（按原书顺序继续）**
+- **主教材当前：Chapter 10 · Discovering Inheritance Techniques（p.357–419；Day 92 完成 Preventing Overriding，约 p.370；下一节 Inheritance for Reuse）**
+- 当前主线：**Chapter 10 · Discovering Inheritance Techniques（Day 88–92 已推进至 virtual / override、vtable、虚析构与 final）**
 - 更新方式：**GitHub Markdown only**
 - Gmail 邮件投递：**已停止**
 
@@ -33,6 +33,7 @@
 
 ## 最近课程
 
+- [Day 92 · Preventing Overriding：用 final 关闭不应再变化的继承点](daily/day-092-preventing-overriding-final.md)
 - [Day 91 · 第 13 周复盘：从类接口到运行时多态的稳定边界](daily/day-091-week13-review-inheritance-interface-boundaries.md)
 - [Day 90 · The Truth about virtual：vtable 心智模型、动态分派成本与虚析构边界](daily/day-090-the-truth-about-virtual.md)
 - [Day 89 · Overriding Member Functions：从 virtual 到 override 的运行时契约](daily/day-089-overriding-member-functions-virtual-override.md)
