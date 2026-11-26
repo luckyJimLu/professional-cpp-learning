@@ -1,11 +1,11 @@
 # Professional C++ 学习进度
 
-> 状态校验日期：2026-11-25。已重新扫描 `daily/day-*.md`；发布前最大 Day 为 **91**，本次新增 Day 092，不覆盖或重复既有课程。
+> 状态校验日期：2026-11-26。已重新扫描 `daily/day-*.md`；发布前最大 Day 为 **92**，本次新增 Day 093，不覆盖或重复既有课程。
 
-- **已发布课程：Day 1–92**
-- **最新课程：Day 92 · Preventing Overriding：用 final 关闭不应再变化的继承点**
-- **下一课：Day 93 · Chapter 10 · Inheritance for Reuse（按原书顺序继续）**
-- **主教材当前：Chapter 10 · Discovering Inheritance Techniques（p.357–419；Day 92 完成 Preventing Overriding，约 p.370；下一小节 Inheritance for Reuse）**
+- **已发布课程：Day 1–93**
+- **最新课程：Day 93 · Inheritance for Reuse：继承复用、父类生命周期与安全的扩展边界**
+- **下一课：Day 94 · Chapter 10 · Inheritance for Polymorphism（p.380，按原书顺序继续）**
+- **主教材当前：Chapter 10 · Discovering Inheritance Techniques（p.357–419；Day 93 完成 Inheritance for Reuse，pp.370–379；下一小节 Inheritance for Polymorphism，p.380）**
 - **主教材：** Marc Gregoire, *Professional C++, Sixth Edition*（C++23）
 - **唯一课程源：** 本仓库 Markdown；不发送邮件。
 
@@ -21,7 +21,7 @@
 | Chapter 7 | 56–66 | 内存管理、RAII、智能指针、PMR、固定存储与生命周期 |
 | Chapter 8 | 67–78 | 类封装、对象存储期、构造、成员初始化、复制、列表构造、构造委托、转换构造、explicit、编译器生成的构造函数、Object Destruction、Assignment Operators（copy/move assignment）与第 11 周对象语义复盘 |
 | Chapter 9 | 79–87 | Friends、动态存储、成员函数、constexpr/consteval、数据成员、嵌套类、类内枚举、运算符重载与稳定接口（PImpl） |
-| Chapter 10 | 88– | Discovering Inheritance Techniques：继承扩展、virtual / override、vtable、虚析构、Preventing Overriding 与 final 扩展边界（进行中） |
+| Chapter 10 | 88– | Discovering Inheritance Techniques：继承扩展、virtual / override、vtable、虚析构、Preventing Overriding / final、Inheritance for Reuse、父类生命周期与安全转换（进行中） |
 
 ## 完整课程索引
 
@@ -123,6 +123,7 @@
 | 091 | 2026-11-24 | Chapter 9–10 Review | 第 13 周复盘：类接口、值语义、PImpl、继承、override 与运行时多态；class contract、owner / borrow / lifetime、Facade + composition | Facade、Strategy、composition-over-inheritance；控制器组合 transport，不伪装成底层 transport | [Day 091](daily/day-091-week13-review-inheritance-interface-boundaries.md) |
 
 | 092 | 2026-11-25 | Chapter 10 | Preventing Overriding：class final / virtual member final / final overrider；prevent-overriding, final-contract | Template Method / NVI：只关闭不允许变化的虚钩子；其余扩展点保持开放 | [Day 092](daily/day-092-preventing-overriding-final.md) |
+| 093 | 2026-11-26 | Chapter 10 | Inheritance for Reuse：实现复用与 is-a 分离、派生类增量 / 替换、父类构造析构、构造析构期 virtual dispatch、name hiding、upcast / downcast | Composition 复用 RetryBudget；Strategy 仅用于可替代 Transport；明确 owner / borrow / teardown | [Day 093](daily/day-093-inheritance-for-reuse.md) |
 
 ## 专题
 
