@@ -8,11 +8,11 @@
 
 ## 当前进度
 
-- **已发布：Day 1–92**
-- **当前课程：Day 92 · Preventing Overriding：用 final 关闭不应再变化的继承点（已发布）**
-- **下一课：Day 93 · Chapter 10 · Inheritance for Reuse（按原书顺序继续）**
-- **主教材当前：Chapter 10 · Discovering Inheritance Techniques（p.357–419；Day 92 完成 Preventing Overriding，约 p.370；下一节 Inheritance for Reuse）**
-- 当前主线：**Chapter 10 · Discovering Inheritance Techniques（Day 88–92 已推进至 virtual / override、vtable、虚析构与 final）**
+- **已发布：Day 1–93**
+- **当前课程：Day 93 · Inheritance for Reuse：继承复用、父类生命周期与安全的扩展边界（已发布）**
+- **下一课：Day 94 · Chapter 10 · Inheritance for Polymorphism（p.380，按原书顺序继续）**
+- **主教材当前：Chapter 10 · Discovering Inheritance Techniques（p.357–419；Day 93 完成 Inheritance for Reuse，pp.370–379；下一节 Inheritance for Polymorphism，p.380）**
+- 当前主线：**Chapter 10 · Discovering Inheritance Techniques（Day 88–93 已推进至 virtual / override、vtable、虚析构、final、继承复用与父类生命周期）**
 - 更新方式：**GitHub Markdown only**
 - Gmail 邮件投递：**已停止**
 
@@ -33,6 +33,7 @@
 
 ## 最近课程
 
+- [Day 93 · Inheritance for Reuse：继承复用、父类生命周期与安全的扩展边界](daily/day-093-inheritance-for-reuse.md)
 - [Day 92 · Preventing Overriding：用 final 关闭不应再变化的继承点](daily/day-092-preventing-overriding-final.md)
 - [Day 91 · 第 13 周复盘：从类接口到运行时多态的稳定边界](daily/day-091-week13-review-inheritance-interface-boundaries.md)
 - [Day 90 · The Truth about virtual：vtable 心智模型、动态分派成本与虚析构边界](daily/day-090-the-truth-about-virtual.md)
