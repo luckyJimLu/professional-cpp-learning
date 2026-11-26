@@ -2467,6 +2467,45 @@
       "lab": "examples/day-092/main.cpp",
       "previous": 91,
       "next": 93
+    },
+    {
+      "path": "daily/day-093-inheritance-for-reuse.md",
+      "week": 14,
+      "part": "III",
+      "chapter": 10,
+      "chapter_title": "Discovering Inheritance Techniques",
+      "title": "Inheritance for Reuse · 继承复用、父类生命周期与安全的扩展边界",
+      "duration": 60,
+      "status": "published",
+      "date": "2026-11-26",
+      "patterns": [
+        "composition",
+        "strategy",
+        "template-method",
+        "decorator",
+        "ownership-borrow-lifetime"
+      ],
+      "topics": [
+        "inheritance-for-reuse",
+        "implementation-reuse-vs-substitutability",
+        "base-constructor-destructor",
+        "virtual-dispatch-during-construction-destruction",
+        "name-hiding",
+        "using-base-overloads",
+        "upcast-downcast",
+        "embedded-transport-boundary"
+      ],
+      "guidelines": [
+        "public-inheritance-requires-is-a",
+        "prefer-composition-for-code-reuse",
+        "no-virtual-calls-from-constructors-destructors",
+        "override-all-overrides",
+        "downcast-requires-type-proof",
+        "explicit-owner-borrow-teardown"
+      ],
+      "lab": "examples/day-093/main.cpp",
+      "previous": 92,
+      "next": 94
     }
   ]
 }
