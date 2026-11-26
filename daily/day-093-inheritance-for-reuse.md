@@ -195,3 +195,254 @@ class Derived : public Base {
 | 成本 | 代码直观但约束分散 | 关系更明确；仍需审查 vcall、RTTI、代码体积和耦合成本 |
 
 现代 C++ 并不要求所有复用都走继承。把共享实现做成一个独立小组件，通常更容易单测、替换和复用，也更容易给 RAM / WCET 设上界。
+
+## ⑤ 设计模式映射：Strategy、Template Method、Decorator 与 Composition（约 7 分钟）
+
+### 5.1 先识别真实变化轴
+
+以 Modem transport 为例：
+
+- UART / USB / Fake 的底层写入机制不同，且设备启动时可能选择实现：这是运行时变化轴，适合 Strategy（稳定 Transport interface + composition）。
+- 重试预算、字节计数、校验策略被多个业务类使用：这是共享实现，不是 is-a；优先把 RetryBudget / ByteCounter 作为成员对象。
+- 所有实现都必须执行同一套验证、再调用一个硬件 hook：可以考虑 Template Method / NVI，但只在流程确实稳定且 hook 受控时使用。
+- trace / metrics 需要独立叠加在 transport 外部：可考虑 Decorator；如果只有一个计数器，普通成员或 helper 更简单。
+
+### 5.2 模式与 C++ 机制
+
+| 机制 / Pattern | 适用变化 | 主要成本 / 边界 |
+|---|---|---|
+| Composition | 复用状态或实现；has-a | 成员生命周期、调用委托；通常最清楚 |
+| Strategy | 运行期替换 transport / 算法 | virtual call、对象组装、owner / borrow |
+| Template Method / NVI | 固定算法骨架 + 少量受控 hook | 基类需要稳定且可验证的不变量；避免过深继承 |
+| Decorator | 多个可独立叠加的包装行为 | 包装链长度、顺序、生命周期和调用开销 |
+| Private inheritance | 仅内部实现复用且确有基类语义需求 | 仍耦合基类布局、protected 细节和初始化顺序 |
+| Template / concept | 编译期固定实现 | 代码膨胀、编译时间、实例化复杂度 |
+
+### 5.3 Ownership / Borrow / Lifetime
+
+- Composition root 拥有 UartTransport / UsbTransport 具体对象。
+- ModemSender 通过 Transport& 借用策略；Transport owner 必须比 ModemSender 活得更久。
+- RetryBudget 由 ModemSender 按值拥有；没有共享所有权需求，不使用 shared_ptr。
+- 如果 transport 将 buffer 交给 DMA 异步读取，span 只描述借用范围，不延长 buffer 生命周期；必须由固定 buffer pool / ring 的明确 owner 持有，直到 completion、cancel 或 drain。
+- 若添加 callback，必须定义 registration token、unregister、in-flight callback drain、执行线程 / ISR 上下文和销毁顺序。继承关系不负责这些事情。
+
+### 5.4 何时保持简单
+
+- 只有一个实现且没有测试替身需求：具体类型 + composition 即可。
+- 多个实现需要运行时替换：Strategy。
+- 多个类型只是共享计数器：成员对象，不建 RetryCounter 基类。
+- 不要为了“以后可能复用”先做 BaseManager、Factory、ServiceLocator 和多层 abstract base。
+
+## ⑥ Embedded / System Design：Modem transport 与重试策略（约 8 分钟）
+
+推荐边界：
+
+~~~text
+Composition Root
+  ├── owns UartTransport / UsbTransport
+  └── constructs ModemSender
+                 |
+                 | borrows Transport&
+                 v
+            Transport::Write()
+                 |
+        +--------+---------+
+        |                  |
+   UartTransport      UsbTransport
+        |
+        v
+    HAL / DMA
+
+ModemSender
+  └── owns RetryBudget by value
+~~~
+
+### 6.1 构造与 teardown
+
+- 先构造 HAL / transport，再构造借用它的 ModemSender；销毁顺序必须反过来。
+- 不在 Base constructor 中调用 virtual hook 来启动派生 HAL；派生对象尚未完整建立。
+- 停止 DMA、取消 callback、等待 in-flight completion 必须发生在 transport 资源销毁之前。
+- 不在 Base destructor 中期望派生 override 执行硬件关闭；Derived teardown 应先完成自己的异步 drain，再让 Base 析构。
+
+### 6.2 实时与线程约束
+
+- **重试上界**：RetryBudget 使用固定宽度计数，最多 N 次重试；禁止 while(true) 无界重试。每次重试还必须受 monotonic deadline / timeout 约束。
+- **阻塞**：不能在 ISR 中调用可能等待 DMA、获取 mutex 或 sleep 的 Send。ISR 只投递固定容量事件，由 ModemTask 处理。
+- **内存**：发送热路径不 new、不构造动态字符串、不建立无界包装链；Lab 的 frame 使用 std::array。
+- **WCET**：预算需覆盖最多 N+1 次 Write、锁等待、DMA 提交和错误路径；virtual dispatch 本身通常不是唯一成本。
+- **RTTI**：若固件关闭 RTTI，核心流程不依赖 dynamic_cast；类型选择应在 composition root 完成。
+- **错误传播**：busy、timeout、invalid argument、hardware failure 应保留不同状态，不能只返回 bool。
+- **硬件可替换性**：Host Fake 与生产 UART / USB 实现遵守相同 Write contract，包括空输入、最大长度、timeout 和线程上下文。
+
+## ⑦ 今日编码规范（MUST / SHOULD / MAY）
+
+### MUST 1：public inheritance 必须表达可替代关系；仅共享状态 / 算法时使用 composition
+
+**错误写法：**
+
+~~~cpp
+class RetryBudget {
+ public:
+  bool Consume() noexcept;
+};
+
+class UartSender : public RetryBudget {};  // UartSender 并不是一种 RetryBudget
+~~~
+
+**推荐写法：**
+
+~~~cpp
+class UartSender {
+ public:
+  explicit UartSender(std::uint8_t retries) noexcept
+      : retry_budget_(retries) {}
+
+ private:
+  RetryBudget retry_budget_;  // UartSender owns its policy component.
+};
+~~~
+
+### MUST 2：不得在构造 / 析构期间调用依赖派生 override 的 virtual hook
+
+**错误写法：**
+
+~~~cpp
+Base::Base() { Initialize(); }  // 不会分派到 Derived::Initialize()
+~~~
+
+**推荐写法：**
+
+~~~cpp
+Derived::Derived() : Base() {
+  InitializeDerivedResources();  // 当前对象的派生部分已开始构造
+}
+~~~
+
+异步资源还必须有明确失败回滚和 teardown 顺序；不要把可能失败的硬件启动藏进构造函数而又无法表达失败。
+
+### SHOULD 3：向下转换必须有可审计的类型证明；优先消除业务层 downcast
+
+**错误写法：**
+
+~~~cpp
+auto* uart = static_cast<UartTransport*>(transport);  // 没有证明
+~~~
+
+**推荐写法：**
+
+~~~cpp
+if (auto* uart = dynamic_cast<UartTransport*>(transport)) {
+  uart->ReadDiagnostics();
+} else {
+  return Status::kUnsupported;
+}
+~~~
+
+如果目标固件不支持 RTTI，优先把诊断能力放入独立接口或在创建边界保留受验证的类型信息，不要把 static_cast 当成运行期检查。
+
+命名、enum class、explicit、小接口、RAII、错误模型和固定容量要求继续沿用既有 guideline；新增继承层级必须在 Code Review 中写明 is-a 证明、owner / borrow 和 teardown 规则。
+
+## ⑧ 可编译 Lab / 练习（约 9 分钟）
+
+每个文件都包含自己的 int main()，必须独立编译运行。不要把多个 main() 链接到同一个程序。
+
+### 主 Lab：真实 is-a 用 Strategy，代码复用用 Composition
+
+源码：[examples/day-093/main.cpp](../examples/day-093/main.cpp)
+
+~~~bash
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-093/main.cpp -o day93
+./day93
+~~~
+
+预期输出：
+
+~~~text
+transport=UART result=ok attempts=2 retries_left=0
+transport=USB result=ok writes=1
+shared retry behavior uses composition; runtime transport uses is-a
+~~~
+
+观察：
+
+1. UartTransport / UsbTransport 是 Transport，因为它们都满足同一个 Write contract。
+2. ModemSender 不继承 RetryBudget，而是按值拥有 RetryBudget。
+3. ModemSender 通过 Transport& 借用策略对象；main 中 owner 比 borrower 活得更久。
+4. RetryBudget 的重试次数有界，Lab 不分配 heap，不引入 shared_ptr。
+5. 运行时替换只发生在真正变化的 Transport 轴上。
+
+### Exercise 01：修复“为了复用而 public inherit”的设计
+
+Starter：[examples/day-093/exercise-01.cpp](../examples/day-093/exercise-01.cpp)
+
+~~~bash
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-093/exercise-01.cpp -o day93-ex01
+./day93-ex01
+~~~
+
+这是**逻辑 / 设计违规但可编译运行**的 starter。它故意让 UartSender 与 AtCommandSession public inherit RetryBudget。运行时会显示两个类型都能隐式转换为 RetryBudget*，外部调用方还能直接消耗内部重试额度。
+
+请重构：
+
+1. 将 RetryBudget 改为普通独立组件，两个业务类分别按值拥有自己的 RetryBudget。
+2. 删除 public inheritance；不要用 private inheritance 仅仅把错误关系藏起来。
+3. 只暴露业务需要的操作，例如 TrySubmit() / StartCommand()；不要把 Consume() 直接泄漏给无关调用方。
+4. 保留固定容量和无动态分配；错误路径必须可观察。
+5. 在 main() 中增加静态检查，证明 UartSender* 不再能隐式转换为 RetryBudget*。
+6. 解释为什么这里不需要 Strategy、Factory 或 shared_ptr。
+
+重构后仍使用同一文件、同一命令独立编译运行：
+
+~~~bash
+g++ -std=c++23 -Wall -Wextra -Wconversion -Wpedantic examples/day-093/exercise-01.cpp -o day93-ex01
+./day93-ex01
+~~~
+
+**通过标准**：业务类不再 is-a RetryBudget；每个 owner 明确拥有自己的 policy；外部无法绕过业务接口修改内部预算；输出能证明重构前后的行为边界。
+
+## ⑨ 三个常见坑
+
+1. **把同名函数当成 override**：基类函数非 virtual，或派生签名不匹配时，不会形成预期动态分派。对每个重写使用 override；需要保留基类 overload set 时使用 using Base::Function。
+2. **在构造 / 析构中调用 virtual 初始化或清理派生资源**：构造阶段派生部分尚未建立，析构阶段派生部分已销毁；不要把派生 hook 当成可用的生命周期回调。
+3. **为了复用而建立深继承树，再用 downcast 找回具体类型**：这会同时损害 substitutability、可测试性和实时可审计性。先考虑 composition、value component、Strategy 或封闭类型集合；只有真实 is-a 才 public inherit。
+
+## ⑩ 检查题（约 5 分钟）
+
+### 知识 / 代码检查
+
+1. Base 构造函数调用 virtual Initialize()，Derived override 了它。构造 Derived 时实际执行哪个版本？为什么？如果 Initialize 是 pure virtual，会发生什么风险？
+2. Derived 声明了 Read(double)，Base 有 Read() 和 Read(int)。Base 的两个重载是否仍可通过 Derived 对象直接调用？如何恢复？若在 Derived 中写 Base::Read()，当 Base::Read 是 virtual 时会不会继续动态分派？
+
+### 设计题：Modem transport 复用方案
+
+某 Modem 子系统有 UART、USB 两种 transport；它们都实现 Write(span)；AT command session 和 firmware updater 都需要重试预算、统计字节数与错误计数。要求：
+
+- 设备启动时选择 UART 或 USB；
+- 固件热路径不能动态分配，重试必须有上界；
+- ISR 不允许阻塞；
+- transport 可以被 Host Fake 替换；
+- updater 可能异步 DMA 发送，buffer 必须活到 completion。
+
+请画出对象关系并回答：
+
+1. 哪些类型应该 public inherit？请给出可替代性证明。
+2. RetryBudget / ByteCounter 应该用 composition、private inheritance 还是模板？为什么？
+3. ModemSender 对 Transport 的依赖是 owner 还是 borrow？谁负责先销毁？
+4. 如果要增加 trace，何时普通成员足够，何时 Decorator 才值得引入？
+5. 运行期是否真的需要 downcast？若固件禁用 RTTI，如何保持接口完整？
+6. DMA buffer、callback registration、timeout、最大重试次数和 WCET 如何形成可审计上界？
+
+**答题检查路径**：需求变化 → 识别变化轴 → 找稳定 contract → 选择 composition / public inheritance / template → 设计 owner / borrow / lifetime → 检查 teardown、RTOS context 与实时上界 → Code Review。
+
+---
+
+## 本日完成标准
+
+- 能解释“代码复用”与“可替代性”是两个不同问题。
+- 能正确写出基类构造参数、理解构造 / 析构顺序与 virtual dispatch 边界。
+- 能区分 name hiding、using Base::name 与 Base::name() 限定调用。
+- 能解释 implicit upcast、dynamic_cast 和 static_cast downcast 的不同保证。
+- 能把真实 is-a 留给 public inheritance，把普通共享实现迁移到 composition。
+- 主 Lab 与 Exercise 01 都能独立编译运行；Exercise 的重构结果仍能通过同一命令验证。
+
+**下一课 Day 94**：Chapter 10 · Inheritance for Polymorphism，p.380；从 SpreadsheetCell 案例进入抽象基类、纯虚函数与运行时多态接口。
