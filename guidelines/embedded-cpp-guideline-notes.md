@@ -415,3 +415,14 @@
 - REVIEW：final 函数仍然是 virtual；派生类可以继承它的实现，但不能 override。不同参数的同名函数可能是 overload / name hiding，不构成对 final 虚函数的重写。
 - REVIEW：final 可能为编译器提供 devirtualization 机会，但不能把它写成性能保证；在目标编译器、优化级别和 MCU 上测量调用成本与 WCET。
 - REVIEW：检查 ISR / task context、timeout、Status 错误传播、固定容量、DMA buffer、callback unregister / in-flight drain、析构顺序和边界测试。
+
+
+## 继承复用与父类生命周期（Day 93）
+
+- **MUST**：public inheritance 必须表达可替代的 is-a 契约；仅为了复用计数器、缓存、重试预算或校验逻辑时，优先 composition，不得把实现 helper 暴露为公共基类。
+- **SHOULD**：除非组合无法清晰表达且有明确技术收益，否则避免 private inheritance；隐藏基类转换不等于消除基类耦合。
+- **MUST**：构造 / 析构函数不得调用依赖派生 override 的 virtual hook。派生资源在派生构造阶段建立，在派生 teardown 中停止并 drain；基类析构只清理基类自身资源。
+- **MUST**：每个重写显式标记 override；同名不同签名不是 override。需要保留基类 overload set 时使用 using Base::Function。
+- **SHOULD**：核心业务流程尽量不依赖向下转换。dynamic_cast 失败必须有明确处理；static_cast downcast 仅在类型不变量已被证明时使用，不能冒充运行期检查。
+- **MUST**：继承 / 组合评审同时记录 owner、borrow、lifetime、callback unregister、DMA completion 和 teardown 顺序；虚函数本身不延长对象或缓冲区生命周期。
+- **SHOULD**：关闭 RTTI 的固件优先通过完整接口、封闭类型集合或创建边界的已验证 tag 设计，避免业务层到处 downcast。
