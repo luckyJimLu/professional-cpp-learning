@@ -1078,6 +1078,19 @@
   max-width: none;
 }
 
+.faq-page .faq-document .markdown :not(pre) > code {
+  padding: 1px 6px;
+  border: 1px solid color-mix(in srgb, var(--blue) 22%, var(--line));
+  border-radius: 5px;
+  background: var(--blue-soft);
+  color: #00467a;
+  font-weight: 500;
+}
+
+.faq-page .faq-document .code-block-card[data-language="cpp"] .code-block-lang {
+  color: #7cc4fa;
+}
+
 .faq-chapter-bar {
   display: flex;
   flex-wrap: wrap;
