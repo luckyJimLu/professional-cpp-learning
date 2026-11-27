@@ -209,10 +209,22 @@ export function Shell({
         ? "operate"
         : "browse";
 
+  const showReadingProgress = [
+    "lesson",
+    "faq",
+    "topics",
+    "guidelines",
+    "booklets",
+    "xiantu",
+  ].includes(view);
+
   return (
     <div
       className={`app-shell ${isSidebarCollapsed ? "is-sidebar-collapsed" : ""}`}
     >
+      {showReadingProgress && (
+        <div className="reading-scroll-progress" aria-hidden="true" />
+      )}
       <a className="skip-link" href="#main-content">
         跳到正文
       </a>

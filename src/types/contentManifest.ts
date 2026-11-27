@@ -34,11 +34,26 @@ export interface ContentBooklet {
   entries: number;
 }
 
+export interface ContentFaqChapter {
+  id: string;
+  path: string;
+  chapter: number;
+  part: string;
+  title: string;
+  summary: string;
+  questionCount: number;
+  stats?: {
+    minutes: number;
+    wordCount: number;
+  };
+}
+
 export interface ContentManifest {
   contentVersion: string;
   generatedAt: string;
   lessons: ContentLesson[];
   topics: ContentTopic[];
+  faq?: ContentFaqChapter[];
   booklets: { c: ContentBooklet; cpp: ContentBooklet };
   slides: { outline: string; lessons: string[] };
   assets: { byPath: Record<string, string> };

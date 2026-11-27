@@ -16,6 +16,7 @@
 | 路径 | 用途 |
 | --- | --- |
 | `daily/` | 每日课程(day-001 ~ day-068),元数据在 `lessons.meta.json` |
+| `docs/faq/` | 分章节 FAQ 正文(`modifiers.md` + `ch01.md`~`ch34.md`),总目录在 `docs/faq.md`,由 `build-content.py` 输出 `manifest.faq` |
 | `examples/day-XXX/` | 每课可编译源码(`main.cpp` + `exercise-XX.cpp`),CI 会全部编译运行 |
 | `weekly/` / `patterns/` / `booklets/` / `guidelines/` | 周复盘、设计模式、速查册、Embedded C++ 规范 |
 | `topics/` | 独立专题(正文 `README.md` + `lab/` 可编译实验),不占用 Day 编号 |

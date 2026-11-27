@@ -5,6 +5,7 @@
 @import "./styles/workspace.css" layer(legacy);
 @import "./styles/docs.css" layer(legacy);
 @import "./styles/product-ui.css" layer(legacy);
+@import "./styles/modern-web.css";
 @import "./styles/theme.css";
 
 @custom-variant dark (&:where(.dark, .dark *));

@@ -1070,12 +1070,112 @@
 }
 
 .faq-page .faq-summary-card {
-  margin: var(--space-5) 0 var(--space-6);
+  margin: var(--space-4) 0 var(--space-6);
   padding: 20px 24px;
 }
 
 .faq-page .faq-document {
   max-width: none;
+}
+
+.faq-chapter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: var(--space-5);
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--canvas);
+}
+
+.faq-chapter-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.faq-chapter-select {
+  flex: 1 1 220px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.faq-chapter-step-buttons {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.faq-chapter-step-buttons button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.faq-chapter-footer {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: var(--space-6);
+}
+
+.faq-chapter-footer-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--canvas);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.faq-chapter-footer-btn:hover {
+  border-color: var(--line-strong);
+  background: var(--surface, var(--canvas));
+}
+
+.faq-chapter-footer-btn.is-next {
+  text-align: right;
+  align-items: flex-end;
+}
+
+.faq-chapter-footer-btn small {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.faq-chapter-footer-btn strong {
+  font-size: 0.875rem;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.faq-aside-chapters {
+  max-height: 360px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.faq-aside-ch-tag {
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-right: 4px;
+}
+
+@media (max-width: 640px) {
+  .faq-chapter-footer {
+    grid-template-columns: 1fr;
+  }
+
+  .faq-chapter-footer-btn.is-next {
+    text-align: left;
+    align-items: flex-start;
+  }
 }
 
 .today-aside-stats {

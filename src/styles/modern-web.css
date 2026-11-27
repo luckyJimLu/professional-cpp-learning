@@ -1,0 +1,222 @@
+/* ==========================================================================
+ * Modern Web Platform UI Enhancements
+ * Grounded in GoogleChrome/modern-web-guidance:
+ *   - scroll-progress-indicator
+ *   - state-aware-sticky-headers (WCAG 2.4.11 scroll-padding-top)
+ *   - accordion + animate-to-intrinsic-sizes
+ *   - scrollability-affordance-hints (vertical shadows + horizontal fades)
+ * ========================================================================== */
+
+/* Top-level opt-in for animating to intrinsic keywords (e.g. block-size: auto) */
+:root {
+  interpolate-size: allow-keywords;
+}
+
+/* Registered custom properties for smooth scroll-driven horizontal fade masks */
+@property --fade-start {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --fade-end {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+/* --------------------------------------------------------------------------
+ * 1. Scroll Progress Indicator (Compositor-driven, Progressive Enhancement)
+ * -------------------------------------------------------------------------- */
+.reading-scroll-progress {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    @keyframes grow-reading-progress {
+      from {
+        transform: scaleX(0);
+      }
+      to {
+        transform: scaleX(1);
+      }
+    }
+
+    .reading-scroll-progress {
+      display: block;
+      position: fixed;
+      inset-inline: 0;
+      inset-block-start: var(--header-height);
+      height: 2.5px;
+      z-index: 35;
+      pointer-events: none;
+      background: linear-gradient(
+        90deg,
+        var(--blue),
+        color-mix(in srgb, var(--blue) 70%, #38bdf8)
+      );
+      transform-origin: 0 50%;
+      animation: grow-reading-progress auto linear;
+      /* Declared after animation shorthand so shorthand does not reset timeline */
+      animation-timeline: scroll(root block);
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * 2. Smooth Native <details> Accordion Transitions (::details-content)
+ *    Excludes .mobile-drawer (fixed navigation overlay).
+ * -------------------------------------------------------------------------- */
+:is(
+  .markdown details,
+  .reading-index,
+  .course-week,
+  .docs-note-collapsible,
+  .lesson-stage-disclosure
+)::details-content {
+  interpolate-size: allow-keywords;
+  overflow: clip;
+  contain: layout;
+}
+
+:is(
+  .markdown details,
+  .reading-index,
+  .course-week,
+  .docs-note-collapsible,
+  .lesson-stage-disclosure
+):not([open])::details-content {
+  block-size: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :is(
+    .markdown details,
+    .reading-index,
+    .course-week,
+    .docs-note-collapsible,
+    .lesson-stage-disclosure
+  )::details-content {
+    transition: block-size, content-visibility, display;
+    transition-duration: 0.28s;
+    transition-timing-function: ease-in-out;
+    transition-behavior: allow-discrete;
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * 3. Scrollability Affordance Hints
+ *    A) Vertical scroller shadows (.faq-aside-chapters)
+ * -------------------------------------------------------------------------- */
+.faq-aside-chapters {
+  container-type: scroll-state;
+  position: relative;
+}
+
+.faq-aside-chapters::before,
+.faq-aside-chapters::after {
+  content: "";
+  display: block;
+  position: sticky;
+  block-size: 0.75rem;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.faq-aside-chapters::before {
+  inset-block-start: 0;
+  margin-block-end: -0.75rem;
+  background: radial-gradient(
+    farthest-side at 50% 0,
+    rgb(15 23 42 / 0.12),
+    transparent
+  );
+}
+
+.faq-aside-chapters::after {
+  inset-block-end: 0;
+  margin-block-start: -0.75rem;
+  background: radial-gradient(
+    farthest-side at 50% 100%,
+    rgb(15 23 42 / 0.12),
+    transparent
+  );
+}
+
+@container scroll-state(scrollable: block-start) {
+  .faq-aside-chapters::before {
+    opacity: 1;
+  }
+}
+
+@container scroll-state(scrollable: block-end) {
+  .faq-aside-chapters::after {
+    opacity: 1;
+  }
+}
+
+@supports not (container-type: scroll-state) {
+  @supports (animation-timeline: scroll()) {
+    @keyframes show-scroll-shadow {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .faq-aside-chapters::before,
+    .faq-aside-chapters::after {
+      animation: show-scroll-shadow linear both;
+      animation-timeline: scroll();
+    }
+
+    .faq-aside-chapters::before {
+      animation-range: 0 1.5rem;
+    }
+
+    .faq-aside-chapters::after {
+      animation-direction: reverse;
+      animation-range: calc(100% - 1.5rem) 100%;
+    }
+  }
+}
+
+/*    B) Horizontal scroller edge fades (.xt-chapter-tabs with hidden scrollbar) */
+@supports (animation-timeline: scroll(self inline)) {
+  @keyframes reveal-fade-start {
+    to {
+      --fade-start: var(--fade-size);
+    }
+  }
+
+  @keyframes hide-fade-end {
+    from {
+      --fade-end: var(--fade-size);
+    }
+  }
+
+  .xt-chapter-tabs {
+    --fade-size: 2.25rem;
+    --fade-dir: right;
+    --fade-start-pos: 0;
+    --fade-end-pos: 100%;
+    scroll-padding-inline: var(--fade-size);
+    mask:
+      linear-gradient(black, black) no-clip subtract,
+      linear-gradient(to var(--fade-dir), black, transparent)
+        var(--fade-start-pos) 0 / var(--fade-start) 100% no-repeat no-clip,
+      linear-gradient(to var(--fade-dir), transparent, black)
+        var(--fade-end-pos) 0 / var(--fade-end) 100% no-repeat no-clip;
+    animation: reveal-fade-start linear both, hide-fade-end linear both;
+    animation-timeline: scroll(self inline);
+    animation-range: 0 var(--fade-size), calc(100% - var(--fade-size)) 100%;
+  }
+
+  .xt-chapter-tabs:dir(rtl) {
+    --fade-dir: left;
+    --fade-start-pos: 100%;
+    --fade-end-pos: 0;
+  }
+}

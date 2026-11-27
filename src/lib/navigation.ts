@@ -42,6 +42,7 @@ const PAGE_PARAMS: Partial<Record<View, string[]>> = {
   slides: ["deck", "slide", "tab"],
   lab: ["code", "line"],
   lessons: ["courseTab", "courseQuery"],
+  faq: ["chapter"],
 };
 
 export function navigate(

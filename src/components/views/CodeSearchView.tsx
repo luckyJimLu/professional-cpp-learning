@@ -343,6 +343,23 @@ export function CodeSearchView() {
                     阅读所在文档 <Icon id="right" />
                   </Button>
                 )}
+              {selected.path.startsWith("docs/faq/") &&
+                selected.path.endsWith(".md") && (
+                  <Button
+                    variant="outline"
+                    className="action-pill"
+                    onClick={() =>
+                      navigate({
+                        view: "faq",
+                        chapter: selected.path
+                          .replace(/^docs\/faq\//, "")
+                          .replace(/\.md$/, ""),
+                      })
+                    }
+                  >
+                    阅读 FAQ 章节 <Icon id="right" />
+                  </Button>
+                )}
               {selected.path.startsWith("daily/") && (
                 <Button
                   variant="outline"

@@ -89,6 +89,7 @@ def collect_sources():
     add_dir("patterns/**/*.md")
     add_dir("topics/**/*.md")
     add_dir("booklets/**/*.md")
+    add_dir("docs/faq/*.md")
     add_dir("references/reading-paths/*.md")
     for name in ZONE1_DOCS:
         p = ROOT / "docs" / name
@@ -244,7 +245,7 @@ def build_manifest(pairs):
                                   "utils/", "references/system-design-notes/"))
                 or rel_s in ("PPT/设计模式大纲.md",) or rel_s.startswith("slides/")):
             continue
-        if "maint/" in rel_s or "archive/" in rel_s or rel_s == "progress.md":
+        if "maint/" in rel_s or "archive/" in rel_s or rel_s == "progress.md" or rel_s.startswith("docs/faq/"):
             continue
         text = (ROOT / rel).read_text(encoding="utf-8", errors="replace")
         meta = parse_frontmatter(text)
@@ -266,6 +267,29 @@ def build_manifest(pairs):
             "title": first_heading(text),
             "locale": "en" if rel_s.endswith(".en.md") else "zh",
         })
+
+    faq_chapters = []
+    for _, rel in pairs:
+        rel_s = str(rel)
+        if not (rel_s.startswith("docs/faq/") and rel_s.endswith(".md")):
+            continue
+        text = (ROOT / rel).read_text(encoding="utf-8", errors="replace")
+        meta = parse_frontmatter(text)
+        ch_raw = scalar_value(meta, "chapter")
+        ch_num = int(ch_raw) if ch_raw.isdigit() else 999
+        slug = Path(rel_s).stem
+        q_count = len(re.findall(r"^#{2,3}\s+Q\d+\b", text, re.M))
+        faq_chapters.append({
+            "id": slug,
+            "path": rel_s,
+            "chapter": ch_num,
+            "part": scalar_value(meta, "part") or "核心专题",
+            "title": scalar_value(meta, "title") or first_heading(text) or slug,
+            "summary": scalar_value(meta, "summary"),
+            "questionCount": q_count,
+            "stats": reading_stats(text),
+        })
+    faq_chapters.sort(key=lambda item: (item["chapter"], item["id"]))
 
     bundle = {}
     for name, path in (("c", "booklets/c.md"), ("cpp", "booklets/cpp.md")):
@@ -298,6 +322,7 @@ def build_manifest(pairs):
         "generatedAt": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         "lessons": lessons,
         "topics": topics,
+        "faq": faq_chapters,
         "booklets": bundle,
         "slides": {"outline": "content/PPT/设计模式大纲.md",
                    "lessons": ["content/slides/lesson-01.md", "content/slides/lesson-02.md", "content/slides/lesson-03.md"]},

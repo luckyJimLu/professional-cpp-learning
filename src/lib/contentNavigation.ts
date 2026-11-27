@@ -10,6 +10,13 @@ export function resolveContentNavigation(currentPath: string, href: string) {
   const lesson = lessons.find((item) => item.path === path);
   if (lesson)
     return { view: "lesson", day: String(lesson.day), topic: undefined };
+  if (path === "docs/faq.md") {
+    return { view: "faq", chapter: undefined, day: undefined, topic: undefined };
+  }
+  const faqMatch = path?.match(/^docs\/faq\/([^/]+)\.md$/);
+  if (faqMatch) {
+    return { view: "faq", chapter: faqMatch[1], day: undefined, topic: undefined };
+  }
   const topic = resolveTopicLink(currentPath, href);
   if (topic) return { view: "topics", topic: topic.path, day: undefined };
   return undefined;
